@@ -1,0 +1,47 @@
+﻿
+@{
+
+}
+<script src="~/crystalreportviewers13/js/crviewer/crv.js"></script>
+<script src="~/Angular/ng-Reports.js"></script>
+<style>
+    .margin-top {
+        margin-top: 1px;
+    }
+</style>
+<section id="crystal_section" ng-app="ng_HRD_App" ng-controller="cReports_ctrlr">
+    <div class="modal fade" id="modal_generating_report">
+        <div class="modal-dialog">
+            <div class="modal-dialog text-center">
+                @*<span class="fa fa-spinner fa-spin fa-3x text-white"></span>*@
+                <div class="spiner-example">
+                    <div class="sk-spinner sk-spinner-wandering-cubes" style="width:250px;height:250px;">
+                        <div class="sk-cube1" style="width:50px;height:50px;"></div>
+                        <div class="sk-cube2" style="width:50px;height:50px;"></div>
+                    </div>
+                </div>
+                @**@
+            </div>
+        </div>
+    </div>
+    <div class="row wrapper border-bottom white-bg page-heading text-white" style="background-color:#507CD1">
+        <div class="col-lg-4">
+            <h2>Print Preview</h2>
+        </div>
+        <div class="col-lg-8" style="margin-top:20px;">
+            <button class="btn btn-primary pull-right" onclick="window.location.href='@Session["history_page"].ToString()'"><i class="fa fa-arrow-circle-left"></i> Back</button>
+            @*<a class="btn btn-info btn-sm pull-right" href="@Url.Action("Index", "cJobDescription")" style="width:80px;margin-right:50px;margin-top:10px;"><i class="fa fa-arrow-left"></i> Back</a>*@
+        </div>
+    </div>
+    <div class="form-horizontal">
+
+        <div class="row margin-top">
+            <div id="iframe_content" class="col-md-12">
+                <center>
+                    <iframe id="ReportFrame" src="" height="75%" width="100%"></iframe>
+                </center>
+            </div>
+        </div>
+    </div>
+</section>
+

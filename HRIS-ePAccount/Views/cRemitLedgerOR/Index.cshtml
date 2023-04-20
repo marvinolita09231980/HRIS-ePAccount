@@ -1,0 +1,322 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+
+<style type="text/css">
+    .field {
+        border-radius: 3px;
+        height: 35px;
+        font-size: 18px;
+    }
+
+    .field-arrow {
+        font-size: 26px;
+    }
+
+    .require-field {
+        border: 1px solid red !important;
+    }
+    .badge {
+        font-family: inherit !important;
+    }
+</style>
+
+<script src="~/Angular/ng-cRemitLedgerOR.js"></script>
+<div class="modal fade" id="loading_data" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" data-backdrop="static" data-keyboard="false" aria-hidden="true" style="margin-top:10%;overflow:hidden">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+
+        @*<span class="fa fa-spinner fa-spin fa-3x text-white"></span>*@
+        <div class="spiner-example">
+            <div class="sk-spinner sk-spinner-cube-grid" style="height:50px;width:50px;">
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="row" style="padding-top:5px;">
+
+                    <div class="col-sm-12">
+                        <div style="width:10%; float:left;" class="no-padding">
+                            <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;color:white">Please&nbsp;wait..</span>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        @**@
+
+    </div>
+</div>
+
+<section ng-app="ng_HRD_App" ng-controller="cRemitLedger_ctrlr">
+    @*---PRINT OPTIONS MODAL-----*@
+    <div class="modal fade" id="modal_print_option" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY modal-content-add-edit">
+                <div class="modal-header bg-primary text-white">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h3 class="modal-title" id="modalLabelSmall">RS5 PRINT DETAILS</h3>
+                </div>
+                <div class="modal-body with-background" style="padding:10px;">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;"><b>Remittance Year:</b></span>
+                            <div style="width:45%; float:right;" class="text-center">
+                                <input type="text" class="form-control form-control-sm text-center font-bold" id="txtb_rpt_remittance_year" value="{{ddl_year}}" disabled readonly />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="pull-left font-bold" id="lbl_dynamic_month" style="margin-top:9px;margin-right:10px;"><b>Remittance Month:</b></span>
+                            <div style="width:45%; float:right;" class="text-center">
+                                <input type="text" class="form-control form-control-sm text-center font-bold" id="txtb_rpt_quarter" value="1st Quarter" disabled readonly />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:5px;">
+                        <div class="col-sm-12">
+                            <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;"><b>Employment Type:</b></span>
+                            <div style="width:74%; float:right;">
+                                <input type="text" class="form-control form-control-sm font-bold" id="txtb_remittance_type" disabled readonly />
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="row" style="margin-top:5px;">
+                            <div class="col-sm-12">
+                                <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;"><b>RS5 For Employee:</b></span>
+                                <div style="width:74%; float:right;">
+                                    <input type="text" class="form-control form-control-sm font-bold" id="txtb_rpt_employee_name" disabled readonly />
+                                </div>
+                            </div>
+                        </div>*@
+                    <div class="row" style="margin-top:5px;">
+                        <div class="col-sm-12">
+                            <span class="pull-left font-bold" style="margin-top:9px;"><b>Select Report:</b></span><label style="color:red;margin-top:5px;">*</label>
+                            <div style="width:74%; float:right;">
+                                <select id="ddl_reports" class="form-control form-control-sm" ng-model="ddl_reports">
+                                    <option ng-show="ShowSelected" value="">--Select Here--</option> @*--------------------------------------------------------------*@
+                                    <option value="{{lst.report_name}}" ngx-data="{{$index}}" ng-repeat="lst in reports track by $index">{{lst.report_descr}}</option>
+                                </select>
+                                <label class="text-danger small">{{lbl_requiredfield7}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-primary" style="padding:10px;">
+                    <button id="btn_print_rs5" ng-click="btn_print_click()" class="btn btn-primary"><i class="fa fa-print"> </i> <b>PRINT</b></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*---END OF PRINT OPTIONS MODAL-----*@
+
+
+    <!-- The modal -->
+    <div class="modal fade" id="main_modal" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content animated flipInY modal-content-add-edit">
+                <div class="modal-header modal-header-add-edit text-white">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="modalLabelSmall">{{ModalTitle}}</h4>
+                </div>
+
+                <div class="modal-body with-background">
+
+                    <div class="form-group row" style="display:none">
+                        <div class="col-sm-12">
+                            <input id="hidden_remittance_dttm_created" ng-model="hidden_remittance_dttm_created" class="form-control" />
+                            <input id="hidden_remittance_dttm_updated" ng-model="hidden_remittance_dttm_updated" class="form-control" />
+                            <input id="hidden_remittance_dttm_released" ng-model="hidden_remittance_dttm_released" class="form-control" />
+                            <input id="hidden_remittance_dttm_remitted" ng-model="hidden_remittance_dttm_remitted" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label class="font-bold">Remit Nbr:</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input id="txtb_remittance_ctrl_no" ng-model="txtb_remittance_ctrl_no" type="text" class="form-control text-center bold" disabled />
+                            <label class="text-danger small">{{lbl_requiredfield1}}</label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label class="font-bold">Remittance Type:</label><label style="color:red;">*</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input ng-show="isEdit" class="form-control" id="txtb_remittancetype" ng-model="txtb_remittancetype" disabled />
+                            <select ng-show="!isEdit" class="form-control field-select-sm" id="ddl_remittancetype" ng-model="ddl_remittancetype" ng-change="SelectTemplateType(ddl_year,ddl_month,ddl_employment_type,ddl_remittancetype)" @*ng-disabled="disabled_ddl_remittancetype"*@>
+                                <option value="" selected>--Select Here--</option>
+                                <option ng-repeat="lst in remittancetype" value="{{lst.remittancetype_code}}">{{lst.remittancetype_descr}}</option>
+                            </select>
+                            <label class="text-danger small">{{lbl_requiredfield2}}</label>
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label class="font-bold">Remittance Year:</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input id="txtb_year" ng-model="txtb_year" type="text" class="form-control text-center bold" disabled />
+                        </div>
+                        <div class="col-sm-3" style="padding-right:0 !important">
+                            <label class="font-bold">Remittance Month:</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input id="txtb_month" ng-model="txtb_month" type="text" class="form-control text-center bold" disabled />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label class="font-bold"> Description:</label> <label style="color:red;">*</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" ng-model="txtb_description" id="txtb_description"></textarea>
+                            <label class="text-danger small">{{lbl_requiredfield5}}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer" style="padding: 10px 30px 10px 30px !important">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                    <button id="addFinal" ng-show="ishow" ng-click="btn_save_add()" type="button" class="btn btn-success"><i class="fa fa-save"></i> Save Only</button>
+                    <button ng-show="isupdate" id="btn_save_update" ng-click="btn_save_update()" type="button" class="btn btn-success"><i class="fa fa-save"></i> Save Edit</button>
+                    @*<button ng-show="ishow" ng-click="ExtracData()" type="button" class="btn btn-primary"><i class="fa fa-qrcode"></i> Save and Extract Data</button>*@
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInRight" style="padding:10px 0 0 0!important">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox-title" style="background-color:#507CD1;border-radius:5px 5px 0 0;">
+
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <b><h2 class="text-white">@Model.menu_name</h2></b>
+                        </div>
+                        <div class="col-lg-8">
+                            <input type="search" class="form-control" ng-model="search_box" ng-keyup="search_in_list(search_box,'datalist_grid')" placeholder="Search ....">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInRight" style="padding:0 !important;">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;"><b>Show</b></span>
+                                <select class="form-control field-select-sm" style="width:25%;float:left;" ng-model="rowLen" ng-change="setNumOfRow(rowLen,'datalist_grid')">
+                                    <option value="5">5</option>
+                                    <option value="10" selected>10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                </select>
+                                <span class="font-bold" style="float:left;margin-top:9px;margin-left:10px;"><b>entries</b></span>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <div style="width:55%; float:left;">
+                                    <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;"><b>Remittance Year:</b></span>
+                                </div>
+                                <div style="width:44%; float:right;">
+                                    <select id="ddl_year" ng-model="ddl_year" ng-change="SelectYear(ddl_year,ddl_month,ddl_employment_type,ddl_employment_type,ddl_remittancetype)" class="form-control field-select-sm" style="width:100%;">
+                                        <option ng-repeat="yr in year" value="{{yr.year}}">{{yr.year}}</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-5">
+
+                                <div style="width:32%; float:left;">
+                                    <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;"><b>Remittance Month:</b></span>
+                                </div>
+                                <div style="width:68%; float:right;">
+                                    <select id="ddl_month" ng-model="ddl_month" ng-change="SelectMonth(ddl_year,ddl_month,ddl_employment_type,ddl_remittancetype)" class="form-control field-select-sm">
+                                        <option value="01">January</option>
+                                        <option value="02">February</option>
+                                        <option value="03">March</option>
+                                        <option value="04">April</option>
+                                        <option value="05">May</option>
+                                        <option value="06">June</option>
+                                        <option value="07">July</option>
+                                        <option value="08">August</option>
+                                        <option value="09">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+
+                            </div>
+                            <div class="col-sm-8 m-t-xs">
+                                <div style="width:20%;float:left;padding-top:7px;">
+                                    <label class="font-bold"><b>Employment Type:</b></label>
+                                </div>
+                              
+                                <div style="width:70%;float:left;padding-right:0;">
+                                    <select class="form-control field-select-sm" id="ddl_employment_type" ng-model="ddl_employment_type" ng-change="SelectEmploymentType(ddl_employment_type)">
+                                        <option value="" selected>--Select Here--</option>
+                                        <option ng-repeat="lst in employeeddl" value="{{lst.employment_type}}">{{lst.employmenttype_description}}</option>
+                                    </select>
+                                    <label class="text-danger small">{{lbl_requiredfield6}}</label>
+                                </div>
+                                <div style="width:10%;float:right;margin-left:5px;padding-right:2px">
+                                    @*<button class="btn btn-success" id="add" ng-click="btn_add()"><i class="fa fa-plus-circle"> </i> Add</button>*@
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="ibox-content">
+                        <div class="col-12 table-resposive">
+                            <table id="datalist_grid" class="table table-striped table-bordered table-hover table-responsive" style="width:100% !important;">
+                                <thead>
+                                    <tr>
+                                        <th width="12%">REMIT NBR</th>
+                                        <th width="28%">DESCRIPTION</th>
+                                        <th width="20%">REMITTANCE TYPE</th>
+                                        <th width="12%">STATUS</th>
+                                        <th width="15%">TOTAL PS</th>
+                                        <th width="15%">TOTAL GS</th>
+                                        <th width="18%">ACTIONS</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

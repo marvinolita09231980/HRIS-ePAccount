@@ -1,0 +1,491 @@
+﻿
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRIS-ePAccount</title>
+    <base href="/" />
+
+    <link href="~/Content/plugins/select2/select2.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="~/Content/font-awesome/css/font-awesome.css" rel="stylesheet" />
+
+    <!-- Data picker -->
+    <link href="~/Content/plugins/datapicker/datepicker3.css" rel="stylesheet">
+    <link href="~/Content/plugins/clockpicker/clockpicker.css" rel="stylesheet" />
+    <link href="~/Content/plugins/dataTables/datatables.min.css" rel="stylesheet" />
+
+    <link href="~/Content/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="~/Content/common.css" rel="stylesheet" />
+    <!-- Toastr style -->
+    <link href="~/Content/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+    <!-- Gritter -->
+    @*<link href="~/Content/plugins/gritter/jquery.gritter.css" rel="stylesheet">*@
+    <link href="~/Content/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+
+    <link href="~/Content/animate.css" rel="stylesheet">
+    <link href="~/Content/style.css" rel="stylesheet">
+
+
+    <script src="~/Scripts/ngSweetAlert.js"></script>
+
+    <script src="~/Angular/angular.min.js"></script>
+    <script src="~/Angular/ng-file-upload.min.js"></script>
+    <script src="~/Angular/ngApp.js"></script>
+
+    <script src="~/Angular/ng-SharedLayout.js"></script>
+
+    <script language="javascript" type="text/javascript">
+
+    var sessionTimeoutWarning   = @System.Configuration.ConfigurationManager.AppSettings["SessionWarning"].ToString(); //get session warning value from web config variable
+    var sessionTimeout          = @Session.Timeout; //get session timeout value from web config variable
+    var sTimeout                = sessionTimeoutWarning * 60000; //time to pop-up warning message
+    var set_time_var            = "";
+    var count                   = sessionTimeout * 60;
+    var counter                 = "";
+
+    //detect mouse click then call reset session time function
+    function mouse_detect(event) {
+        reset_session();
+    }
+
+    //detect mouse scroll then call reset session time function
+    function wheel_detect() {
+        reset_session();
+    }
+
+    //start session timer on page load
+    function onload_body() {
+        set_time();
+        timer();
+    }
+
+    function set_time() {
+        set_time_var = setTimeout('session_warning();', sTimeout);
+        counter = setInterval(timer, 1000);
+    }
+
+    function timer() {
+        count = count - 1;
+        if (count <= 0) {
+            setTimeout(function () {
+                swal({
+                    title: "Session Timeout",
+                    text: "You will be redirected to Login Page.",
+                    icon: "error",
+                    allowOutsideClick: false,
+                })
+                    .then(function () {
+                        clearInterval(counter);
+                        sessionStorage.clear();
+                        location.href = "../Login/Index"
+                        return;
+                    });
+            }, 1000);
+        }
+        $('#time_left').text(count);
+    }
+
+    function session_warning() {
+        setTimeout(function () {
+            toastr.options = {
+                closeOnHover: true,
+                closeButton: false,
+                progressBar: true,
+                showMethod: 'slideDown',
+                timeOut: 30000
+            };
+            toastr.error('Your session is about to end in ' + sessionTimeoutWarning + ' minutes, try refreshing the page!', 'You have been idle for too long.');
+
+        }, 1000);
+    }
+
+    function reset_session() {
+        toastr.clear();
+        var xmlHttp = null;
+        xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", "KeepAlive.aspx", true);
+        xmlHttp.send(null);
+
+        count = sessionTimeout * 60;
+        toast_time_out = 1;
+        clearTimeout(set_time_var);
+        clearInterval(counter);
+        set_time();
+    }
+    </script>
+
+    <style>
+        .row-height {
+            height: 40px !important;
+        }
+
+        .imgProfile {
+            border-radius: 50%;
+        }
+
+        .modal-xl {
+            width: 1300px;
+        }
+
+        .modal {
+            overflow: auto !important;
+        }
+
+        body {
+            padding-right: 0px !important;
+        }
+    </style>
+
+    <style type="text/css">
+        @@media only screen and (max-width: 450px) {
+            .menu-display-none {
+                font-size: 6px !important;
+            }
+        }
+    </style>
+
+    <style type="text/css">
+        @@media only screen and (max-width: 468px) {
+            .menu-display-none {
+                font-size: 9px !important;
+            }
+        }
+    </style>
+    <style type="text/css">
+        @@media only screen and (max-width: 300px) {
+            .menu-display-none {
+                font-size: 7px !important;
+            }
+        }
+    </style>
+
+</head>
+<body ng-app="ng_HRD_App" ng-controller="SharedLayoutCtrlr" id="main_body" onload="onload_body()" onmousedown="mouse_detect(event)" onwheel="wheel_detect()">
+    <div id="wrapper">
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav metismenu" id="side-menu">
+                    @*<li class="nav-header profile-container" style="margin-top:-20px;">
+                            <div class="row dropdown profile-container">
+                                <span>
+                                    <img alt="image" class="img-circle" src="{{imgprofile}}" height="155" width="155" />
+                                </span>
+                            </div>
+                            <div class="logo-element">
+                                ID+
+                            </div>
+                        </li>*@
+                    <li class="nav-header">
+                        
+                        <div class="dropdown profile-element">
+                            <span>
+                                <img alt="image" class="img-circle" src="{{imgprofile}}" height="50" width="50" />
+                            </span>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <span class="clear">
+                                    <span class="block m-t-xs">
+                                    </span> <span class="text-muted text-xs block">{{username}} </span>
+                                </span>
+                            </a>
+                            @*<ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li><a href="profile.html">My Profile</a></li>
+                                <li><a href="contacts.html">My Worklist</a></li>
+                                <li><a href="mailbox.html">My Password</a></li>
+                                <li class="divider"></li>
+                                <li><a ng-model="logout" ng-click="logout()">Logout</a></li>
+                            </ul>*@
+                        </div>
+                        @*<div class="logo-element">
+                            <span>
+                                <img alt="image" class="img-circle" src="{{imgprofile}}" height="50" width="50" />
+                            </span>
+                        </div>*@
+                    </li>
+
+                    <li ng-repeat="lst1 in MenuList" ng-if="lst1.menu_level == 1" class="xx">
+                        @* <a ng-if="lst1.hasUrl == 1" href="~/{{lst1.url_name}}/{{Action}}?menu_name={{lst1.menu_name}}" ng-click="setActive(lst1.id)"><i class="fa fa-sitemap"></i><span class="nav-label">{{lst1.menu_name}}</span><span class=""></span></a>*@
+                        <a ng-if="lst2.hasUrl == 1" href="" ng-click="setActive(lst1)">{{lst1.menu_name}}<span class=""></span></a>
+
+                        <a ng-if="lst1.hasUrl == 0" ng-click="collapse(lst1.isOpen,lst1.id,lst1.hasUrl)" id="{{lst1.id}}">
+                            <i class="{{lst1.menu_icon}}"></i><span class="nav-label">{{lst1.menu_name}}</span>
+                            <span ng-show="!lst1.isOpen" class="fa fa-angle-right pull-right"></span>
+                            <span ng-show="lst1.isOpen" class="fa fa-angle-down pull-right"></span>
+                        </a>
+                        <ul class="tranx nav nav-second-level" ng-show="lst1.isOpen">
+                            <li ng-repeat="lst2 in MenuList" ng-if="lst2.menu_level == 2 && lst2.menu_id_link == lst1.id ">
+                                @*<a ng-if="lst2.hasUrl == 1" href="~/{{lst2.url_name}}/{{Action}}?menu_name={{lst2.menu_name}}" ng-click="setActive(lst2.id)">{{lst2.menu_name}}<span class=""></span></a>*@
+                                <a ng-if="lst2.hasUrl == 1" href="" ng-click="setActive(lst2)">{{lst2.menu_name}}<span class=""></span></a>
+                                <a ng-if="lst2.hasUrl == 0" ng-click="collapse(lst2.isOpen,lst2.id,lst2.hasUrl)">
+                                    {{lst2.menu_name}}
+                                    <span ng-show="!lst2.isOpen" class="fa fa-angle-right pull-right"></span>
+                                    <span ng-show="lst2.isOpen" class="fa fa-angle-down pull-right"></span>
+                                </a>
+                                <ul class=" nav nav-third-level" ng-show="lst2.isOpen">
+                                    <li ng-repeat="lst3 in MenuList" ng-if="lst3.menu_level == 3 && lst2.id == lst3.menu_id_link ">
+                                        @*<a href="~/{{lst3.url_name}}}/{{Action}}?menu_name={{lst3.menu_name}}" ng-click="setActive(lst3.id)">{{lst3.menu_name}}</a>*@
+                                        <a href="" ng-click="setActive(lst3)">{{lst3.menu_name}}</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+        </nav>
+    </div>
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <a class="navbar-minimalize minimalize-styl-2 btn btn-success" href=""><i class="fa fa-bars"></i> </a>
+                    @*<form role="search" class="navbar-form-custom" action="http://webapplayers.com/inspinia_admin-v2.5/search_results.html">
+                            <div class="form-group">
+                                <input type="text" placeholder="Search for something..." class="form-control" name="top-search" id="top-search">
+                            </div>
+                        </form>*@
+                </div>
+                <ul class="nav navbar-top-links navbar-right">
+                    @*<li>
+                            <span class="m-r-sm text-muted welcome-message">Welcome to INSPINIA+ Admin Theme.</span>
+                        </li>*@
+                    @*<li class="dropdown">
+                            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                                <i class="fa fa-envelope"></i>  <span class="label label-warning">16</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-messages">
+                                <li>
+                                    <div class="dropdown-messages-box">
+                                        <a href="profile.html" class="pull-left">
+                                            <img alt="image" class="img-circle" src="img/a7.jpg">
+                                        </a>
+                                        <div class="media-body">
+                                            <small class="pull-right">46h ago</small>
+                                            <strong>Mike Loreipsum</strong> started following <strong>Monica Smith</strong>. <br>
+                                            <small class="text-muted">3 days ago at 7:58 pm - 10.06.2014</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <div class="dropdown-messages-box">
+                                        <a href="profile.html" class="pull-left">
+                                            <img alt="image" class="img-circle" src="img/a4.jpg">
+                                        </a>
+                                        <div class="media-body ">
+                                            <small class="pull-right text-navy">5h ago</small>
+                                            <strong>Chris Johnatan Overtunk</strong> started following <strong>Monica Smith</strong>. <br>
+                                            <small class="text-muted">Yesterday 1:21 pm - 11.06.2014</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <div class="dropdown-messages-box">
+                                        <a href="profile.html" class="pull-left">
+                                            <img alt="image" class="img-circle" src="img/profile.jpg">
+                                        </a>
+                                        <div class="media-body ">
+                                            <small class="pull-right">23h ago</small>
+                                            <strong>Monica Smith</strong> love <strong>Kim Smith</strong>. <br>
+                                            <small class="text-muted">2 days ago at 2:30 am - 11.06.2014</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <div class="text-center link-block">
+                                        <a href="mailbox.html">
+                                            <i class="fa fa-envelope"></i> <strong>Read All Messages</strong>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                                <i class="fa fa-bell"></i>  <span class="label label-primary">8</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-alerts">
+                                <li>
+                                    <a href="mailbox.html">
+                                        <div>
+                                            <i class="fa fa-envelope fa-fw"></i> You have 16 messages
+                                            <span class="pull-right text-muted small">4 minutes ago</span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="profile.html">
+                                        <div>
+                                            <i class="fa fa-twitter fa-fw"></i> 3 New Followers
+                                            <span class="pull-right text-muted small">12 minutes ago</span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="grid_options.html">
+                                        <div>
+                                            <i class="fa fa-upload fa-fw"></i> Server Rebooted
+                                            <span class="pull-right text-muted small">4 minutes ago</span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <div class="text-center link-block">
+                                        <a href="notifications.html">
+                                            <strong>See All Alerts</strong>
+                                            <i class="fa fa-angle-right"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>*@
+
+                    <li class="dropdown" ng-show="isShowFavorites">
+                        <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                            <i id="i_fav" class="fa fa-star"></i><span id="span_fav " class="menu-display-none">Favorites</span>Favorites</span>  @*<span class="label label-primary">8</span>*@
+                        </a>
+                        <ul class="dropdown-menu dropdown-alerts">
+                            <li ng-show="showAddFav" ng-click="addToFavorite()">
+                                <a>
+                                    <div>
+                                        <i class="fa fa-star-o fa-fw"></i> Add To Favorites
+                                    </div>
+                                </a>
+                            </li>
+                            <li ng-show="showRemoveFav" ng-click="removeToFavorite()">
+                                <a>
+                                    <div>
+                                        <i class="fa fa-star text-warning fa-fw"></i> Remove To Favorites
+                                    </div>
+                                </a>
+                            </li>
+
+
+                        </ul>
+                    </li>
+                    <li>
+                        <a ng-click="dl_manual()">
+                            <i class="fa fa-download"></i><span id="span_fav " class="menu-display-none"> Download Manual</span>
+                        </a>
+                    </li>
+                    <li>
+                        <b>|</b>
+                    </li>
+                    <li>
+                        <a ng-click="logout()">
+                            <i class="fa fa-sign-out"></i><span id="span_fav " class="menu-display-none"> Log out</span>
+                        </a>
+                    </li>
+                </ul>
+
+            </nav>
+        </div>
+
+        @RenderBody()
+
+    </div>
+    <!-- Mainly scripts -->
+    <script src="~/Scripts/jquery-2.1.1.js"></script>
+
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="~/Scripts/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <script src="~/Scripts/plugins/dataTables/datatables.min.js"></script>
+
+    <!-- Flot -->
+    <script src="~/Scripts/plugins/flot/jquery.flot.js"></script>
+    <script src="~/Scripts/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="~/Scripts/plugins/flot/jquery.flot.spline.js"></script>
+    <script src="~/Scripts/plugins/flot/jquery.flot.resize.js"></script>
+    <script src="~/Scripts/plugins/flot/jquery.flot.pie.js"></script>
+
+
+    <!-- Peity -->
+    <script src="~/Scripts/plugins/peity/jquery.peity.min.js"></script>
+    <script src="~/Scripts/demo/peity-demo.js"></script>
+
+    <!-- Custom and plugin javascript -->
+
+    <script src="~/Scripts/plugins/pace/pace.min.js"></script>
+
+    <!-- jQuery UI -->
+    <script src="~/Scripts/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+    <!-- GITTER -->
+    <script src="~/Scripts/plugins/gritter/jquery.gritter.min.js"></script>
+
+    <!-- Sparkline -->
+    <script src="~/Scripts/plugins/sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- Sparkline demo data  -->
+    <script src="~/Scripts/demo/sparkline-demo.js"></script>
+
+    <!-- ChartJS-->
+    <script src="~/Scripts/plugins/chartJs/Chart.min.js"></script>
+
+    <!-- Toastr -->
+    <script src="~/Scripts/plugins/toastr/toastr.min.js"></script>
+
+    <script src="~/Scripts/inspinia.js"></script>
+
+    <!-- iCheck -->
+    <script src="~/Scripts/plugins/iCheck/icheck.min.js"></script>
+
+    <!-- Data picker -->
+    <script src="~/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="~/Scripts/plugins/clockpicker/clockpicker.js"></script>
+    <!-- Date range picker -->
+    <script src="~/Scripts/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="~/Scripts/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+
+    <script src="~/Scripts/moment.js"></script>
+    <script src="~/Scripts/plugins/select2/select2.full.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+
+            $('#data_1 .input-group.date').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true,
+                format: "yyyy/mm/dd"
+            })
+
+            $('#datetimepicker1').datepicker({
+                maxDate: moment(),
+                format: 'yyyy-mm-dd HH:mm:ss',
+            });
+            $('.datetimepicker2').datepicker({
+                defaultDate: "",
+                maxDate: moment(),
+                format: 'YYYY-MM-DD hh:mm:ss',
+            });
+
+        });
+
+        $(".select2_demo_3").select2({
+            placeholder: "Select Employee Name. . . ",
+            allowClear: true,
+            //dropdownParent: $("#main_modal")
+        });
+    </script>
+
+
+</body>
+</html>

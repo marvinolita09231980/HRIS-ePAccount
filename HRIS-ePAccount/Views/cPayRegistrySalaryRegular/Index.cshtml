@@ -1,0 +1,940 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<style type="text/css">
+    .field {
+        border-radius: 3px;
+        height: 35px;
+        font-size: 18px;
+    }
+
+    .field-arrow {
+        font-size: 26px;
+    }
+
+    .require-field {
+        border: 1px solid red !important;
+    }
+    .inputfield {
+        height: 30px;
+        font-weight:bold;
+    }
+</style>
+<script src="~/Angular/ng-cPayRegistrySalaryRegular.js"></script>
+<!-- The Modal - Generating Report -->
+<div class="modal fade" id="Loading_master">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog">
+            @*<span class="fa fa-spinner fa-spin fa-3x text-white"></span>*@
+            <div class="spiner-example">
+                <div class="sk-spinner sk-spinner-wandering-cubes ">
+                    <div class="sk-cube1"></div>
+                    <div class="sk-cube2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section ng-app="ng_HRD_App" ng-controller="cPayRegistrySalaryRegular_ctrlr">
+
+
+    <!-- The modal -->
+    <div class="modal fade" id="main_modal" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header modal-header-add-edit text-white">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div style="float:left;">
+                        <h4 class="modal-title" id="modalLabelSmall">{{ModalTitle}}</h4>
+                    </div>
+
+                    <label id="" class="badge badge-danger" style="color:White;font-size:Small; margin-left:150px;padding-top:5px;">{{post_status}}</label>
+                </div>
+
+                <div class="modal-body with-background">
+
+                    <div class="form-group row">
+
+                        <div class="col-lg-2" style="padding-top:5px;">
+                            <label class="font-bold">Employee's Name:</label>
+                        </div>
+                        <div class="col-lg-7">
+                            <input id="txtb_empl_name" ng-disabled="true" ng-model="txtb_empl_name" class="form-control inputfield" disabled />
+                        </div>
+
+                        <div class="col-lg-1" style="padding-top:5px;  padding-right:0px;">
+                            <label class="font-bold">ID Nbr.:</label>
+                        </div>
+
+                        <div class="col-lg-2">
+                            <input id="txtb_empl_id" ng-disabled="true" ng-model="txtb_empl_id" class="form-control inputfield text-center" disabled />
+                        </div>
+
+
+                    </div>
+                    <div class="row" style="margin-top:-15px;">
+                        <hr />
+                    </div>
+                    <div class="form-group row" style="margin-top:-18px;">
+                        <div class="col-lg-2" style="padding-top:10px;">
+                            <label class="font-bold">Position Title:</label>
+                        </div>
+                        <div class="col-lg-10" style="padding-top:5px;">
+                            <input id="txtb_position" ng-disabled="true" ng-model="txtb_position" class="form-control inputfield" disabled />
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top:-15px;">
+                        <hr />
+                    </div>
+
+                    <div class="form-group row" style="margin-top:-18px;">
+                        <div class="col-lg-2" style="padding-top:10px;">
+                            <label class="font-bold">Department:</label>
+                        </div>
+                        <div class="col-lg-10" style="padding-top:5px;">
+                            <input id="txtb_department" ng-disabled="true" ng-model="txtb_department" class="form-control inputfield" disabled />
+                        </div>
+                    </div>
+
+                    <div class="form-group row" style="margin-top:-18px;">
+                        <div class="col-lg-2" style="padding-top:10px;">
+                            <label class="font-bold">Sub-Department:</label>
+                        </div>
+                        <div class="col-lg-10" style="padding-top:5px;">
+                            <input id="txtb_sub_department" ng-disabled="true" ng-model="txtb_sub_department" class="form-control inputfield" disabled />
+                        </div>
+                    </div>
+
+                    <div class="form-group row" style="margin-top:-18px;">
+                        <div class="col-lg-2" style="padding-top:10px;">
+                            <label class="font-bold">Division:</label>
+                        </div>
+                        <div class="col-lg-10" style="padding-top:5px;">
+                            <input id="txtb_division" ng-disabled="true" ng-model="txtb_division" class="form-control inputfield" disabled />
+                        </div>
+                    </div>
+
+                    <div class="form-group row" style="margin-top:-18px;">
+                        <div class="col-lg-2" style="padding-top:10px;">
+                            <label class="font-bold">Section:</label>
+                        </div>
+                        <div class="col-lg-10" style="padding-top:5px;">
+                            <input id="txtb_section" ng-disabled="true" ng-model="txtb_section" class="form-control inputfield" disabled />
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:-15px;">
+                        <hr />
+                    </div>
+
+                    <div class="form-group row" style="margin-top:-18px;">
+                        <div class="col-lg-2" style="padding-top:10px;">
+                            <label class="font-bold">Monthly Rate:</label>
+                        </div>
+                        <div class="col-lg-2" style="padding-top:5px;">
+                            <input id="txtb_monthly_rate" ng-disabled="true" ng-model="txtb_monthly_rate" class="form-control inputfield text-right" disabled />
+                        </div>
+
+                        <div class="col-lg-2" style="padding-top:10px;">
+                            <label class="font-bold">LWOP Days:</label>
+                        </div>
+                        <div class="col-lg-2" style="padding-top:5px;">
+                            <input id="txtb_lwop_days" ng-disabled="true" ng-model="txtb_lwop_days" class="form-control inputfield text-right" disabled />
+                        </div>
+
+                        <div class="col-lg-2" style="padding-top:10px;">
+                            <label class="font-bold">Lates (in min):</label>
+                        </div>
+                        <div class="col-lg-2" style="padding-top:5px;">
+                            <input id="txtb_lates_minutes" ng-disabled="true" ng-model="txtb_lates_minutes" class="form-control inputfield text-center" disabled />
+                        </div>
+                    </div>
+
+                    <div class="form-group row" style="margin-top:-18px;">
+                        <div class="col-lg-2" style="padding-top:10px;">
+                            <label class="font-bold">Remarks:</label>
+                        </div>
+                        <div class="col-lg-10" style="padding-top:5px;">
+                            <textarea id="txtb_remarks" ng-disabled="true" ng-model="txtb_remarks" class="form-control inputfield text-right" style="height:50px;" disabled> </textarea>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:-15px;">
+                        <hr />
+                    </div>
+                    <div class="form-group row" style="margin-top:-18px;">
+
+                        <div class="col-lg-4" style="padding-top:10px;">
+                            <h2 style="margin-top:-8px; font-weight:bold;">Summary Totals</h2>
+                            <div class="form-group row">
+                                <div class="col-lg-5" style="padding-top:10px;">
+                                    <label class="font-bold">PERA:</label>
+                                </div>
+                                <div class="col-lg-7" style="padding-top:5px;">
+                                    <input id="txtb_pera" ng-disabled="true" ng-model="txtb_pera" class="form-control inputfield text-right" disabled />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-lg-5" style="padding-top:10px;">
+                                    <label class="font-bold">LWOP (MR) :</label>
+                                </div>
+                                <div class="col-lg-7" style="padding-top:5px;">
+                                    <input id="txtb_lwop_mr" ng-disabled="true" ng-model="txtb_lwop_mr" class="form-control inputfield text-right" disabled />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-lg-5" style="padding-top:10px;">
+                                    <label class="font-bold">LWOP (PERA) :</label>
+                                </div>
+                                <div class="col-lg-7" style="padding-top:5px;">
+                                    <input id="txtb_lwop_pera" ng-disabled="true" ng-model="txtb_lwop_pera" class="form-control inputfield text-right" disabled />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-lg-5" style="padding-top:10px;">
+                                    <label class="font-bold">Lates in Amt :</label>
+                                </div>
+                                <div class="col-lg-7" style="padding-top:5px;">
+                                    <input id="txtb_lates_amt" ng-disabled="true" ng-model="txtb_lates_amt" class="form-control inputfield text-right" disabled />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-lg-5" style="padding-top:10px;">
+                                    <label class="font-bold">Gross Pay :</label>
+                                </div>
+                                <div class="col-lg-7" style="padding-top:5px;">
+                                    <input id="txtb_gross_pay" ng-disabled="true" ng-model="txtb_gross_pay" class="form-control inputfield text-right" disabled />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-lg-5" style="padding-top:10px;">
+                                    <label class="font-bold">Mandatory :</label>
+                                </div>
+                                <div class="col-lg-7" style="padding-top:5px;">
+                                    <input id="txtb_mandatory" ng-disabled="true" ng-model="txtb_mandatory" class="form-control inputfield text-right" disabled />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-lg-5" style="padding-top:10px;">
+                                    <label class="font-bold">Optional :</label>
+                                </div>
+                                <div class="col-lg-7" style="padding-top:5px;">
+                                    <input id="txtb_optional" ng-disabled="true" ng-model="txtb_optional" class="form-control inputfield text-right" disabled />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-lg-5" style="padding-top:10px;">
+                                    <label class="font-bold">Loans :</label>
+                                </div>
+                                <div class="col-lg-7" style="padding-top:5px;">
+                                    <input id="txtb_loans" ng-disabled="true" ng-model="txtb_loans" class="form-control inputfield text-right" disabled />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-lg-5" style="padding-top:10px;">
+                                    <label class="font-bold">Net Pay :</label>
+                                </div>
+                                <div class="col-lg-7" style="padding-top:5px;">
+                                    <input id="txtb_net_pay" ng-disabled="true" ng-model="txtb_net_pay" class="form-control inputfield text-right" disabled />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-lg-5" style="padding-top:10px;">
+                                    <label class="font-bold">Net Pay(1H) :</label>
+                                </div>
+                                <div class="col-lg-7" style="padding-top:5px;">
+                                    <input id="txtb_net_pay1" ng-disabled="true" ng-model="txtb_net_pay1" class="form-control inputfield text-right" disabled />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-lg-5" style="padding-top:10px;">
+                                    <label class="font-bold">Net Pay(2H) :</label>
+                                </div>
+                                <div class="col-lg-7" style="padding-top:5px;">
+                                    <input id="txtb_net_pay2" ng-disabled="true" ng-model="txtb_net_pay2" class="form-control inputfield text-right" disabled />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8" style="padding-top:5px;">
+                            <div class="form-group row">
+                                <div class="col-lg-12 m-b-md">
+                                    <div class="tabs-container">
+                                        <ul class="nav nav-tabs">
+                                            <li class=""><a data-toggle="tab" href="#tab-1"><i class="fa fa-university"></i>Mandatory</a></li>
+                                            <li class=""><a data-toggle="tab" href="#tab-2"><i class="fa fa-building"></i>Optional</a></li>
+                                            <li class="active"><a data-toggle="tab" href="#tab-3"><i class="fa fa-archive"></i>Loans</a></li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div id="tab-1" class="tab-pane">
+                                                <div class="panel-body">
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-3" style="padding-top:10px;">
+                                                            <label class="font-bold">GSIS - GS :</label>
+                                                        </div>
+                                                        <div class="col-lg-3" style="padding-top:5px;">
+                                                            <input id="txtb_gsis_gs" ng-disabled="true" ng-model="txtb_gsis_gs" class="form-control inputfield text-right" disabled />
+                                                        </div>
+                                                        <div class="col-lg-3" style="padding-top:10px;">
+                                                            <label class="font-bold">HDMF-PS :</label>
+                                                        </div>
+                                                        <div class="col-lg-3" style="padding-top:5px;">
+                                                            <input id="txtb_hdmf_ps" ng-disabled="true" ng-model="txtb_hdmf_ps" class="form-control inputfield text-right" disabled />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-3" style="padding-top:10px;">
+                                                            <label class="font-bold">GSIS - PS :</label>
+                                                        </div>
+                                                        <div class="col-lg-3" style="padding-top:5px;">
+                                                            <input id="txtb_gsis_ps" ng-disabled="true" ng-model="txtb_gsis_ps" class="form-control inputfield text-right" disabled />
+                                                        </div>
+                                                        <div class="col-lg-3" style="padding-top:10px;">
+                                                            <label class="font-bold">PHIC - GS :</label>
+                                                        </div>
+                                                        <div class="col-lg-3" style="padding-top:5px;">
+                                                            <input id="txtb_phic_gs" ng-disabled="true" ng-model="txtb_phic_gs" class="form-control inputfield text-right" disabled />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-3" style="padding-top:10px;">
+                                                            <label class="font-bold">SIF :</label>
+                                                        </div>
+                                                        <div class="col-lg-3" style="padding-top:5px;">
+                                                            <input id="txtb_sif" ng-disabled="true" ng-model="txtb_sif" class="form-control inputfield text-right" disabled />
+                                                        </div>
+                                                        <div class="col-lg-3" style="padding-top:10px;">
+                                                            <label class="font-bold">PHIC - PS :</label>
+                                                        </div>
+                                                        <div class="col-lg-3" style="padding-top:5px;">
+                                                            <input id="txtb_phic_ps" ng-disabled="true" ng-model="txtb_phic_ps" class="form-control inputfield text-right" disabled />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-3" style="padding-top:10px;">
+                                                            <label class="font-bold">HDMF-GS :</label>
+                                                        </div>
+                                                        <div class="col-lg-3" style="padding-top:5px;">
+                                                            <input id="txtb_hdmf_gs" ng-disabled="true" ng-model="txtb_hdmf_gs" class="form-control inputfield text-right" disabled />
+                                                        </div>
+                                                        <div class="col-lg-3" style="padding-top:10px;">
+                                                            <label class="font-bold">BIR Tax :</label>
+                                                        </div>
+                                                        <div class="col-lg-3" style="padding-top:5px;">
+                                                            <input id="txtb_bir_tax" ng-disabled="true" ng-model="txtb_bir_tax" class="form-control inputfield text-right" disabled />
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div id="tab-2" class="tab-pane">
+                                                <div class="panel-body">
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-4">
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">GSIS-OULI:</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_gsis_ouli" ng-disabled="true" ng-model="txtb_gsis_ouli" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">OULI-45 :</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_gsis_ouli45" ng-disabled="true" ng-model="txtb_gsis_ouli45" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">OULI-50 :</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_gsis_ouli50" ng-disabled="true" ng-model="txtb_gsis_ouli50" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">OULI-55 :</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_gsis_ouli55" ng-disabled="true" ng-model="txtb_gsis_ouli55" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">OULI-60 :</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_gsis_ouli60" ng-disabled="true" ng-model="txtb_gsis_ouli60" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">OULI-65 :</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_gsis_ouli65" ng-disabled="true" ng-model="txtb_gsis_ouli65" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">SSS :</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_sss" ng-disabled="true" ng-model="txtb_sss" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">HDMF-PS2 :</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_hdmf_ps2" ng-disabled="true" ng-model="txtb_hdmf_ps2" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">HHDMFMP2:</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_hdmf_mp2" ng-disabled="true" ng-model="txtb_hdmf_mp2" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">HDMFLCD:</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_hdmf_lcd" ng-disabled="true" ng-model="txtb_hdmf_lcd" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">PHIL LF:</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_phil_lf" ng-disabled="true" ng-model="txtb_phil_lf" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">EHP :</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_ehp" ng-disabled="true" ng-model="txtb_ehp" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">HIP :</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_hip" ng-disabled="true" ng-model="txtb_hip" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">CEAP :</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_ceap" ng-disabled="true" ng-model="txtb_ceap" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">GSIS A.I :</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_gsis_ai" ng-disabled="true" ng-model="txtb_gsis_ai" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">(Reserved1):</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_reserve1_opt" ng-disabled="true" ng-model="txtb_reserve1_opt" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">(Reserved2):</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_reserve2_opt" ng-disabled="true" ng-model="txtb_reserve2_opt" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">(Reserved3):</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_reserve3_opt" ng-disabled="true" ng-model="txtb_reserve3_opt" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">(Reserved4):</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_reserve4_opt" ng-disabled="true" ng-model="txtb_reserve4_opt" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">(Reserved5):</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_reserve5_opt" ng-disabled="true" ng-model="txtb_reserve5_opt" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div id="tab-3" class="tab-pane active">
+                                                <div class="panel-body">
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-4">
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">Consol :</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_consol" ng-disabled="true" ng-model="txtb_consol" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">Pol. Reg :</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_pol_reg" ng-disabled="true" ng-model="txtb_pol_reg" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">Pol. Optnl:</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_pol_opt" ng-disabled="true" ng-model="txtb_pol_opt" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">OULI Loan:</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_ouli_loan" ng-disabled="true" ng-model="txtb_ouli_loan" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">Emergency:</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_emergency" ng-disabled="true" ng-model="txtb_emergency" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">E-Card:</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_e_card" ng-disabled="true" ng-model="txtb_e_card" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">Educ. Asst:</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_educ_asst" ng-disabled="true" ng-model="txtb_educ_asst" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">Real State:</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_real_state" ng-disabled="true" ng-model="txtb_real_state" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">SOS:</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_sos" ng-disabled="true" ng-model="txtb_sos" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">MPL:</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_mpl" ng-disabled="true" ng-model="txtb_mpl" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">Housing:</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_housing" ng-disabled="true" ng-model="txtb_housing" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">Calamity:</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_calamity" ng-disabled="true" ng-model="txtb_calamity" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">CCMPC :</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_ccmpc" ng-disabled="true" ng-model="txtb_ccmpc" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">NICO:</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_nico" ng-disabled="true" ng-model="txtb_nico" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">Net. Bnk:</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_net_bank" ng-disabled="true" ng-model="txtb_net_bank" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">NHMFC :</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_nhmfc" ng-disabled="true" ng-model="txtb_nhmfc" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">NAFC :</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_nafc" ng-disabled="true" ng-model="txtb_nafc" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">GSIS HELP :</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_gsis_help" ng-disabled="true" ng-model="txtb_gsis_help" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">GSISHOUS :</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_gsis_hous" ng-disabled="true" ng-model="txtb_gsis_hous" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">(Reserved1):</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_reserve1_loan" ng-disabled="true" ng-model="txtb_reserve1_loan" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">(Reserved2):</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_reserve2_loan" ng-disabled="true" ng-model="txtb_reserve2_loan" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">(Reserved3):</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_reserve3_loan" ng-disabled="true" ng-model="txtb_reserve3_loan" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">(Reserved4):</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_reserve4_loan" ng-disabled="true" ng-model="txtb_reserve4_loan" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div style="float:left; width:50%; padding:5px;">
+                                                                    <label class="font-bold">(Reserved5):</label>
+                                                                </div>
+                                                                <div style="float:right; width:50%;">
+                                                                    <input id="txtb_reserve5_loan" ng-disabled="true" ng-model="txtb_reserve5_loan" class="form-control inputfield text-right" disabled />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 10px 30px 30px 10px !important;">
+                    <button type="button" ng-show="true" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row wrapper border-bottom white-bg page-heading" style="background-color:#507CD1">
+        <div class="col-lg-3">
+            <h2 class="text-white">{{txtb_payroll_template}}</h2>
+           
+        </div>
+
+        <div class="col-lg-6" style="margin-top:20px;">
+            <input type="search" class="form-control" ng-model="search_box" ng-keyup="search_in_list(search_box,'datalist_grid')" placeholder="Search ....">
+        </div>
+
+        <div class="col-lg-3" style="margin-top:20px;">
+            <button type="button" class="btn btn-primary btn-block" ng-click="BacktoPayrollRegistry()" style="font-weight:bold;"><i class="fa fa-arrow-left"></i>&nbsp;&nbsp;&nbsp;Back To Payroll Registry</button>
+        </div>
+
+
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;">Show</span>
+                                <select class="form-control field-select-sm" style="width:30%;float:left;" ng-model="rowLen" ng-change="setNumOfRow(rowLen,'datalist_grid')">
+                                    <option value="5">5</option>
+                                    <option value="10" selected>10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                </select>
+                                <span class="font-bold" style="float:left;margin-top:9px;margin-left:10px;">entries</span>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div style="width:40%; float:left;">
+                                    <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;font-weight:bold;">Payroll Year:</span>
+                                </div>
+                                <div style="width:60%; float:right;">
+                                    <input id="txtb_payroll_year" ng-disabled="true" ng-model="txtb_payroll_year" style="font-weight:bold;" class="form-control" />
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div style="width:30%; float:left;">
+                                    <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;font-weight:bold;">Month:</span>
+                                </div>
+                                <div style="width:70%; float:right;">
+                                    <input id="txtb_payroll_month" ng-disabled="true" ng-model="txtb_payroll_month" style="font-weight:bold;" class="form-control" />
+
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+
+                        <div class="row" style="margin-top:5px;">
+                            <div class="col-sm-4">
+
+
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div style="width:40%; float:left;">
+                                    <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;font-weight:bold;">Employment Type:</span>
+                                </div>
+                                <div style="width:60%; float:right;">
+                                    <input id="txtb_employment_type" ng-disabled="true" ng-model="txtb_employment_type" style="font-weight:bold;" class="form-control" />
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div style="width:30%; float:left;">
+                                    <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;font-weight:bold;">Payroll Type:</span>
+                                </div>
+                                <div style="width:70%; float:right;">
+                                    <input id="txtb_payroll_type" ng-disabled="true" ng-model="txtb_payroll_type" style="font-weight:bold;" class="form-control" />
+                                </div>
+
+                            </div>
+
+
+
+
+
+
+                        </div>
+
+                        <div class="row" style="margin-top:5px;">
+                            <div class="col-sm-3">
+                                
+
+                            </div>
+                            <div class="col-sm-1">
+
+                            </div>
+
+                            <div class="col-sm-8">
+                                <div style="width:19%; float:left;">
+                                    <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;font-weight:bold;">Payroll Template:</span>
+                                </div>
+                                <div style="width:81%; float:right;">
+                                    <input id="txtb_payroll_template" ng-disabled="true" ng-model="txtb_payroll_template" style="font-weight:bold;" class="form-control" />
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        @*<div class="row" style="margin-top:5px;">
+                                <div class="col-sm-3">
+                                    <button type="button" class="btn btn-primary btn-block" ng-click="BacktoPayrollRegistry()" style="font-weight:bold;"><i class="fa fa-arrow-left"></i>&nbsp;&nbsp;&nbsp;Back To Payroll Registry</button>
+
+                                </div>
+                                <div class="col-sm-1">
+
+                                </div>
+
+                                <div class="col-sm-8">
+                                    <div style="width:19%; float:left;">
+                                        <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;">Payroll Group:</span>
+                                    </div>
+                                    <div style="width:81%; float:right;">
+                                        <select class="form-control field-select-sm" id="ddl_payrollgroup_nbr" ng-model="ddl_payrollgroup_nbr">
+                                            <option value="" selected>--Select Here--</option>
+                                            <option ng-repeat="lst in payrollgroup_nbr" ng-click="SelectPayrollGroup(lst)" value="{{lst.payroll_group_nbr}}">{{lst.grouping_descr}}</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+
+
+                            </div>*@
+
+                    </div>
+                    <div class="ibox-content">
+                        <div class="col-12 table-resposive">
+                            <table id="datalist_grid" class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th width="8%">ID Nbr.</th>
+                                        <th width="22%">Employee Name</th>
+                                        <th width="25%">Position Title</th>
+                                        <th width="10%">Gross Pay</th>
+                                        <th width="10%">Net Pay</th>
+                                        @*<th width="10%">Post Status</th>*@
+                                        <th width="8%">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+    <div class="modal fade" id="loading_data">
+        <div class="modal-dialog modal-lg">
+            <div class="sk-spinner sk-spinner-cube-grid" style="height:250px;width:250px;">
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="row" style="padding-top:5px;">
+                    <div class="col-sm-12">
+                        <div style="width:40%; float:left;" class="no-padding">
+                            <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;color:white">LOADING</span>
+                        </div>
+                        <div style="width:60%; float:right;" class="no-padding">
+                            <div class="sk-spinner sk-spinner-three-bounce" style="margin-top:6px;">
+                                <div class="sk-bounce1" style="background-color:white"></div>
+                                <div class="sk-bounce2" style="background-color:white"></div>
+                                <div class="sk-bounce3" style="background-color:white"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</section>

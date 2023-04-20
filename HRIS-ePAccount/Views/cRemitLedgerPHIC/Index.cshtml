@@ -1,0 +1,916 @@
+﻿@*// **********************************************************
+// Page Name    : Remittance Details (PHIC)
+// Purpose      : Index for Remittance Details (PHIC)
+// Created By   : Vincent Jade Alivio
+// Created Date : October 10, 2019
+// Updated Date : -- -- ---
+// ***********************************************************@
+
+<style type="text/css">
+    .field {
+        border-radius: 3px;
+        height: 35px;
+        font-size: 18px;
+    }
+
+    .field-arrow {
+        font-size: 26px;
+    }
+
+    .require-field {
+        border: 1px solid red !important;
+    }
+    .font-bold{
+        font-weight:bold!important;
+    }
+</style>
+
+<script src="~/Angular/ng-cRemitLedgerPHIC.js"></script>
+
+<section ng-app="ng_HRD_App" ng-controller="cRemitLedgerPHIC_ctrlr">
+
+    <!-- The modal for Add/Edit-->
+    <div class="modal fade" id="main_modal" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" aria-hidden="true" style="overflow-y:scroll">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content animated flipInY modal-content-add-edit">
+                <div class="modal-header modal-header-add-edit text-white">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="modalLabelSmall">{{ModalTitle}}</h4>
+                </div>
+
+                <div class="modal-body with-background" style="padding-top:10px;padding-bottom:10px;">
+
+                    <div class="form-group row">
+                        <div class="col-sm-3" style="padding-right:0px;padding-top:5px;">
+                            <span class="pull-left font-bold">Remittance Nbr:</span>
+                        </div>
+                        <div class="col-sm-3 ">
+                            <b><input class="form-control text-center" disabled style="font-weight:bold" ng-model="txtb_remittance_ctrl_nbr" /></b>
+                        </div>
+
+                        <div class="col-sm-3" style="display:none">
+                            <b><span class="pull-left font-bold" style="padding-top:5px;">Remittance Status:</span></b>
+                        </div>
+                        <div class="col-sm-3" style="display:none">
+                            <input class="form-control text-center text-danger" disabled ng-model="txtb_remittance_status" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-3" style="padding-right:0px">
+                            <span class="pull-left font-bold" style="padding-top:5px;">Remittance Year:</span>
+                        </div>
+                        <div class="col-sm-3">
+                            <b><input class="form-control text-center" disabled ng-model="txtb_remittance_year" id="txtb_remittance_year" /></b>
+                        </div>
+
+                        <div class="col-sm-3 m-t-xxs" style="padding-right:0px">
+                            <span class="pull-left font-bold" style="padding-top:5px;">Remittance Month:</span>
+                        </div>
+                        <div class="col-sm-3">
+                            <b><input class="form-control text-center" disabled ng-model="txtb_remittance_month" id="txtb_remittance_month" /></b>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-3 m-t-xxs" style="padding-right:0px">
+                            <b><span class="pull-left font-bold" style="padding-top:5px;">Employment Type:</span></b>
+                        </div>
+                        <div class="col-sm-9">
+                            <b><input class="form-control" disabled ng-model="txtb_employment_type" /></b>
+                        </div>
+
+
+                    </div>
+                    <div class="row" style="margin-top:-15px;">
+                        <hr style="border-color:cadetblue; border:0.5px solid cadetblue;" />
+                    </div>
+                    <div class="form-group row" style="margin-top:-15px;">
+                        <div class="col-sm-3">
+                            <label class="font-bold" style="padding-top:5px;">Vch. Ctrl Nbr.:</label>
+                            <span class="text-danger font-bold pull-right" style="display:inline-block;margin-right:-5px;">*</span>
+                        </div>
+                        <div class="col-sm-9">
+                            <select class="form-control" id="ddl_voucher_nbr" ng-model="ddl_voucher_nbr" ng-change="select_ddl_voucher_nbr(ddl_voucher_nbr)" ng-show="showvoucher_nbr">
+                                <option value="" selected>--Select Here--</option>
+                                <option ng-repeat="lst in lst_voucher track by $index" value="{{lst.voucher_nbr}}">{{lst.voucher_nbr}}&nbsp;-&nbsp;{{lst.payroll_registry_descr}}</option>
+                            </select>
+                            <input id="txtb_employeename" ng-model="txtb_voucher_nbr_disabled" class="form-control" style="" disabled ng-show="!showvoucher_nbr" />
+                            <label class="text-danger small">{{lbl_requiredfield1}}</label>
+
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top:-15px;">
+                        <hr style="border-color:cadetblue; border:0.5px solid cadetblue;" />
+                    </div>
+
+                    <div class="form-group row" style="margin-top:-15px;">
+                        <div class="col-sm-3" style="display:none;">
+                            <label class="font-bold" style="padding-top:5px;">Voucher Nbr.:</label>
+                        </div>
+                        <div class="col-sm-4" style="padding-right:0px !important;display:none;">
+                            <input id="txtb_voucher_nbr" ng-model="txtb_voucher_nbr" class="form-control text-center" style="" disabled />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <div style="width:26%;float:left;">
+                                <label class="font-bold">Pay Reg Nbr.:</label>
+                            </div>
+                            <div style="width:16%;float:left;">
+                                <input id="txtb_registry_nbr" ng-model="txtb_registry_nbr" class="form-control text-center no-padding" style="" disabled />
+
+                            </div>
+                            <div style="width:13%;float:left;">
+                                <span class="pull-left font-bold" style="padding-left:6px;padding-top:5px;">Pay Year:</span>
+                            </div>
+                            <div style="width:14%;float:left;">
+                                <input class="form-control text-center" disabled ng-model="txtb_payroll_year" />
+                            </div>
+
+                            <div style="width:15%;float:left;">
+                                <span class="pull-left font-bold" style="padding-left:6px;padding-top:5px;">Pay Month:</span>
+                            </div>
+                            <div style="width:16%;float:left;">
+                                <input class="form-control text-center" disabled ng-model="txtb_payroll_month_word" />
+                                <input class="form-control text-center" ng-show="false" ng-model="txtb_payroll_month" />
+                                <input class="form-control text-center" ng-show="false" ng-model="txtb_remittance_month_code" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top:-15px;">
+                        <hr style="border-color:cadetblue; border:0.5px solid cadetblue;" />
+                    </div>
+
+                    <div class="form-group row" style="margin-top:-15px;">
+                        <div class="col-sm-3" style="padding-right:0px">
+                            <label class="font-bold" style="padding-top:5px;">Employee's Name:</label><label class="text-danger"> *</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <select class="form-control" id="ddl_employee_name" ng-model="ddl_employee_name" ng-change="select_ddl_employee(ddl_employee_name)" ng-show="showemployee">
+                                <option value="" selected>--Select Here--</option>
+                                <option ng-repeat="lst in employees track by $index" value="{{lst.empl_id}}">{{lst.employee_name}}</option>
+                            </select>
+                            <input id="txtb_employeename" ng-model="txtb_employeename" class="form-control" style="" disabled ng-show="!showemployee" />
+                            <label class="text-danger small">{{lbl_requiredfield2}}</label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-3 m-t-xxs">
+                            <label class="font-bold" style="padding-top:5px;">ID Nbr.:</label>
+                        </div>
+                        <div class="col-sm-2 m-t-xxs">
+                            <input id="txtb_empl_id" ng-model="txtb_empl_id" class="form-control text-center" style="" disabled />
+                        </div>
+                        <div class="col-sm-3 m-t-xxs">
+                            <label class="font-bold pull-right" style="margin-right:5px; padding-top:5px;">PHIC Nbr.:</label>
+                        </div>
+                        <div class="col-sm-4 m-t-xxs">
+                            <input id="txtb_phic_nbr" ng-model="txtb_phic_nbr" class="form-control text-center" style="" disabled />
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:-15px;">
+                        <hr style="border-color:cadetblue; border:0.5px solid cadetblue;" />
+                    </div>
+
+                    <div class="form-group row" style="margin-top:-15px;">
+                        <div class="col-sm-3 m-t-xxs" style="padding-right:0px">
+                            <span class="pull-left font-bold" style="padding-top:5px;">Payroll PS Amt.:</span><label class="text-danger"> *</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input class="form-control text-right" style="" ng-model="txtb_payroll_amount_ps" id="txtb_payroll_amount_ps" ng-disabled="disable_edit_ps" />
+                            <label class="text-danger small">{{lbl_requiredfield4}}</label>
+                        </div>
+                        <div class="col-sm-3 m-t-xxs" style="padding-right:0px">
+                            <span class="pull-left font-bold" style="padding-top:5px;">Payroll GS Amt.:</span><label class="text-danger"> *</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input class="form-control text-right" style="padding-top:5px;" ng-model="txtb_payroll_amount_gs" id="txtb_payroll_amount_gs" ng-disabled="disable_edit_ps" />
+                            <label class="text-danger small">{{lbl_requiredfield3}}</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-3 m-t-xxs" style="padding-right:0px">
+                            <span class="pull-left font-bold">Uploaded PS Amt.:</span>
+                        </div>
+                        <div class="col-sm-3">
+                            <input class="form-control text-right" style="" ng-model="txtb_uploaded_amount_ps" id="txtb_uploaded_amount_ps" ng-disabled="disable_u_edit_ps" />
+                            <label class="text-danger small">{{lbl_requiredfield6}}</label>
+                        </div>
+                        <div class="col-sm-3 m-t-xxs" style="padding-right:0px">
+                            <span class="pull-left font-bold">Uploaded GS Amt.:</span>
+                        </div>
+                        <div class="col-sm-3">
+                            <input class="form-control text-right" style="" ng-model="txtb_uploaded_amount_gs" id="txtb_uploaded_amount_gs" ng-disabled="disable_u_edit_ps" />
+                            <label class="text-danger small">{{lbl_requiredfield5}}</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-3 m-t-xxs" style="padding-right:0px">
+                            <span class="pull-left font-bold">Override PS Amt.:</span>
+                        </div>
+                        <div class="col-sm-3">
+                            <input class="form-control text-right" style="" ng-model="txtb_override_amount_ps" id="txtb_override_amount_ps" ng-disabled="disable_edit" />
+                            <label class="text-danger small">{{lbl_requiredfield8}}</label>
+                        </div>
+                        <div class="col-sm-3 m-t-xxs" style="padding-right:0px">
+                            <span class="pull-left font-bold">Override GS Amt.:</span>
+                        </div>
+                        <div class="col-sm-3">
+                            <input class="form-control text-right" style="" ng-model="txtb_override_amount_gs" id="txtb_override_amount_gs" ng-disabled="disable_edit" />
+                            <label class="text-danger small">{{lbl_requiredfield7}}</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" style="display:none">
+
+                        <div class="col-sm-3 m-t-xxs" style="padding-right:0px">
+                            <span class="pull-left font-bold">Detail Status:</span>
+                        </div>
+                        <div class="col-sm-6">
+                            <select class="form-control" ng-disabled="disable_edit" ng-model="ddl_remittance_status">
+                                <option value="1">1 - Active           </option>
+                                <option value="2">2 - No Earnings      </option>
+                                <option value="3">3 - New Remittance   </option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer" style="padding: 10px 30px 10px 30px !important">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                    <button ng-show="ishow" ng-click="btn_save_add()" type="button" class="btn btn-success"><i id="saving_icon" class="fa fa-save"></i> Save</button>
+                    <button ng-show="ishow_update" ng-click="btn_save_update()" type="button" class="btn btn-success"><i class="fa fa-save"></i>Save Edit</button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- The modal for Upload -->
+    <div class="modal fade" id="upload_modal" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content animated flipInY modal-content-add-edit">
+                <div class="modal-heade modal-header-add-edit text-white">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="modalLabelSmall">Upload Data:</h4>
+                </div>
+
+                <div class="modal-body with-background">
+
+                    <div class="form-group row">
+                        <div class="col-sm-3" style="padding-right:0px">
+                            <span class="pull-left font-bold">Remit Nbr.:</span>
+                        </div>
+                        <div class="col-sm-3 ">
+                            <input class="form-control text-center" disabled style="font-weight:bold" ng-model="txtb_remittance_ctrl_nbr_upload" />
+                        </div>
+
+                        <div class="col-sm-3" style="display:none">
+                            <span class="pull-left font-bold">Remittance Status:</span>
+                        </div>
+                        <div class="col-sm-3" style="display:none">
+                            <input class="form-control text-center text-danger" disabled ng-model="txtb_remittance_status_upload" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-3" style="padding-right:0px">
+                            <span class="pull-left font-bold">Remittance Year:</span>
+                        </div>
+                        <div class="col-sm-3">
+                            <input class="form-control text-center" disabled ng-model="txtb_remittance_year_upload" />
+                        </div>
+
+                        <div class="col-sm-3 m-t-xxs" style="padding-right:0px">
+                            <span class="pull-left font-bold">Remittance Month:</span>
+                        </div>
+                        <div class="col-sm-3">
+                            <input class="form-control text-center" disabled ng-model="txtb_remittance_month_upload" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-3 m-t-xxs" style="padding-right:0px">
+                            <span class="pull-left font-bold">Employment Type:</span>
+                        </div>
+                        <div class="col-sm-9">
+                            <b><input class="form-control" disabled ng-model="txtb_employment_type_upload" /></b>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <hr style="margin-bottom:5px; margin-top:5px " />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-3 m-t-xxs" style="padding-right:0px">
+                            <span class="pull-left font-bold">Upload File:</span>
+                        </div>
+                        <div class="col-sm-9">
+                            <input ng-model="file_upload" id="file_upload" type="file" />
+                        </div>
+                        <div class="col-sm-12">
+                            <hr style="margin-bottom:5px; margin-top:5px " />
+                        </div>
+                        <div class="col-sm-12">
+                            <button class="btn btn-warning btn-block" ng-click="btn_execute_upload()"><i id="upload" class="fa fa-upload"> </i> EXECUTE UPLOAD</button>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row wrapper border-bottom white-bg page-heading" style="background-color:#507CD1">
+        <div class="col-lg-3">
+            <h2 class="text-white"> @ViewBag.prevValues[6] </h2>
+        </div>
+        <div class="col-lg-6" style="margin-top:20px;">
+            <div class="input-group m-b">
+                <div class="input-group-btn">
+                    <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">{{lbl_payroll_month}} <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li><a ng-click="search_in_list_month(''  ,       'datalist_grid')">All</a></li>
+                        <li class="divider"></li>
+                        <li><a ng-click="search_in_list_month('January'  ,'datalist_grid')">January	  </a></li>
+                        <li><a ng-click="search_in_list_month('February' ,'datalist_grid')">February  </a></li>
+                        <li><a ng-click="search_in_list_month('March'    ,'datalist_grid')">March	  </a></li>
+                        <li><a ng-click="search_in_list_month('April'    ,'datalist_grid')">April	  </a></li>
+                        <li><a ng-click="search_in_list_month('May'	     ,'datalist_grid')">May		  </a></li>
+                        <li><a ng-click="search_in_list_month('June'     ,'datalist_grid')">June	  </a></li>
+                        <li><a ng-click="search_in_list_month('July'     ,'datalist_grid')">July	  </a></li>
+                        <li><a ng-click="search_in_list_month('August'   ,'datalist_grid')">August	  </a></li>
+                        <li><a ng-click="search_in_list_month('September','datalist_grid')">September </a></li>
+                        <li><a ng-click="search_in_list_month('October'  ,'datalist_grid')">October	  </a></li>
+                        <li><a ng-click="search_in_list_month('November' ,'datalist_grid')">November  </a></li>
+                        <li><a ng-click="search_in_list_month('December' ,'datalist_grid')">December  </a></li>
+                    </ul>
+                </div>
+                <input type="search" class="form-control" ng-model="search_box" ng-keyup="search_in_list(search_box,'datalist_grid')" placeholder="Search ....">
+            </div>
+
+
+        </div>
+        <div class="col-sm-3" style="margin-top:20px;">
+            <button class="btn btn-primary font-bold btn-block" ng-click="BackToHeader()"><i class="fa fa-arrow-left"></i>&nbsp;&nbsp;&nbsp;Back to Remittance Header</button>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInRight no-padding">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-group row">
+                                    <div class="col-lg-2">
+                                        <b><span class="pull-left font-bold m-t-sm">Show</span></b>
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <select class="form-control field-select-sm" ng-model="rowLen" ng-change="setNumOfRow(rowLen,'datalist_grid')">
+                                            <option value="5">5</option>
+                                            <option value="10" selected>10</option>
+                                            <option value="15">15</option>
+                                            <option value="20">20</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <b><span class="pull-left font-bold m-t-sm">entries</span></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group row">
+                                    <div class="col-lg-6">
+                                        <b><span class="pull-left font-bold m-t-sm">Remittance Nbr.:</span></b>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <input class="form-control text-center" disabled style="font-weight:bold;" value="@ViewBag.prevValues[7]" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group row">
+                                    <div class="col-lg-6">
+                                        <b><span class="pull-left font-bold m-t-sm">Remittance Year:</span></b>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <input class="form-control text-center" ng-model="txtb_remittance_year" style="font-weight:bold;" disabled value="@ViewBag.prevValues[0]" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <div class="form-group row">
+                                    <div class="col-lg-6" style="padding-right:0px !important">
+                                        <b><span class="pull-left font-bold m-t-sm">Remittance Month:</span></b>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <input class="form-control text-center" ng-model="txtb_remittance_month" style="font-weight:bold;" disabled value="@ViewBag.prevValues[2]" />
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        @*<div class="col-sm-3">
+
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <div class="col-lg-3" style="padding-right:0px !important">
+                                        <b><span class="pull-left font-bold m-t-sm">Employment Type:</span></b>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        <b><input class="form-control" disabled value="@ViewBag.prevValues[4]" /></b>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-3">
+                                <div class="form-group row">
+                                    <div class="col-lg-3">
+                                        <b><span class="pull-left font-bold m-t-sm"> Status:</span></b>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        <input class="form-control text-right {{remit_status_class}}" disabled style="font-weight:bold;background-color:white;border-color:white" ng-model="txtb_remittance_status" id="txtb_remittance_status" />
+                                    </div>
+                                </div>
+
+                            </div>*@
+
+                        <div class="row">
+                            <div class="col-lg-3"></div>
+                            <div class="col-lg-6">
+                                <div class="form-group row">
+                                    <div class="col-lg-3" style="padding-right:0px !important">
+                                        <span class="pull-left font-bold m-t-sm"><b>Employment Type:</b></span>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        <input class="form-control font-bold" value="@ViewBag.prevValues[4]" ng-model="empl_type" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group row">
+                                    <div class="col-lg-3">
+                                        <span class="pull-left font-bold m-t-sm"><b>Status:</b></span>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        <input class="form-control text-right {{remit_status_class}}" disabled style="font-weight:bold;background-color:white;border-color:white" value="" ng-model="txtb_remittance_status" id="txtb_remittance_status" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-3"></div>
+                            <div class="col-lg-3">
+                                <div class="form-group row">
+                                    @*<div class="col-lg-6" style="padding-right:0px !important">
+                                            <span class="pull-left font-bold m-t-sm"><b>View Remittance:</b></span>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <select class="form-control pull-left" ng-model="view_option" ng-change="viewOption()">
+                                                <option value="1">All</option>
+                                                <option value="2">Current</option>
+                                                <option value="3">Late</option>
+                                            </select>
+                                        </div>*@
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group row">
+                                    <div class="col-lg-7" style="padding-right:0px !important">
+                                        <b><span class="pull-left font-bold m-t-sm">Last Name Starts W/:</span></b>
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <select class="form-control" ng-change="ddl_lastname_starts_and_department()" id="ddl_lastname_starts" ng-model="ddl_lastname_starts">
+                                            <option value="">--</option>
+                                            <option value="A">A</option>
+                                            <option value="B">B</option>
+                                            <option value="C">C</option>
+                                            <option value="D">D</option>
+                                            <option value="E">E</option>
+                                            <option value="F">F</option>
+                                            <option value="G">G</option>
+                                            <option value="H">H</option>
+                                            <option value="I">I</option>
+                                            <option value="J">J</option>
+                                            <option value="K">K</option>
+                                            <option value="L">L</option>
+                                            <option value="M">M</option>
+                                            <option value="N">N</option>
+                                            <option value="O">O</option>
+                                            <option value="P">P</option>
+                                            <option value="Q">Q</option>
+                                            <option value="R">R</option>
+                                            <option value="S">S</option>
+                                            <option value="T">T</option>
+                                            <option value="U">U</option>
+                                            <option value="V">V</option>
+                                            <option value="W">W</option>
+                                            <option value="X">X</option>
+                                            <option value="Y">Y</option>
+                                            <option value="Z">Z</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group row">
+                                    <div class="col-lg-5">
+                                        <button class="btn btn-success btn-block" ng-click="Open_Add_Modal()"><i id="add_btn" class="fa fa-plus-circle"> </i> Add</button>
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <div class="btn-group">
+                                            <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Other Actions <span class="caret"></span></button>
+                                            <ul class="dropdown-menu">
+                                                <li ng-show="check_employment_RECE"><a ng-click="btn_upload_modal()">Upload Data</a></li>
+                                                <li ng-show="check_employment_RECE"><a ng-click="ExtractToExcel()">Extract to Excel (Back Premiums)</a></li>
+                                                <li ng-show="check_employment_RECE"><a ng-click="ExtractToExcelCheck()">Extract to Excel (For Checking)</a></li>
+                                                <li ng-show="check_employment_RECE"><a ng-click="btn_report_PHIC('NPN')">List of No PHIC Number or <br />  Employee ID</a></li>
+                                                <li ng-show="check_employment_RECE"><a ng-click="btn_report_PHIC('NRL')">List of not in <br /> Remittance/Uploaded Data</a></li>
+                                                <li ng-show="check_employment_RECE"><a ng-click="btn_view_grand_total()">View Grand Total </a></li>
+                                                <li ng-show="check_employment_JO"><a ng-click="ExtractToExcelJO_monthly()">Extract to Excel</a></li>
+                                                @*// NPN - No PHIC NBR IN HRIS NOT IN REMITTANCE LEDGER*@
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+                        <div class="col-sm-9 m-t-sm" style="display:none">
+                            <div style=" float:left;">
+                                <b><span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;">Department:</span></b>
+                            </div>
+                            <div style="width:10%; float:right;">
+
+                            </div>
+                            <div style="width:24%; float:right;">
+
+                            </div>
+                            <div style="width:49%; float:right;padding-right:5px">
+                                <select class="form-control" ng-change="ddl_lastname_starts_and_department()" id="ddl_department" ng-model="ddl_department">
+                                    <option value="">-- Select Here -- </option>
+                                    <option ng-repeat="lst in lst_department" value="{{lst.department_code}}">{{lst.department_name1}}</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="ibox-content">
+                        <div class="col-12 table-resposive">
+                            <table id="datalist_grid" class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th width="6%">ID NBR</th>
+                                        <th width="10%">VCH. NBR</th>
+                                        <th width="33%">EMPLOYEE NAME</th>
+                                        <th width="6%">PS AMT</th>
+                                        <th width="6%">GS AMT</th>
+
+                                        <th width="10%">MONTH</th>
+                                        <th width="5%">YEAR</th>
+                                        <th width="5%">ACTIONS</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="loading_data" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" data-backdrop="static" data-keyboard="false" aria-hidden="true" style="margin-top:10%;overflow:hidden">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+
+            @*<span class="fa fa-spinner fa-spin fa-3x text-white"></span>*@
+            <div class="spiner-example">
+                <div class="sk-spinner sk-spinner-cube-grid" style="height:50px;width:50px;">
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="row" style="padding-top:5px;">
+
+                        <div class="col-sm-12">
+                            <div style="width:10%; float:left;" class="no-padding">
+                                <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;color:white">Please&nbsp;wait..</span>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+            @**@
+
+        </div>
+    </div>
+
+    <!-- The Modal - Fetching Data -->
+
+    <div class="modal fade" id="extracting_data" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" data-backdrop="static" data-keyboard="false" aria-hidden="true" style="margin-top:10%;overflow:hidden">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+
+            @*<span class="fa fa-spinner fa-spin fa-3x text-white"></span>*@
+            <div class="spiner-example">
+                <div class="sk-spinner sk-spinner-cube-grid" style="height:50px;width:50px;">
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="row" style="padding-top:5px;">
+
+                        <div class="col-sm-12">
+                            <div style="width:10%; float:left;" class="no-padding">
+                                <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;color:white">Please&nbsp;wait..</span>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+            @**@
+
+        </div>
+    </div>
+    <!-- BEGIN ------------  VJA : 2021-07-19 - The modal page for Grand Totals  -->
+    <div class="modal fade" id="modal_grand_total" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content ">
+                <div class="modal-header blue-bg">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h3 class="modal-title" id="modalLabelSmall">GRAND TOTAL</h3>
+                </div>
+
+                <div class="modal-body with-background">
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label class="font-bold">Remit Nbr:</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input id="txtb_remittance_ctrl_no" ng-model="txtb_remittance_ctrl_no" type="text" class="form-control text-center bold" disabled />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label class="font-bold">Remittance Type:</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input class="form-control" id="txtb_remittancetype" ng-model="txtb_remittancetype" disabled />
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label class="font-bold">Remittance Year:</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input id="txtb_year" ng-model="txtb_year" type="text" class="form-control text-center bold" disabled />
+                        </div>
+                        <div class="col-sm-3" style="padding-right:0px !important">
+                            <label class="font-bold">Remittance Month:</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input id="txtb_month" ng-model="txtb_month" type="text" class="form-control text-center bold" disabled />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label class="font-bold"> Description:</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" ng-model="txtb_description" id="txtb_description" disabled></textarea>
+                        </div>
+                    </div>
+
+                    @* GSIS DETAILS*@
+                    <div class="form-group row" ng-show="show_div_gsis">
+
+                        <div class="col-lg-12">
+                            <hr style="margin:5px 0px 5px 0px" />
+                            <h2>Process</h2>
+                        </div>
+
+                        <div class="col-sm-3"> <label class="font-bold"> GSIS GS:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_gs" id="txtb_p_gsis_gs" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> GSIS PS:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_ps" id="txtb_p_gsis_ps" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> SIF:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_sif_gs" id="txtb_p_sif_gs" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> GSIS OULI:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_uoli" id="txtb_p_gsis_uoli" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> EHP:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_ehp" id="txtb_p_gsis_ehp" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> HIP:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_hip" id="txtb_p_gsis_hip" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> CEAP:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_ceap" id="txtb_p_gsis_ceap" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> ADD. INS.:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_addl_ins" id="txtb_p_gsis_addl_ins" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> CONSO LN.:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_conso_ln" id="txtb_p_gsis_conso_ln" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> POL. REG.:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_policy_reg_ln" id="txtb_p_gsis_policy_reg_ln" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> POL. OPT.:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_policy_opt_ln" id="txtb_p_gsis_policy_opt_ln" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> EMERGENCY:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_emergency_ln" id="txtb_p_gsis_emergency_ln" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> E-CARD:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_ecard_ln" id="txtb_p_gsis_ecard_ln" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> EDUC. ASST.:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_educ_asst_ln" id="txtb_p_gsis_educ_asst_ln" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> REAL STATE:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_real_state_ln" id="txtb_p_gsis_real_state_ln" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> SOS:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_sos_ln" id="txtb_p_gsis_sos_ln" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> HELP:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_help" id="txtb_p_gsis_help" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> MPL:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_other_loan1" id="txtb_p_other_loan1" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> GFAL:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_other_loan2" id="txtb_p_other_loan2" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> CPL:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_other_loan3" id="txtb_p_other_loan3" disabled /></div>
+
+                        <div class="col-lg-12">
+                            <hr style="margin:5px 0px 5px 0px" />
+                            <h2>Uploaded</h2>
+                        </div>
+
+                        <div class="col-sm-3"> <label class="font-bold"> GSIS GS:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_u_gsis_gs" id="txtb_u_gsis_gs" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> GSIS PS:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_u_gsis_ps" id="txtb_u_gsis_ps" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> SIF:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_u_sif_gs" id="txtb_u_sif_gs" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> GSIS OULI:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_u_gsis_uoli" id="txtb_u_gsis_uoli" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> EHP:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_u_gsis_ehp" id="txtb_u_gsis_ehp" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> HIP:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_u_gsis_hip" id="txtb_u_gsis_hip" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> CEAP:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_u_gsis_ceap" id="txtb_u_gsis_ceap" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> ADD. INS.:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_u_gsis_addl_ins" id="txtb_u_gsis_addl_ins" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> CONSO LN.:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_u_gsis_conso_ln" id="txtb_u_gsis_conso_ln" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> POL. REG.:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_u_gsis_policy_reg_ln" id="txtb_u_gsis_policy_reg_ln" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> POL. OPT.:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_u_gsis_policy_opt_ln" id="txtb_u_gsis_policy_opt_ln" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> EMERGENCY:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_u_gsis_emergency_ln" id="txtb_u_gsis_emergency_ln" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> E-CARD:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_u_gsis_ecard_ln" id="txtb_u_gsis_ecard_ln" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> EDUC. ASST.:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_u_gsis_educ_asst_ln" id="txtb_u_gsis_educ_asst_ln" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> REAL STATE:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_u_gsis_real_state_ln" id="txtb_u_gsis_real_state_ln" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> SOS:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_u_gsis_sos_ln" id="txtb_u_gsis_sos_ln" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> HELP:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_u_gsis_help" id="txtb_u_gsis_help" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> MPL:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_u_other_loan1" id="txtb_u_other_loan1" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> GFAL:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_u_other_loan2" id="txtb_u_other_loan2" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> CPL:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_u_other_loan3" id="txtb_u_other_loan3" disabled /></div>
+
+                        <div class="col-lg-12">
+                            <hr style="margin:5px 0px 5px 0px" />
+                            <h2>Override</h2>
+                        </div>
+
+                        <div class="col-sm-3"> <label class="font-bold"> GSIS GS:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_o_gsis_gs" id="txtb_o_gsis_gs" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> GSIS PS:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_o_gsis_ps" id="txtb_o_gsis_ps" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> MPL:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_o_other_loan1" id="txtb_o_other_loan1" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> GFAL:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_o_other_loan2" id="txtb_o_other_loan2" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> CPL:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_o_other_loan3" id="txtb_o_other_loan3" disabled /></div>
+
+
+                    </div>
+
+                    @* PHIC AND HDMF DETAILS*@
+                    <div class="form-group row" ng-show="show_div_phic_hdmf">
+
+                        <div class="col-lg-12">
+                            <hr style="margin:5px 0px 5px 0px" />
+                            <h2>Process</h2>
+                        </div>
+
+                        <div class="col-sm-3"> <label class="font-bold"> GS:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_payroll_amount_gs" id="txtb_payroll_amount_gs" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> PS:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_payroll_amount_ps" id="txtb_payroll_amount_ps" disabled /></div>
+
+                        <div class="col-lg-12">
+                            <hr style="margin:5px 0px 5px 0px" />
+                            <h2>Uploaded</h2>
+                        </div>
+
+                        <div class="col-sm-3"> <label class="font-bold"> GS:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_uploaded_amount_gs" id="txtb_uploaded_amount_gs" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> PS:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_uploaded_amount_ps" id="txtb_uploaded_amount_ps" disabled /></div>
+
+                        <div class="col-lg-12">
+                            <hr style="margin:5px 0px 5px 0px" />
+                            <h2>Override</h2>
+                        </div>
+
+                        <div class="col-sm-3"> <label class="font-bold"> GS:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_override_amount_gs" id="txtb_override_amount_gs" disabled /></div>
+                        <div class="col-sm-3"> <label class="font-bold"> PS:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_override_amount_ps" id="txtb_override_amount_ps" disabled /></div>
+                    </div>
+
+                    @* SSS AND OTHER DETAILS*@
+                    <div class="form-group row" ng-show="show_div_sss_oth">
+
+                        <div class="col-lg-12">
+                            <hr style="margin:5px 0px 5px 0px" />
+                            <h2>Process</h2>
+                        </div>
+
+                        <div class="col-sm-3"> <label class="font-bold"> AMOUNT:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_payroll_amount" id="txtb_payroll_amount" disabled /></div>
+
+                        <div class="col-lg-12">
+                            <hr style="margin:5px 0px 5px 0px" />
+                            <h2>Uploaded</h2>
+                        </div>
+
+                        <div class="col-sm-3"> <label class="font-bold"> AMOUNT:</label></div>
+                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_uploaded_amount" id="txtb_uploaded_amount" disabled /></div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END ------------  VJA : 2021-07-19 - The modal page for Grand Totals  -->
+</section>
+
+

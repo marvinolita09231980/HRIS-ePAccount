@@ -1,0 +1,94 @@
+﻿@model HRIS_eHRD.Models.Dev_Version_Name
+
+@{
+    Layout = null;
+}
+
+
+
+
+<html>
+
+
+<!-- Mirrored from webapplayers.com/inspinia_admin-v2.5/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 12 May 2016 13:21:22 GMT -->
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>HRIS-ePAccount | Login</title>
+
+    <link href="/Content/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="/Content/font-awesome/css/font-awesome.css" rel="stylesheet" />
+
+    <link href="/Content/animate.css" rel="stylesheet" />
+
+    <link href="/Content/style.css" rel="stylesheet" />
+    <script src="/Scripts/ngSweetAlert.js"></script>
+    <script src="/Angular/angular.min.js"></script>
+    <script src="~/Angular/ng-file-upload.min.js"></script>
+    <script src="/Angular/ngApp.js"></script>
+    <script src="/Angular/ng-Login.js"></script>
+
+    <style type="text/css">
+        .body-login {
+            padding: 5%;
+            background-image: url('../../ResourcesImages/DDO Building Blur.jpg');
+            background-size: cover;
+        }
+
+        .screen-login {
+            background: url('../../ResourcesImages/Davao de Oro Provincial Capitol Building.JPG') no-repeat;
+            background-size: contain;
+            box-shadow: 5px 10px 20px 0px #606060;
+            padding: 15px !important;
+            background-color: #f3f3f3;
+            border-radius: 10px;
+            border: 1px solid #f5f5f5;
+        }
+    </style>
+
+</head>
+
+<body class="gray-bg body-login" ng-app="ng_HRD_App" ng-controller="LoginCtrlr">
+    <div class="middle-box text-center loginscreen animated fadeInDown screen-login">
+        <div style="margin-bottom:5px;">
+            <h1 class="logo-name">
+                <img src="/ResourcesImages/ddo logo.png" height="200" width="200" />
+            </h1>
+        </div>
+        <div style="font-size:14px;color:darkgoldenrod;margin-top:10px;">
+            <small style="font-size:16px;font-weight:bolder">Welcome to</small>
+            <small style="font-size:16px;font-weight:bolder">  </small>
+        </div>
+        <hr style="margin-top:4px;margin-bottom:4px;border-color:darkgoldenrod;" />
+        <h2 style="margin-top:3px;"><strong>HRIS - PERSONNEL ACCOUNTING </strong></h2>
+        <hr style="margin-top:4px;margin-bottom:0px;border-color:darkgoldenrod;" />
+        <form class="m-t" role="form" ng-model="lgn" style="margin-top:4px;">
+            <div class="form-group" style="margin-bottom: 5px;">
+
+                <input type="text" class="form-control" placeholder="Username" ng-model="txt_username" required="">
+            </div>
+            <div class="form-group" style="margin-bottom: 5px;">
+                <input type="password" class="form-control" placeholder="Password" id="txtb_password" ng-model="txt_password" required="">
+                <span class="fa fa-eye pull-right" onmousedown="$('#txtb_password').attr('type', 'text');" onmouseout="$('#txtb_password').attr('type', 'password');" onmouseup="$('#txtb_password').attr('type', 'password');$('#txtb_password').focus();" style="margin-top:-32px;margin-right:2px;z-index:1000;background-color:white;padding:8px;cursor:pointer;"></span>
+            </div>
+            <button type="submit" ng-click="btn_Login_Submit()" class="btn btn-primary block full-width "><i class="fa fa-sign-in"></i> Login</button>
+            <br />
+        </form>
+        <p class="m-t-n"> <small>Provincial Government of Davao de Oro &copy; 2020</small> </p>
+    </div>
+
+
+
+    <!-- Mainly scripts -->
+    <script src="/Scripts/jquery-2.1.1.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+
+</body>
+
+
+<!-- Mirrored from webapplayers.com/inspinia_admin-v2.5/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 12 May 2016 13:21:22 GMT -->
+</html>
+

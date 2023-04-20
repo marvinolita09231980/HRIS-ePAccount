@@ -1,0 +1,17 @@
+﻿
+<script language="javascript" type="text/javascript">
+    manual_alert();
+    function manual_alert() {
+        setTimeout(function () {
+            toastr.options = {
+                closeOnHover: true,
+                closeButton: false,
+                progressBar: true,
+                showMethod: 'slideDown',
+                timeOut: 7000
+            };
+            toastr.success('For now some page has no available manual. Thank You.', 'Download Manual for Reference');
+
+        }, 1300);
+    }
+</script>

@@ -1,0 +1,132 @@
+﻿@*
+    ****Page Development assigned to:   Joseph M. Tombo Jr.
+    ****Page Development started date:  10/18/2019
+    ****Page Purpose and Description:   This page is allow to auto generate remittance ledger.
+*@
+@{
+    ViewBag.Title = "Index";
+}
+<script src="~/Angular/ng-cRemittanceAutoGen.js"></script>
+<div class="modal fade" id="modal_generating_remittance">
+    <div class="modal-dialog text-center">
+        @*<span class="fa fa-spinner fa-spin fa-3x text-white"></span>*@
+        <div class="spiner-example">
+            <div class="sk-spinner sk-spinner-cube-grid">
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+                <div class="sk-cube"></div>
+            </div>
+        </div>
+        <div class="row text-center">
+            <span style="color:white;padding:10px 20px 10px 20px;border:0.5px solid aquamarine;border-radius:5px 5px 5px 5px;background-image: linear-gradient(329deg, #268672 50%, #39a28c 50%);">
+                <b>
+                    GENERATING REMITTANCE PLEASE WAIT..
+                </b>
+            </span>
+        </div>
+    </div>
+</div>
+<div class="row" style="padding:50px;" ng-app="ng_HRD_App" ng-controller="cRemitAutoGen_ctrlr">
+    <div class="col-lg-12" style="padding:5% 5% 5% 5%;border: 1px solid gray;border-radius:10px;background-color:lightgray;">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title" style="background-color:#507CD1;color:white;">
+                <div class="row" style="margin-top:-5px;">
+                    <div class="col-lg-12">
+                        <h2 style="font-weight:bold;">Remittance Generation..</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="row" style="margin-bottom:5px;">
+                    <div class="col-lg-6">
+                        <span style="float:left;padding-top:7px;">REMITTANCE YEAR:</span>
+                        <div style="width:70%;float:right;">
+                            <select class="form-control" id="ddl_remittance_year" ng-model="ddl_remittance_year">
+                                <option ng-repeat="yr in year" value="{{yr.year}}">{{yr.year}}</option>
+                            </select>
+                            <label id="lbl_ddl_remittance_year_req" class="lbl_required"></label>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <span style="float:left;padding-top:7px;">REMITTANCE MONTH:</span>
+                        <div style="width:60.9%;float:right;">
+                            <select class="form-control" id="ddl_remittance_month" ng-model="ddl_remittance_month">
+                                <option value="">--Select here--</option>
+                                <option value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                            <label id="lbl_ddl_remittance_month_req" class="lbl_required"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:5px;">
+                    <div class="col-lg-12">
+                        <span style="float:left;padding-top:7px;">EMPLOYMENT TYPE:</span>
+                        <div style="width:85.5%;float:right;">
+                            <select class="form-control" id="ddl_employment_type" ng-model="ddl_employment_type" ng-change="SelectedEmploymentType_Change(ddl_employment_type)">
+                                <option value="">--Select Here--</option>
+                                <option ng-repeat="empl_type in employment_type_data" value="{{empl_type.employment_type}}">{{empl_type.employmenttype_description}}</option>
+                            </select>
+                            <label id="lbl_ddl_employment_type_req" class="lbl_required"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <span style="float:left;padding-top:7px;">REMITTANCE TYPE:</span>
+                        <div style="width:70%;float:right;">
+                            <select class="form-control" id="ddl_remittance_type" ng-model="ddl_remittance_type" ng-change="SelectedRemittanceType_Change(ddl_remittance_type)">
+                                <option value="">--Select Here--</option>
+                                <option ng-repeat="rm_type in remittance_type_data" value="{{rm_type.remittancetype_code}}">{{rm_type.remittancetype_descr}}</option>
+                            </select>
+                            <label id="lbl_ddl_remittance_type_req" class="lbl_required"></label>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <span style="float:left;padding-top:7px;">REMITTANCE BATCH:</span>
+                        <div style="width:60.9%;float:right;">
+                            <select class="form-control" id="ddl_batch_nbr" ng-disabled="batch_disabled" ng-model="ddl_batch_nbr">
+                                <option value="S">--Select here--</option>
+                                <option value="1">Batch 1 or 2</option>
+                                <option value="2">Batch 3 or 4</option>
+                                <option value="3">Batch 5 or 6</option>
+                                <option value="4">Batch 7 or 8</option>
+                                <option value="5">Batch 9 or 0</option>
+                                <option value="0">All Batches</option>
+                            </select>
+                            <label id="lbl_ddl_batch_nbr_req" class="lbl_required"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ibox-footer">
+                <div class="row">
+                    <div class="col-lg-12 text-right">
+                        <button class="btn btn-primary" id="btn_generate_remittance" ng-click="btn_generate_remittance_click()">GENERATE REMITTANCE</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

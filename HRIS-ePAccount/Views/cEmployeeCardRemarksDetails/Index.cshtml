@@ -1,0 +1,313 @@
+﻿@*
+    ****Page Created by     :   Lorraine I. Ale
+    ****Page Started date   :   11/25/2019
+    ****Page Description    :   This page is allow to view/add/edit/delete remittance certification.
+*@
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<style type="text/css">
+    .field {
+        border-radius: 3px;
+        height: 35px;
+        font-size: 18px;
+    }
+
+    .field-arrow {
+        font-size: 26px;
+    }
+
+    .require-field {
+        border: 1px solid red !important;
+    }
+</style>
+<script src="~/Angular/ng-cEmployeeCardRemarksDetails.js"></script>
+<section ng-app="ng_HRD_App" ng-controller="cEmployeeCardRemarksDetails_ctrlr" style="padding-right:0px !important">
+
+
+
+
+    <!-- Add Modal -->
+    <div class="modal fade" id="main_modal" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content animated modal-content-add-edit">
+                <div class="modal-header modal-header-add-edit text-white">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modalLabelSmall">{{ModalTitle}}</h4>
+                </div>
+                <div class="modal-body" style="padding-bottom:5px;">
+
+                    <hr ng-show="!isEdit" style="margin-top:5px;margin-bottom:2px;border:0.5px solid cadetblue;padding:0px;" />
+                    <div class="row" style="padding-top:5px">
+                        <div class="col-sm-3">
+                            <span class="pull-left" style="margin-top:9px;"><b>Employee Name:</b></span>
+                        </div>
+                        <div class="col-sm-9">
+                            <b><input class="form-control" id="txtb_empl_name" ng-model="txtb_empl_name" disabled /></b>
+                            <b><input class="form-control hidden" ng-show="false" id="txtb_empl_id" ng-model="txtb_empl_id"/></b>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top:5px">
+                        <div class="col-sm-3">
+                            <span class="pull-left" style="margin-top:9px;"><b>Date Posted:</b></span>
+                        </div>
+                        <div class="col-sm-3">
+                            <b><input class="form-control" id="txtb_posted_date" ng-model="txtb_posted_date" disabled /></b>
+                        </div>
+                        <div class="col-sm-3">
+                            <span class="pull-left" style="margin-top:9px;"><b>Date Covered:</b></span>
+                        </div>
+                        <div class="col-sm-3">
+                            <b><input class="form-control" id="txtb_covered_date" ng-model="txtb_covered_date" disabled /></b>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top:5px">
+                        <div class="col-sm-3">
+                            <span class="pull-left" style="margin-top:9px;"><b>Voucher Nbr.:</b></span>
+                        </div>
+                        <div class="col-sm-3">
+                            <b><input class="form-control" id="txtb_voucher_nbr" ng-model="txtb_voucher_nbr" disabled /></b>
+                        </div>
+                        <div class="col-sm-3">
+                            <span class="pull-left" style="margin-top:9px;"><b>Registry Nbr.:</b></span>
+                        </div>
+                        <div class="col-sm-3">
+                            <b><input class="form-control" id="txtb_registry_nbr" ng-model="txtb_registry_nbr" disabled /></b>
+                        </div>
+                    </div>
+
+
+                    <hr style="margin-top:5px;margin-bottom:2px;border:0.5px solid cadetblue;padding:0px;" />
+
+                    <div class="row" style="padding-top:5px">
+                        <div class="col-sm-3">
+                            <span class="pull-left" style="margin-top:9px;"><b>Remarks:</b></span>
+                        </div>
+                        <div class="col-sm-9">
+                            <b><textarea class="form-control" cols="40" rows="5" id="txtb_remarks" placeholder="Additional remarks here.." ng-model="txtb_remarks"></textarea></b>
+                            <label id="lbl_txtb_remarks_req" class="lbl_required"></label>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="modal-footer" style="padding: 10px 30px 10px 30px !important">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                    <button id="addFinal" ng-click="btn_save()" type="button" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remittance Certification Page Details-->
+    <div class="wrapper wrapper-content animated fadeInRight" style="padding:10px 0px 0px 0px!important">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox-title" style="background-color:#507CD1;border-radius:5px 5px 0px 0px;">
+
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <h2 class="text-white">Remarks Details</h2>
+                        </div>
+                        <div class="col-lg-6">
+                            <input type="search" class="form-control pull-right" ng-model="search_box" ng-keyup="search_in_list(search_box,'datalist_grid')" placeholder="Search ....">
+                        </div>
+                        <div class="col-sm-3">
+                            <button class="btn btn-primary font-bold btn-block" onclick="window.location.href = '../cEmployeeCardRemarks';"><i class="fa fa-arrow-left"></i> &nbsp; &nbsp; &nbsp;Back to Remarks Header</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper wrapper-content animated fadeInRight" style="padding:0px !important;">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <div class="form-group row">
+                            <div class="col-sm-3 mt10">
+                                <strong for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm mt10"><span>Show:</span></strong>
+
+                                <div class="col-sm-7">
+                                    <select class="form-control form-control-sm field-select-sm" ng-model="rowLen" ng-change="setNumOfRow(rowLen,'datalist_grid')">
+                                        <option value="5">5</option>
+                                        <option value="10" selected>10</option>
+                                        <option value="15">15</option>
+                                        <option value="20">20</option>
+                                    </select>
+                                </div>
+                                <strong for="colFormLabelSm" class="col-sm-3 col-form-label col-form-label-sm mt10"><span>entries</span></strong>
+
+
+
+
+
+                            </div>
+                            <div class="col-sm-1 mt10">
+                                <strong>Payroll Year:</strong>
+                            </div>
+                            <div class="col-sm-2 mt10">
+                                <select id="ddl_year" ng-model="ddl_year" ng-change="FilterGrid()" class="form-control field-select-sm text-center" style="width:100%;">
+                                    <option ng-repeat="yr in year" value="{{yr.year}}">{{yr.year}}</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-1 mt10">
+                                <strong>Payroll Month:</strong>
+                            </div>
+                            <div class="col-sm-2 mt10">
+                                <select class="form-control field-select-sm text-center" ng-change="FilterGridMonth(ddl_month,'datalist_grid')" id="ddl_month" ng-model="ddl_month" ng-change="">
+                                     <option value="00">--Select Here--</option>
+                                    <option value="01">January</option>
+                                    <option value="02">February</option>
+                                    <option value="03">March</option>
+                                    <option value="04">April</option>
+                                    <option value="05">May</option>
+                                    <option value="06">June</option>
+                                    <option value="07">July</option>
+                                    <option value="08">August</option>
+                                    <option value="09">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-1 mt10">
+                                
+                            </div>
+
+
+
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+
+                            </div>
+                            <div class="col-sm-1 mt10">
+                                <strong>Name:</strong>
+                            </div>
+                            <div class="col-sm-5 mt10">
+                                <b><input class="form-control" ng-model="txtb_empl_name" disabled /></b>
+                            </div>
+
+                            <div class="col-sm-1 mt10">
+                               
+                            </div>
+
+                            <div class="col-sm-2 mt10">
+
+                                <div class="btn-group btn-block">
+                                    <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle pull-left">Other Actions <span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a ng-click="btn_print_open()"><i class="fa fa-print"> </i>Print</a></li>
+                                    </ul>
+                                </div>
+                                @*<button id="extract" type="button" class="btn btn-warning btn btn-block" ng-click="btn_extract_open()"><i class="fa fa-download"></i> Extract</button>*@
+                                @*<button id="add" ng-show="ShowAdd" class="btn btn-success btn btn-block" ng-click="btn_open_modal()"><i class="fa fa-plus-circle"> </i> Add</button>*@
+                            </div>
+
+
+
+                        </div>
+                        
+                    </div>
+                    <div class="ibox-content">
+                        <div class="col-12 table-resposive">
+                            <table id="datalist_grid" ng-model="datalist_grid" class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th width="8%">VCH. NBR</th>
+                                        <th width="10%">YEAR</th>
+                                        <th width="10%" class="hidden">MONTH SORT</th>
+                                        <th width="10%">DATE POSTED</th>
+                                        <th width="25%">DESCRIPTION</th>
+                                        <th width="25%">REMARKS</th>
+                                        <th width="10%">GROSS PAY</th>
+                                        <th width="10%">NET PAY</th>
+                                        <th width="9%">ACTIONS</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="print_preview_modal" role="dialog" aria-labelledby="modalLabelSmall" aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="width:80% !important;">
+            <div class="modal-content animated fadeIn modal-content-add-edit">
+                <div class="modal-header add-icon add-edit-modal text-white bg-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exchange_modal_title">{{Modal_title}}</h4>
+                </div>
+                <div class="modal-body with-background text-center" style="padding-bottom:15px;">
+                    <div class="form-horizontal">
+                        <div class="row margin-top">
+                            <div id="iframe_content" class="col-md-12">
+                                <div ng-show="loading_r">
+                                    <div class="spiner-example">
+                                        <div class="sk-spinner sk-spinner-chasing-dots">
+                                            <div class="sk-dot1"></div>
+                                            <div class="sk-dot2"></div>
+                                        </div>
+                                    </div>
+                                    <h2><b>{{generate_message}}</b></h2>
+                                    <label class="text-right"><i class="fa fa-info-circle"></i><small> If it takes too long, you can refresh the page by Pressing Ctrl +F5 Key at the same Time.</small></label>
+                                </div>
+                                <center ng-show="!loading_r">
+                                    <iframe id="iframe_print_preview" name="iframe_print_preview" alt="Please Wait.. Initializing Report Source" src="" height="500vh" width="100%" style="border:10px #ffffff"></iframe>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal Loading -->
+    <div class="modal fade" id="modal_generating_remittance" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" data-backdrop="static" data-keyboard="false" aria-hidden="true" style="margin-top:10%;overflow:hidden">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+
+            @*<span class="fa fa-spinner fa-spin fa-3x text-white"></span>*@
+            <div class="spiner-example">
+                <div class="sk-spinner sk-spinner-cube-grid" style="height:50px;width:50px;">
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="row" style="padding-top:5px;">
+
+                        <div class="col-sm-12">
+                            <div style="width:10%; float:left;" class="no-padding">
+                                <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;color:white">Please&nbsp;wait..</span>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+            @**@
+
+        </div>
+    </div>
+</section>
+

@@ -1,0 +1,103 @@
+﻿@*
+    ****Page Development assigned to:   Jorge Rustom Villanueva.
+    ****Page Development started date:  04/28/2020
+    ****Page Purpose and Description:   This page is allow to auto generate remittance ledger.
+*@
+@{
+    ViewBag.Title = "Index";
+}
+<script src="~/Angular/ng-cExtractToExcel.js"></script>
+
+<section ng-app="ng_HRD_App" ng-controller="cExtractToExcel_ctrlr">
+
+    <div class="modal fade" id="modal_generating_tax">
+        <div class="modal-dialog text-center">
+            @*<span class="fa fa-spinner fa-spin fa-3x text-white"></span>*@
+            <div class="spiner-example">
+                <div class="sk-spinner sk-spinner-cube-grid">
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                </div>
+            </div>
+            <div class="row text-center">
+                <span style="color:white;padding:10px 20px 10px 20px;border:0.5px solid aquamarine;border-radius:5px 5px 5px 5px;background-image: linear-gradient(329deg, #268672 50%, #39a28c 50%);">
+                    <b>
+                        EXTRACTING... PLEASE WAIT...
+                    </b>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="padding:50px;" >
+        <div class="col-lg-12" style="padding:5% 5% 5% 5%;border: 1px solid gray;border-radius:10px;background-color:lightgray;">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title" style="background-color:#507CD1;color:white;">
+                    <div class="row" style="margin-top:-5px;">
+                        <div class="col-lg-12">
+                            <h2 style="font-weight:bold;">On-Demand Extract to Excel</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <span >EXTRACT/REPORT TYPE:</span>
+                        </div>
+                        <div class="col-lg-9">
+                            <select class="form-control" id="ddl_report_type" ng-model="ddl_report_type">
+                                <option value="REFUND">LIST OF REFUND</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top:5px !important">
+                        <div class="col-lg-3">
+                            <span>POSTED YEAR:</span>
+                        </div>
+                        <div class="col-lg-3">
+                            <select class="form-control" id="ddl_payroll_year" ng-model="ddl_payroll_year">
+                                <option ng-repeat="yr in year" value="{{yr.year}}">{{yr.year}}</option>
+                            </select>
+                            <label id="lbl_ddl_payroll_year_req" class="lbl_required"></label>
+                        </div>
+                        <div class="col-lg-3">
+                            <span>POSTED MONTH:</span>
+                        </div>
+                        <div class="col-lg-3">
+                            <select class="form-control" id="ddl_payroll_month" ng-model="ddl_payroll_month">
+                                <option value="">All</option>
+                                <option value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox-footer">
+                    <div class="row">
+                        <div class="col-lg-12 text-right">
+                            <button class="btn btn-primary" id="btn_extract" ng-click="btn_extract()">EXTRACT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>

@@ -1,0 +1,260 @@
+﻿@*
+    ****Page Development assigned to:   JORGE RUSTOM VILLANUEVA
+    ****Page Development started date:  11/13/2019
+    ****Page Purpose and Description:   This page will page card index for employee.
+*@
+@{
+    ViewBag.Title = "Index";
+}
+
+<style type="text/css">
+    .select2-selection__clear {
+        font-size: 14px !important;
+    }
+
+    .select2-close-mask {
+        z-index: 2099;
+    }
+
+    .select2-dropdown {
+        z-index: 3051;
+    }
+
+
+
+    .select2-selection__rendered {
+        line-height: 31px !important;
+    }
+
+    .select2-container .select2-selection--single {
+        height: 35px !important;
+        /*border: 1px solid red !important;*/
+    }
+
+    .select2-selection__arrow {
+        height: 34px !important;
+    }
+</style>
+<script src="~/Angular/ng-cEmployeeCardRep.js"></script>
+
+<div class="row" style="padding:50px;" ng-app="ng_HRD_App" ng-controller="cEmployeeCardRep_ctrlr">
+    <div class="col-lg-12" style="padding:5% 5% 5% 5%;border: 1px solid gray;border-radius:10px;background-color:lightgray;">
+        <div class="ibox float-e-margins">
+
+            <div class="ibox-title" style="background-color:#507CD1;color:white;">
+                <div class="row" style="margin-top:-5px;">
+                    <div class="col-lg-12">
+                        <h2 style="font-weight:bold;">Employee's Card Printing..</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ibox-content">
+                <div class="row" style="margin-bottom:5px;">
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-4" style="padding-top:7px;">
+                                <span style="font-weight:bold;">PAYROLL YEAR:</span>
+                            </div>
+                            <div class="col-lg-8">
+                                <select class="form-control text-center" onchange="RemoveClass('ddl_year','ddl_year')" id="ddl_year" ng-model="ddl_year">
+                                    <option value="">--Select here--</option>
+                                    <option ng-repeat="yr in year" value="{{yr.year}}">{{yr.year}}</option>
+                                </select>
+                                <label id="lbl_ddl_year_req" class="lbl_required"></label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-5" style="padding-top:7px;">
+                                <span style="font-weight:bold;">EMPLOYMENT TYPE:</span>
+                            </div>
+                            <div class="col-lg-7">
+                                <select class="form-control text-center" id="ddl_employment_type" ng-model="ddl_employment_type" ng-change="SelectedEmployment_Change()">
+                                    <option value="RC">Regular/Casual Employees</option>
+                                    <option value="JO">Job Order Employees</option>
+                                </select>
+                                <label id="lbl_ddl_remittance_year_req" class="lbl_required"></label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row" style="margin-top:-15px;">
+                    <hr />
+                </div>
+
+                <div class="row" style="margin-bottom:5px;margin-top:-10px;">
+
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-4" style="padding-top:7px;">
+                                <span style="font-weight:bold;">PERIOD FROM:</span>
+                            </div>
+                            <div class="col-lg-8">
+                                <div class="input-group date" data-provide="datepicker">
+
+                                    <input type="text" id="txtb_period_from" ng-model="txtb_period_from" placeholder="YYYY-MM-DD" class="form-control text-center">
+                                    <div class="input-group-addon">
+                                        <span class="fa fa-calendar"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-5" style="padding-top:7px;">
+                                <span style="font-weight:bold;">PERIOD TO:</span>
+                            </div>
+                            <div class="col-lg-7">
+                                <div class="input-group date" data-provide="datepicker">
+                                    <input type="text" id="txtb_period_to" ng-model="txtb_period_to" placeholder="YYYY-MM-DD" class="form-control text-center">
+                                    <div class="input-group-addon">
+                                        <span class="fa fa-calendar"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+                <div class="row" style="margin-top:-15px;">
+                    <hr />
+                </div>
+                <div class="row" style="margin-bottom:5px;margin-top:-10px; display:none;">
+                    <div class="col-lg-2" style="padding-top:7px;">
+                        <span style="font-weight:bold;">DEPARTMENT:</span>
+                    </div>
+                    <div class="col-lg-10">
+                        <select class="form-control" id="ddl_department" ng-model="ddl_department" ng-change="SelectedDepartment_Change(ddl_department)">
+                            <option value="">--Select Here--</option>
+                            <option ng-repeat="lst in department_data" value="{{lst.department_code}}">{{lst.department_name1}}</option>
+                        </select>
+                        <label id="lbl_ddl_department_req" class="lbl_required"></label>
+
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-2" style="padding-top:7px;">
+                        <span style="font-weight:bold;">NAME:</span>
+                    </div>
+                    <div class="col-lg-10">
+
+                        <select ng-show="true" class="select2_demo_3 form-control" id="ddl_empl_name" ng-model="ddl_empl_name" style="width:100%;">
+                            <option value="">--Select here--</option>
+                            <option ng-repeat="lst in employee_data" value="{{lst.empl_id}}">{{lst.employee_name}}</option>
+                        </select>
+                        @*<select class="form-control" id="ddl_empl_name" ng-model="ddl_empl_name" ng-change="SelectedEmployee_Change(ddl_empl_name)">
+                                <option value="">--Select Here--</option>
+                                <option ng-repeat="lst in employee_data" value="{{lst.empl_id}}">{{lst.employee_name}}</option>
+                            </select>*@
+                        <label id="lbl_ddl_empl_name_req" class="lbl_required"></label>
+
+                    </div>
+
+
+
+
+                    <div class="col-lg-2" style="visibility:hidden;">
+                        <span style="float:left;padding-top:7px; font-weight:bold;">ID Nbr.:</span>
+                        <div style="width:50%;float:right;">
+                            <input id="txtb_empl_id" ng-model="txtb_empl_id" class="form-control text-center" style="font-weight:bold;" disabled />
+                            <label id="lbl_ddl_remittance_type_req" class="lbl_required"></label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="ibox-footer">
+                <div class="row">
+                    <div class="col-lg-12 text-right">
+                        <button class="btn btn-primary" id="btn_print" ng-click="btn_print_action()"><i class="fa fa-print"></i> &nbsp;PRINT CARD</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="print_preview_modal" role="dialog" aria-labelledby="modalLabelSmall" aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="width:80% !important;">
+            <div class="modal-content animated fadeIn modal-content-add-edit">
+                <div class="modal-header add-icon add-edit-modal text-white bg-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exchange_modal_title">{{Modal_title}}</h4>
+                </div>
+                <div class="modal-body with-background text-center" style="padding-bottom:15px;">
+                    <div class="form-horizontal">
+                        <div class="row margin-top">
+                            <div id="iframe_content" class="col-md-12">
+                                <div ng-show="loading_r">
+                                    <div class="spiner-example">
+                                        <div class="sk-spinner sk-spinner-chasing-dots">
+                                            <div class="sk-dot1"></div>
+                                            <div class="sk-dot2"></div>
+                                        </div>
+                                    </div>
+                                    <h2><b>{{generate_message}}</b></h2>
+                                    <label class="text-right"><i class="fa fa-info-circle"></i><small> If it takes too long, you can refresh the page by Pressing Ctrl +F5 Key at the same Time.</small></label>
+                                </div>
+                                <center ng-show="!loading_r">
+                                    <iframe id="iframe_print_preview" name="iframe_print_preview" alt="Please Wait.. Initializing Report Source" src="" height="500vh" width="100%" style="border:10px #ffffff"></iframe>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal Loading -->
+    <div class="modal fade" id="modal_generating_remittance" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" data-backdrop="static" data-keyboard="false" aria-hidden="true" style="margin-top:10%;overflow:hidden">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+
+            @*<span class="fa fa-spinner fa-spin fa-3x text-white"></span>*@
+            <div class="spiner-example">
+                <div class="sk-spinner sk-spinner-cube-grid" style="height:50px;width:50px;">
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="row" style="padding-top:5px;">
+
+                        <div class="col-sm-12">
+                            <div style="width:10%; float:left;" class="no-padding">
+                                <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;color:white">Please&nbsp;wait..</span>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+            @**@
+
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,392 @@
+﻿@model HRIS_ePAccount.Models.User_Menu
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<style type="text/css">
+    .field {
+        border-radius: 3px;
+        height: 35px;
+        font-size: 18px;
+    }
+
+    .field-arrow {
+        font-size: 26px;
+    }
+
+    .require-field {
+        border: 1px solid red !important;
+    }
+
+    .btn.action {
+        width: 27px;
+    }
+
+    .form-control.detail {
+        padding-bottom: 0;
+        padding-top: 0;
+        height: 30px !important;
+    }
+</style>
+<script src="~/Angular/ng-cSepSet.js"></script>
+<!-- The Modal - Generating Report -->
+<div class="modal fade" id="Loading_master" ng-model="Loading_master">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog">
+            @*<span class="fa fa-spinner fa-spin fa-3x text-white"></span>*@
+            <div class="spiner-example">
+                <div class="sk-spinner sk-spinner-wandering-cubes ">
+                    <div class="sk-cube1"></div>
+                    <div class="sk-cube2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section ng-app="ng_HRD_App" ng-controller="cSepSet_ctrlr">
+    <!-- The modal -->
+    <div class="modal fade" id="modal_print">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content animated flipInY ">
+                <div class="modal-header text-white" style="background-color: #28a745; height:8%;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h2 class="modal-title" id="modalLabelSmall" style="font-weight:bold; margin-top:-5px;">{{ModalTitle}}</h2>
+                </div>
+
+                <div class="modal-body with-background">
+                    <hr style="margin-top:5px;" />
+                    <div class="form-group row" style="margin-top:-10px;">
+
+                        <div class="col-lg-12">
+                            <select class="form-control field-select-sm" id="ddl_reporttemplate" ng-model="ddl_reporttemplate" ng-change="SelectReportTemplate()">
+                                <option value="" selected>--Select Here--</option>
+                                <option ng-repeat="lst in reporttemplate" value="{{lst.payrolltemplate_code}}">{{lst.payrolltemplate_descr}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 10px 30px 10px 30px !important">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                    <button ng-show="true" ng-click="btn_print_action2()" type="button" class="btn btn-primary"><i class="fa fa-print"></i> Print </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- The modal -->
+    <div class="modal fade" id="main_modal" data-toggle="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" aria-hidden="true" style="overflow:auto;">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content animated">
+                <div class="modal-header modal-header-add-edit text-white">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="modalLabelSmall">{{ModalTitle}}</h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row" style="display:none;">
+                    </div>
+                    <div class="form-group row">
+
+                        <div class="col-lg-3" style="padding-top:5px;">
+                            <label class="font-bold">Employee's Name:</label>
+                        </div>
+                        <div class="col-lg-9">
+                            <input id="txtb_empl_name" ng-show="isShowNameInput" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_empl_name" class="form-control inputfield" disabled />
+                            <select class="form-control field-select-sm" ng-show="isShowNameSelect" id="ddl_employee_name">
+                                <option value="" ng-click="SelectEmployeeNameClear()" selected>--Select Here--</option>
+                                <option ng-click="SelectEmployeeName(lst)" ng-repeat="lst in employeenames" value="{{lst.empl_id}}">{{lst.employee_name}}</option>
+                            </select>
+                            <label id="lbl_ddl_employee_name_req" class="lbl_required"></label>
+                            @*<label class="text-danger small">{{lbl_requiredfield1}}</label>*@
+                        </div>
+
+                        <div class="col-lg-2" style="padding-top:5px; padding-right:0px;display:none;">
+                            <label class="font-bold">ID Nbr.:</label>
+                        </div>
+
+                        <div class="col-lg-1" style="padding-top:5px; padding-right:0px;display:none;">
+                            <input id="txtb_empl_id" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_empl_id" class="form-control inputfield text-center" disabled />
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="margin-top:-15px;">
+                        <hr />
+                    </div>
+                    <div class="form-group row" style="margin-top:-15px;">
+
+                        <div class="col-lg-3" style="padding-top:5px;">
+                            <label class="font-bold">Position Title:</label>
+                        </div>
+                        <div class="col-lg-9">
+                            <input id="txtb_position" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_position" class="form-control inputfield" disabled />
+                        </div>
+
+
+                    </div>
+
+                    <div class="row" style="margin-top:-15px;">
+                        <hr />
+                    </div>
+
+                    <div class="form-group row" style="margin-top:-15px;">
+
+                        <div class="col-lg-3" style="padding-top:5px;">
+                            <label class="font-bold">Employment Type:</label>
+                        </div>
+                        <div class="col-lg-9">
+                            <input id="txtb_employment_type" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_employment_type" class="form-control inputfield" disabled />
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="row" style="margin-top:-15px;">
+                        <hr />
+                    </div>
+
+                    <div class="form-group row" style="margin-top:-15px;">
+
+                        <div class="col-lg-3" style="padding-top:5px;">
+                            <label class="font-bold">Period From:</label>
+                        </div>
+                        <div class="col-lg-5" id="div_to_date">
+
+                            <div class="input-group date">
+                                <input type="text" id="txtb_period_from" maxlength="10" ng-model="txtb_period_from" class="form-control text-center" style="padding-right:20px;">
+                                <span id="div_travel_date_disable1" class="input-group-addon" style="padding-left:7.5px;">
+                                    <i id="div_travel_date_disable2" class="fa fa-calendar"></i>
+                                </span>
+
+                            </div>
+                            <label id="lbl_txtb_period_from_req" class="lbl_required"></label>
+                        </div>
+                        <div class="col-lg-4">
+                            &nbsp;
+                        </div>
+
+                    </div>
+
+                    <div class="form-group row">
+
+                        <div class="col-lg-3" style="padding-top:5px;">
+                            <label class="font-bold">Period To:</label>
+                        </div>
+                        <div class="col-lg-5" id="div_to_date">
+
+                            <div class="input-group date">
+                                <input type="text" id="txtb_period_to" maxlength="10" ng-model="txtb_period_to" class="form-control text-center" style="padding-right:20px;">
+                                <span id="div_travel_date_disable1" class="input-group-addon" style="padding-left:7.5px;">
+                                    <i id="div_travel_date_disable2" class="fa fa-calendar"></i>
+                                </span>
+
+                            </div>
+                            <label id="lbl_txtb_period_to_req" class="lbl_required"></label>
+                        </div>
+                        <div class="col-lg-4">
+                            &nbsp;
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="margin-top:-15px;">
+                        <hr />
+                    </div>
+
+
+                    <div class="form-group row" style="margin-top:-15px;">
+
+                        <div class="col-lg-3" style="padding-top:5px;">
+                            <label class="font-bold">Status:</label>
+                        </div>
+                        <div class="col-lg-5">
+                            <select class="form-control field-select-sm text-center" id="ddl_flag" ng-model="ddl_flag">
+                                <option value="true">Separated</option>
+                                <option value="false">Active</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-4">
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer" style="padding: 10px 30px 10px 30px !important">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                    <button ng-show="ishowsave" ng-click="btn_save()" type="button" class="btn btn-success"><i id="btn_save" class="fa fa-save"></i> Save</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper wrapper-content animated fadeInRight" style="padding:10px 0px 0px 0px!important">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox-title" style="background-color:#507CD1;border-radius:5px 5px 0px 0px;">
+
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <b><h2 class="text-white">@Model.menu_name</h2></b>
+                        </div>
+                        <div class="col-lg-8">
+                            <input type="search" class="form-control" ng-model="search_box" ng-keyup="search_in_list(search_box,'datalist_grid')" placeholder="Search ....">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;">Show</span>
+                                <select class="form-control field-select-sm" id="ddl_show_entries" style="width:30%;float:left;" ng-model="rowLen" ng-change="setNumOfRow(rowLen,'datalist_grid')">
+                                    <option value="5" selected>5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                                <span class="font-bold" style="float:left;margin-top:9px;margin-left:10px;">entries</span>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div style="width:40%; float:left;">
+                                    <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;font-weight:bold;">Payroll Year:</span>
+                                </div>
+                                <div style="width:60%; float:right;">
+                                    <select id="ddl_year" ng-model="ddl_year" ng-change="SelectPayrollYear(ddl_employment_type,ddl_year,ddl_letter)" class="form-control field-select-sm" style="width:100%;">
+                                        <option ng-repeat="yr in year" value="{{yr.year}}">{{yr.year}}</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+
+                        <div class="row" style="margin-top:5px;">
+                            <div class="col-sm-3">
+                                <div style="width:60%; float:left;">
+                                    <span class="pull-left font-bold" style="margin-top:9px;font-weight:bold;">Last Name Starts W/ :</span>
+                                </div>
+
+                                <div style="width:40%; float:right;">
+                                    <select class="form-control" id="ddl_letter" ng-model="ddl_letter" ng-change="SelectLetter(ddl_letter,'datalist_grid')">
+                                        <option value="">--</option>
+                                        <option ng-repeat="lst in alphabet_list track by $index" value="{{lst.id}}">{{lst.alpha_name}}</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-6">
+                                <div style="width:26%; float:left;">
+                                    <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;font-weight:bold;">Employment Type:</span>
+                                </div>
+                                <div style="width:74%; float:right;">
+                                    <select class="form-control field-select-sm" id="ddl_employment_type" ng-model="ddl_employment_type" ng-change="SelectEmploymentType(ddl_employment_type,ddl_year,ddl_letter)">
+                                        <option value="" selected>--Select Here--</option>
+                                        <option ng-repeat="lst in employeeddl" value="{{lst.employment_type}}">{{lst.employmenttype_description}}</option>
+                                    </select>
+
+                                </div>
+                            </div>
+
+                            <div class="col-sm-2 text-right">
+
+
+
+                            </div>
+                            <div class="col-sm-1 text-right">
+
+
+
+                            </div>
+
+
+
+
+                        </div>
+
+
+
+
+                    </div>
+                    <div class="ibox-content">
+                        <div class="col-12 table-resposive">
+                            <table id="datalist_grid" class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th width="10%">ID NBR</th>
+                                        <th width="20%">EMPLOYEE NAME</th>
+                                        <th width="12%">TAXABLE AMT.</th>
+                                        <th width="15%">PERIOD FROM</th>
+                                        <th width="15%">PERIOD TO</th>
+                                        <th width="15%">STATUS</th>
+                                        <th width="0%" style="display:none;"></th>
+                                        <th width="15%">ACTIONS</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="loading_data" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" data-backdrop="static" data-keyboard="false" aria-hidden="true" style="margin-top:10%;overflow:hidden">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+
+            @*<span class="fa fa-spinner fa-spin fa-3x text-white"></span>*@
+            <div class="spiner-example">
+                <div class="sk-spinner sk-spinner-cube-grid" style="height:50px;width:50px;">
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="row" style="padding-top:5px;">
+
+                        <div class="col-sm-12">
+                            <div style="width:10%; float:left;" class="no-padding">
+                                <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;color:white">Please&nbsp;wait..</span>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+            @**@
+
+        </div>
+    </div>
+
+</section>
