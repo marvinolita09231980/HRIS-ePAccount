@@ -6,7 +6,7 @@
 @{
     ViewBag.Title = "Index";
 }
-<script src="~/Angular/ng-cExtractToExcel.js"></script>
+<script src="~/Angular/ng-cExtractToExcel.js?v1"></script>
 
 <section ng-app="ng_HRD_App" ng-controller="cExtractToExcel_ctrlr">
 
@@ -36,7 +36,7 @@
         </div>
     </div>
 
-    <div class="row" style="padding:50px;" >
+    <div class="row" style="padding:50px;">
         <div class="col-lg-12" style="padding:5% 5% 5% 5%;border: 1px solid gray;border-radius:10px;background-color:lightgray;">
             <div class="ibox float-e-margins">
                 <div class="ibox-title" style="background-color:#507CD1;color:white;">
@@ -49,17 +49,19 @@
                 <div class="ibox-content">
                     <div class="row">
                         <div class="col-lg-3">
-                            <span >EXTRACT/REPORT TYPE:</span>
+                            <span>EXTRACT/REPORT TYPE:</span>
                         </div>
                         <div class="col-lg-9">
-                            <select class="form-control" id="ddl_report_type" ng-model="ddl_report_type">
+                            <select class="form-control" id="ddl_report_type" ng-model="ddl_report_type" ng-change="ReportType()">
                                 <option value="REFUND">LIST OF REFUND</option>
+                                <option value="TAX-PAYABLE">LIST FOR TAX PAYABLE (TAX PYBL)</option>
+                                <option value="TAX-RATE-AMOUNT">LIST OF TAX RATE WITH TAX AMOUNT FOR JOB-ORDER,CASUAL AND REGULAR EMPLOYEES</option>
                             </select>
                         </div>
                     </div>
                     <div class="row" style="padding-top:5px !important">
                         <div class="col-lg-3">
-                            <span>POSTED YEAR:</span>
+                            <span id="id_lbl_year">POSTED YEAR:</span>
                         </div>
                         <div class="col-lg-3">
                             <select class="form-control" id="ddl_payroll_year" ng-model="ddl_payroll_year">
@@ -68,7 +70,7 @@
                             <label id="lbl_ddl_payroll_year_req" class="lbl_required"></label>
                         </div>
                         <div class="col-lg-3">
-                            <span>POSTED MONTH:</span>
+                            <span id="id_lbl_month">POSTED MONTH:</span>
                         </div>
                         <div class="col-lg-3">
                             <select class="form-control" id="ddl_payroll_month" ng-model="ddl_payroll_month">
@@ -93,6 +95,26 @@
                     <div class="row">
                         <div class="col-lg-12 text-right">
                             <button class="btn btn-primary" id="btn_extract" ng-click="btn_extract()">EXTRACT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal_print_preview" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content  modal-content-add-edit">
+                <div class="modal-header navy-bg text-white">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h3 class="modal-title" id="modalLabelSmall">PRINT PREVIEW</h3>
+                </div>
+                <div class="modal-body with-background" style="padding:0px !important">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <iframe style="width:100% !important;height:80% !important;border:0px none;" id="iframe_print_preview"></iframe>
                         </div>
                     </div>
                 </div>

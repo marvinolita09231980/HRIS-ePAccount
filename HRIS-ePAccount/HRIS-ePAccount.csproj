@@ -1429,6 +1429,18 @@
     <Compile Include="Reports\CrystalViewer.aspx.designer.cs">
       <DependentUpon>CrystalViewer.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Reports\cryTaxPayable\cryTaxPayable.cs">
+      <DependentUpon>cryTaxPayable.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Reports\cryTaxRate_TaxAmount\cryTaxRate_TaxAmount.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>cryTaxRate_TaxAmount.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\cryVoucher\cryHonorarium\cryHonorarium.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -3300,6 +3312,14 @@
     <Content Include="Reports\cryRemittanceOTHERS1\OtherRecon\cryRemittanceNHMFC.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>cryRemittanceNHMFC.cs</LastGenOutput>
+    </Content>
+    <Content Include="Reports\cryTaxRate_TaxAmount\cryTaxRate_TaxAmount.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>cryTaxRate_TaxAmount.cs</LastGenOutput>
+    </Content>
+    <Content Include="Reports\cryTaxPayable\cryTaxPayable.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>cryTaxPayable.cs</LastGenOutput>
     </Content>
     <EmbeddedResource Include="Reports\cryVoucher\cryOBR\cryOBR_NOCAFOA.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
