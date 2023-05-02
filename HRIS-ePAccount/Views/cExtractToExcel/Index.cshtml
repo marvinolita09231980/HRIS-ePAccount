@@ -6,35 +6,11 @@
 @{
     ViewBag.Title = "Index";
 }
-<script src="~/Angular/ng-cExtractToExcel.js?v1"></script>
+<script src="~/Angular/ng-cExtractToExcel.js?v2"></script>
 
 <section ng-app="ng_HRD_App" ng-controller="cExtractToExcel_ctrlr">
 
-    <div class="modal fade" id="modal_generating_tax">
-        <div class="modal-dialog text-center">
-            @*<span class="fa fa-spinner fa-spin fa-3x text-white"></span>*@
-            <div class="spiner-example">
-                <div class="sk-spinner sk-spinner-cube-grid">
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                </div>
-            </div>
-            <div class="row text-center">
-                <span style="color:white;padding:10px 20px 10px 20px;border:0.5px solid aquamarine;border-radius:5px 5px 5px 5px;background-image: linear-gradient(329deg, #268672 50%, #39a28c 50%);">
-                    <b>
-                        EXTRACTING... PLEASE WAIT...
-                    </b>
-                </span>
-            </div>
-        </div>
-    </div>
+
 
     <div class="row" style="padding:50px;">
         <div class="col-lg-12" style="padding:5% 5% 5% 5%;border: 1px solid gray;border-radius:10px;background-color:lightgray;">
@@ -54,8 +30,9 @@
                         <div class="col-lg-9">
                             <select class="form-control" id="ddl_report_type" ng-model="ddl_report_type" ng-change="ReportType()">
                                 <option value="REFUND">LIST OF REFUND</option>
-                                <option value="TAX-PAYABLE">LIST FOR TAX PAYABLE (TAX PYBL)</option>
-                                <option value="TAX-RATE-AMOUNT">LIST OF TAX RATE WITH TAX AMOUNT FOR JOB-ORDER,CASUAL AND REGULAR EMPLOYEES</option>
+                                <option value="TAX-PAYABLE">LIST OF TAX PAYABLE (TAX PYBL)</option>
+                                <option value="TAX-RATE-AMOUNT">LIST OF TAX RATE WITH TAX AMOUNT FROM PAYROLL</option>
+                                <option value="DEDUCTIONS">LIST OF DEDUCTION FROM PAYROLL</option>
                             </select>
                         </div>
                     </div>
@@ -90,6 +67,56 @@
                             </select>
                         </div>
                     </div>
+
+                    <div class="row" ng-show="show_deduction" style="padding-top:5px !important">
+                        <div class="col-lg-3">
+                            <span>DEDUCTION:</span>
+                        </div>
+                        <div class="col-lg-9">
+                            <select class="form-control" id="ddl_deduction" ng-model="ddl_deduction">
+                                <option value="wtax">				BIR Tax</option>
+                                <option value="wtax_10perc">		BIR Tax - 10% for JO</option>
+                                <option value="wtax_3perc">			BIR Tax - 3% for JO</option>
+                                <option value="wtax_5perc">			BIR Tax - 5% for JO</option>
+                                <option value="ccmpc_ln">			CCMPC </option>
+                                <option value="gsis_emergency_ln">	EMERGENCY LOAN </option>
+                                <option value="gsis_gs">			GSIS (GS)</option>
+                                <option value="gsis_ps">			GSIS (PS)</option>
+                                <option value="gsis_ecard_ln">		GSIS ECARD </option>
+                                <option value="gsis_educ_asst_ln">	GSIS EDUCATIONAL ASSISTANCE LOAN</option>
+                                <option value="other_loan2">		GSIS GFAL</option>
+                                <option value="other_loan1">		GSIS MPL</option>
+                                <option value="gsis_conso_ln">		GSIS SALARY LOAN/CONSO LOAN </option>
+                                <option value="other_loan4">		GSIS-COMP LN</option>
+                                <option value="hdmf_ps2">			HDMF - ADDNTL</option>
+                                <option value="hdmf_cal_ln">		HDMF CALAMITY LOAN</option>
+                                <option value="hdmf_hse_ln">		HDMF HOUSING LN</option>
+                                <option value="hdmf_mp2">			HDMF MP2</option>
+                                <option value="hdmf_gs">			HDMF PRM (GS)</option>
+                                <option value="hdmf_ps">			HDMF PRM (PS)</option>
+                                <option value="hdmf_mpl_ln">		HDMFP MP LN</option>
+                                <option value="other_loan5">		LBP eSL</option>
+                                <option value="network_ln">			NETWORK BANK </option>
+                                <option value="nhmfc_hsing">		NHMFC HSING </option>
+                                <option value="nico_ln">			NICO LOAN </option>
+                                <option value="phic_gs">			PHIC (GS)</option>
+                                <option value="phic_ps">			PHIC (PS)</option>
+                                <option value="other_premium1">		PHIC DED 1</option>
+                                <option value="philamlife_ps">		PHILAM LIFE </option>
+                                <option value="gsis_policy_opt_ln">	POL LN - OPT</option>
+                                <option value="gsis_policy_reg_ln">	POL REG LOAN</option>
+                                <option value="sif_gs">				SIF</option>
+                                <option value="sss_ps">				SSS</option>
+                                <option value="other_ded_loan1">	TAGUM COOP LN.</option>
+                                <option value="gsis_uoli">			UOLI </option>
+                                <option value="gsis_uoli50">		UOLI-E50</option>
+                                <option value="gsis_uoli55">		UOLI-E55</option>
+                                <option value="gsis_uoli60">		UOLI-E60</option>
+                                <option value="gsis_uoli65">		UOLI-E65</option>
+                            </select>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="ibox-footer">
                     <div class="row">
@@ -118,6 +145,32 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal_generating_tax">
+        <div class="modal-dialog text-center">
+            @*<span class="fa fa-spinner fa-spin fa-3x text-white"></span>*@
+            <div class="spiner-example">
+                <div class="sk-spinner sk-spinner-cube-grid">
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                    <div class="sk-cube"></div>
+                </div>
+            </div>
+            <div class="row text-center">
+                <span style="color:white;padding:10px 20px 10px 20px;border:0.5px solid aquamarine;border-radius:5px 5px 5px 5px;background-image: linear-gradient(329deg, #268672 50%, #39a28c 50%);">
+                    <b>
+                        EXTRACTING... PLEASE WAIT...
+                    </b>
+                </span>
             </div>
         </div>
     </div>

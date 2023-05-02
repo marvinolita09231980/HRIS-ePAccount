@@ -16,6 +16,7 @@ ng_HRD_App.controller("cExtractToExcel_ctrlr", function ($scope, $compile, $http
 
     s.year = [];
 
+    s.show_deduction = false
     s.ddl_report_type ="TAX-PAYABLE"  ;
     s.ddl_payroll_month = "";
     
@@ -206,6 +207,67 @@ ng_HRD_App.controller("cExtractToExcel_ctrlr", function ($scope, $compile, $http
 
             }
 
+            if (s.ddl_report_type == "DEDUCTIONS")
+            {
+                // *******************************************************
+                // *** VJA : 2023-04-28 - Validation and Loading hide ****
+                // *******************************************************
+                var controller = "Reports"
+                var action = "Index"
+                var ReportName = "CrystalReport"
+                var SaveName = "Crystal_Report"
+                var ReportType = "inline"
+                var ReportPath = "~/Reports/cryPayrollDeductions/cryPayrollDeductions.rpt"
+                var sp = "sp_extract_payrolldeductions,p_payroll_year," + s.ddl_payroll_year + ",p_payroll_month," + s.ddl_payroll_month + ",p_deduc_descr," + s.ddl_deduction 
+                
+                
+                $("#modal_generating_tax").modal({ keyboard: false, backdrop: "static" })
+                var iframe = document.getElementById('iframe_print_preview');
+                var iframe_page = $("#iframe_print_preview")[0];
+                iframe.style.visibility = "hidden";
+
+                s.embed_link = "../Reports/CrystalViewer.aspx?Params=" + ""
+                        + "&ReportName=" + ReportName
+                        + "&SaveName=" + SaveName
+                        + "&ReportType=" + ReportType
+                        + "&ReportPath=" + ReportPath
+                        + "&id=" + sp // + "," + parameters
+
+                if (!/*@cc_on!@*/0) { //if not IE
+                    iframe.onload = function () {
+                        iframe.style.visibility = "visible";
+                        $("#modal_generating_tax").modal("hide")
+                    };
+                }
+                else if (iframe_page.innerHTML()) {
+                    // get and check the Title (and H tags if you want)
+                    var ifTitle = iframe_page.contentDocument.title;
+                    if (ifTitle.indexOf("404") >= 0) {
+                        swal("You cannot Preview this Report", "There something wrong!", { icon: "warning" });
+                        iframe.src = "";
+                    }
+                    else if (ifTitle != "") {
+                        swal("You cannot Preview this Report", "There something wrong!", { icon: "warning" });
+                        iframe.src = "";
+                    }
+                }
+                else {
+                    iframe.onreadystatechange = function () {
+                        if (iframe.readyState == "complete") {
+                            iframe.style.visibility = "visible";
+                            $("#modal_generating_tax").modal("hide")
+                        }
+                    };
+                }
+                console.log(iframe.src)
+                iframe.src = s.embed_link;
+                $('#modal_print_preview').modal({ backdrop: 'static', keyboard: false });
+
+                // *******************************************************
+                // *** VJA : 2023-04-28 - Validation and Loading hide ****
+                // *******************************************************
+
+            }
         }
 
     }
@@ -219,7 +281,7 @@ ng_HRD_App.controller("cExtractToExcel_ctrlr", function ($scope, $compile, $http
     function ValidateFields() {
         var return_val = true;
         ValidationResultColor("ALL", false);
-        if (s.ddl_report_type == "TAX-RATE-AMOUNT" || s.ddl_report_type == "TAX-PAYABLE")
+        if (s.ddl_report_type == "TAX-RATE-AMOUNT" || s.ddl_report_type == "TAX-PAYABLE" || s.ddl_report_type == "DEDUCTIONS" )
         {
             if ($("#ddl_payroll_month option:selected").val() == "")
             {
@@ -251,12 +313,18 @@ ng_HRD_App.controller("cExtractToExcel_ctrlr", function ($scope, $compile, $http
 
     s.ReportType = function ()
     {
+        s.show_deduction = false
         $('#id_lbl_year').text("POSTED YEAR:");
         $('#id_lbl_month').text("POSTED MONTH:");
         if (s.ddl_report_type == "TAX-RATE-AMOUNT")
         {
             $('#id_lbl_year').text("YEAR:");
             $('#id_lbl_month').text("MONTH:");
+        } else if (s.ddl_report_type == "DEDUCTIONS")
+        {
+            $('#id_lbl_year').text("YEAR:");
+            $('#id_lbl_month').text("MONTH:");
+            s.show_deduction = true
         }
     }
 });

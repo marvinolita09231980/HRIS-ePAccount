@@ -1435,6 +1435,12 @@
       <SubType>Component</SubType>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Reports\cryPayrollDeductions\cryPayrollDeductions.cs">
+      <DependentUpon>cryPayrollDeductions.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Reports\cryTaxRate_TaxAmount\cryTaxRate_TaxAmount.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -3320,6 +3326,10 @@
     <Content Include="Reports\cryTaxPayable\cryTaxPayable.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>cryTaxPayable.cs</LastGenOutput>
+    </Content>
+    <Content Include="Reports\cryPayrollDeductions\cryPayrollDeductions.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>cryPayrollDeductions.cs</LastGenOutput>
     </Content>
     <EmbeddedResource Include="Reports\cryVoucher\cryOBR\cryOBR_NOCAFOA.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
