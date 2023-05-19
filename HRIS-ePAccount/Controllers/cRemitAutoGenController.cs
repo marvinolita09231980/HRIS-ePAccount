@@ -55,6 +55,7 @@ namespace HRIS_ePAccount.Controllers
             return Json(new { sp_remittance }, JsonRequestBehavior.AllowGet);
         }
 
+
         //*********************************************************************//
         // Created By : JMTJR - Created Date : 10/19/2019
         // Description : This will occure and perform the stored procedure that 

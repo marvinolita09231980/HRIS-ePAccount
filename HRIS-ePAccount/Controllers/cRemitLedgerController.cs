@@ -253,6 +253,7 @@ namespace HRIS_ePAccount.Controllers
                     case "12":
                     case "13":
                     case "17":
+                    case "18":
                         var details_oth = db_pacco.remittance_dtl_others_tbl.Where(a => a.remittance_ctrl_nbr == par_remittance_ctrl_no).ToList();
                         db_pacco.remittance_dtl_others_tbl.RemoveRange(details_oth);
 

@@ -116,6 +116,7 @@ ng_HRD_App.controller("cRemitAutoGen_ctrlr", function ($scope, $compile, $http, 
                 }
                 else
                 {
+                    console.log(s.ddl_remittance_year, s.ddl_remittance_month, s.ddl_employment_type, s.ddl_remittance_type, s.ddl_batch_nbr)
                     setTimeout(function () {
                         h.post("../cRemitAutoGen/GenerateRemittance",
                             {
