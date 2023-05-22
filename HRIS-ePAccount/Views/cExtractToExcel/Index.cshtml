@@ -6,7 +6,7 @@
 @{
     ViewBag.Title = "Index";
 }
-<script src="~/Angular/ng-cExtractToExcel.js?v2"></script>
+<script src="~/Angular/ng-cExtractToExcel.js?v3"></script>
 
 <section ng-app="ng_HRD_App" ng-controller="cExtractToExcel_ctrlr">
 
@@ -74,6 +74,7 @@
                         </div>
                         <div class="col-lg-9">
                             <select class="form-control" id="ddl_deduction" ng-model="ddl_deduction">
+                                <option value="">-- Select here --</option>
                                 <option value="wtax">				BIR Tax</option>
                                 <option value="wtax_10perc">		BIR Tax - 10% for JO</option>
                                 <option value="wtax_3perc">			BIR Tax - 3% for JO</option>
@@ -99,6 +100,7 @@
                                 <option value="network_ln">			NETWORK BANK </option>
                                 <option value="nhmfc_hsing">		NHMFC HSING </option>
                                 <option value="nico_ln">			NICO LOAN </option>
+                                <option value="other_premium2">		OTHER PAYABLE </option>
                                 <option value="phic_gs">			PHIC (GS)</option>
                                 <option value="phic_ps">			PHIC (PS)</option>
                                 <option value="other_premium1">		PHIC DED 1</option>
@@ -113,6 +115,7 @@
                                 <option value="gsis_uoli55">		UOLI-E55</option>
                                 <option value="gsis_uoli60">		UOLI-E60</option>
                                 <option value="gsis_uoli65">		UOLI-E65</option>
+                                <option value="uniform_amt">		UNIFORM</option>
                             </select>
                         </div>
                     </div>
