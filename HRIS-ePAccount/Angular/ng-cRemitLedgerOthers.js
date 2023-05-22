@@ -1445,6 +1445,10 @@
         if (s.remittance_type == "13") {
             s.ddl_reports = "cryRemittanceNHMFC.rpt"
         }
+        if (s.remittance_type == "18") {
+            alert("jdasdsad")
+            s.ddl_reports = "cryRemittanceJO_UNIFORM.rpt"
+        }
 
 
         sp = "sp_remittance_OTHERS_rep,p_remittance_ctrl_nbr," + s.txtb_control_nbr.trim();
@@ -1528,7 +1532,7 @@
             s.ddl_reports = "cryRemittanceNICO.rpt"
         }
 
-        if (s.remittance_type == "11") {
+        if (s.remittance_type == "11" ) {
             s.ddl_reports = "cryRemittanceCCMPC.rpt"
         }
 
@@ -1538,6 +1542,10 @@
 
         if (s.remittance_type == "13") {
             s.ddl_reports = "cryRemittanceNHMFC.rpt"
+        }
+
+        if (s.remittance_type == "18") {
+            s.ddl_reports = "cryRemittanceJOUniform.rpt"
         }
         
         

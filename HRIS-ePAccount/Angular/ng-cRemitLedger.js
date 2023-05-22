@@ -1007,16 +1007,13 @@
                         sp = "sp_remittance_TAX_smry_rep,p_remittance_ctrl_nbr," + data.remittance_ctrl_nbr;
                        
                     }
-
                     else
                     {
                         var parameters = "p_remittancetype_code," + "14" + ",p_employment_type," + data.employment_type + ",p_remit_year," + data.remittance_year + ",p_remit_month," + data.remittance_month + ",p_remittance_ctrl_nbr," + data.remittance_ctrl_nbr
                         sp = "sp_monthly_remittance_tax_rep," + parameters;
                         
                     }
-
-                    ReportPath = "~/Reports/cryRemittanceOTHERS1/" + s.ddl_reports + "";
-                    
+                    ReportPath = "~/Reports/cryRemittanceOTHERS1/" + s.ddl_reports + ""; 
                 }
                 
                 s.loading_r = true;
@@ -1038,9 +1035,7 @@
                         par_page_nbr: $('#datalist_grid').DataTable().page.info().page,
                         par_search: s.search_box,
 
-
                     }).then(function (d)
-
                     {
 
                         // *******************************************************
@@ -1304,7 +1299,9 @@
                     case "17":
                         url = "/cRemitLedgerOthers?id=17&title=" + s.datalistgrid[lst].remittancetype_descr;
                         break;
-
+                    case "18":
+                        url = "/cRemitLedgerOthers?id=18&title=" + s.datalistgrid[lst].remittancetype_descr;
+                        break;
 
                 }
                 if (url != "") {
