@@ -2413,6 +2413,8 @@
       <DependentUpon>cnHRIS_ePAccount.edmx</DependentUpon>
     </Content>
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Reports\cryRemittanceOTHERS1\OtherRecon\cryRemittanceJOUniform.rpt" />
+    <Content Include="Reports\cryRemittanceOTHERS1\cryRemittanceJO_UNIFORM.rpt" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\demo\chartjs-demo.js" />
     <Content Include="Scripts\demo\flot-demo.js" />
