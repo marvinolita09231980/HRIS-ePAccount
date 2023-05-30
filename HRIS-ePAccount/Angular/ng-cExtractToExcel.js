@@ -16,10 +16,10 @@ ng_HRD_App.controller("cExtractToExcel_ctrlr", function ($scope, $compile, $http
 
     s.year = [];
 
-    s.show_deduction = false
-    s.ddl_report_type ="TAX-PAYABLE"  ;
-    s.ddl_payroll_month = "";
-    
+    s.show_deduction        = false
+    s.ddl_report_type       = "TAX-PAYABLE";
+    s.ddl_payroll_month     = "";
+    s.ddl_deduction         = ""
     
     //Initialize Request to backend to get the data for employment type and remittance type
     function init()
@@ -36,16 +36,14 @@ ng_HRD_App.controller("cExtractToExcel_ctrlr", function ($scope, $compile, $http
     function RetrieveYear()
     {
         var currentYear = new Date().getFullYear();
-
         var prev_year = currentYear - 5;
-        for (var i = 1; i <= 8; i++) {
+        for (var i = 1; i <= 8; i++)
+        {
             var data = { "year": prev_year };
             s.year.push(data);
             prev_year++;
         }
     }
-    
-    
 
     //**************************************************************//
     //***Occure when btn_generate_remittance is click by the user***//
@@ -218,7 +216,7 @@ ng_HRD_App.controller("cExtractToExcel_ctrlr", function ($scope, $compile, $http
                 var SaveName = "Crystal_Report"
                 var ReportType = "inline"
                 var ReportPath = "~/Reports/cryPayrollDeductions/cryPayrollDeductions.rpt"
-                var sp = "sp_extract_payrolldeductions,p_payroll_year," + s.ddl_payroll_year + ",p_payroll_month," + s.ddl_payroll_month + ",p_deduc_descr," + s.ddl_deduction 
+                var sp = "sp_extract_payrolldeductions,p_created_payroll_year," + s.ddl_payroll_year + ",p_created_payroll_month," + s.ddl_payroll_month + ",p_deduc_descr," + s.ddl_deduction 
                 
                 
                 $("#modal_generating_tax").modal({ keyboard: false, backdrop: "static" })

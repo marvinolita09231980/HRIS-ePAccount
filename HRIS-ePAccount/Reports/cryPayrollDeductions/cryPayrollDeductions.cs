@@ -114,7 +114,7 @@ namespace HRIS_ePAccount.Reports.cryPayrollDeductions {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_p_payroll_year {
+        public CrystalDecisions.Shared.IParameterField Parameter_p_deduc_descr {
             get {
                 return this.DataDefinition.ParameterFields[0];
             }
@@ -122,7 +122,7 @@ namespace HRIS_ePAccount.Reports.cryPayrollDeductions {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_p_payroll_month {
+        public CrystalDecisions.Shared.IParameterField Parameter_p_created_payroll_year {
             get {
                 return this.DataDefinition.ParameterFields[1];
             }
@@ -130,7 +130,7 @@ namespace HRIS_ePAccount.Reports.cryPayrollDeductions {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_p_deduc_descr {
+        public CrystalDecisions.Shared.IParameterField Parameter_p_created_payroll_month {
             get {
                 return this.DataDefinition.ParameterFields[2];
             }
