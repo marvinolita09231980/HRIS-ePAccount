@@ -183,7 +183,7 @@
                             <div class="col-sm-5 mt10">
                                 <strong for="colFormLabelSm" class="col-sm-4 col-form-label col-form-label-sm mt10"><span>Remittance Type:</span></strong>
                                 <div class="col-sm-8">
-                                    <select class="form-control form-control-sm field-select-sm" id="ddl_remit_type" ng-model="ddl_remit_type" ng-change="Filters(ddl_remit_type)">
+                                    <select class="form-control form-control-sm field-select-sm" id="ddl_remit_type" ng-model="ddl_remit_type" ng-change="Filters()">
                                             <option ng-repeat="lst in remittanceType" value="{{lst.remittancetype_code}}">{{lst.remittancetype_descr}}</option>
                                     </select>
                                 </div>
