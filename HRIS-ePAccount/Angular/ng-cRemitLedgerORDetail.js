@@ -624,7 +624,8 @@
         else {
             require_warning(false, "odReq", "odWng", "require-field")
         }
-        
+
+       
 
         h.post("../cRemitLedgerORDetail/Post_All", { or_nbr: fd.txtb_or_nbr, or_date: fd.txtb_or_date, action: "PO", payroll_month: $("#ddl_month option:selected").val() }).then(function (d) {
             if(d.data.message == "success")
@@ -659,10 +660,6 @@
                     s.chk_all_chk = false
                 }
                
-                
-
-                
-
                 s.ORPOST_Table_Data.refreshTable("ORPOSTTable", empl_id)
                 btn_post.innerHTML = '<i class="fa fa-save"> </i>Save ';
                 $('#btn_post').attr("disabled", false);

@@ -88,12 +88,12 @@
 
     function currency(d) {
 
-        var retdata = ""
+        var retdata = "0.00"
         if (d == null || d == "" || d == undefined) {
-            return retdata = "0.00"
+            return retdata
         }
         else {
-            retdata = parseFloat(d).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1')
+            retdata = parseFloat(d).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
             return retdata
         }
     }
@@ -737,7 +737,9 @@
                     case "16":
                         url = "/cRemitLedgerORDetail?id=16&title=" + s.datalistgrid[lst].remittancetype_descr;
                         break;
-
+                    case "17":
+                        url = "/cRemitLedgerORDetail?id=17&title=" + s.datalistgrid[lst].remittancetype_descr;
+                        break;
                 }
                 if (url != "") {
                     window.location.href = url;
