@@ -256,13 +256,15 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
     }
 
     function currency(d) {
-
+       
         var retdata = ""
-        if (d == null || d == "" || d == undefined) {
+        if (d == null || d == "" || d == undefined || isNaN(d)== true) {
             return retdata = "0.00"
         }
         else {
-            retdata = d.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+           
+            retdata = parseFloat(d).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+            //retdata = parseFloat(d).toFixed(2)
             return retdata
         }
 
@@ -990,6 +992,8 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
         s.datalistgrid[index_update].vat_perc           = $("#ddl_vat").val()
         s.datalistgrid[index_update].exmpt_amt          = toDecimalFormat($("#txtb_expt_amt").val())
 
+
+
         s.oTable.fnClearTable();
         s.oTable.fnAddData(s.datalistgrid);
         page_value = info.page
@@ -1051,7 +1055,7 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
             }).then(function (d) {
 
                 if (d.data.message == "success") {
-                    console.log(dt)
+                  
                     h.post("../cJOTaxRate/SaveEDITInDatabase",
                         {
                             data: dt
@@ -1206,7 +1210,7 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
             ,par_empl_id                : s.datalistgrid[id_ss].empl_id
             ,par_effective_date         : s.datalistgrid[id_ss].effective_date
         }).then(function (d) {
-
+            console.log(s.datalistgrid[id_ss])
             if (d.data.message == "success")
             {
 
@@ -1214,7 +1218,38 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
                 s.txtb_employment_type_val = s.datalistgrid[id_ss].employment_type
                 s.txtb_empl_name           = s.datalistgrid[id_ss].employee_name
                 s.txtb_empl_id             = s.datalistgrid[id_ss].empl_id
-                s.txtb_position            = s.datalistgrid[id_ss].position_title1
+                s.txtb_position = s.datalistgrid[id_ss].position_title1
+                if (s.datalistgrid[id_ss].rcrd_status == "A") {
+                    $("#txtb_effective_date_hid").prop("disabled",true)
+                    $("#ddl_bir_class").prop("disabled", true)
+                    $("#ddl_fixed_rate").prop("disabled", true)
+                    $("#ddl_with_sworn").prop("disabled", true)
+                    $("#ddl_deduction_status").prop("disabled", true)
+                    $("#ddl_status").prop("disabled", true)
+                    $("#ddl_w_held").prop("disabled", true)
+                    $("#ddl_b_tax").prop("disabled", true)
+                    $("#ddl_vat").prop("disabled", true)
+                    $("#btn_save_tx_edit").prop("disabled", true)
+                    $("#alert_section").css('color', 'red');
+                    $("#alert_section").text("Not allowed for edit, tax generation already approved. Please contact HR")
+                    
+                }
+                else{
+                    $("#txtb_effective_date_hid").prop("disabled", false)
+                    $("#ddl_bir_class").prop("disabled", false)
+                    $("#ddl_fixed_rate").prop("disabled", false)
+                    $("#ddl_with_sworn").prop("disabled", false)
+                    $("#ddl_deduction_status").prop("disabled", false)
+                    $("#ddl_status").prop("disabled", false)
+                    $("#ddl_w_held").prop("disabled", false)
+                    $("#ddl_b_tax").prop("disabled", false)
+                    $("#ddl_vat").prop("disabled", false)
+                    $("#btn_save_tx_edit").prop("disabled", false)
+
+                    $("#alert_section").text("")
+                    
+                }
+
                 $("#txtb_effective_date_hid").val(s.datalistgrid[id_ss].effective_date)
                 $("#ddl_bir_class").val(s.datalistgrid[id_ss].bir_class)
                 $("#ddl_fixed_rate").val(s.datalistgrid[id_ss].fixed_rate.toString())

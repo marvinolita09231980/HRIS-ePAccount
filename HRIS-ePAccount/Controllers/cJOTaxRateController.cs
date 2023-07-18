@@ -28,6 +28,7 @@ namespace HRIS_ePAccount.Controllers
     {
 
         HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+       HRIS_DEVEntities db_pay = new HRIS_DEVEntities();
         User_Menu um = new User_Menu();
         //*********************************************************************//
         // Created By : JRV - Created Date : 09/19/2019
@@ -293,8 +294,9 @@ namespace HRIS_ePAccount.Controllers
                     tbl.vat_perc            = data.vat_perc;
                     tbl.exmpt_amt           = data.exmpt_amt;
                     tbl.updated_dttm        = Convert.ToDateTime("1900-01-01");
-
                     db_pacco.payrollemployee_tax_hdr_tbl.Add(tbl);
+
+                   
                    
                 }
 
@@ -313,8 +315,14 @@ namespace HRIS_ePAccount.Controllers
                     payrollemployee_tax_hdr_tbl.bus_tax_perc        = data.bus_tax_perc;
                     payrollemployee_tax_hdr_tbl.vat_perc            = data.vat_perc;
                     payrollemployee_tax_hdr_tbl.exmpt_amt           = data.exmpt_amt;
-                   
-                   
+
+                    //var payrollemployee_tax_tbl = db_pay.payrollemployee_tax_tbl.Where(a => a.effective_date == effective_date && a.empl_id == par_empl_id).FirstOrDefault();
+
+                    //if(payrollemployee_tax_tbl != null)
+                    //{
+                    //    payrollemployee_tax_tbl.rcrd_status = "N";
+                    //}
+
                 }
                 message = "success";
                 db_pacco.SaveChanges();

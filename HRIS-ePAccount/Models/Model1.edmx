@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="HRIS_PAYModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="payrollemployee_tax_tbl">
+          <Key>
+            <PropertyRef Name="empl_id" />
+            <PropertyRef Name="effective_date" />
+          </Key>
+          <Property Name="empl_id" Type="varchar" MaxLength="8" Nullable="false" />
+          <Property Name="effective_date" Type="date" Nullable="false" />
+          <Property Name="bir_class" Type="varchar" MaxLength="1" />
+          <Property Name="with_sworn" Type="bit" />
+          <Property Name="fixed_rate" Type="bit" />
+          <Property Name="total_gross_pay" Type="money" />
+          <Property Name="dedct_status" Type="bit" />
+          <Property Name="rcrd_status" Type="varchar" MaxLength="1" />
+          <Property Name="user_id_created_by" Type="varchar" MaxLength="30" />
+          <Property Name="created_dttm" Type="datetime" />
+          <Property Name="user_id_updated_by" Type="varchar" MaxLength="30" />
+          <Property Name="updated_dttm" Type="datetime" />
+          <Property Name="w_tax_perc" Type="money" />
+          <Property Name="bus_tax_perc" Type="money" />
+          <Property Name="vat_perc" Type="money" />
+          <Property Name="exmpt_amt" Type="money" />
+        </EntityType>
+        <EntityContainer Name="HRIS_PAYModelStoreContainer">
+          <EntitySet Name="payrollemployee_tax_tbl" EntityType="Self.payrollemployee_tax_tbl" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="HRIS_PAYModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="payrollemployee_tax_tbl">
+          <Key>
+            <PropertyRef Name="empl_id" />
+            <PropertyRef Name="effective_date" />
+          </Key>
+          <Property Name="empl_id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="effective_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="bir_class" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="with_sworn" Type="Boolean" />
+          <Property Name="fixed_rate" Type="Boolean" />
+          <Property Name="total_gross_pay" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="dedct_status" Type="Boolean" />
+          <Property Name="rcrd_status" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="user_id_created_by" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="created_dttm" Type="DateTime" Precision="3" />
+          <Property Name="user_id_updated_by" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="updated_dttm" Type="DateTime" Precision="3" />
+          <Property Name="w_tax_perc" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="bus_tax_perc" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="vat_perc" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="exmpt_amt" Type="Decimal" Precision="19" Scale="4" />
+        </EntityType>
+        <EntityContainer Name="HRIS_DEVEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="payrollemployee_tax_tbl" EntityType="Self.payrollemployee_tax_tbl" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="HRIS_PAYModelStoreContainer" CdmEntityContainer="HRIS_DEVEntities">
+          <EntitySetMapping Name="payrollemployee_tax_tbl">
+            <EntityTypeMapping TypeName="HRIS_PAYModel.payrollemployee_tax_tbl">
+              <MappingFragment StoreEntitySet="payrollemployee_tax_tbl">
+                <ScalarProperty Name="empl_id" ColumnName="empl_id" />
+                <ScalarProperty Name="effective_date" ColumnName="effective_date" />
+                <ScalarProperty Name="bir_class" ColumnName="bir_class" />
+                <ScalarProperty Name="with_sworn" ColumnName="with_sworn" />
+                <ScalarProperty Name="fixed_rate" ColumnName="fixed_rate" />
+                <ScalarProperty Name="total_gross_pay" ColumnName="total_gross_pay" />
+                <ScalarProperty Name="dedct_status" ColumnName="dedct_status" />
+                <ScalarProperty Name="rcrd_status" ColumnName="rcrd_status" />
+                <ScalarProperty Name="user_id_created_by" ColumnName="user_id_created_by" />
+                <ScalarProperty Name="created_dttm" ColumnName="created_dttm" />
+                <ScalarProperty Name="user_id_updated_by" ColumnName="user_id_updated_by" />
+                <ScalarProperty Name="updated_dttm" ColumnName="updated_dttm" />
+                <ScalarProperty Name="w_tax_perc" ColumnName="w_tax_perc" />
+                <ScalarProperty Name="bus_tax_perc" ColumnName="bus_tax_perc" />
+                <ScalarProperty Name="vat_perc" ColumnName="vat_perc" />
+                <ScalarProperty Name="exmpt_amt" ColumnName="exmpt_amt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

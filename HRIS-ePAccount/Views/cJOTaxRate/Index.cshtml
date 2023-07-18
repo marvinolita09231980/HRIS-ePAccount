@@ -234,7 +234,8 @@
 
                             <select class="form-control text-center" id="ddl_b_tax" ng-disabled="isDisabledBTax" ng-model="ddl_b_tax">
                                 <option value="0">0</option>
-                                <option ng-repeat="lst in w_held_data" value="{{lst.taxrate_percentage}}">{{lst.taxrate_percentage}}</option>
+                                <option value="3">3</option>
+                                @*<option ng-repeat="lst in w_held_data" value="{{lst.taxrate_percentage}}">{{lst.taxrate_percentage}}</option>*@
                             </select>
 
                         </div>
@@ -330,43 +331,46 @@
                     <div class="row" style="margin-top:-15px;">
                         <hr style="border-color:cadetblue; height:5px;" />
                     </div>
+                    <div class="row">
+                        <div class="col-12" id="alert_section"></div>
+                    </div>
 
                     @*<div class="form-group row" style="margin-top:-15px;">
 
-                            <div class="col-lg-6">
-                                <div style="float:left; width:35.5%; padding-top:10px;">
-                                    <label>Business Tax:</label>
-                                </div>
-                                <div style="width:64.5%; float:right;" class="input-group">
-                                    <input id="txtb_business_tax" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_business_tax" class="form-control text-center" disabled />
-                                    <div class="input-group-addon">
-                                        <span>%</span>
-                                    </div>
+            <div class="col-lg-6">
+                <div style="float:left; width:35.5%; padding-top:10px;">
+                    <label>Business Tax:</label>
+                </div>
+                <div style="width:64.5%; float:right;" class="input-group">
+                    <input id="txtb_business_tax" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_business_tax" class="form-control text-center" disabled />
+                    <div class="input-group-addon">
+                        <span>%</span>
+                    </div>
 
-                                </div>
+                </div>
 
-                            </div>
+            </div>
 
 
-                            <div class="col-lg-6">
-                                <div style="float:left; width:35.5%; padding-top:10px;">
-                                    <label>W/ Held Tax:</label>
-                                </div>
-                                <div style="width:64.5%; float:right;" class="input-group">
-                                    <input id="txtb_wheld_tax" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_wheld_tax" class="form-control text-center" disabled />
-                                    <div class="input-group-addon">
-                                        <span>%</span>
-                                    </div>
+            <div class="col-lg-6">
+                <div style="float:left; width:35.5%; padding-top:10px;">
+                    <label>W/ Held Tax:</label>
+                </div>
+                <div style="width:64.5%; float:right;" class="input-group">
+                    <input id="txtb_wheld_tax" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_wheld_tax" class="form-control text-center" disabled />
+                    <div class="input-group-addon">
+                        <span>%</span>
+                    </div>
 
-                                </div>
+                </div>
 
-                            </div>
+            </div>
 
-                        </div>*@
+        </div>*@
                 </div>
                 <div class="modal-footer" style="padding: 10px 30px 10px 30px !important">
                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-                    <button ng-show="ishowsave" ng-click="btn_save()" type="button" class="btn btn-success"><i id="btn_save" class="fa fa-save"></i> Save</button>
+                    <button ng-show="ishowsave" id="btn_save_tx_edit" ng-click="btn_save()" type="button" class="btn btn-success"><i id="btn_save" class="fa fa-save"></i> Save</button>
 
                 </div>
             </div>
