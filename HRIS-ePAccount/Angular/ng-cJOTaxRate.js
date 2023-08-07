@@ -219,7 +219,7 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
                     },
 
                     {
-                        "mData": null,
+                        "mData": "rcrd_status",
                         "bSortable": false,
                         "mRender": function (data, type, full, row) {
 
@@ -236,7 +236,8 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
                                 + '<button type="button" class="btn btn-info btn-sm action" data-toggle="tooltip" data-placement="left" title="Edit" ng-show="' + s.allow_edit + '" ng-click="btn_edit_action(' + row["row"] + ')" > '
                                 + '<i class="fa fa-edit"></i>' + '</button>'
                                 + '<button type="button" class="btn btn-danger btn-sm action" data-toggle="tooltip" data-placement="left" title="Delete" ng-show="' + s.allow_delete + '" ng-click="btn_delete_action(' + row["row"] + ')" > '
-                                + '<i class="fa fa-trash"></i>' + '</button></div ></center >'
+                                + '<i class="fa fa-trash"></i>' + '</button>'
+                                + '</div ></center > '
 
                         }
                     }
@@ -255,6 +256,15 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
         $("div.toolbar").html('<b>Custom tool bar! Text/images etc.</b>');
     }
 
+    function approvedOrnew(data) {
+        if (data == "A") {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+
     function currency(d) {
        
         var retdata = ""
@@ -269,6 +279,9 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
         }
 
     }
+
+  
+    
 
 
     //************************************//
@@ -413,7 +426,7 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
                 {
                     if (d.data.sp_payrollemployee_tax_hdr_tbl_list.length > 0)
                     {
-
+                        console.log(d.data.sp_payrollemployee_tax_hdr_tbl_list)
                         s.datalistgrid = d.data.sp_payrollemployee_tax_hdr_tbl_list;
                         s.oTable.fnClearTable();
                         s.oTable.fnAddData(s.datalistgrid)
@@ -1024,6 +1037,7 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
             
             var dt = getFromValue()
 
+           
             var history = "N"
             var effective_date = ""
             if (s.chckbx_history == true) {
@@ -1219,36 +1233,36 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
                 s.txtb_empl_name           = s.datalistgrid[id_ss].employee_name
                 s.txtb_empl_id             = s.datalistgrid[id_ss].empl_id
                 s.txtb_position = s.datalistgrid[id_ss].position_title1
-                if (s.datalistgrid[id_ss].rcrd_status == "A") {
-                    $("#txtb_effective_date_hid").prop("disabled",true)
-                    $("#ddl_bir_class").prop("disabled", true)
-                    $("#ddl_fixed_rate").prop("disabled", true)
-                    $("#ddl_with_sworn").prop("disabled", true)
-                    $("#ddl_deduction_status").prop("disabled", true)
-                    $("#ddl_status").prop("disabled", true)
-                    $("#ddl_w_held").prop("disabled", true)
-                    $("#ddl_b_tax").prop("disabled", true)
-                    $("#ddl_vat").prop("disabled", true)
-                    $("#btn_save_tx_edit").prop("disabled", true)
-                    $("#alert_section").css('color', 'red');
-                    $("#alert_section").text("Not allowed for edit, tax generation already approved. Please contact HR")
+                //if (s.datalistgrid[id_ss].rcrd_status == "A") {
+                //    $("#txtb_effective_date_hid").prop("disabled",true)
+                //    $("#ddl_bir_class").prop("disabled", true)
+                //    $("#ddl_fixed_rate").prop("disabled", true)
+                //    $("#ddl_with_sworn").prop("disabled", true)
+                //    $("#ddl_deduction_status").prop("disabled", true)
+                //    $("#ddl_status").prop("disabled", true)
+                //    $("#ddl_w_held").prop("disabled", true)
+                //    $("#ddl_b_tax").prop("disabled", true)
+                //    $("#ddl_vat").prop("disabled", true)
+                //    $("#btn_save_tx_edit").prop("disabled", true)
+                //    $("#alert_section").css('color', 'red');
+                //    $("#alert_section").text("Not allowed for edit, tax generation already approved. Please contact HR")
                     
-                }
-                else{
-                    $("#txtb_effective_date_hid").prop("disabled", false)
-                    $("#ddl_bir_class").prop("disabled", false)
-                    $("#ddl_fixed_rate").prop("disabled", false)
-                    $("#ddl_with_sworn").prop("disabled", false)
-                    $("#ddl_deduction_status").prop("disabled", false)
-                    $("#ddl_status").prop("disabled", false)
-                    $("#ddl_w_held").prop("disabled", false)
-                    $("#ddl_b_tax").prop("disabled", false)
-                    $("#ddl_vat").prop("disabled", false)
-                    $("#btn_save_tx_edit").prop("disabled", false)
+                //}
+                //else{
+                //    $("#txtb_effective_date_hid").prop("disabled", false)
+                //    $("#ddl_bir_class").prop("disabled", false)
+                //    $("#ddl_fixed_rate").prop("disabled", false)
+                //    $("#ddl_with_sworn").prop("disabled", false)
+                //    $("#ddl_deduction_status").prop("disabled", false)
+                //    $("#ddl_status").prop("disabled", false)
+                //    $("#ddl_w_held").prop("disabled", false)
+                //    $("#ddl_b_tax").prop("disabled", false)
+                //    $("#ddl_vat").prop("disabled", false)
+                //    $("#btn_save_tx_edit").prop("disabled", false)
 
-                    $("#alert_section").text("")
+                //    $("#alert_section").text("")
                     
-                }
+                //}
 
                 $("#txtb_effective_date_hid").val(s.datalistgrid[id_ss].effective_date)
                 $("#ddl_bir_class").val(s.datalistgrid[id_ss].bir_class)
