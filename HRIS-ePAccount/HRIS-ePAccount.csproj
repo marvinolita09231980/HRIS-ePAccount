@@ -1125,12 +1125,6 @@
       <DependentUpon>cryHonRemit.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\cryJobOrderReports\crySalary\cryConAndDedPage11.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>cryConAndDedPage1.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Reports\cryOtherPayroll\cryOthpay\cryOthPay1.cs">
       <SubType>Component</SubType>
     </Compile>
