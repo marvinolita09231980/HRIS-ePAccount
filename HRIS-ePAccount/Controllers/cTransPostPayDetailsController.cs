@@ -62,6 +62,7 @@ namespace HRIS_ePAccount.Controllers
         {
             string[] prevValues = null;
             string batch_nbr    = "";
+            db_pacco.Database.CommandTimeout = Int32.MaxValue;
             if (Session["PreviousValuesonPage_cTransPostPay"] == null || Session["PreviousValuesonPage_cTransPostPay"].ToString().Trim() == "")
             {
                 Session["PreviousValuesonPage_cTransPostPay"] = "";
@@ -96,7 +97,7 @@ namespace HRIS_ePAccount.Controllers
                 um.page_title           = Session["page_title"].ToString();
             }
 
-            return Json(new { listgrid, prevValues, payrolltemplate_list,um, override_data }, JsonRequestBehavior.AllowGet);
+            return JSON(new { listgrid, prevValues, payrolltemplate_list,um, override_data }, JsonRequestBehavior.AllowGet);
         }
 
         //*********************************************************************//
@@ -105,9 +106,10 @@ namespace HRIS_ePAccount.Controllers
         //*********************************************************************//
         public ActionResult GetCAVoucher(string p_ca_voucher_nbr, string p_batch_nbr, string p_payrolltemplate_code)
         {
+            db_pacco.Database.CommandTimeout = Int32.MaxValue;
             var payroll_vouchers_list = db_pacco.sp_ca_pay_vouchers_list(p_ca_voucher_nbr,p_batch_nbr, p_payrolltemplate_code).ToList();
             
-            return Json(new { payroll_vouchers_list }, JsonRequestBehavior.AllowGet);
+            return JSON(new { payroll_vouchers_list }, JsonRequestBehavior.AllowGet);
         }
 
         //*********************************************************************//
@@ -118,9 +120,10 @@ namespace HRIS_ePAccount.Controllers
         {
             try
             {
+                db_pacco.Database.CommandTimeout = Int32.MaxValue;
                 var datalistgrid = db_pacco.sp_transmital_postpay_tbl_list(p_payroll_year, p_payroll_month, p_employment_type).ToList();
 
-                return Json(new { datalistgrid }, JsonRequestBehavior.AllowGet);
+                return JSON(new { datalistgrid }, JsonRequestBehavior.AllowGet);
             }
             catch (DbEntityValidationException e)
             {
@@ -138,10 +141,11 @@ namespace HRIS_ePAccount.Controllers
         {
             try
             {
+                db_pacco.Database.CommandTimeout = Int32.MaxValue;
                 db_pacco.pyent_tbl.Add(data);
                 db_pacco.SaveChangesAsync();
 
-                return Json(new { message = "success", save_data = data }, JsonRequestBehavior.AllowGet);
+                return JSON(new { message = "success", save_data = data }, JsonRequestBehavior.AllowGet);
             }
             catch (DbEntityValidationException e)
             {
