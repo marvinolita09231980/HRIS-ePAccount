@@ -62,50 +62,74 @@ ng_HRD_App.controller("cEmplTaxUpd_ctrlr", function ($scope, $compile, $http, $f
     //**************************************************************//
     //***Occure when btn_generate_remittance is click by the user***//
     //**************************************************************// 
-    s.btn_generate_tax_click = function () {
-        if (ValidateFields()) {
-            $("#modal_generating_tax").modal();
-            setTimeout(function () {
-                h.post("../cEmplTaxUpd/GenerateTax",
-                    {
-                        par_year: s.ddl_remittance_year,
-                        par_empType: s.ddl_employment_type
-                    }).then(function (d) {
+    //s.btn_generate_tax_click = function () {
+    //    if (ValidateFields()) {
+    //        $("#modal_generating_tax").modal();
+    //        setTimeout(function () {
+    //            h.post("../cEmplTaxUpd/GenerateTax",
+    //                {
+    //                    par_year: s.ddl_remittance_year,
+    //                    par_empType: s.ddl_employment_type
+    //                }).then(function (d) {
 
-                        $("#modal_generating_tax").modal('hide');
-                        if (d.data.message == "success") {
-                            var icon_display = "";
-                            icon_display = "success";
-                            if (s.ddl_employment_type == "RC") 
-                            {
-                                swal(d.data.sp_generate_annualtax_tax_rece.result_flag_message, "Generation Message", icon_display);
-                            }
+    //                    $("#modal_generating_tax").modal('hide');
+    //                    if (d.data.message == "success") {
+    //                        var icon_display = "";
+    //                        icon_display = "success";
+    //                        if (s.ddl_employment_type == "RC") 
+    //                        {
+    //                            swal(d.data.sp_generate_annualtax_tax_rece.result_flag_message, "Generation Message", icon_display);
+    //                        }
 
-                            else if (s.ddl_employment_type == "JO")
-                            {
-                                swal(d.data.sp_generate_payrollemployee_tax_hdr_dtl.result_flag_message, "Generation Message", icon_display);
-                            }
+    //                        else if (s.ddl_employment_type == "JO")
+    //                        {
+    //                            swal(d.data.sp_generate_payrollemployee_tax_hdr_dtl.result_flag_message, "Generation Message", icon_display);
+    //                        }
 
-                            }
+    //                        }
                         
 
-                        else
-                        {
-                            icon_display = "warning";
-                            swal(d.data.message, "Generation Message", icon_display);
-                        }
+    //                    else
+    //                    {
+    //                        icon_display = "warning";
+    //                        swal(d.data.message, "Generation Message", icon_display);
+    //                    }
                         
-
-                        
-
-
-
                        
-                    })
-            }, 1500);
-        }
+    //                })
+    //        }, 1500);
+    //    }
 
+    //}
+
+    s.btn_generate_tax_click = function () {
+        h.post("../cEmplTaxUpd/GenerateTaxLaterNight",
+            {
+                par_year: s.ddl_remittance_year,
+                par_empType: s.ddl_employment_type
+            }).then(function (d) {
+                if (d.data.message == "success") {
+                    var icon_display = "";
+                    icon_display = "success";
+                    if (s.ddl_employment_type == "RC") {
+                        swal("Your generation request will be executed later tonight at 10 o'clock", "Generation Message", icon_display);
+                    }
+
+                    else if (s.ddl_employment_type == "JO") {
+                        swal(d.data.sp_generate_payrollemployee_tax_hdr_dtl.result_flag_message, "Generation Message", icon_display);
+                    }
+
+                }
+                else {
+                    icon_display = "warning";
+                    swal(d.data.message, "Generation Message", icon_display);
+                }
+
+               
+            })
+    
     }
+
 
     //***********************************************************//
     //***Field validation everytime generation button is click***//

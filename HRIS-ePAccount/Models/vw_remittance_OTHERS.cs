@@ -33,5 +33,7 @@ namespace HRIS_ePAccount.Models
         public string payroll_registry_nbr { get; set; }
         public string payroll_year { get; set; }
         public string payroll_month { get; set; }
+        public decimal tgm_coop_ln { get; set; }
+        public Nullable<decimal> uniform_amt { get; set; }
     }
 }

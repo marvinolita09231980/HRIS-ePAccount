@@ -345,7 +345,7 @@
           <Property Name="tran_year" Type="varchar" MaxLength="4" Nullable="false" />
           <Property Name="payroll_registry_nbr" Type="varchar" MaxLength="15" />
           <Property Name="payroll_registry_descr" Type="varchar" MaxLength="255" />
-          <Property Name="payroll_group_nbr" Type="varchar" MaxLength="4" />
+          <Property Name="payroll_group_nbr" Type="varchar" MaxLength="8" />
           <Property Name="department_code" Type="varchar" MaxLength="2" />
           <Property Name="rcvd_dttm" Type="datetime" />
           <Property Name="rcvd_by_user" Type="varchar" MaxLength="30" />
@@ -1326,7 +1326,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_idoc_trk_tbl_2be_rlsd' does not ha
           <Property Name="rlsd_req_doc" Type="bit" />
           <Property Name="required_doc_type" Type="varchar" MaxLength="3" Nullable="false" />
           <Property Name="role_id" Type="varchar" MaxLength="3" />
-          <Property Name="payroll_registry_descr" Type="varchar" MaxLength="255" />
+          <Property Name="payroll_registry_descr" Type="varchar" MaxLength="261" />
           <Property Name="gross_pay" Type="money" />
           <Property Name="net_pay" Type="money" />
           <Property Name="payrolltemplate_code" Type="varchar" MaxLength="3" />
@@ -1708,23 +1708,23 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_payrollregistry_info3_HRIS_ACT' do
         <EntityType Name="vw_payrollregistry_info3_HRIS_ACT">
           <Key>
             <PropertyRef Name="payroll_year" />
-            <PropertyRef Name="payroll_month" />
             <PropertyRef Name="payroll_registry_nbr" />
             <PropertyRef Name="payrolltemplate_code" />
-            <PropertyRef Name="payroll_group_nbr" />
             <PropertyRef Name="middle_name" />
             <PropertyRef Name="suffix_name" />
             <PropertyRef Name="payroll_source" />
             <PropertyRef Name="lates_amount_pera" />
             <PropertyRef Name="lwpay_day_spl" />
             <PropertyRef Name="wages_amt" />
+            <PropertyRef Name="payroll_month" />
+            <PropertyRef Name="payroll_group_nbr" />
           </Key>
           <Property Name="payroll_year" Type="varchar" MaxLength="4" Nullable="false" />
-          <Property Name="payroll_month" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="payroll_month" Type="varchar" MaxLength="3" Nullable="false" />
           <Property Name="payroll_registry_nbr" Type="varchar" MaxLength="6" Nullable="false" />
           <Property Name="payrolltemplate_code" Type="varchar" MaxLength="3" Nullable="false" />
           <Property Name="employment_type" Type="varchar" MaxLength="2" />
-          <Property Name="payroll_group_nbr" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="payroll_group_nbr" Type="varchar" MaxLength="8" Nullable="false" />
           <Property Name="payroll_registry_descr" Type="varchar" MaxLength="255" />
           <Property Name="payroll_period_from" Type="date" />
           <Property Name="payroll_period_to" Type="date" />
@@ -2377,7 +2377,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_remittance_info_GSIS' does not hav
           <Property Name="remittance_status_dtl" Type="varchar" MaxLength="1" />
           <Property Name="payroll_registry_nbr" Type="varchar" MaxLength="15" />
           <Property Name="payroll_registry_descr" Type="varchar" MaxLength="255" />
-          <Property Name="payroll_group_nbr" Type="varchar" MaxLength="4" />
+          <Property Name="payroll_group_nbr" Type="varchar" MaxLength="8" />
           <Property Name="department_code" Type="varchar" MaxLength="2" />
           <Property Name="payroll_source" Type="varchar" MaxLength="2" />
           <Property Name="payroll_year" Type="varchar" MaxLength="4" />
@@ -2432,7 +2432,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_remittance_info_HDMF' does not hav
           <Property Name="detailed_remarks" Type="varchar" MaxLength="100" />
           <Property Name="payroll_registry_nbr" Type="varchar" MaxLength="15" />
           <Property Name="payroll_registry_descr" Type="varchar" MaxLength="255" />
-          <Property Name="payroll_group_nbr" Type="varchar" MaxLength="4" />
+          <Property Name="payroll_group_nbr" Type="varchar" MaxLength="8" />
           <Property Name="department_code" Type="varchar" MaxLength="2" />
           <Property Name="payroll_source" Type="varchar" MaxLength="2" />
           <Property Name="payroll_year" Type="varchar" MaxLength="4" />
@@ -2471,7 +2471,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_remittance_info_OTHERS' does not h
           <Property Name="uploaded_amount" Type="money" />
           <Property Name="payroll_registry_nbr" Type="varchar" MaxLength="15" />
           <Property Name="payroll_registry_descr" Type="varchar" MaxLength="255" />
-          <Property Name="payroll_group_nbr" Type="varchar" MaxLength="4" />
+          <Property Name="payroll_group_nbr" Type="varchar" MaxLength="8" />
           <Property Name="department_code" Type="varchar" MaxLength="2" />
           <Property Name="payroll_source" Type="varchar" MaxLength="2" />
           <Property Name="payroll_year" Type="varchar" MaxLength="4" />
@@ -2517,7 +2517,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_remittance_info_PHIC' does not hav
           <Property Name="remittance_status_dtl" Type="varchar" MaxLength="1" />
           <Property Name="payroll_registry_nbr" Type="varchar" MaxLength="15" />
           <Property Name="payroll_registry_descr" Type="varchar" MaxLength="255" />
-          <Property Name="payroll_group_nbr" Type="varchar" MaxLength="4" />
+          <Property Name="payroll_group_nbr" Type="varchar" MaxLength="8" />
           <Property Name="department_code" Type="varchar" MaxLength="2" />
           <Property Name="payroll_source" Type="varchar" MaxLength="2" />
           <Property Name="payroll_year" Type="varchar" MaxLength="4" />
@@ -2558,7 +2558,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_remittance_info_SSS' does not have
           <Property Name="remittance_status_dtl" Type="varchar" MaxLength="1" />
           <Property Name="payroll_registry_nbr" Type="varchar" MaxLength="15" />
           <Property Name="payroll_registry_descr" Type="varchar" MaxLength="255" />
-          <Property Name="payroll_group_nbr" Type="varchar" MaxLength="4" />
+          <Property Name="payroll_group_nbr" Type="varchar" MaxLength="8" />
           <Property Name="department_code" Type="varchar" MaxLength="2" />
           <Property Name="payroll_source" Type="varchar" MaxLength="2" />
           <Property Name="payroll_year" Type="varchar" MaxLength="4" />
@@ -2570,15 +2570,16 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_remittance_info_SSS' does not have
 warning 6002: The table/view 'HRIS_ACT.dbo.vw_remittance_OTHERS' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vw_remittance_OTHERS">
           <Key>
-            <PropertyRef Name="employment_type" />
             <PropertyRef Name="voucher_nbr" />
-            <PropertyRef Name="employee_name" />
-            <PropertyRef Name="last_name" />
-            <PropertyRef Name="first_name" />
+            <PropertyRef Name="tgm_coop_ln" />
             <PropertyRef Name="middle_name" />
             <PropertyRef Name="suffix_name" />
             <PropertyRef Name="payroll_registry_nbr" />
             <PropertyRef Name="payroll_year" />
+            <PropertyRef Name="employment_type" />
+            <PropertyRef Name="employee_name" />
+            <PropertyRef Name="last_name" />
+            <PropertyRef Name="first_name" />
             <PropertyRef Name="payroll_month" />
           </Key>
           <Property Name="empl_id" Type="varchar" MaxLength="8" />
@@ -2592,6 +2593,8 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_remittance_OTHERS' does not have a
           <Property Name="nhmfc_hsing" Type="numeric" Precision="19" Scale="4" />
           <Property Name="philamlife_ps" Type="numeric" Precision="19" Scale="4" />
           <Property Name="ccmpc_ln" Type="numeric" Precision="19" Scale="4" />
+          <Property Name="tgm_coop_ln" Type="numeric" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="uniform_amt" Type="numeric" Precision="19" Scale="4" />
           <Property Name="employee_name" Type="varchar" MaxLength="211" Nullable="false" />
           <Property Name="last_name" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="first_name" Type="varchar" MaxLength="100" Nullable="false" />
@@ -2599,7 +2602,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_remittance_OTHERS' does not have a
           <Property Name="suffix_name" Type="varchar" MaxLength="5" Nullable="false" />
           <Property Name="payroll_registry_nbr" Type="varchar" MaxLength="6" Nullable="false" />
           <Property Name="payroll_year" Type="varchar" MaxLength="4" Nullable="false" />
-          <Property Name="payroll_month" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="payroll_month" Type="varchar" MaxLength="3" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'HRIS_ACT.dbo.vw_remittance_OTHERS09' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -3091,6 +3094,10 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
         </Function>
         <Function Name="sp_generate_annualtax_tax_rece" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="p_payroll_year" Type="varchar" Mode="In" />
+          <Parameter Name="p_user_id" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_generate_annualtax_tax_rece_laternight" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="p_par_year" Type="varchar" Mode="In" />
           <Parameter Name="p_user_id" Type="varchar" Mode="In" />
         </Function>
         <Function Name="sp_generate_payrollemployee_tax_hdr_dtl" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -5058,6 +5065,8 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
     [vw_remittance_OTHERS].[nhmfc_hsing] AS [nhmfc_hsing], 
     [vw_remittance_OTHERS].[philamlife_ps] AS [philamlife_ps], 
     [vw_remittance_OTHERS].[ccmpc_ln] AS [ccmpc_ln], 
+    [vw_remittance_OTHERS].[tgm_coop_ln] AS [tgm_coop_ln], 
+    [vw_remittance_OTHERS].[uniform_amt] AS [uniform_amt], 
     [vw_remittance_OTHERS].[employee_name] AS [employee_name], 
     [vw_remittance_OTHERS].[last_name] AS [last_name], 
     [vw_remittance_OTHERS].[first_name] AS [first_name], 
@@ -5393,7 +5402,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Name="tran_year" Type="String" MaxLength="4" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="payroll_registry_nbr" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="payroll_registry_descr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="payroll_group_nbr" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="payroll_group_nbr" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="department_code" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="rcvd_dttm" Type="DateTime" Precision="3" />
           <Property Name="rcvd_by_user" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
@@ -6442,7 +6451,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Name="detailed_remarks" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="payroll_registry_nbr" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="payroll_registry_descr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="payroll_group_nbr" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="payroll_group_nbr" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="department_code" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="payroll_source" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="payroll_year" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
@@ -6479,7 +6488,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Name="uploaded_amount" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="payroll_registry_nbr" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="payroll_registry_descr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="payroll_group_nbr" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="payroll_group_nbr" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="department_code" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="payroll_source" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="payroll_year" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
@@ -6523,7 +6532,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Name="remittance_status_dtl" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="payroll_registry_nbr" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="payroll_registry_descr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="payroll_group_nbr" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="payroll_group_nbr" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="department_code" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="payroll_source" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="payroll_year" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
@@ -6562,7 +6571,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Name="remittance_status_dtl" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="payroll_registry_nbr" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="payroll_registry_descr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="payroll_group_nbr" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="payroll_group_nbr" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="department_code" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="payroll_source" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="payroll_year" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
@@ -6582,6 +6591,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
             <PropertyRef Name="payroll_registry_nbr" />
             <PropertyRef Name="payroll_year" />
             <PropertyRef Name="payroll_month" />
+            <PropertyRef Name="tgm_coop_ln" />
           </Key>
           <Property Name="empl_id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="employment_type" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
@@ -6601,7 +6611,9 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Name="suffix_name" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="payroll_registry_nbr" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="payroll_year" Type="String" MaxLength="4" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="payroll_month" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="payroll_month" Type="String" MaxLength="3" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tgm_coop_ln" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="uniform_amt" Type="Decimal" Precision="19" Scale="4" />
         </EntityType>
         <EntityType Name="vw_remittance_OTHERS09">
           <Key>
@@ -7881,6 +7893,10 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
             <Parameter Name="p_letter" Mode="In" Type="String" />
             <Parameter Name="p_empl_id" Mode="In" Type="String" />
             <Parameter Name="p_voucher_nbr" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_generate_annualtax_tax_rece_laternight" ReturnType="Collection(HRIS_ACTModel.sp_generate_annualtax_tax_rece_laternight_Result)">
+            <Parameter Name="p_par_year" Mode="In" Type="String" />
+            <Parameter Name="p_user_id" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="sp_accountingsystemsetup_tbl_list_Result">
@@ -11274,7 +11290,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Name="rlsd_req_doc" Type="Boolean" />
           <Property Name="required_doc_type" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
           <Property Name="role_id" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="payroll_registry_descr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="payroll_registry_descr" Type="String" MaxLength="261" FixedLength="false" Unicode="false" />
           <Property Name="gross_pay" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="net_pay" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="payrolltemplate_code" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
@@ -11671,11 +11687,11 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
             <PropertyRef Name="wages_amt" />
           </Key>
           <Property Name="payroll_year" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
-          <Property Name="payroll_month" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="payroll_month" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
           <Property Name="payroll_registry_nbr" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="false" />
           <Property Name="payrolltemplate_code" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
           <Property Name="employment_type" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
-          <Property Name="payroll_group_nbr" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="payroll_group_nbr" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="payroll_registry_descr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="payroll_period_from" Type="DateTime" Precision="0" />
           <Property Name="payroll_period_to" Type="DateTime" Precision="0" />
@@ -12613,7 +12629,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Name="remittance_status_dtl" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="payroll_registry_nbr" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="payroll_registry_descr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="payroll_group_nbr" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="payroll_group_nbr" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="department_code" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="payroll_source" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="payroll_year" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
@@ -13270,6 +13286,10 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Type="String" Name="payroll_month" Nullable="true" MaxLength="2" />
           <Property Type="Decimal" Name="other_ded_mand1" Nullable="false" Precision="19" />
           <Property Type="Decimal" Name="other_ded_mand2" Nullable="false" Precision="19" />
+        </ComplexType>
+        <ComplexType Name="sp_generate_annualtax_tax_rece_laternight_Result">
+          <Property Type="Int32" Name="return_status" Nullable="true" />
+          <Property Type="String" Name="return_message" Nullable="true" MaxLength="100" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -14432,6 +14452,8 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <EntitySetMapping Name="vw_remittance_OTHERS">
             <EntityTypeMapping TypeName="HRIS_ACTModel.vw_remittance_OTHERS">
               <MappingFragment StoreEntitySet="vw_remittance_OTHERS">
+                <ScalarProperty Name="uniform_amt" ColumnName="uniform_amt" />
+                <ScalarProperty Name="tgm_coop_ln" ColumnName="tgm_coop_ln" />
                 <ScalarProperty Name="empl_id" ColumnName="empl_id" />
                 <ScalarProperty Name="employment_type" ColumnName="employment_type" />
                 <ScalarProperty Name="voucher_nbr" ColumnName="voucher_nbr" />
@@ -20484,6 +20506,14 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
                 <ScalarProperty Name="payroll_month" ColumnName="payroll_month" />
                 <ScalarProperty Name="other_ded_mand1" ColumnName="other_ded_mand1" />
                 <ScalarProperty Name="other_ded_mand2" ColumnName="other_ded_mand2" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_generate_annualtax_tax_rece_laternight" FunctionName="HRIS_ACTModel.Store.sp_generate_annualtax_tax_rece_laternight">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HRIS_ACTModel.sp_generate_annualtax_tax_rece_laternight_Result">
+                <ScalarProperty Name="return_status" ColumnName="return_status" />
+                <ScalarProperty Name="return_message" ColumnName="return_message" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

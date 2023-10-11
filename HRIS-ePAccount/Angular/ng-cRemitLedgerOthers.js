@@ -1445,12 +1445,15 @@
         if (s.remittance_type == "13") {
             s.ddl_reports = "cryRemittanceNHMFC.rpt"
         }
+        if (s.remittance_type == "17") {
+            s.ddl_reports = "cryRemittanceTAGUMCOOP.rpt"
+        }
         if (s.remittance_type == "18") {
             alert("jdasdsad")
             s.ddl_reports = "cryRemittanceJO_UNIFORM.rpt"
         }
 
-
+       
         sp = "sp_remittance_OTHERS_rep,p_remittance_ctrl_nbr," + s.txtb_control_nbr.trim();
         ReportPath = "~/Reports/cryRemittanceOTHERS1/" + s.ddl_reports + "";
 
@@ -1543,13 +1546,16 @@
         if (s.remittance_type == "13") {
             s.ddl_reports = "cryRemittanceNHMFC.rpt"
         }
+        if (s.remittance_type == "17") {
+            s.ddl_reports = "cryRemittanceTAGUMCOOP.rpt"
+        }
 
         if (s.remittance_type == "18") {
             s.ddl_reports = "cryRemittanceJOUniform.rpt"
         }
         
         
-
+        
 
         sp = "sp_remittance_OTHERS_recon_rep,p_remittance_ctrl_nbr," + s.txtb_control_nbr.trim();
         ReportPath = "~/Reports/cryRemittanceOTHERS1/OtherRecon/" + s.ddl_reports + "";

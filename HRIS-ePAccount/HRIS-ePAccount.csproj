@@ -539,6 +539,9 @@
     <Compile Include="Models\sp_generate_annualized_tax_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_generate_annualtax_tax_rece_laternight_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_generate_annualtax_tax_rece_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>

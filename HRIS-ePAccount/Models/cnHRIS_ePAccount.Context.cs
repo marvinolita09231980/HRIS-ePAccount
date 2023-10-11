@@ -3449,5 +3449,18 @@ namespace HRIS_ePAccount.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_remittance_ledger_info_PHIC_Result>("sp_remittance_ledger_info_PHIC", p_remittance_ctrl_nbrParameter, p_department_codeParameter, p_letterParameter, p_empl_idParameter, p_voucher_nbrParameter);
         }
+    
+        public virtual ObjectResult<sp_generate_annualtax_tax_rece_laternight_Result> sp_generate_annualtax_tax_rece_laternight(string p_par_year, string p_user_id)
+        {
+            var p_par_yearParameter = p_par_year != null ?
+                new ObjectParameter("p_par_year", p_par_year) :
+                new ObjectParameter("p_par_year", typeof(string));
+    
+            var p_user_idParameter = p_user_id != null ?
+                new ObjectParameter("p_user_id", p_user_id) :
+                new ObjectParameter("p_user_id", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_generate_annualtax_tax_rece_laternight_Result>("sp_generate_annualtax_tax_rece_laternight", p_par_yearParameter, p_user_idParameter);
+        }
     }
 }
