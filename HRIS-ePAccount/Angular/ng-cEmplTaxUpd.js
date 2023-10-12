@@ -76,6 +76,7 @@ ng_HRD_App.controller("cEmplTaxUpd_ctrlr", function ($scope, $compile, $http, $f
     //                    if (d.data.message == "success") {
     //                        var icon_display = "";
     //                        icon_display = "success";
+
     //                        if (s.ddl_employment_type == "RC") 
     //                        {
     //                            swal(d.data.sp_generate_annualtax_tax_rece.result_flag_message, "Generation Message", icon_display);
