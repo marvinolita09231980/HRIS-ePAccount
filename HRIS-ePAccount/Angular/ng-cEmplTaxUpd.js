@@ -115,7 +115,6 @@ ng_HRD_App.controller("cEmplTaxUpd_ctrlr", function ($scope, $compile, $http, $f
                     if (s.ddl_employment_type == "RC") {
                         swal("Your generation request will be executed later tonight at 10 o'clock", "Generation Message", icon_display);
                     }
-
                     else if (s.ddl_employment_type == "JO") {
                         swal(d.data.sp_generate_payrollemployee_tax_hdr_dtl.result_flag_message, "Generation Message", icon_display);
                     }

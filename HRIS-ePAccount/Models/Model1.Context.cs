@@ -26,5 +26,6 @@ namespace HRIS_ePAccount.Models
         }
     
         public virtual DbSet<payrollemployee_tax_tbl> payrollemployee_tax_tbl { get; set; }
+        public virtual DbSet<personnel_tbl> personnel_tbl { get; set; }
     }
 }

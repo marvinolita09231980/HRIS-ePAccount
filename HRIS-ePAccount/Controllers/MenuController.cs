@@ -12,7 +12,9 @@ namespace HRIS_ePAccount.Controllers
 {
     public class MenuController : Controller
     {
+
         //
+        HRIS_DEVEntities db_pay = new HRIS_DEVEntities();
         HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
         // GET: Menu
         public ActionResult Index()
@@ -46,17 +48,18 @@ namespace HRIS_ePAccount.Controllers
                     var empl_id = Session["empl_id"].ToString();
 
 
-                    var emp_photo_byte_arr = db_pacco.vw_personnel_tbl_image.Where(a => a.empl_id == empl_id).FirstOrDefault().empl_photo_img;
+                   var emp_photo_byte_arr = db_pay.personnel_tbl.Where(a => a.empl_id == empl_id).FirstOrDefault().empl_photo_img;
 
-                    string imreBase64Data = "";
+                    //string imreBase64Data = "";
                     string imgDataURL = "";
                     string current_url = Request.UrlReferrer.ToString().Replace("Index", "").Trim('/').Split('/')[Request.UrlReferrer.ToString().Replace("Index", "").Trim('/').Split('/').Count() - 1].ToString();
                     int already_in_fav = 0;
                     //***************convert byte array to image***********************************
                     if (emp_photo_byte_arr != null)
                     {
-                        imreBase64Data = Convert.ToBase64String(emp_photo_byte_arr);
-                        imgDataURL = string.Format("data:image/png;base64,{0}", imreBase64Data);
+                        //imreBase64Data = Convert.ToBase64String(emp_photo_byte_arr);
+                        //imgDataURL = string.Format("data:image/png;base64,{0}", imreBase64Data);
+                        imgDataURL = "http://192.168.5.218/storage/images" + emp_photo_byte_arr;
                     }
                     else
                     {
