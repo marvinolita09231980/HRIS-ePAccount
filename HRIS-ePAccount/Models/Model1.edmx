@@ -68,10 +68,6 @@
           <Property Name="citizenship_type" Type="bit" />
           <Property Name="citizenship_nature" Type="bit" />
           <Property Name="citizenship_country" Type="varchar" MaxLength="25" />
-          <Property Name="ethnicity_id" Type="int" />
-          <Property Name="religion_id" Type="int" />
-          <Property Name="pwd_type_id" Type="int" />
-          <Property Name="gender2" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityContainer Name="HRIS_PAYModelStoreContainer">
           <EntitySet Name="payrollemployee_tax_tbl" EntityType="Self.payrollemployee_tax_tbl" Schema="dbo" store:Type="Tables" />
@@ -148,10 +144,6 @@
           <Property Name="citizenship_type" Type="Boolean" />
           <Property Name="citizenship_nature" Type="Boolean" />
           <Property Name="citizenship_country" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
-          <Property Name="ethnicity_id" Type="Int32" />
-          <Property Name="religion_id" Type="Int32" />
-          <Property Name="pwd_type_id" Type="Int32" />
-          <Property Name="gender2" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -184,10 +176,6 @@
           <EntitySetMapping Name="personnel_tbl">
             <EntityTypeMapping TypeName="HRIS_PAYModel.personnel_tbl">
               <MappingFragment StoreEntitySet="personnel_tbl">
-                <ScalarProperty Name="gender2" ColumnName="gender2" />
-                <ScalarProperty Name="pwd_type_id" ColumnName="pwd_type_id" />
-                <ScalarProperty Name="religion_id" ColumnName="religion_id" />
-                <ScalarProperty Name="ethnicity_id" ColumnName="ethnicity_id" />
                 <ScalarProperty Name="citizenship_country" ColumnName="citizenship_country" />
                 <ScalarProperty Name="citizenship_nature" ColumnName="citizenship_nature" />
                 <ScalarProperty Name="citizenship_type" ColumnName="citizenship_type" />

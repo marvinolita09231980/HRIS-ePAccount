@@ -148,6 +148,8 @@ namespace HRIS_ePAccount.Reports
                     dtSub = MyCmn.GetDatatable("SELECT * FROM vw_payrollemployeemaster_info_HRIS_ACT WHERE empl_id = '" + ls_splitvalue[4].ToString().Trim() + "' ORDER BY effective_date DESC");
                 }
 
+                crvPrint.SeparatePages = false;
+
             }
             //FOR SUBREPORT ON CARDING 
             //ADDED BY JORGE: 11/16/2019
