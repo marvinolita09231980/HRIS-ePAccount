@@ -23,6 +23,7 @@ namespace HRIS_ePAccount.Models
         public string employment_type_descr { get; set; }
         public string remittance_status_descr { get; set; }
     }
+
    public class RejectedData : sp_remittance_ledger_info_GSIS_Result
    {
        public int isChecked { get; set; }
