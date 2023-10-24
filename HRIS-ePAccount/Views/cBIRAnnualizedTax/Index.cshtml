@@ -30,7 +30,7 @@
         height: 30px !important;
     }
 </style>
-<script src="~/Angular/ng-cBIRAnnualizedTax.js?v=2"></script>
+<script src="~/Angular/ng-cBIRAnnualizedTax.js?v=3"></script>
 <!-- The Modal - Generating Report -->
 <div class="modal fade" id="Loading_master" ng-model="Loading_master">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -45,6 +45,7 @@
         </div>
     </div>
 </div>
+
 
 <section ng-app="ng_HRD_App" ng-controller="cBIRAnnualizedTax_ctrlr">
     <!-- The modal -->
@@ -879,9 +880,9 @@
                                 {
                                     @*<button class="btn btn-primary" ng-click="btn_generateALL_action()"><i id="btn_generate" class="fa fa-share-square-o"> </i>Generate All</button>*@
                                     @*<select class="form-control detail text-center"  ng-change="btn_extract_action()">
-                                            <option value="">--Select here--</option>
-                                            <option ng-repeat="lst in extract_status" value="{{lst.id}}">{{lst.text}}</option>
-                                        </select>*@
+                            <option value="">--Select here--</option>
+                            <option ng-repeat="lst in extract_status" value="{{lst.id}}">{{lst.text}}</option>
+                        </select>*@
 
                                     <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"> Other Actions <span class="caret"></span></button>
                                     @*<button  ng-click="ExctractToExcel()" data-toggle="dropdown" class="btn btn-primary dropdown-toggle" >Other Actions </button>*@
@@ -912,25 +913,51 @@
 
 
                     </div>
-                    <div class="ibox-content">
-                        <div class="col-12 table-resposive">
-                            <table id="datalist_grid" class="table table-striped table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th width="10%">ID NBR</th>
-                                        <th width="30%">EMPLOYEE NAME</th>
-                                        <th width="15%">TIN NBR</th>
-                                        <th width="15%">TAXABLE AMT.</th>
-                                        <th width="15%">TAX RATE</th>
-                                        <th width="15%">ACTIONS</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
+
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#tab-1"><i class="fa fa-user"></i> Employee List</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-2"><i class="fa fa-briefcase"></i>Generation List</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane active">
+                            <div class="full-height-scroll">
+                               
+                                    <table id="datalist_grid" class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th width="10%">ID NBR</th>
+                                                <th width="30%">EMPLOYEE NAME</th>
+                                                <th width="15%">TIN NBR</th>
+                                                <th width="15%">TAXABLE AMT.</th>
+                                                <th width="15%">TAX RATE</th>
+                                                <th width="15%">ACTIONS</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                               
+                            </div>
+                        </div>
+                        <div id="tab-2" class="tab-pane">
+                            <div class="full-height-scroll">
+                                    <table id="datalist_grid_2" class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>DATE</th>
+                                                <th>START</th>
+                                                <th>END</th>
+                                                <th>STATUS</th>
+                                                <th>DESCRIPTION</th>
+                                                <th>RUN BY</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                               
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
 

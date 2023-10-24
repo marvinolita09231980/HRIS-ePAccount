@@ -3512,6 +3512,11 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Parameter Name="par_payroll_month" Type="varchar" Mode="In" />
           <Parameter Name="par_payrolltemplate_code" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="sp_prcmonitor_tbl" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="par_year" Type="varchar" Mode="In" />
+          <Parameter Name="par_month" Type="varchar" Mode="In" />
+          <Parameter Name="par_employment_type" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="sp_rata_rate_skedaccounting_tbl_list2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="par_no_of_days" Type="float" Mode="In" />
           <Parameter Name="par_rate_type" Type="varchar" Mode="In" />
@@ -7897,6 +7902,11 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <FunctionImport Name="sp_generate_annualtax_tax_rece_laternight" ReturnType="Collection(HRIS_ACTModel.sp_generate_annualtax_tax_rece_laternight_Result)">
             <Parameter Name="p_par_year" Mode="In" Type="String" />
             <Parameter Name="p_user_id" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_prcmonitor_tbl" ReturnType="Collection(HRIS_ACTModel.sp_prcmonitor_tbl_Result)">
+            <Parameter Name="par_year" Mode="In" Type="String" />
+            <Parameter Name="par_month" Mode="In" Type="String" />
+            <Parameter Name="par_employment_type" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="sp_accountingsystemsetup_tbl_list_Result">
@@ -13290,6 +13300,15 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
         <ComplexType Name="sp_generate_annualtax_tax_rece_laternight_Result">
           <Property Type="Int32" Name="return_status" Nullable="true" />
           <Property Type="String" Name="return_message" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="sp_prcmonitor_tbl_Result">
+          <Property Type="String" Name="prc_date" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="prc_start" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="prc_end" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="prc_status" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="prc_status_descr" Nullable="false" MaxLength="16" />
+          <Property Type="String" Name="prc_descr" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="prc_run_by" Nullable="true" MaxLength="30" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -20514,6 +20533,19 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
               <ComplexTypeMapping TypeName="HRIS_ACTModel.sp_generate_annualtax_tax_rece_laternight_Result">
                 <ScalarProperty Name="return_status" ColumnName="return_status" />
                 <ScalarProperty Name="return_message" ColumnName="return_message" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_prcmonitor_tbl" FunctionName="HRIS_ACTModel.Store.sp_prcmonitor_tbl">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HRIS_ACTModel.sp_prcmonitor_tbl_Result">
+                <ScalarProperty Name="prc_date" ColumnName="prc_date" />
+                <ScalarProperty Name="prc_start" ColumnName="prc_start" />
+                <ScalarProperty Name="prc_end" ColumnName="prc_end" />
+                <ScalarProperty Name="prc_status" ColumnName="prc_status" />
+                <ScalarProperty Name="prc_status_descr" ColumnName="prc_status_descr" />
+                <ScalarProperty Name="prc_descr" ColumnName="prc_descr" />
+                <ScalarProperty Name="prc_run_by" ColumnName="prc_run_by" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

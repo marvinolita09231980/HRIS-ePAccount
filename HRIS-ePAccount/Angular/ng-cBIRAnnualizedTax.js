@@ -57,6 +57,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
             s.rowLen                = d.data.show_entries
 
             init_table_data([]);
+            init_table_data2([]);
 
             s.allow_edit         = d.data.um.allow_edit
             s.allow_print        = d.data.um.allow_print
@@ -205,6 +206,75 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         $("div.toolbar").html('<b>Custom tool bar! Text/images etc.</b>');
     }
 
+    var init_table_data2 = function (par_data) {
+        s.datalistgrid2 = par_data;
+
+        s.gTable = $('#datalist_grid_2').dataTable(
+            {
+
+                data: s.datalistgrid2,
+                stateSave: false,
+                sDom: 'rt<"bottom"p>',
+                pageLength: 20,
+                deferRender: true,
+                columns: [
+
+                    {
+                        "mData": "prc_date", "mRender": function (data, type, full, row) {
+                            return "<div class='btn-block text-center " + text_color(full["prc_status"])+"'>" + data + "</div>";
+                        }
+                    },
+
+
+
+                    {
+                        "mData": "prc_start", "mRender": function (data, type, full, row) {
+                            return "<div class='btn-block text-left " + text_color(full["prc_status"]) +"'>" + data + "</div>";
+                        }
+                    },
+
+                    {
+                        "mData": "prc_end", "mRender": function (data, type, full, row) {
+                            return "<div class='btn-block text-center " + text_color(full["prc_status"]) +"'>" + data + "</div>";
+                        }
+                    },
+
+
+
+
+                    {
+                        "mData": "prc_status_descr", "mRender": function (data, type, full, row) {
+                            return "<div class='btn-block text-right " + text_color(full["prc_status"]) +"'>" + data + "</div>";
+                        }
+
+                    },
+
+
+                    {
+                        "mData": "prc_descr", "mRender": function (data, type, full, row) {
+                            return "<div class='btn-block text-center " + text_color(full["prc_status"]) +"'>" + data + "</div>";
+                        }
+                    },
+                    {
+                        "mData": "prc_run_by", "mRender": function (data, type, full, row) {
+                            return "<div class='btn-block text-center " + text_color(full["prc_status"]) +"'>" + data + "</div>";
+                        }
+                    },
+
+                ],
+
+
+                "createdRow": function (row, data, index) {
+                    $(row).attr('id', index);
+                    $compile(row)($scope);  //add this to compile the DOM
+                }
+            });
+
+        s.gTable.fnSort([[1, 'asc']]);
+
+        $("div.toolbar").html('<b>Custom tool bar! Text/images etc.</b>');
+    }
+
     function currency(d)
     {
 
@@ -217,6 +287,14 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         {
             retdata = d.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
             return retdata
+        }
+    }
+
+    function text_color(d) {
+        if (d == "E") {
+            return "text-danger"
+        } else {
+            return ""
         }
     }
 
@@ -313,6 +391,14 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                     s.oTable.fnClearTable();
                 }
 
+                if (d.data.sp_prcmonitor_tbl.length > 0) {
+
+                    s.datalistgrid2 = d.data.sp_prcmonitor_tbl;
+                    s.gTable.fnClearTable();
+                    s.gTable.fnAddData(s.datalistgrid2)
+                }
+                else {
+                    gTable                }
                 $("#loading_data").modal("hide")
             })
 

@@ -3462,5 +3462,22 @@ namespace HRIS_ePAccount.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_generate_annualtax_tax_rece_laternight_Result>("sp_generate_annualtax_tax_rece_laternight", p_par_yearParameter, p_user_idParameter);
         }
+    
+        public virtual ObjectResult<sp_prcmonitor_tbl_Result> sp_prcmonitor_tbl(string par_year, string par_month, string par_employment_type)
+        {
+            var par_yearParameter = par_year != null ?
+                new ObjectParameter("par_year", par_year) :
+                new ObjectParameter("par_year", typeof(string));
+    
+            var par_monthParameter = par_month != null ?
+                new ObjectParameter("par_month", par_month) :
+                new ObjectParameter("par_month", typeof(string));
+    
+            var par_employment_typeParameter = par_employment_type != null ?
+                new ObjectParameter("par_employment_type", par_employment_type) :
+                new ObjectParameter("par_employment_type", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_prcmonitor_tbl_Result>("sp_prcmonitor_tbl", par_yearParameter, par_monthParameter, par_employment_typeParameter);
+        }
     }
 }

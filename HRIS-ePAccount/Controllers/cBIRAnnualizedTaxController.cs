@@ -410,8 +410,9 @@ namespace HRIS_ePAccount.Controllers
                 if (par_letter == null)
                 { par_letter = ""; }
                 var sp_annualtax_hdr_tbl_list = db_pacco.sp_annualtax_hdr_tbl_list(par_year, par_empType, par_letter).ToList();
+                var sp_prcmonitor_tbl = db_pacco.sp_prcmonitor_tbl(par_year,"" , par_empType).ToList();
 
-                return JSON(new { sp_annualtax_hdr_tbl_list }, JsonRequestBehavior.AllowGet);
+                return JSON(new { sp_annualtax_hdr_tbl_list, sp_prcmonitor_tbl }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
