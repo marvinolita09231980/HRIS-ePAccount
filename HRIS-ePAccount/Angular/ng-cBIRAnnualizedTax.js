@@ -128,15 +128,11 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                 pageLength: 5,
 				deferRender:true,
                 columns: [
-
                     {
                         "mData": "empl_id", "mRender": function (data, type, full, row) {
                             return "<div class='btn-block text-center'>" + data + "</div>";
                         }
                     },
-
-                    
-
                     {
                         "mData": "employee_name", "mRender": function (data, type, full, row) {
                             return "<div class='btn-block text-left'>" + data + "</div>";
@@ -148,10 +144,6 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                             return "<div class='btn-block text-center'>" + data + "</div>";
                         }
                     },
-
-                   
-
-
                     {
                         "mData": "annual_txbl_income", "mRender": function (data, type, full, row) {
                             var retdata = currency(data)
@@ -159,30 +151,24 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                         }
                         
                     },
-
-
                     {
                         "mData": "tax_rate", "mRender": function (data, type, full, row) {
                             return "<div class='btn-block text-center'>" + data + "%</div>";
                         }
                     },
-
                     {
                         "mData": null,
                         "bSortable": false,
                         "mRender": function (data, type, full, row)
                         {
 
-                            
                             return '<center><div class="btn-group tooltip-demo">'
-
                                 + '<button type="button" class="btn btn-warning btn-sm action" data-toggle="tooltip" data-placement="left" title="Show Details" ng-show="' + s.allow_view + '" ng-click="btn_show_action(' + row["row"] + ')" > '
                                 + '<i class="fa fa-plus"></i>' + '</button>'
                                 + '<button type="button" class="btn btn-primary btn-sm action" style="background-color:blueviolet;color:white;border:1px solid blueviolet;" data-toggle="tooltip" data-placement="left" title="Generate Annualized Tax" ng-show="' + s.allow_edit + '" ng-click="btn_generate_action(' + row["row"] + ')" > '
                                 + '<i id="generate_icon_dtl' + row["row"] + '" class="fa fa-clipboard"></i>' + '</button>' 
                                 + '<button type="button" class="btn btn-info btn-sm action" data-toggle="tooltip" data-placement="left" title="Edit" ng-show="' + s.allow_edit + '" ng-click="btn_edit_action(' + row["row"] + ')" > '
                                 + '<i id="edit_icon' + row["row"] + '" class="fa fa-edit"></i>' + '</button>' +
-                               
                                  '<button type="button" class="btn btn-danger btn-sm action" data-toggle="tooltip" data-placement="left" title="Delete" ng-show="' + s.allow_delete + '" ng-click="btn_delete_action(' + row["row"] + ')" > '
                                 + '<i id="delete_icon' + row["row"] + '" class="fa fa-trash"></i>' +
                                 '<button type="button" class="btn btn-primary btn-sm action" data-toggle="tooltip" data-placement="left" title="Print" ng-show="' + s.allow_print + '" ng-click="btn_print_action(' + row["row"] + ')" > '
