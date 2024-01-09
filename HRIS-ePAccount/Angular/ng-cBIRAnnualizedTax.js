@@ -1547,6 +1547,8 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                 }
 
                 else {
+
+                    console.log(d.data.index_error)
                     //$("#btn_extract_icon").removeClass("fa fa-spinner fa-spin");
                     //$("#btn_extract_icon").addClass("fa fa-file-excel-o");
                     $("#loading_data").modal("hide")

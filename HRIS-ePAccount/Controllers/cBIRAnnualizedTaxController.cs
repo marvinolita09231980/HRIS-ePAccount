@@ -503,8 +503,10 @@ namespace HRIS_ePAccount.Controllers
         //*********************************************************************//
         public ActionResult ExtractData(string par_empType, string par_payroll_year, string par_extract_type)
         {
+            int index_error = 0;
             try
             {
+               
                 db_pacco.Database.CommandTimeout = int.MaxValue;
                 var filePath = "";
                 string message = "";
@@ -586,7 +588,7 @@ namespace HRIS_ePAccount.Controllers
                         c_start_row_i++;
 
                         message = "success";
-
+                        index_error++;
                     }
 
                     string filename = "";
@@ -624,6 +626,7 @@ namespace HRIS_ePAccount.Controllers
                         xlWorkSheet.get_Range("A" + start_row_original, "AU" + start_row_original).Copy(Missing.Value);
                         xlWorkSheet.get_Range("A" + c_start_row_i, "AU" + c_start_row_i).PasteSpecial(Excel.XlPasteType.xlPasteAll,
                             Excel.XlPasteSpecialOperation.xlPasteSpecialOperationNone, false, false);
+
                         xlWorkSheet.Cells[c_start_row_i, 1] = sp_extract_annualized_tax[i].empl_id;
                         xlWorkSheet.Cells[c_start_row_i, 2] = sp_extract_annualized_tax[i].account_id_nbr_ref;
                         xlWorkSheet.Cells[c_start_row_i, 3] = sp_extract_annualized_tax[i].branch_code;
@@ -699,7 +702,7 @@ namespace HRIS_ePAccount.Controllers
             }
             catch (Exception ex)
             {
-                return JSON(new { ex.Message }, JsonRequestBehavior.AllowGet);
+                return JSON(new { ex.Message, index_error }, JsonRequestBehavior.AllowGet);
             }
 
         }
