@@ -104,7 +104,7 @@ ng_HRD_App.controller("cEmplTaxUpd_ctrlr", function ($scope, $compile, $http, $f
     //}
 
     s.btn_generate_tax_click = function () {
-        h.post("../cEmplTaxUpd/GenerateTaxLaterNight",
+        h.post("../cEmplTaxUpd/GenerateTax",
             {
                 par_year: s.ddl_remittance_year,
                 par_empType: s.ddl_employment_type

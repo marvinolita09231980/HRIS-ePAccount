@@ -115,6 +115,7 @@ namespace HRIS_ePAccount.Controllers
                 message = "fail";
             }
             
+            
 
             return JSON(new { um, message, sp_generate_annualtax_tax_rece, sp_generate_payrollemployee_tax_hdr_dtl }, JsonRequestBehavior.AllowGet);
 

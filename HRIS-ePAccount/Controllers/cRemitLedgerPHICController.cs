@@ -877,7 +877,7 @@ namespace HRIS_ePAccount.Controllers
                                 {
                                     xlWorkSheet.get_Range("A3", "V3").Copy(Missing.Value);
                                     xlWorkSheet.get_Range("A" + z, "V" + z).PasteSpecial(Excel.XlPasteType.xlPasteAll,
-                                        Excel.XlPasteSpecialOperation.xlPasteSpecialOperationNone, false, false);
+                                    Excel.XlPasteSpecialOperation.xlPasteSpecialOperationNone, false, false);
                                     xlWorkSheet.Cells[z, 1] = Missing.Value;
                                     xlWorkSheet.Cells[z, 2] = Missing.Value;
                                     xlWorkSheet.Cells[z, 3] = Missing.Value;
@@ -970,23 +970,10 @@ namespace HRIS_ePAccount.Controllers
                             xlWorkSheet.Cells[c_start_row_i, 20] = diff_ps;
                             xlWorkSheet.Cells[c_start_row_i, 21] = diff_gs;
 
-                            if (x == 0)
-                            {
-                                string filename = "";
-                                filename = prevValues[6].Trim() + "-" + prevValues[0].Trim() + "-" + prevValues[1].Trim() + ".xlsx";
-                                xlWorkBook.SaveAs(Server.MapPath("~/UploadedFile/" + filename), Excel.XlFileFormat.xlOpenXMLWorkbook,
-                                    Missing.Value, Missing.Value, Missing.Value, Missing.Value, Excel.XlSaveAsAccessMode.xlNoChange,
-                                    Excel.XlSaveConflictResolution.xlLocalSessionChanges, Missing.Value, Missing.Value,
-                                    Missing.Value, Missing.Value);
-                                xlWorkBook.Close();
-                                xlApp.Quit();
-                                Marshal.ReleaseComObject(xlWorkSheet);
-                                Marshal.ReleaseComObject(xlWorkBook);
-                                Marshal.ReleaseComObject(xlApp);
-
-                                filePath = "/UploadedFile/" + filename;
-                                message = "success";
-                            }
+                            //if (x == 0)
+                            //{
+                               
+                            //}
 
                         
 
@@ -996,14 +983,27 @@ namespace HRIS_ePAccount.Controllers
                     }
 
 
+                        string filename = "";
+                        filename = prevValues[6].Trim() + "-" + prevValues[0].Trim() + "-" + prevValues[1].Trim() + ".xlsx";
+                        xlWorkBook.SaveAs(Server.MapPath("~/UploadedFile/" + filename), Excel.XlFileFormat.xlOpenXMLWorkbook,
+                            Missing.Value, Missing.Value, Missing.Value, Missing.Value, Excel.XlSaveAsAccessMode.xlNoChange,
+                            Excel.XlSaveConflictResolution.xlLocalSessionChanges, Missing.Value, Missing.Value,
+                            Missing.Value, Missing.Value);
+                        xlWorkBook.Close();
+                        xlApp.Quit();
+                        Marshal.ReleaseComObject(xlWorkSheet);
+                        Marshal.ReleaseComObject(xlWorkBook);
+                        Marshal.ReleaseComObject(xlApp);
+
+                        filePath = "/UploadedFile/" + filename;
+                        message = "success";
 
 
 
 
 
 
-
-                }
+                    }
                 else
                 {
                     message = "No data extracted";
