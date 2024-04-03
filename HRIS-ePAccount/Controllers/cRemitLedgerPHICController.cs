@@ -876,8 +876,7 @@ namespace HRIS_ePAccount.Controllers
                                 for (var z = start_row_original; z < prev_loop + start_row_original + 1; z++)
                                 {
                                     xlWorkSheet.get_Range("A3", "V3").Copy(Missing.Value);
-                                    xlWorkSheet.get_Range("A" + z, "V" + z).PasteSpecial(Excel.XlPasteType.xlPasteAll,
-                                    Excel.XlPasteSpecialOperation.xlPasteSpecialOperationNone, false, false);
+                                    xlWorkSheet.get_Range("A" + z, "V" + z).PasteSpecial(Excel.XlPasteType.xlPasteAll,Excel.XlPasteSpecialOperation.xlPasteSpecialOperationNone, false, false);
                                     xlWorkSheet.Cells[z, 1] = Missing.Value;
                                     xlWorkSheet.Cells[z, 2] = Missing.Value;
                                     xlWorkSheet.Cells[z, 3] = Missing.Value;
@@ -909,8 +908,7 @@ namespace HRIS_ePAccount.Controllers
                             {
                                 xlWorkSheet.get_Range("A" + start_row, "V" + start_row).Borders.Color = Color.Black;
                                 xlWorkSheet.get_Range("A3", "V3").Copy(Missing.Value);
-                                xlWorkSheet.get_Range("A" + c_start_row_i, "V" + c_start_row_i).PasteSpecial(Excel.XlPasteType.xlPasteAll,
-                                    Excel.XlPasteSpecialOperation.xlPasteSpecialOperationNone, false, false);
+                                xlWorkSheet.get_Range("A" + c_start_row_i, "V" + c_start_row_i).PasteSpecial(Excel.XlPasteType.xlPasteAll,Excel.XlPasteSpecialOperation.xlPasteSpecialOperationNone, false, false);
                                 xlWorkSheet.Cells[c_start_row_i, 1] = g[i].voucher_nbr;
                                 xlWorkSheet.Cells[c_start_row_i, 2] = g[i].empl_id;
                                 xlWorkSheet.Cells[c_start_row_i, 3] = g[i].phic_nbr;
