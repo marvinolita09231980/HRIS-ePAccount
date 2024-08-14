@@ -33,6 +33,7 @@ ng_HRD_App.controller("cRemitAutoGen_ctrlr", function ($scope, $compile, $http, 
         });
     } 
 
+
     init()
 
     //**************************************//

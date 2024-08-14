@@ -1,34 +1,21 @@
-﻿
-//**********************************************************************************
-// PROJECT NAME     :   HRIS - eComval
-// VERSION/RELEASE  :   HRIS Release #1
-// PURPOSE          :   Code Behind for Annual Tax Header
-//**********************************************************************************
-// REVISION HISTORY
-//**********************************************************************************
-// AUTHOR                    DATE            PURPOSE
-//----------------------------------------------------------------------------------
-// JORGE RUSTOM VILLANUEVA       10/18/2019      Code Creation
-//**********************************************************************************
-
-using HRIS_ePAccount.Models;
+﻿using HRIS_ePAccount.Models;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Validation;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using System.Text;
+
+
 
 namespace HRIS_ePAccount.Controllers
 {
-    public class cJOTaxRateController : Controller
+    public class cNonEmployeeTaxRateController : Controller
     {
+      
 
-       HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
-       HRIS_DEVEntities db_pay = new HRIS_DEVEntities();
+        HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+        HRIS_DEVEntities db_pay = new HRIS_DEVEntities();
         User_Menu um = new User_Menu();
         //*********************************************************************//
         // Created By : JRV - Created Date : 09/19/2019
@@ -37,16 +24,16 @@ namespace HRIS_ePAccount.Controllers
 
         public void GetAllowAccess()
         {
-            um.allow_add            = (int)Session["allow_add"];
-            um.allow_delete         = (int)Session["allow_delete"];
-            um.allow_edit           = (int)Session["allow_edit"];
-            um.allow_edit_history   = (int)Session["allow_edit_history"];
-            um.allow_print          = (int)Session["allow_print"];
-            um.allow_view           = (int)Session["allow_view"];
-            um.url_name             = Session["url_name"].ToString();
-            um.id                   = (int)Session["id"];
-            um.menu_name            = Session["menu_name"].ToString();
-            um.page_title           = Session["page_title"].ToString();
+            um.allow_add = (int)Session["allow_add"];
+            um.allow_delete = (int)Session["allow_delete"];
+            um.allow_edit = (int)Session["allow_edit"];
+            um.allow_edit_history = (int)Session["allow_edit_history"];
+            um.allow_print = (int)Session["allow_print"];
+            um.allow_view = (int)Session["allow_view"];
+            um.url_name = Session["url_name"].ToString();
+            um.id = (int)Session["id"];
+            um.menu_name = Session["menu_name"].ToString();
+            um.page_title = Session["page_title"].ToString();
         }
         public ActionResult Index()
         {
@@ -105,6 +92,8 @@ namespace HRIS_ePAccount.Controllers
             db_pacco.Database.CommandTimeout = int.MaxValue;
             GetAllowAccess();
             var taxrate_percentage_tbl_list = db_pacco.taxrate_percentage_tbl.ToList();
+
+
             if (Session["PreviousValuesonPage_cJOTaxRate"] == null)
             {
                 Session["PreviousValuesonPage_cJOTaxRate"] = null;
@@ -117,23 +106,18 @@ namespace HRIS_ePAccount.Controllers
                 var empType = db_pacco.vw_employmenttypes_tbl_list.Where(a => !a.employment_type.Contains("JO")).ToList();
                 var bir_class_list = db_pacco.sp_jo_tax_tbl_list().ToList();
 
-               
-
                 var department_list = db_pacco.vw_departments_tbl_list.ToList().OrderBy(a => a.department_code);
-                var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.sp_payrollemployee_tax_hdr_tbl_list(par_payroll_year, "", "").ToList();
+                var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_empl_tbl_ACT.Where(a => a.department_code == "").ToList();
                 return JSON(new { empType, ddl_emp_type, sp_payrollemployee_tax_hdr_tbl_list, sort_value, page_value, sort_order, show_entries, um, department_list, bir_class_list, taxrate_percentage_tbl_list, department_code }, JsonRequestBehavior.AllowGet);
 
             }
-
-
             else
             {
-                string[] PreviousValuesonPage_cJOTaxRate = Session["PreviousValuesonPage_cJOTaxRate"].ToString().Split(new char[] { ',' });
 
+                string[] PreviousValuesonPage_cJOTaxRate = Session["PreviousValuesonPage_cJOTaxRate"].ToString().Split(new char[] { ',' });
                 string ddl_year = PreviousValuesonPage_cJOTaxRate[0].ToString().Trim();
                 string department_code = PreviousValuesonPage_cJOTaxRate[10].ToString().Trim();
                 string history = PreviousValuesonPage_cJOTaxRate[11].ToString().Trim();
-                
                 string show_entries = PreviousValuesonPage_cJOTaxRate[3].ToString().Trim();
                 int page_value = Convert.ToInt32(PreviousValuesonPage_cJOTaxRate[4].ToString().Trim());
                 string search_value = PreviousValuesonPage_cJOTaxRate[5].ToString().Trim();
@@ -141,7 +125,7 @@ namespace HRIS_ePAccount.Controllers
                 string sort_order = PreviousValuesonPage_cJOTaxRate[7].ToString().Trim();
                 var bir_class_list = db_pacco.sp_jo_tax_tbl_list().ToList();
                 var department_list = db_pacco.vw_departments_tbl_list.ToList().OrderBy(a => a.department_code);
-                var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.sp_payrollemployee_tax_hdr_tbl_list(ddl_year, department_code, history).ToList();
+                var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_empl_tbl_ACT.Where(a => a.department_code == department_code).ToList();
 
                 return JSON(new { department_list, department_code, sp_payrollemployee_tax_hdr_tbl_list, ddl_year, show_entries, page_value, search_value, sort_value, sort_order, um, bir_class_list, history, taxrate_percentage_tbl_list }, JsonRequestBehavior.AllowGet);
 
@@ -179,6 +163,7 @@ namespace HRIS_ePAccount.Controllers
             try
             {
                 string message = "";
+
                 var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.sp_payrollemployee_tax_hdr_tbl_list(par_payroll_year, par_department_code, par_history).Where(a => a.empl_id == par_empl_id && a.effective_date == par_effective_date).FirstOrDefault();
 
                 if (sp_payrollemployee_tax_hdr_tbl_list != null && par_action == "ADD")
@@ -189,13 +174,13 @@ namespace HRIS_ePAccount.Controllers
                 else if (sp_payrollemployee_tax_hdr_tbl_list == null && par_action == "EDIT")
                 {
                     message = "fail";
-                   
+
                 }
 
                 else if (sp_payrollemployee_tax_hdr_tbl_list == null && par_action == "DELETE")
-                { 
-                    
-                        message = "fail";
+                {
+
+                    message = "fail";
                 }
 
                 else
@@ -246,7 +231,7 @@ namespace HRIS_ePAccount.Controllers
             {
                 data = Convert.ToDateTime(value);
             }
-            
+
 
             return data;
         }
@@ -275,33 +260,33 @@ namespace HRIS_ePAccount.Controllers
 
                 DateTime current_date = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
 
-               
+
 
 
                 if (par_action == "ADD")
                 {
                     payrollemployee_tax_hdr_tbl tbl = new payrollemployee_tax_hdr_tbl();
 
-                    tbl.empl_id             = data.empl_id;
-                    tbl.effective_date      = isCheckDate(data.effective_date.ToString());
-                    tbl.bir_class           = data.bir_class;
-                    tbl.with_sworn          = isCheckBool(data.with_sworn.ToString());
-                    tbl.fixed_rate          = isCheckBool(data.fixed_rate.ToString());
-                    tbl.total_gross_pay     = data.total_gross_pay;
-                    tbl.dedct_status        = isCheckBool(data.dedct_status.ToString());
-                    tbl.rcrd_status         = data.rcrd_status;
-                    tbl.user_id_created_by  = Session["user_id"].ToString();
-                    tbl.created_dttm        = DateTime.Now;
-                    tbl.user_id_updated_by  = "";
-                    tbl.w_tax_perc          = data.w_tax_perc;
-                    tbl.bus_tax_perc        = data.bus_tax_perc;
-                    tbl.vat_perc            = data.vat_perc;
-                    tbl.exmpt_amt           = data.exmpt_amt;
-                    tbl.updated_dttm        = Convert.ToDateTime("1900-01-01");
+                    tbl.empl_id = data.empl_id;
+                    tbl.effective_date = isCheckDate(data.effective_date.ToString());
+                    tbl.bir_class = data.bir_class;
+                    tbl.with_sworn = isCheckBool(data.with_sworn.ToString());
+                    tbl.fixed_rate = isCheckBool(data.fixed_rate.ToString());
+                    tbl.total_gross_pay = data.total_gross_pay;
+                    tbl.dedct_status = isCheckBool(data.dedct_status.ToString());
+                    tbl.rcrd_status = data.rcrd_status;
+                    tbl.user_id_created_by = Session["user_id"].ToString();
+                    tbl.created_dttm = DateTime.Now;
+                    tbl.user_id_updated_by = "";
+                    tbl.w_tax_perc = data.w_tax_perc;
+                    tbl.bus_tax_perc = data.bus_tax_perc;
+                    tbl.vat_perc = data.vat_perc;
+                    tbl.exmpt_amt = data.exmpt_amt;
+                    tbl.updated_dttm = Convert.ToDateTime("1900-01-01");
                     db_pacco.payrollemployee_tax_hdr_tbl.Add(tbl);
 
-                   
-                   
+
+
                 }
 
                 else if (par_action == "EDIT")
@@ -359,7 +344,7 @@ namespace HRIS_ePAccount.Controllers
                 }
                 message = "success";
                 db_pacco.SaveChanges();
-               
+
                 return Json(new { message }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -374,7 +359,7 @@ namespace HRIS_ePAccount.Controllers
         ////// Description: to Generate per Employee
         //////*********************************************************************//
 
-        public ActionResult GenerateByEmployee(string par_empl_id,string par_payroll_year, string par_department_code, string par_history)
+        public ActionResult GenerateByEmployee(string par_empl_id, string par_payroll_year, string par_department_code, string par_history)
         {
 
             try
@@ -440,18 +425,18 @@ namespace HRIS_ePAccount.Controllers
         //*********************************************************************//
         public ActionResult PreviousValuesonPage_cJOTaxRate
             (string par_year
-             ,string par_empl_id
-             ,string par_empl_name
-             ,string par_department
-             ,string par_show_entries
-             ,string par_page_nbr
-             ,string par_search
-             ,string par_sort_value
-             ,string par_sort_order
-             ,string par_position
-             ,string par_effective_date
-             ,string par_department_code
-             ,string par_history
+             , string par_empl_id
+             , string par_empl_name
+             , string par_department
+             , string par_show_entries
+             , string par_page_nbr
+             , string par_search
+             , string par_sort_value
+             , string par_sort_order
+             , string par_position
+             , string par_effective_date
+             , string par_department_code
+             , string par_history
             )
         {
 
@@ -504,7 +489,7 @@ namespace HRIS_ePAccount.Controllers
             try
             {
 
-                var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.sp_payrollemployee_tax_hdr_tbl_list(pay_payroll_year, par_department_code, par_history).ToList();
+                var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_empl_tbl_ACT.Where(a => a.department_code == par_department_code).ToList();
 
                 return Json(new { sp_payrollemployee_tax_hdr_tbl_list }, JsonRequestBehavior.AllowGet);
             }
@@ -514,7 +499,7 @@ namespace HRIS_ePAccount.Controllers
             }
 
         }
-        
+
 
         //*********************************************************************//
         // Created By : JRV - Created Date : 09/19/2019
@@ -567,8 +552,6 @@ namespace HRIS_ePAccount.Controllers
             var reportcount = db_pacco.sp_annualtax_hdr_tbl_rep(par_payroll_year, par_empl_id).ToList();
             return Json(new { reportcount }, JsonRequestBehavior.AllowGet);
         }
-
-
 
     }
 }

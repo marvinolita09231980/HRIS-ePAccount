@@ -26,7 +26,6 @@
         <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_others_tbl" Width="1.5" PointX="6.75" PointY="14.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_phic_tbl" Width="1.5" PointX="8.75" PointY="14.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_sss_tbl" Width="1.5" PointX="14.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_hdr_tbl" Width="1.5" PointX="14.75" PointY="13.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.remittance_or_tbl" Width="1.5" PointX="16.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.remittancetype_tbl" Width="1.5" PointX="16.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.tax_tbl" Width="1.5" PointX="16.75" PointY="11.75" IsExpanded="true" />
@@ -112,6 +111,8 @@
         <EntityTypeShape EntityType="HRIS_ACTModel.employeecard_remarks_tbl" Width="1.5" PointX="3.375" PointY="38.75" />
         <EntityTypeShape EntityType="HRIS_ACTModel.annualtax_separation_tbl" Width="1.5" PointX="7.375" PointY="0.75" />
         <EntityTypeShape EntityType="HRIS_ACTModel.annualtax_hdr_tbl" Width="1.5" PointX="29.375" PointY="34.75" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_hdr_tbl" Width="1.5" PointX="13.375" PointY="13.75" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_phic_share_empl_tbl_ACT" Width="1.5" PointX="38.375" PointY="5.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

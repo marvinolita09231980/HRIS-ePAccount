@@ -7,6 +7,7 @@
 ng_HRD_App.controller("cRemitLedgerSSS_ctrlr", function ($scope, $compile, $http, $filter) {
     var s = $scope
     var h = $http
+    var excelExportServer = "";
     s.rowLen                = "10"
     s.datalistgrid          = null;
     s.voucher_list          = null;
@@ -32,7 +33,8 @@ ng_HRD_App.controller("cRemitLedgerSSS_ctrlr", function ($scope, $compile, $http
             p_department_code   : s.ddl_departments,
             p_starts_letter     : s.ddl_lastname_letter,
             p_batch_nbr         : s.ddl_batch_nbr
-        }).then(function (d) {
+            }).then(function (d) {
+            excelExportServer = d.data.excelExportServer
             s.txtb_remittance_year      = d.data.prevValues[0]; 
             s.txtb_remittance_month     = d.data.prevValues[2];
             s.txtb_employment_type      = d.data.prevValues[4];
@@ -788,33 +790,187 @@ ng_HRD_App.controller("cRemitLedgerSSS_ctrlr", function ($scope, $compile, $http
         }
     }
 
+
     s.ExctractToExcel = function (sq_m)
     {
         //$('#loading_msg').html("Extracting data");
         $('#extracting_data').modal({ keyboard: false, backdrop: "static" });
-        h.post("../cRemitLedgerSSS/ExctractToExcelSSS",
-            {
-                p_employment_type           : $("#txtb_employment_type").attr("ngx-data"),
-                p_employmenttype_descr      : $("#txtb_employment_type").val(),
-                p_remittance_year           : $("#txtb_remittance_year").val(),
-                p_quarter_rep               : getQuarterByMonth($("#txtb_remittance_month").attr("ngx-data")),
-                p_empl_id                   : "",
-                p_batch_nbr                 : s.ddl_batch_nbr,
-                p_sq_m                      : sq_m
-            }
-        ).then(function (d)
-        {
-            if (d.data.message == "success") {
-                $("#extracting_data").modal("hide")
-                window.open(d.data.filePath, '', '');
-            }
-            else {
-                $("#extracting_data").modal("hide")
-                swal(d.data.message, { icon: "success" });
-            }
+
+
+        h.post("../Menu/GetToken").then(function (d) {
+            var token = { token: d.data.token }
+            h.post(excelExportServer + "/api/remittance/verify-token", token, { responseType: 'arraybuffer' }
+
+            ).then(function (response) {
+                if (response.data) {
+                    h.post("../cRemitLedgerSSS/ExctractToExcelSSS_PHP",
+                        {
+                            p_employment_type: $("#txtb_employment_type").attr("ngx-data"),
+                            p_employmenttype_descr: $("#txtb_employment_type").val(),
+                            p_remittance_year: $("#txtb_remittance_year").val(),
+                            p_quarter_rep: getQuarterByMonth($("#txtb_remittance_month").attr("ngx-data")),
+                            p_empl_id: "",
+                            p_batch_nbr: s.ddl_batch_nbr,
+                            p_sq_m: sq_m
+                        }
+                    ).then(function (d) {
+                        if (d.data.message == "success") {
+                            var quarterm = getQuarterByMonth($("#txtb_remittance_month").attr("ngx-data"))
+                            var SSS_result = d.data.SSS_result
+                            var applicableQuarter = ""
+
+                            if (sq_m == "Q") {
+
+                                if (quarterm == 1) {
+                                    applicableQuarter = "1ST QUARTER OF " + SSS_result[0].remittance_year;
+                                }
+                                else if (quarterm == 2) {
+                                    applicableQuarter = "2ND QUARTER OF " + SSS_result[0].remittance_year;
+                                }
+                                else if (quarterm == 3) {
+                                    applicableQuarter = "3RD QUARTER OF " + SSS_result[0].remittance_year;
+                                }
+                                else if (quarterm == 4) {
+                                    applicableQuarter = "4TH QUARTER OF " + SSS_result[0].remittance_year;
+                                }
+
+                                var employment_type_str = $("#txtb_employment_type").val()
+
+                                h.post(excelExportServer + "/api/export/sss-quarterly-export", {
+                                    data: SSS_result
+                                    ,quarter: quarterm
+                                }, { responseType: 'arraybuffer' }
+                                ).then(function (response2) {
+
+                                    // Check the response data
+                                    if (response2.data) {
+                                        // Create a Blob from the response data
+                                        const csvBlob = new Blob([response2.data], { type: 'text/csv;charset=utf-8;' });
+                                        // Generate a URL for the Blob
+                                        const downloadUrl = window.URL.createObjectURL(csvBlob);
+
+                                        // Create an anchor element and set its href attribute to the Blob URL
+                                        const link = document.createElement('a');
+                                        link.href = downloadUrl;
+
+                                        // Set the download attribute with a dynamic filename
+                                        //const name = new Date().toLocaleString().replace(/[/,\\:*?"<>|]/g, '_');
+                                        const name = "SSS-Quarterly-" + applicableQuarter + "-" + employment_type_str + ".xlsx"
+                                        link.setAttribute('download', name);
+                                        console.log(link)
+                                        // Append the link to the document body and click it to initiate the download
+                                        document.body.appendChild(link);
+                                        link.click();
+
+                                        // Clean up by removing the link element and revoking the Blob URL
+                                        document.body.removeChild(link);
+                                        window.URL.revokeObjectURL(downloadUrl);
+                                        $("#extracting_data").modal("hide");
+                                    } else {
+                                        console.error('The response data is empty or undefined.');
+                                        $("#extracting_data").modal("hide");
+                                    }
+                                }).catch(function (error) {
+                                    console.error('There was a problem with the POST request:', error);
+                                    $("#extracting_data").modal("hide");
+                                });
+                            }
+                            else {
+
+                               
+                                var monthname = SSS_result[0][0].month_name
+                                var empl_type = SSS_result[0][0].employment_type
+                                var remittance_year = SSS_result[0][0].remittance_year
+
+                                h.post(excelExportServer + "/api/export/sss-monthly-export", {
+                                    data: SSS_result
+                                }, { responseType: 'arraybuffer' }
+                                ).then(function (response2) {
+
+                                    // Check the response data
+                                    if (response2.data) {
+                                        // Create a Blob from the response data
+                                        const csvBlob = new Blob([response2.data], { type: 'text/csv;charset=utf-8;' });
+                                        // Generate a URL for the Blob
+                                        const downloadUrl = window.URL.createObjectURL(csvBlob);
+
+                                        // Create an anchor element and set its href attribute to the Blob URL
+                                        const link = document.createElement('a');
+                                        link.href = downloadUrl;
+
+                                        // Set the download attribute with a dynamic filename
+                                        //const name = new Date().toLocaleString().replace(/[/,\\:*?"<>|]/g, '_');
+                                        const name = "SSS-Monthly-" + remittance_year + "-" + monthname + "-" + empl_type + ".xlsx"
+                                        link.setAttribute('download', name);
+                                        console.log(link)
+                                        // Append the link to the document body and click it to initiate the download
+                                        document.body.appendChild(link);
+                                        link.click();
+
+                                        // Clean up by removing the link element and revoking the Blob URL
+                                        document.body.removeChild(link);
+                                        window.URL.revokeObjectURL(downloadUrl);
+                                        $("#extracting_data").modal("hide");
+                                    } else {
+                                        console.error('The response data is empty or undefined.');
+                                        $("#extracting_data").modal("hide");
+                                    }
+                                }).catch(function (error) {
+                                    console.error('There was a problem with the POST request:', error);
+                                    $("#extracting_data").modal("hide");
+                                });
+                            }
+
+                           
+
+                        }
+                        else {
+                            $("#extracting_data").modal("hide")
+                            swal(d.data.message, { icon: "success" });
+                        }
+                        
+
+
+                    })
+                }
+
+            }).catch(function (error, response) {
+                swal("Token expired! please generate new token.", { icon: "error" })
+                console.error('Token expired! please generate new token :', error);
+                $("#extracting_data").modal("hide");
+            });
+
+
         })
 
+
     }
+
+    //s.ExctractToExcel = function (sq_m) {
+    //    //$('#loading_msg').html("Extracting data");
+    //    $('#extracting_data').modal({ keyboard: false, backdrop: "static" });
+    //    h.post("../cRemitLedgerSSS/ExctractToExcelSSS_PHP",
+    //        {
+    //            p_employment_type: $("#txtb_employment_type").attr("ngx-data"),
+    //            p_employmenttype_descr: $("#txtb_employment_type").val(),
+    //            p_remittance_year: $("#txtb_remittance_year").val(),
+    //            p_quarter_rep: getQuarterByMonth($("#txtb_remittance_month").attr("ngx-data")),
+    //            p_empl_id: "",
+    //            p_batch_nbr: s.ddl_batch_nbr,
+    //            p_sq_m: sq_m
+    //        }
+    //    ).then(function (d) {
+    //        if (d.data.message == "success") {
+    //            $("#extracting_data").modal("hide")
+    //            window.open(d.data.filePath, '', '');
+    //        }
+    //        else {
+    //            $("#extracting_data").modal("hide")
+    //            swal(d.data.message, { icon: "success" });
+    //        }
+    //    })
+
+    //}
 
     Array.prototype.delete = function (code) {
         return this.filter(function (d, k)

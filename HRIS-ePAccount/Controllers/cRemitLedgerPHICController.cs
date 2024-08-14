@@ -522,7 +522,7 @@ namespace HRIS_ePAccount.Controllers
                 return JSON(new { message, sp_remittance_PHIC_monthly_rep, filePath }, JsonRequestBehavior.AllowGet);
         }
             //To Merge with Jorge
-            public ActionResult ExtractToExcelCheck()
+        public ActionResult ExtractToExcelCheck()
         {
             db_pacco.Database.CommandTimeout = int.MaxValue;
             var message = "";

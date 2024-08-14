@@ -13,10 +13,12 @@
     var voucher_nbr = ""
     var empl_id = ""
     var wdc = new w_dc([])
+    var excelExportServer = ""
     s.fd = []
     s.fd.txtb_year = ""
     s.fd.txtb_month = ""
     s.fd.txtb_empl_type = ""
+   
 
 
     s.month_arr = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -201,7 +203,8 @@
         Init_Premium_Data([])
         var browserHeight = window.innerHeight
         h.post("../cRemitLedgerHDMF/initializeData", { ltr: s.ddl_letter, v_opt: s.view_option }).then(function (d) {
-           
+
+            excelExportServer = d.data.excelExportServer;
 
             s.remit_ctrl_nbr            = d.data.prevValues[7].trim()
             s.year                      = d.data.prevValues[0].trim()
@@ -726,42 +729,255 @@
             }
         })
     }
-   
+
+    //s.ExctractToExcel = function () {
+
+    //    var rc = s.remittancetype_code
+    //    $("#extracting_data").modal("show")
+
+    //    if (rc == "02" || rc == "05") {
+
+    //        //h.post("../cRemitLedgerHDMF/ExctractToExcelPremiumsPhp", { rc: rc }).then(function (d) {
+    //        //    console.log(d.data.hdmf)
+    //        //    $("#extracting_data").modal("hide")
+    //        //})
+
+    //        h.post("../cRemitLedgerHDMF/ExctractToExcelPremiums", { rc: rc }).then(function (d) {
+
+    //            if (d.data.message == "success") {
+    //                $("#extracting_data").modal("hide")
+    //                window.open(d.data.filePath, '', '');
+    //            }
+    //            else {
+    //                $("#extracting_data").modal("hide")
+    //                swal(d.data.message, { icon: "error" });
+    //            }
+    //        })
+    //    }
+    //    else {
+
+    //        //h.post("../cRemitLedgerHDMF/ExctractToExcelLoansPhp", { rc: rc }).then(function (d) {
+    //        //    console.log(d.data.hdmf)
+    //        //    $("#extracting_data").modal("hide")
+    //        //})
+
+    //        h.post("../cRemitLedgerHDMF/ExctractToExcelLoans", { rc: rc }).then(function (d) {
+
+    //            if (d.data.message == "success") {
+    //                $("#extracting_data").modal("hide")
+    //                window.open(d.data.filePath, '', '');
+    //            }
+    //            else {
+    //                $("#extracting_data").modal("hide")
+    //                swal(d.data.message, { icon: "success" });
+    //            }
+    //        })
+    //    }
+
+    //}
+
     s.ExctractToExcel = function () {
 
+       
         var rc = s.remittancetype_code
+        var remittance_year = $("#remittanceyear").val()
+        var remittance_month_descr = $("#remittance_month_descr").val()
         $("#extracting_data").modal("show")
 
+        
+
         if (rc == "02" || rc == "05") {
-          
-            h.post("../cRemitLedgerHDMF/ExctractToExcelPremiums", { rc: rc }).then(function (d) {
-              
-                if (d.data.message == "success") {
-                        $("#extracting_data").modal("hide")
-                        window.open(d.data.filePath, '', '');
-                }
-                else {
-                    $("#extracting_data").modal("hide")
-                    swal(d.data.message, { icon: "error" });
-                }
+
+            var premium_name = ""
+
+            if (rc == "02") {
+                premium_name = "HDMF Premiums"
+            }
+            else if (rc == "05") {
+                premium_name = "HDMF MP2"
+            }
+            else {
+                premium_name = ""
+            }
+            h.post("../Menu/GetToken").then(function (d) {
+                var token = { token: d.data.token }
+
+                h.post(excelExportServer + "/api/remittance/verify-token", token, { responseType: 'arraybuffer' }
+
+                ).then(function (response) {
+
+                    if (response.data) {
+                        h.post("../cRemitLedgerHDMF/ExctractToExcelPremiumsPHP",{ rc: rc }).then(function (d) {
+                            var hdmf = d.data.hdmf_grouped
+                            var mp = d.data.mp
+                            h.post(excelExportServer + "/api/export/hdmf-premiums-export", {
+                                 data: hdmf
+                                ,mp:mp
+                            }, { responseType: 'arraybuffer' }
+                            ).then(function (response2) {
+                               
+                                // Check the response data
+                                if (response2.data) {
+                                    // Create a Blob from the response data
+                                    const csvBlob = new Blob([response2.data], { type: 'text/csv;charset=utf-8;' });
+                                    // Generate a URL for the Blob
+                                    const downloadUrl = window.URL.createObjectURL(csvBlob);
+                                   
+                                    // Create an anchor element and set its href attribute to the Blob URL
+                                    const link = document.createElement('a');
+                                    link.href = downloadUrl;
+
+                                    // Set the download attribute with a dynamic filename
+                                    //const name = new Date().toLocaleString().replace(/[/,\\:*?"<>|]/g, '_');
+                                    const name = premium_name + "-" + remittance_year + "-" + remittance_month_descr + "-" + s.empl_type + ".xlsx"
+                                    link.setAttribute('download', name);
+                                    console.log(link)
+                                    // Append the link to the document body and click it to initiate the download
+                                    document.body.appendChild(link);
+                                    link.click();
+
+                                    // Clean up by removing the link element and revoking the Blob URL
+                                    document.body.removeChild(link);
+                                    window.URL.revokeObjectURL(downloadUrl);
+                                    $("#extracting_data").modal("hide");
+                                } else {
+                                    console.error('The response data is empty or undefined.');
+                                    $("#extracting_data").modal("hide");
+                                }
+                            }).catch(function (error) {
+                                console.error('There was a problem with the POST request:', error);
+                                $("#extracting_data").modal("hide");
+                            });
+
+                        })
+                    }
+
+                }).catch(function (error, response) {
+                    swal("Token expired! please generate new token.", { icon: "error" })
+                    console.error('Token expired! please generate new token :', error);
+                    $("#extracting_data").modal("hide");
+                });
+
+
             })
+
         }
-        else
-        {
-            h.post("../cRemitLedgerHDMF/ExctractToExcelLoans", { rc: rc }).then(function (d) {
-               
-                if (d.data.message == "success") {
-                        $("#extracting_data").modal("hide")
-                           window.open(d.data.filePath, '', '');
-                }
-                else {
-                    $("#extracting_data").modal("hide")
-                    swal(d.data.message, { icon: "success" });
-                }
+
+        else {
+
+            var loan_name = ""
+
+            if (rc == "03") {
+                loan_name = "HDMF MPL "
+            }
+            else if (rc == "04") {
+                loan_name = "HDMF CALAMITY "
+            }
+            else if (rc == "06") {
+                loan_name = "HDMF HOUSING "
+            }
+            else {
+                loan_name = ""
+            }
+
+            h.post("../Menu/GetToken").then(function (d) {
+                var token = { token: d.data.token }
+                h.post(excelExportServer +"/api/remittance/verify-token", token, { responseType: 'arraybuffer' }
+
+                ).then(function (response3) {
+                    if (response3.data) {
+                        h.post("../cRemitLedgerHDMF/ExctractToExcelLoansPhp", { rc: rc }).then(function (d) {
+
+                            var hdmf = d.data.hdmf_grouped
+                          
+                            h.post(excelExportServer +"/api/export/hdmf-loans-export", {
+                                data: hdmf
+                            }, { responseType: 'arraybuffer' }
+                            ).then(function (response4) {
+
+                                // Check the response data
+                                if (response4.data) {
+                                    // Create a Blob from the response data
+                                    const csvBlob = new Blob([response4.data], { type: 'text/csv;charset=utf-8;' });
+                                    // Generate a URL for the Blob
+                                    const downloadUrl = window.URL.createObjectURL(csvBlob);
+
+                                    // Create an anchor element and set its href attribute to the Blob URL
+                                    const link = document.createElement('a');
+                                    link.href = downloadUrl;
+
+                                    // Set the download attribute with a dynamic filename
+                                    //const name = new Date().toLocaleString().replace(/[/,\\:*?"<>|]/g, '_');
+                                    const name = loan_name+"Loans-" + remittance_year + "-" + remittance_month_descr + "-" + s.empl_type + ".xlsx"
+                                    link.setAttribute('download', name);
+                                    console.log(link)
+                                    // Append the link to the document body and click it to initiate the download
+                                    document.body.appendChild(link);
+                                    link.click();
+
+                                    // Clean up by removing the link element and revoking the Blob URL
+                                    document.body.removeChild(link);
+                                    window.URL.revokeObjectURL(downloadUrl);
+                                    $("#extracting_data").modal("hide");
+                                } else {
+                                    console.error('The response data is empty or undefined.');
+                                    $("#extracting_data").modal("hide");
+                                }
+                            }).catch(function (error) {
+                                console.error('There was a problem with the POST request:', error);
+                                $("#extracting_data").modal("hide");
+                            });
+
+                        })
+                    }
+
+                }).catch(function (error, response) {
+                    swal("Token expired! please generate new token.", { icon: "error" })
+                    console.error('Token expired! please generate new token :', error);
+                    $("#extracting_data").modal("hide");
+                });
+
+
             })
         }
 
     }
+   
+    //s.ExctractToExcel = function () {
+
+    //    var rc = s.remittancetype_code
+    //    $("#extracting_data").modal("show")
+
+    //    if (rc == "02" || rc == "05") {
+          
+    //        h.post("../cRemitLedgerHDMF/ExctractToExcelPremiums", { rc: rc }).then(function (d) {
+              
+    //            if (d.data.message == "success") {
+    //                    $("#extracting_data").modal("hide")
+    //                    window.open(d.data.filePath, '', '');
+    //            }
+    //            else {
+    //                $("#extracting_data").modal("hide")
+    //                swal(d.data.message, { icon: "error" });
+    //            }
+    //        })
+    //    }
+    //    else
+    //    {
+    //        h.post("../cRemitLedgerHDMF/ExctractToExcelLoans", { rc: rc }).then(function (d) {
+               
+    //            if (d.data.message == "success") {
+    //                    $("#extracting_data").modal("hide")
+    //                       window.open(d.data.filePath, '', '');
+    //            }
+    //            else {
+    //                $("#extracting_data").modal("hide")
+    //                swal(d.data.message, { icon: "success" });
+    //            }
+    //        })
+    //    }
+
+    //}
 
     s.ExctractToExcelCheck = function () {
 

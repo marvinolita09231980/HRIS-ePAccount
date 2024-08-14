@@ -21,6 +21,7 @@ namespace HRIS_ePAccount.Controllers
         HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
         public string url_name = "cRemitLedger";
         // GET: cRemitLedgerHDMF
+        // GET: cRemitLedgerHDMF
         User_Menu um = new User_Menu();
         // GET: cRemitLedgerGSIS
         
@@ -52,6 +53,7 @@ namespace HRIS_ePAccount.Controllers
         
         public ActionResult initializeData(string l, string v_opt)
         {
+            string excelExportServer = System.Configuration.ConfigurationManager.AppSettings["ExcelExportServerIP"];
             assignToModel();
             db_pacco.Database.CommandTimeout = int.MaxValue;
             string[] prevVal = Session["PreviousValuesonPage_cRemitLedger"].ToString().Split(new char[] { ',' });
@@ -61,7 +63,7 @@ namespace HRIS_ePAccount.Controllers
                     
             var rs = db_pacco.remittance_hdr_tbl.Where(a => a.remittance_ctrl_nbr == um.remittance_ctrl_nbr).FirstOrDefault();
 
-            return JSON(new { department_list, details, remittance_status = rs.remittance_status, prevVal }, JsonRequestBehavior.AllowGet);
+            return JSON(new { department_list, details, remittance_status = rs.remittance_status, prevVal, excelExportServer}, JsonRequestBehavior.AllowGet);
         }
         //*********************************************************************//
         // Created By : MARVIN - Created Date : 10/19/2019
@@ -738,6 +740,29 @@ namespace HRIS_ePAccount.Controllers
 
 
         }
+
+        public ActionResult ExtractToPhpExcel()
+        {
+            assignToModel();
+            var message = "";
+            try
+            {
+                db_pacco.Database.CommandTimeout = int.MaxValue;
+                List<sp_remittance_GSIS_rep_2_Result> collection = new List<sp_remittance_GSIS_rep_2_Result>();
+                var sp_remittance_GSIS_rep_2 = db_pacco.sp_remittance_GSIS_rep_2(um.remittance_ctrl_nbr, um.remittance_year, um.remittance_month).GroupBy(b => b.due_month).OrderBy(grouping => grouping.Max(m => m.due_month)).ToList();
+
+                return JSON(new { message = message, sp_remittance_GSIS_rep_2 }, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (DbEntityValidationException e)
+            {
+                message = DbEntityValidationExceptionError(e);
+
+                return JSON(new { message = message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
         public ActionResult ExtractToExcel()
         {
             assignToModel();

@@ -197,11 +197,18 @@ namespace HRIS_ePAccount.Controllers
         {
             try
             {
-                var header_table = db_pacco.remittance_hdr_tbl.Where(a => a.remittance_ctrl_nbr == par_remittance_ctrl_no).FirstOrDefault();
-                db_pacco.remittance_hdr_tbl.Remove(header_table);
-               
-                db_pacco.SaveChanges();
-                
+                //var header_table = db_pacco.remittance_hdr_tbl.Where(a => a.remittance_ctrl_nbr == par_remittance_ctrl_no).FirstOrDefault();
+                //db_pacco.remittance_hdr_tbl.Remove(header_table);
+
+                //db_pacco.SaveChanges();
+
+                var header_table = db_pacco.sp_delete_remittance_hdr_tbl(par_remittance_ctrl_no).FirstOrDefault();
+
+                if (header_table.exec_code == 0)
+                {
+                    throw new Exception("Failed to delete remittance header!");
+                }
+
                 switch (par_remittancetype_code)
                 {
                     case "01"://GSIS Details
