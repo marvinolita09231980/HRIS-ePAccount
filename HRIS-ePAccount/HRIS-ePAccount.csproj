@@ -1471,12 +1471,6 @@
       <DependentUpon>cryHonRemit.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\cryJobOrderReports\cryOvertimeJO\cryOvertimeJO1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>cryOvertimeJO.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Reports\cryOtherPayroll\cryOthpay\cryOthPay1.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1899,6 +1893,15 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\cryVoucher\cryOBR\cryOBR_NOCAFOA.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\cryVoucher\cryOthClaimsV2\cryOthClaimsV2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\cryVoucher\cryOthClaimsV2\cryOthClaimsV21.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>cryOthClaimsV2.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\cryVoucher\cryOthClaims\cryOthClaims.cs">
@@ -3801,6 +3804,10 @@
     <Content Include="Reports\cryVoucher\cryOthClaims\cryOthClaims.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>cryOthClaims1.cs</LastGenOutput>
+    </Content>
+    <Content Include="Reports\cryVoucher\cryOthClaimsV2\cryOthClaimsV2.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>cryOthClaimsV21.cs</LastGenOutput>
     </Content>
     <EmbeddedResource Include="Reports\cryVoucher\cryTerminalLeave\cryTerminalLeaveOld.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
