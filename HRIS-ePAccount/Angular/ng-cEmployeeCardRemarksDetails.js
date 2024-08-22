@@ -96,6 +96,12 @@
                 order: [[2, 'asc']],
                 columns: [
                     {
+                        "mData": "payroll_registry_nbr",
+                        "mRender": function (data, type, full, row) {
+                            return "<span class='text-center btn-block'>" + data + "</span>"
+                        }
+                    },
+                    {
                         "mData": "voucher_nbr",
                         "mRender": function (data, type, full, row) {
                             return "<span class='text-center btn-block'>" + data + "</span>"

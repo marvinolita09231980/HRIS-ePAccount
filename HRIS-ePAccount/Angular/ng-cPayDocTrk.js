@@ -2799,6 +2799,13 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
                 parameters = "par_payroll_year," + s.txtb_payroll_year + ",par_payroll_registry_nbr," + s.txtb_ctrl_no + ",par_payrolltemplate_code," + $('#ddl_reports option:selected').val()
                 ReportPath = "/Reports/cryOtherPayroll/cryOthPay/cryOthPay_PBB.rpt";
                 break;
+            case "610":  // Other Claims / Refund v2	RE
+            case "611":  // Other Claims / Refund v2	CE
+            case "612":   // Other Claims / Refund v2	JO
+                sp          = "voucher_dtl_oth_claims_tbl_rep2";
+                parameters = "par_payroll_year," + s.txtb_payroll_year + ",par_payroll_month," + s.txtb_payroll_month + ",par_voucher_ctrl_nbr," + s.txtb_ctrl_no + ",par_payrolltemplate_code," + $('#ddl_reports option:selected').val() + ",par_employment_type," + emp_type;
+                ReportPath = "/Reports/cryVoucher/cryOthClaimsV2/cryOthClaimsV2.rpt";
+                break;
         }
         
         //location.href = "../" + controller + "/" + action + "?ReportName=" + ReportName
