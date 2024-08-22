@@ -45,7 +45,6 @@ namespace HRIS_ePAccount.Models
         public virtual DbSet<remittance_dtl_others_tbl> remittance_dtl_others_tbl { get; set; }
         public virtual DbSet<remittance_dtl_phic_tbl> remittance_dtl_phic_tbl { get; set; }
         public virtual DbSet<remittance_dtl_sss_tbl> remittance_dtl_sss_tbl { get; set; }
-        public virtual DbSet<remittance_hdr_tbl> remittance_hdr_tbl { get; set; }
         public virtual DbSet<remittance_or_tbl> remittance_or_tbl { get; set; }
         public virtual DbSet<remittancetype_tbl> remittancetype_tbl { get; set; }
         public virtual DbSet<tax_tbl> tax_tbl { get; set; }
@@ -131,6 +130,8 @@ namespace HRIS_ePAccount.Models
         public virtual DbSet<employeecard_remarks_tbl> employeecard_remarks_tbl { get; set; }
         public virtual DbSet<annualtax_separation_tbl> annualtax_separation_tbl { get; set; }
         public virtual DbSet<annualtax_hdr_tbl> annualtax_hdr_tbl { get; set; }
+        public virtual DbSet<remittance_hdr_tbl> remittance_hdr_tbl { get; set; }
+        public virtual DbSet<vw_phic_share_empl_tbl_ACT> vw_phic_share_empl_tbl_ACT { get; set; }
     
         [DbFunction("HRIS_PACCO_DEVEntities", "func_remittance_upd_GSIS")]
         public virtual IQueryable<func_remittance_upd_GSIS_Result> func_remittance_upd_GSIS(string p_remittance_year, string p_remittance_month)
@@ -3478,6 +3479,125 @@ namespace HRIS_ePAccount.Models
                 new ObjectParameter("par_employment_type", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_prcmonitor_tbl_Result>("sp_prcmonitor_tbl", par_yearParameter, par_monthParameter, par_employment_typeParameter);
+        }
+    
+        public virtual ObjectResult<sp_remittance_GSIS_rep_2_Result> sp_remittance_GSIS_rep_2(string p_remittance_ctrl_nbr, string p_remittance_year, string p_remittance_month)
+        {
+            var p_remittance_ctrl_nbrParameter = p_remittance_ctrl_nbr != null ?
+                new ObjectParameter("p_remittance_ctrl_nbr", p_remittance_ctrl_nbr) :
+                new ObjectParameter("p_remittance_ctrl_nbr", typeof(string));
+    
+            var p_remittance_yearParameter = p_remittance_year != null ?
+                new ObjectParameter("p_remittance_year", p_remittance_year) :
+                new ObjectParameter("p_remittance_year", typeof(string));
+    
+            var p_remittance_monthParameter = p_remittance_month != null ?
+                new ObjectParameter("p_remittance_month", p_remittance_month) :
+                new ObjectParameter("p_remittance_month", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_remittance_GSIS_rep_2_Result>("sp_remittance_GSIS_rep_2", p_remittance_ctrl_nbrParameter, p_remittance_yearParameter, p_remittance_monthParameter);
+        }
+    
+        public virtual ObjectResult<sp_extract_annualized_tax_bir_forPHP_Result> sp_extract_annualized_tax_bir_forPHP(string p_payroll_year, string p_employment_type)
+        {
+            var p_payroll_yearParameter = p_payroll_year != null ?
+                new ObjectParameter("p_payroll_year", p_payroll_year) :
+                new ObjectParameter("p_payroll_year", typeof(string));
+    
+            var p_employment_typeParameter = p_employment_type != null ?
+                new ObjectParameter("p_employment_type", p_employment_type) :
+                new ObjectParameter("p_employment_type", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_extract_annualized_tax_bir_forPHP_Result>("sp_extract_annualized_tax_bir_forPHP", p_payroll_yearParameter, p_employment_typeParameter);
+        }
+    
+        public virtual ObjectResult<sp_extract_annualized_tax_forPHP_Result> sp_extract_annualized_tax_forPHP(string p_payroll_year, string p_employment_type)
+        {
+            var p_payroll_yearParameter = p_payroll_year != null ?
+                new ObjectParameter("p_payroll_year", p_payroll_year) :
+                new ObjectParameter("p_payroll_year", typeof(string));
+    
+            var p_employment_typeParameter = p_employment_type != null ?
+                new ObjectParameter("p_employment_type", p_employment_type) :
+                new ObjectParameter("p_employment_type", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_extract_annualized_tax_forPHP_Result>("sp_extract_annualized_tax_forPHP", p_payroll_yearParameter, p_employment_typeParameter);
+        }
+    
+        public virtual ObjectResult<sp_remittance_ledger_info_SSS_2_Result> sp_remittance_ledger_info_SSS_2(string p_remittance_ctrl_nbr, string p_department_code, string p_letter, Nullable<int> p_batch_nbr, string p_empl_id, string p_voucher_nbr)
+        {
+            var p_remittance_ctrl_nbrParameter = p_remittance_ctrl_nbr != null ?
+                new ObjectParameter("p_remittance_ctrl_nbr", p_remittance_ctrl_nbr) :
+                new ObjectParameter("p_remittance_ctrl_nbr", typeof(string));
+    
+            var p_department_codeParameter = p_department_code != null ?
+                new ObjectParameter("p_department_code", p_department_code) :
+                new ObjectParameter("p_department_code", typeof(string));
+    
+            var p_letterParameter = p_letter != null ?
+                new ObjectParameter("p_letter", p_letter) :
+                new ObjectParameter("p_letter", typeof(string));
+    
+            var p_batch_nbrParameter = p_batch_nbr.HasValue ?
+                new ObjectParameter("p_batch_nbr", p_batch_nbr) :
+                new ObjectParameter("p_batch_nbr", typeof(int));
+    
+            var p_empl_idParameter = p_empl_id != null ?
+                new ObjectParameter("p_empl_id", p_empl_id) :
+                new ObjectParameter("p_empl_id", typeof(string));
+    
+            var p_voucher_nbrParameter = p_voucher_nbr != null ?
+                new ObjectParameter("p_voucher_nbr", p_voucher_nbr) :
+                new ObjectParameter("p_voucher_nbr", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_remittance_ledger_info_SSS_2_Result>("sp_remittance_ledger_info_SSS_2", p_remittance_ctrl_nbrParameter, p_department_codeParameter, p_letterParameter, p_batch_nbrParameter, p_empl_idParameter, p_voucher_nbrParameter);
+        }
+    
+        public virtual ObjectResult<sp_remittance_SSS_qtrly_rep_2_Result> sp_remittance_SSS_qtrly_rep_2(string p_employment_type, string p_remittance_year, Nullable<int> p_quarter_rep, string p_empl_id, Nullable<int> p_batch_nbr)
+        {
+            var p_employment_typeParameter = p_employment_type != null ?
+                new ObjectParameter("p_employment_type", p_employment_type) :
+                new ObjectParameter("p_employment_type", typeof(string));
+    
+            var p_remittance_yearParameter = p_remittance_year != null ?
+                new ObjectParameter("p_remittance_year", p_remittance_year) :
+                new ObjectParameter("p_remittance_year", typeof(string));
+    
+            var p_quarter_repParameter = p_quarter_rep.HasValue ?
+                new ObjectParameter("p_quarter_rep", p_quarter_rep) :
+                new ObjectParameter("p_quarter_rep", typeof(int));
+    
+            var p_empl_idParameter = p_empl_id != null ?
+                new ObjectParameter("p_empl_id", p_empl_id) :
+                new ObjectParameter("p_empl_id", typeof(string));
+    
+            var p_batch_nbrParameter = p_batch_nbr.HasValue ?
+                new ObjectParameter("p_batch_nbr", p_batch_nbr) :
+                new ObjectParameter("p_batch_nbr", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_remittance_SSS_qtrly_rep_2_Result>("sp_remittance_SSS_qtrly_rep_2", p_employment_typeParameter, p_remittance_yearParameter, p_quarter_repParameter, p_empl_idParameter, p_batch_nbrParameter);
+        }
+    
+        public virtual ObjectResult<sp_extract_refund_2_Result> sp_extract_refund_2(string par_posted_year, string par_posted_month)
+        {
+            var par_posted_yearParameter = par_posted_year != null ?
+                new ObjectParameter("par_posted_year", par_posted_year) :
+                new ObjectParameter("par_posted_year", typeof(string));
+    
+            var par_posted_monthParameter = par_posted_month != null ?
+                new ObjectParameter("par_posted_month", par_posted_month) :
+                new ObjectParameter("par_posted_month", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_extract_refund_2_Result>("sp_extract_refund_2", par_posted_yearParameter, par_posted_monthParameter);
+        }
+    
+        public virtual ObjectResult<sp_delete_remittance_hdr_tbl_Result> sp_delete_remittance_hdr_tbl(string p_remittance_ctrl_nbr)
+        {
+            var p_remittance_ctrl_nbrParameter = p_remittance_ctrl_nbr != null ?
+                new ObjectParameter("p_remittance_ctrl_nbr", p_remittance_ctrl_nbr) :
+                new ObjectParameter("p_remittance_ctrl_nbr", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_delete_remittance_hdr_tbl_Result>("sp_delete_remittance_hdr_tbl", p_remittance_ctrl_nbrParameter);
         }
     }
 }

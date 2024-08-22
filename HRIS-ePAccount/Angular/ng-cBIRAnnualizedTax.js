@@ -483,8 +483,6 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                         $("#generate_icon_dtl" + id_ss).removeClass("fa fa-spinner fa-spin");
                         $("#generate_icon_dtl" + id_ss).addClass("fa fa-edit");
 
-                        
-
                         if (d.data.sp_annualtax_hdr_tbl_list.length > 0) {
                             s.txtb_monthly_tax_due = currency(d.data.sp_annualtax_hdr_tbl_list2.monthly_tax_due)
                             s.txtb_employment_type = d.data.sp_annualtax_hdr_tbl_list2.employmenttype_description

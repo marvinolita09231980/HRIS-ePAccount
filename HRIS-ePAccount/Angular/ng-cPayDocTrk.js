@@ -2549,6 +2549,8 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
                 break;
             case "945": // Other Payroll 5 - For Regular 
 			case "928":
+			case "979":
+			case "980":
                 //printreport = hidden_report_filename.Text;
                 sp = "sp_payrollregistry_othpay_rep";
                 parameters = "par_payroll_year," + s.txtb_payroll_year + ",par_payroll_registry_nbr," + s.txtb_ctrl_no + ",par_payrolltemplate_code," + $('#ddl_reports option:selected').val()
@@ -2777,7 +2779,9 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
             case "931":  //	SSS REFUND	- CE
             case "921":  //	PHIC REFUND	- CE
             case "966":  //	 ONB	- RE
-           
+            case "973":  //	LBP REFUND
+		    case "949":  //	SSS REFUND	- JO
+		    case "965":  //	SSS REFUND	- RE
                 sp = "sp_payrollregistry_othpay_rep";
                 parameters = "par_payroll_year," + s.txtb_payroll_year + ",par_payroll_registry_nbr," + s.txtb_ctrl_no + ",par_payrolltemplate_code," + $('#ddl_reports option:selected').val()
                 ReportPath = "/Reports/cryOtherPayroll/cryOthPay/cryOthPay1.rpt";
@@ -2788,7 +2792,7 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
                 ReportPath = "/Reports/cryOtherPayroll/cryOthPay/cryOthPay_PBB.rpt";
                 break;
 			case "962":  //	SRI
-            case "057":  //	SRI
+            case "957":  //	SRI
                 sp = "sp_payrollregistry_othpay_rep";
                 parameters = "par_payroll_year," + s.txtb_payroll_year + ",par_payroll_registry_nbr," + s.txtb_ctrl_no + ",par_payrolltemplate_code," + $('#ddl_reports option:selected').val()
                 ReportPath = "/Reports/cryOtherPayroll/cryOthPay/cryOthPay_SRI.rpt";
@@ -2799,12 +2803,19 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
                 parameters = "par_payroll_year," + s.txtb_payroll_year + ",par_payroll_registry_nbr," + s.txtb_ctrl_no + ",par_payrolltemplate_code," + $('#ddl_reports option:selected').val()
                 ReportPath = "/Reports/cryOtherPayroll/cryOthPay/cryOthPay_PBB.rpt";
                 break;
-            case "610":  // Other Claims / Refund v2	RE
-            case "611":  // Other Claims / Refund v2	CE
-            case "612":   // Other Claims / Refund v2	JO
-                sp          = "voucher_dtl_oth_claims_tbl_rep2";
-                parameters = "par_payroll_year," + s.txtb_payroll_year + ",par_payroll_month," + s.txtb_payroll_month + ",par_voucher_ctrl_nbr," + s.txtb_ctrl_no + ",par_payrolltemplate_code," + $('#ddl_reports option:selected').val() + ",par_employment_type," + emp_type;
-                ReportPath = "/Reports/cryVoucher/cryOthClaimsV2/cryOthClaimsV2.rpt";
+            case "974":  //	HEA
+            case "975":  //	HEA
+            case "976":  //	HEA
+            case "977":  //	TAGUM REFUND
+            case "978":  //	TAGUM REFUND
+                sp = "sp_payrollregistry_othpay_rep";
+                parameters = "par_payroll_year," + s.txtb_payroll_year + ",par_payroll_registry_nbr," + s.txtb_ctrl_no + ",par_payrolltemplate_code," + $('#ddl_reports option:selected').val()
+                ReportPath = "/Reports/cryOtherPayroll/cryOthPay/cryOthPay_HEA.rpt";
+                break;
+            case "981":  //	RATA DIFF
+                sp = "sp_payrollregistry_othpay_rep";
+                parameters = "par_payroll_year," + s.txtb_payroll_year + ",par_payroll_registry_nbr," + s.txtb_ctrl_no + ",par_payrolltemplate_code," + $('#ddl_reports option:selected').val()
+                ReportPath = "/Reports/cryOtherPayroll/cryOthPay/cryOthPay5_RATADiff.rpt";
                 break;
         }
         

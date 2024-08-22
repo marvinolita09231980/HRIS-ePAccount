@@ -1,11 +1,10 @@
-﻿
+﻿using HRIS_eHRD.Common_Code;
 using HRIS_ePAccount.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Text;
-using System.Web;
 using System.Web.Mvc;
 
 namespace HRIS_ePAccount.Controllers
@@ -13,12 +12,14 @@ namespace HRIS_ePAccount.Controllers
     public class MenuController : Controller
     {
 
+        applicationtoken at = new applicationtoken();
         //
         HRIS_DEVEntities db_pay = new HRIS_DEVEntities();
         HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
         // GET: Menu
         public ActionResult Index()
         {
+            
             return View();
         }
 
@@ -35,13 +36,52 @@ namespace HRIS_ePAccount.Controllers
         }
 
 
+        public ActionResult GetTaxToUpdate()
+        {
+            db_pay.Database.CommandTimeout = int.MaxValue;
+            String[] AllowUserTaxUpdApprove_list;
+            bool AllowUserTaxApprove = false;
+            var userid = Session["user_id"].ToString();
+            var year = DateTime.Now.Year.ToString();
+            AllowUserTaxUpdApprove_list = System.Configuration.ConfigurationManager.AppSettings["AllowApprovetaxUpdateUser"].Split(',');
+            try
+            {
+                var retax = db_pay.sp_empltaxwithheld_tbl_for_apprvl("RE").ToList().Count();
+                var cetax = db_pay.sp_empltaxwithheld_tbl_for_apprvl("CE").ToList().Count();
+                var jotax = db_pay.sp_payrollemployee_tax_tbl_for_apprvl(year, "N").ToList().Count();
+                var rctax = retax + cetax;
+                int updtax = rctax + jotax;
+
+                for (var x = 0; x < AllowUserTaxUpdApprove_list.Count(); x++)
+                {
+                    if (userid == AllowUserTaxUpdApprove_list[x])
+                    {
+                        AllowUserTaxApprove = true;
+                    }
+
+                }
+                return Json(new { message = "Success",  icon = "success", rctax, updtax, jotax, AllowUserTaxApprove}, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                var message = ex.Message;
+                return Json(new { message = message,icon="error" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         public ActionResult GetMenuList()
         {
-
+           
+           
+            
             var message = "";
+            var year = DateTime.Now.Year.ToString();
             //menulst = (List<Object>)Session["menu"];
             try
             {
+                
+
+               
 
                 if (Session["user_id"] != null)
                 {
@@ -82,7 +122,7 @@ namespace HRIS_ePAccount.Controllers
 
                         return JSON(new { data = data, expanded = Session["expanded"], photo = imgDataURL, success = 1, username = User_Name, already_in_fav }, JsonRequestBehavior.AllowGet);
                     }
-                    else return JSON(new { data = data, expanded = 0, photo = imgDataURL, success = 1, username = User_Name, already_in_fav }, JsonRequestBehavior.AllowGet);
+                    else return JSON(new { data = data, expanded = 0, photo = imgDataURL, success = 1, username = User_Name, already_in_fav}, JsonRequestBehavior.AllowGet);
 
                     
                 }
@@ -204,5 +244,29 @@ namespace HRIS_ePAccount.Controllers
                 return JSON(new { success = 0, e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+
+        public ActionResult GetToken()
+        {
+            var token = "";
+            try
+            {
+                var user_id = Session["user_id"].ToString();
+                var app = at.app_name;
+                var user_token_tbl = db_pay.application_token_tbl.Where(a => a.user_id == user_id && a.application_name == app).OrderByDescending(a => a.created_datetime).FirstOrDefault();
+                if (user_token_tbl != null)
+                {
+                    token = user_token_tbl.token;
+                }
+
+                return JSON(new { success = 1, token}, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                return JSON(new { success = 0, e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+       
     }
 }

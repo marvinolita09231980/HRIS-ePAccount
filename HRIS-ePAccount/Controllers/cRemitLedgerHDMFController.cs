@@ -15,16 +15,21 @@ using System.IO;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Text;
+using System.Configuration;
+using System.Data.Entity;
 
 namespace HRIS_ePAccount.Controllers
 {
     public class cRemitLedgerHDMFController : Controller
     {
+        private readonly DbConfiguration _config;
 
         HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
         public string url_name = "cRemitLedger";
         // GET: cRemitLedgerHDMF
         User_Menu um = new User_Menu();
+        
+
         protected void Session_End(object sender, EventArgs e)
         {
             Index("", "");
@@ -133,6 +138,7 @@ namespace HRIS_ePAccount.Controllers
         //*********************************************************************//
         public ActionResult initializeData(string ltr, string v_opt)
         {
+            string excelExportServer = System.Configuration.ConfigurationManager.AppSettings["ExcelExportServerIP"];
 
             assignToModel();
 
@@ -141,7 +147,7 @@ namespace HRIS_ePAccount.Controllers
             var department_list = db_pacco.vw_departments_tbl_list.OrderBy(a => a.department_code).ToList();
             var details = db_pacco.sp_remittance_ledger_info_HDMF(um.remittance_ctrl_nbr, "", ltr, v_opt, "", "").ToList();
             var rs = db_pacco.remittance_hdr_tbl.Where(a => a.remittance_ctrl_nbr == um.remittance_ctrl_nbr).FirstOrDefault();
-            return JSON(new { prevValues, department_list, details, remittance_status = rs.remittance_status }, JsonRequestBehavior.AllowGet);
+            return JSON(new { prevValues, department_list, details, remittance_status = rs.remittance_status, excelExportServer}, JsonRequestBehavior.AllowGet);
 
         }
 
@@ -478,6 +484,50 @@ namespace HRIS_ePAccount.Controllers
             }
         }
 
+       
+        public ActionResult ExctractToExcelPremiumsPHP(string rc)
+        {
+            var mp = "";
+            db_pacco.Database.CommandTimeout = int.MaxValue;
+            List<sp_remittance_HDMF_rep2_Result> hdmf = new List<sp_remittance_HDMF_rep2_Result>();
+
+            assignToModel();
+            var message = "";
+           
+         
+
+            try
+            {
+                
+                if (rc == "02")
+                {
+                    mp = "F1";
+                    //remittype = "hdmfPremium";
+                    hdmf = db_pacco.sp_remittance_HDMF_rep2(um.remittance_ctrl_nbr.Trim(), true).ToList();
+                }
+                else if (rc == "05")
+                {
+                    hdmf = db_pacco.sp_remittance_HDMF_rep2(um.remittance_ctrl_nbr.Trim(), true).ToList();
+                    //remittype = "hdmfMP2";
+                    mp = "M2";
+                }
+
+                var hdmf_grouped = hdmf.GroupBy(a => a.payroll_month).OrderBy(grouping => grouping.Max(m => m.last_name)).ThenBy(grouping => grouping.Max(m => m.first_name)).ThenBy(grouping => grouping.Max(m => m.middle_name)).ThenBy(grouping => grouping.Max(m => m.suffix_name)).ToList();
+
+
+                return JSON(new { message, hdmf_grouped, mp}, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (DbEntityValidationException e)
+            {
+                message = DbEntityValidationExceptionError(e);
+
+                return JSON(new { message = message }, JsonRequestBehavior.AllowGet);
+            }
+
+
+        }
+
         public ActionResult ExctractToExcelPremiums(string rc)
         {
             db_pacco.Database.CommandTimeout = int.MaxValue;
@@ -512,7 +562,7 @@ namespace HRIS_ePAccount.Controllers
 
                 if (hdmf.Count > 0)
                 {
-
+                 
                     var data = hdmf.GroupBy(a => a.payroll_month).OrderBy(grouping => grouping.Max(m => m.last_name)).ThenBy(grouping => grouping.Max(m => m.first_name)).ThenBy(grouping => grouping.Max(m => m.middle_name)).ThenBy(grouping => grouping.Max(m => m.suffix_name)).ToList(); 
 
                     Excel.Workbook xlWorkBook = xlApp.Workbooks.Open(Server.MapPath("~/TemplateExcelFile/PREM_TEMPLATE.xlsx"));
@@ -631,10 +681,13 @@ namespace HRIS_ePAccount.Controllers
                             newWorkSheet.Cells[start_row, 8] = percov;
                             newWorkSheet.Cells[start_row, 12] = g[i].empl_id;
                             newWorkSheet.Cells[start_row, 13] = g[i].voucher_nbr;
+
                             Excel.Range ps = newWorkSheet.get_Range("I" + start_row);
+
                             ps.Style.HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignRight;
                             ps.Value2 = g[i].rep_amount_ps;
                             ps.Merge(Missing.Value);
+
                             Excel.Range gs = newWorkSheet.get_Range("J" + start_row);
                             gs.Style.HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignRight;
                             gs.Value2 = g[i].rep_amount_gs;
@@ -679,6 +732,8 @@ namespace HRIS_ePAccount.Controllers
                         //filename = um.remittancetype_descr.Trim() + "-" + um.remittance_year.Trim() + "-" + um.remittance_month.Trim() + ".xlsx";
                        
                     }
+
+                   
 
                     filename = remittype + "-" + um.remittance_year.Trim() + "-" + um.remittance_month.Trim() + ".xlsx";
                     xlWorkBook.SaveAs(Server.MapPath("~/UploadedFile/" + filename), Excel.XlFileFormat.xlOpenXMLWorkbook,
@@ -1005,6 +1060,56 @@ namespace HRIS_ePAccount.Controllers
 
 
         }
+
+
+
+        public ActionResult ExctractToExcelLoansPhp(string rc)
+        {
+            db_pacco.Database.CommandTimeout = int.MaxValue;
+            List<sp_remittance_HDMF_rep2_Result> hdmf = new List<sp_remittance_HDMF_rep2_Result>();
+
+            assignToModel();
+            var message = "";
+           
+            Excel.Application xlApp = new Excel.Application();
+
+            try
+            {
+                string[] prevValues = Session["PreviousValuesonPage_cRemitLedger"].ToString().Split(new char[] { ',' });
+                if (rc == "03" || rc == "04")
+                {
+
+                    hdmf = db_pacco.sp_remittance_HDMF_rep2(um.remittance_ctrl_nbr.Trim(), true).ToList();
+                }
+                else if (rc == "06")
+                {
+                    if (prevValues[3] == "JO")
+                    {
+                        hdmf = db_pacco.sp_remittance_HDMF_rep2(um.remittance_ctrl_nbr.Trim(), true).ToList();
+                    }
+
+                    else
+                    {
+                        //hdmf = db_pacco.sp_remittance_HDMF_rep2(um.remittance_ctrl_nbr.Trim(), false).ToList(); REMOVE BY JORGE: THEY WANT TO SEE THE CURRENT PAYMENT
+                        hdmf = db_pacco.sp_remittance_HDMF_rep2(um.remittance_ctrl_nbr.Trim(), true).ToList();
+                    }
+
+
+                }
+
+                var hdmf_grouped = hdmf.GroupBy(a => a.payroll_month).OrderBy(grouping => grouping.Max(m => m.last_name)).ThenBy(grouping => grouping.Max(m => m.first_name)).ThenBy(grouping => grouping.Max(m => m.middle_name)).ThenBy(grouping => grouping.Max(m => m.suffix_name)).ToList();
+
+                return JSON(new { message, hdmf_grouped }, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (DbEntityValidationException e)
+            {
+                message = DbEntityValidationExceptionError(e);
+
+                return JSON(new { message = message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
 
         public ActionResult ExctractToExcelLoans(string rc)
         {

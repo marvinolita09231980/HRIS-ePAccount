@@ -4,9 +4,12 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="54104a4757ad4fdd945c9af0a6c4107d" Name="Diagram1">
+      <Diagram DiagramId="54104a4757ad4fdd945c9af0a6c4107d" Name="Diagram1" ZoomLevel="94">
         <EntityTypeShape EntityType="HRIS_PAYModel.payrollemployee_tax_tbl" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_PAYModel.personnel_tbl" Width="1.5" PointX="3.375" PointY="0.75" />
+        <EntityTypeShape EntityType="HRIS_PAYModel.usersprofile_tbl" Width="1.5" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="HRIS_PAYModel.application_token_tbl" Width="1.5" PointX="0.75" PointY="5.75" />
+        <EntityTypeShape EntityType="HRIS_PAYModel.empl_taxwithheld_tbl" Width="1.5" PointX="5.375" PointY="5.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

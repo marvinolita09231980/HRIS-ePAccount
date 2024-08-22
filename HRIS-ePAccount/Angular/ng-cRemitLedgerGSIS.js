@@ -13,6 +13,8 @@
     var empl_id = ""
     var prevVal = []
     var wdc = new w_dc([])
+    var excelExportServer = "";
+
     s.fd = []
     s.rj = {}
     s.fd.txtb_year = ""
@@ -318,6 +320,7 @@
         s.extracting = false
         s.isOverride = false
         h.post("../cRemitLedgerGSIS/initializeData", { l: s.ddl_letter, v_opt: s.view_option }).then(function (d) {
+            excelExportServer = d.data.excelExportServer
             s.department_list = d.data.department_list
             s.GSIS_Table_Data = d.data.details
             prevVal = d.data.prevVal
@@ -1041,11 +1044,13 @@
 
     }
 
+
     //This function is called to extract GSIS remittance to excel format / Overrides
+
     s.btn_report_OVERRIDE = function () {
         var rc = s.remittancetype_code
         $("#extracting_data").modal("show");
-        h.post("../cRemitLedgerGSIS/ExtractToExcelOverride").then(function (d) {
+        h.post("../cRemitLedgerGSIS/Override").then(function (d) {
 
             if (d.data.message == "success") {
 
@@ -1063,24 +1068,87 @@
     }
 
     //This function is called to extract GSIS remittance to excel format
+
     s.ExctractToExcel = function () {
         var rc = s.remittancetype_code
+        var employment_type = $("#employment_type_descr").val()
+        var remittance_year = $("#remittance_year").val()
+        var remittance_month_descr = $("#remittance_month_descr").val()
+
         $("#extracting_data").modal("show");
-        h.post("../cRemitLedgerGSIS/ExtractToExcel").then(function (d) {
+        h.post("../Menu/GetToken").then(function (d) {
+            var token = { token: d.data.token }
+            h.post(excelExportServer + "/api/remittance/verify-token", token, { responseType: 'arraybuffer' }
+        
+            ).then(function (response) {
+               
+                if (response.data) {
+                    h.post("../cRemitLedgerGSIS/ExtractToPhpExcel").then(function (d) {
+                        var sp_remittance_GSIS_rep = d.data.sp_remittance_GSIS_rep_2
+                        h.post(excelExportServer + "/export", {
+                            data: sp_remittance_GSIS_rep
+                        }, { responseType: 'arraybuffer' }
+                        ).then(function (response2) {
+                            // Check the response data
+                            if (response2.data) {
+                                // Create a Blob from the response data
+                                const csvBlob = new Blob([response2.data], { type: 'text/csv;charset=utf-8;' });
+                                // Generate a URL for the Blob
+                                const downloadUrl = window.URL.createObjectURL(csvBlob);
+                                console.log(sp_remittance_GSIS_rep)
+                                // Create an anchor element and set its href attribute to the Blob URL
+                                const link = document.createElement('a');
+                                link.href = downloadUrl;
+
+                                // Set the download attribute with a dynamic filename
+                                //const name = new Date().toLocaleString().replace(/[/,\\:*?"<>|]/g, '_');
+                                const name = "GSIS Premiums-" + remittance_year + "-" + remittance_month_descr + "-" + employment_type+".xlsx"
+                                link.setAttribute('download', name);
+                                console.log(link)
+                                // Append the link to the document body and click it to initiate the download
+                                document.body.appendChild(link);
+                                link.click();
+
+                                // Clean up by removing the link element and revoking the Blob URL
+                                document.body.removeChild(link);
+                                window.URL.revokeObjectURL(downloadUrl);
+                                $("#extracting_data").modal("hide");
+                            } else {
+                                console.error('The response data is empty or undefined.');
+                                $("#extracting_data").modal("hide");
+                            }
+                        }).catch(function (error) {
+                            console.error('There was a problem with the POST request:', error);
+                            $("#extracting_data").modal("hide");
+                        });
+
+                    })
+                }
+
+                }).catch(function (error,response) {
+                    swal("Token expired! please generate new token.", {icon:"error"})
+                    console.error('Token expired! please generate new token :', error);
+                    $("#extracting_data").modal("hide");
+                });
+            
            
-            if (d.data.message == "success") {
-
-
-                $("#extracting_data").modal("hide");
-                window.open(d.data.filePath, '', '');
-            }
-            else {
-
-                $("#extracting_data").modal("hide");
-                swal(d.data.message, { icon: "error" });
-            }
         })
+
+
+        //h.post("../cRemitLedgerGSIS/ExtractToExcel").then(function (d) {
+        //    if (d.data.message == "success") {
+        //        $("#extracting_data").modal("hide");
+        //        window.open(d.data.filePath, '', '');
+        //    }
+        //    else {
+
+        //        $("#extracting_data").modal("hide");
+        //        swal(d.data.message, { icon: "error" });
+        //    }
+        //})
     }
+    
+   
     s.Rejected = function () {
         $("#spinner_load").modal("show")
         h.post("../cRemitLedgerGSIS/GetRejectResult", {

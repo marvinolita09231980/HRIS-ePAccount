@@ -43,6 +43,23 @@ namespace HRIS_ePAccount.Models
         
 
    }
-   
+
+    public class gsis_excel_header
+    {
+        public string office_name { get; set; }
+        public string office_code { get; set; }
+        public string month_descr { get; set; }
+        public string worksheet_name { get; set; }
+    }
+
+    public class token_data
+    {
+        public string token { get; set; }
+        public string user_id { get; set; }
+        public string application_name { get; set; }
+        public string created_datetime { get; set; }
+        public string validuntil_datetime { get; set; }
+    }
+
     
 }

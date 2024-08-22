@@ -497,16 +497,228 @@ namespace HRIS_ePAccount.Controllers
         }
 
 
+        ////*********************************************************************//
+        //// Created By : JRV - Created Date : 09/19/2019
+        //// Description: Populate Employment Type
+        ////*********************************************************************//
+        //public ActionResult ExtractData(string par_empType, string par_payroll_year, string par_extract_type)
+        //{
+        //    int index_error = 0;
+        //    try
+        //    {
+               
+        //        db_pacco.Database.CommandTimeout = int.MaxValue;
+        //        var filePath = "";
+        //        string message = "";
+        //        decimal start_row = 2;
+        //        decimal start_row_original = 2;
+        //        decimal c_start_row_i = start_row;
+        //        if (par_extract_type == "H")
+        //        {
+                   
+        //            var sp_extract_annualized_tax = db_pacco.sp_extract_annualized_tax(par_payroll_year, par_empType).ToList();
+
+        //            Excel.Application xlApp = new Excel.Application();
+        //            Excel.Workbook xlWorkBook = xlApp.Workbooks.Open(Server.MapPath("~/TemplateExcelFile/TAX-DETAILS.xlsx"));
+
+        //            Excel.Worksheet xlWorkSheet = xlWorkBook.Sheets[xlWorkBook.Sheets.Count];
+        //            xlApp.DisplayAlerts = false;
+
+        //            for (var i = 0; i < sp_extract_annualized_tax.Count(); i++)
+        //            {
+
+        //                xlWorkSheet.get_Range("A" + c_start_row_i, "AZ" + c_start_row_i).Borders.Color = Color.Black;
+        //                xlWorkSheet.get_Range("A" + start_row_original, "AZ" + start_row_original).Copy(Missing.Value);
+        //                xlWorkSheet.get_Range("A" + c_start_row_i, "AZ" + c_start_row_i).PasteSpecial(Excel.XlPasteType.xlPasteAll,
+        //                    Excel.XlPasteSpecialOperation.xlPasteSpecialOperationNone, false, false);
+        //                //xlWorkSheet.Cells[c_start_row_i, 1] = (i + 1);
+        //                xlWorkSheet.Cells[c_start_row_i, 1] = sp_extract_annualized_tax[i].row_nbr;
+        //                xlWorkSheet.Cells[c_start_row_i, 2] = sp_extract_annualized_tax[i].empl_id;
+        //                xlWorkSheet.Cells[c_start_row_i, 3] = sp_extract_annualized_tax[i].account_id_nbr_ref;
+        //                xlWorkSheet.Cells[c_start_row_i, 4] = sp_extract_annualized_tax[i].employee_name;
+        //                xlWorkSheet.Cells[c_start_row_i, 5] = sp_extract_annualized_tax[i].department_name1;
+        //                xlWorkSheet.Cells[c_start_row_i, 6] = sp_extract_annualized_tax[i].birth_date;
+        //                xlWorkSheet.Cells[c_start_row_i, 7] = sp_extract_annualized_tax[i].period_from;
+        //                xlWorkSheet.Cells[c_start_row_i, 8] = sp_extract_annualized_tax[i].period_to;
+        //                xlWorkSheet.Cells[c_start_row_i, 9] = sp_extract_annualized_tax[i].tin_employer_prev;
+        //                xlWorkSheet.Cells[c_start_row_i, 10] = sp_extract_annualized_tax[i].employer_name_prev;
+        //                xlWorkSheet.Cells[c_start_row_i, 11] = sp_extract_annualized_tax[i].ntx_basic_salary;
+        //                xlWorkSheet.Cells[c_start_row_i, 12] = sp_extract_annualized_tax[i].ntx_hol_pay_mwe;
+        //                xlWorkSheet.Cells[c_start_row_i, 13] = sp_extract_annualized_tax[i].ntx_ot_pay_mwe;
+        //                xlWorkSheet.Cells[c_start_row_i, 14] = sp_extract_annualized_tax[i].ntx_night_diff_mwe;
+        //                xlWorkSheet.Cells[c_start_row_i, 15] = sp_extract_annualized_tax[i].ntx_hzrd_pay_mwe;
+        //                xlWorkSheet.Cells[c_start_row_i, 16] = sp_extract_annualized_tax[i].ntx_13th_14th;
+        //                xlWorkSheet.Cells[c_start_row_i, 17] = sp_extract_annualized_tax[i].ntx_de_minimis;
+        //                xlWorkSheet.Cells[c_start_row_i, 18] = sp_extract_annualized_tax[i].ntx_gsis_phic_hdmf;
+        //                xlWorkSheet.Cells[c_start_row_i, 19] = sp_extract_annualized_tax[i].ntx_salaries_oth;
+        //                xlWorkSheet.Cells[c_start_row_i, 20] = sp_extract_annualized_tax[i].cna_gross;
+        //                xlWorkSheet.Cells[c_start_row_i, 21] = sp_extract_annualized_tax[i].pbb_gross;
+        //                xlWorkSheet.Cells[c_start_row_i, 22] = sp_extract_annualized_tax[i].total_nontaxable;
+        //                xlWorkSheet.Cells[c_start_row_i, 23] = sp_extract_annualized_tax[i].txbl_basic_salary;
+        //                xlWorkSheet.Cells[c_start_row_i, 24] = sp_extract_annualized_tax[i].txbl_representation;
+        //                xlWorkSheet.Cells[c_start_row_i, 25] = sp_extract_annualized_tax[i].txbl_transportation;
+        //                xlWorkSheet.Cells[c_start_row_i, 26] = sp_extract_annualized_tax[i].txbl_cola;
+        //                xlWorkSheet.Cells[c_start_row_i, 27] = sp_extract_annualized_tax[i].txbl_fh_allowance;
+        //                xlWorkSheet.Cells[c_start_row_i, 28] = sp_extract_annualized_tax[i].txbl_otherA;
+        //                xlWorkSheet.Cells[c_start_row_i, 29] = sp_extract_annualized_tax[i].txbl_otherB;
+        //                xlWorkSheet.Cells[c_start_row_i, 30] = sp_extract_annualized_tax[i].total_txbl_wout_sup_ot;
+        //                xlWorkSheet.Cells[c_start_row_i, 31] = sp_extract_annualized_tax[i].sup_commission;
+        //                xlWorkSheet.Cells[c_start_row_i, 32] = sp_extract_annualized_tax[i].sup_prof_sharing;
+        //                xlWorkSheet.Cells[c_start_row_i, 33] = sp_extract_annualized_tax[i].sup_fi_drctr_fees;
+        //                xlWorkSheet.Cells[c_start_row_i, 34] = sp_extract_annualized_tax[i].sup_13th_14th;
+        //                xlWorkSheet.Cells[c_start_row_i, 35] = sp_extract_annualized_tax[i].sup_hzrd_pay;
+        //                xlWorkSheet.Cells[c_start_row_i, 36] = sp_extract_annualized_tax[i].sup_ot_pay;
+        //                xlWorkSheet.Cells[c_start_row_i, 37] = sp_extract_annualized_tax[i].sup_otherA;
+        //                xlWorkSheet.Cells[c_start_row_i, 38] = sp_extract_annualized_tax[i].sup_otherB;
+        //                xlWorkSheet.Cells[c_start_row_i, 39] = sp_extract_annualized_tax[i].total_other_txbl;
+        //                xlWorkSheet.Cells[c_start_row_i, 40] = sp_extract_annualized_tax[i].total_gross;
+        //                xlWorkSheet.Cells[c_start_row_i, 41] = sp_extract_annualized_tax[i].non_tax_ex_comp;
+        //                xlWorkSheet.Cells[c_start_row_i, 42] = sp_extract_annualized_tax[i].annual_txbl_income;
+        //                xlWorkSheet.Cells[c_start_row_i, 43] = sp_extract_annualized_tax[i].addl_txbl_comp_prsnt;
+        //                xlWorkSheet.Cells[c_start_row_i, 44] = sp_extract_annualized_tax[i].total_annual_txbl_income + sp_extract_annualized_tax[i].addl_txbl_comp_prsnt;
+        //                xlWorkSheet.Cells[c_start_row_i, 45] = sp_extract_annualized_tax[i].annual_tax_due;
+        //                xlWorkSheet.Cells[c_start_row_i, 46] = sp_extract_annualized_tax[i].wtax_prsnt_emplyr;
+        //                xlWorkSheet.Cells[c_start_row_i, 47] = sp_extract_annualized_tax[i].wtax_prev_emplyr;
+        //                xlWorkSheet.Cells[c_start_row_i, 48] = sp_extract_annualized_tax[i].total_tax_jan_nov;
+        //                xlWorkSheet.Cells[c_start_row_i, 49] = sp_extract_annualized_tax[i].tax_paid_dec;
+        //                xlWorkSheet.Cells[c_start_row_i, 50] = sp_extract_annualized_tax[i].over_tax_refund;
+        //                xlWorkSheet.Cells[c_start_row_i, 51] = sp_extract_annualized_tax[i].tax_wheld_adjusted;
+        //                xlWorkSheet.Cells[c_start_row_i, 52] = sp_extract_annualized_tax[i].tax_due_payable;
+
+        //                c_start_row_i++;
+
+        //                message = "success";
+        //                index_error++;
+        //            }
+
+        //            string filename = "";
+        //            filename = par_empType + "-" + "-" + "TAX-LIST" + ".xlsx";
+        //            xlWorkBook.SaveAs(Server.MapPath("~/UploadedFile/" + filename), Excel.XlFileFormat.xlOpenXMLWorkbook,
+        //                Missing.Value, Missing.Value, Missing.Value, Missing.Value, Excel.XlSaveAsAccessMode.xlNoChange,
+        //                Excel.XlSaveConflictResolution.xlLocalSessionChanges, Missing.Value, Missing.Value,
+        //                Missing.Value, Missing.Value);
+        //            xlWorkBook.Close();
+        //            xlApp.Quit();
+        //            Marshal.ReleaseComObject(xlWorkSheet);
+        //            Marshal.ReleaseComObject(xlWorkBook);
+        //            Marshal.ReleaseComObject(xlApp);
+
+        //            filePath = "/UploadedFile/" + filename;
+        //            message = "success";
+        //            return JSON(new { message, sp_extract_annualized_tax, filePath }, JsonRequestBehavior.AllowGet);
+        //        }
+
+        //        else {
+
+                  
+        //            Excel.Application xlApp = new Excel.Application();
+        //            Excel.Workbook xlWorkBook = xlApp.Workbooks.Open(Server.MapPath("~/TemplateExcelFile/TAX-DETAILS-BIR.xlsx"));
+
+        //            Excel.Worksheet xlWorkSheet = xlWorkBook.Sheets[xlWorkBook.Sheets.Count];
+        //            xlApp.DisplayAlerts = false;
+
+
+        //            var sp_extract_annualized_tax = db_pacco.sp_extract_annualized_tax_bir(par_payroll_year, par_empType).ToList();
+
+        //            for (var i = 0; i < sp_extract_annualized_tax.Count(); i++)
+        //            {
+                        
+        //                xlWorkSheet.get_Range("A" + start_row_original, "AU" + start_row_original).Copy(Missing.Value);
+        //                xlWorkSheet.get_Range("A" + c_start_row_i, "AU" + c_start_row_i).PasteSpecial(Excel.XlPasteType.xlPasteAll,
+        //                    Excel.XlPasteSpecialOperation.xlPasteSpecialOperationNone, false, false);
+
+        //                xlWorkSheet.Cells[c_start_row_i, 1] = sp_extract_annualized_tax[i].empl_id;
+        //                xlWorkSheet.Cells[c_start_row_i, 2] = sp_extract_annualized_tax[i].account_id_nbr_ref;
+        //                xlWorkSheet.Cells[c_start_row_i, 3] = sp_extract_annualized_tax[i].branch_code;
+        //                xlWorkSheet.Cells[c_start_row_i, 4] = sp_extract_annualized_tax[i].last_name;
+        //                xlWorkSheet.Cells[c_start_row_i, 5] = sp_extract_annualized_tax[i].first_name;
+        //                xlWorkSheet.Cells[c_start_row_i, 6] = sp_extract_annualized_tax[i].middle_name;
+        //                xlWorkSheet.Cells[c_start_row_i, 7] = sp_extract_annualized_tax[i].region;
+        //                xlWorkSheet.Cells[c_start_row_i, 8] = sp_extract_annualized_tax[i].address_info;
+        //                xlWorkSheet.Cells[c_start_row_i, 9] = sp_extract_annualized_tax[i].zip_code;
+        //                xlWorkSheet.Cells[c_start_row_i, 10] = sp_extract_annualized_tax[i].birth_date;
+        //                xlWorkSheet.Cells[c_start_row_i, 11] = sp_extract_annualized_tax[i].mobile_no;
+        //                xlWorkSheet.Cells[c_start_row_i, 12] = sp_extract_annualized_tax[i].valid_id;
+        //                xlWorkSheet.Cells[c_start_row_i, 13] = sp_extract_annualized_tax[i].date_place_issuance;
+        //                xlWorkSheet.Cells[c_start_row_i, 14] = sp_extract_annualized_tax[i].citizenship;
+        //                xlWorkSheet.Cells[c_start_row_i, 15] = sp_extract_annualized_tax[i].employment_type;
+        //                xlWorkSheet.Cells[c_start_row_i, 16] = sp_extract_annualized_tax[i].period_from;
+        //                xlWorkSheet.Cells[c_start_row_i, 17] = sp_extract_annualized_tax[i].period_to;
+        //                xlWorkSheet.Cells[c_start_row_i, 18] = sp_extract_annualized_tax[i].reason_of_separation;
+        //                xlWorkSheet.Cells[c_start_row_i, 19] = sp_extract_annualized_tax[i].prev_gross;
+        //                xlWorkSheet.Cells[c_start_row_i, 20] = sp_extract_annualized_tax[i].prev_250k_below;
+        //                xlWorkSheet.Cells[c_start_row_i, 21] = sp_extract_annualized_tax[i].prev_13th_others;
+        //                xlWorkSheet.Cells[c_start_row_i, 22] = sp_extract_annualized_tax[i].prev_deminimis;
+        //                xlWorkSheet.Cells[c_start_row_i, 23] = sp_extract_annualized_tax[i].prev_phic_sss_hdmf_ded;
+        //                xlWorkSheet.Cells[c_start_row_i, 24] = sp_extract_annualized_tax[i].prev_salaries_oth;
+        //                xlWorkSheet.Cells[c_start_row_i, 25] = sp_extract_annualized_tax[i].prev_non_tax;
+        //                xlWorkSheet.Cells[c_start_row_i, 26] = sp_extract_annualized_tax[i].prev_basic_wage;
+        //                xlWorkSheet.Cells[c_start_row_i, 27] = sp_extract_annualized_tax[i].prev_13th_txbl;
+        //                xlWorkSheet.Cells[c_start_row_i, 28] = sp_extract_annualized_tax[i].prev_salaries_oth_txbl;
+        //                xlWorkSheet.Cells[c_start_row_i, 29] = sp_extract_annualized_tax[i].prev_total_txbl;
+        //                xlWorkSheet.Cells[c_start_row_i, 30] = sp_extract_annualized_tax[i].pres_total_gross;
+        //                xlWorkSheet.Cells[c_start_row_i, 31] = sp_extract_annualized_tax[i].pres_250k_below;
+        //                xlWorkSheet.Cells[c_start_row_i, 32] = sp_extract_annualized_tax[i].pres_13th_14th;
+        //                xlWorkSheet.Cells[c_start_row_i, 33] = sp_extract_annualized_tax[i].pres_de_minimis;
+        //                xlWorkSheet.Cells[c_start_row_i, 34] = sp_extract_annualized_tax[i].pres_gsis_phic_hdmf;
+        //                xlWorkSheet.Cells[c_start_row_i, 35] = sp_extract_annualized_tax[i].pres_salaries_oth;
+        //                xlWorkSheet.Cells[c_start_row_i, 36] = sp_extract_annualized_tax[i].total_nontaxable;
+        //                xlWorkSheet.Cells[c_start_row_i, 37] = sp_extract_annualized_tax[i].pres_basic_salary;
+        //                xlWorkSheet.Cells[c_start_row_i, 38] = sp_extract_annualized_tax[i].pres_txbl_13th_14th;
+        //                xlWorkSheet.Cells[c_start_row_i, 39] = sp_extract_annualized_tax[i].pres_txbl_oth_sal;
+        //                xlWorkSheet.Cells[c_start_row_i, 40] = sp_extract_annualized_tax[i].total_gross_txbl;
+        //                xlWorkSheet.Cells[c_start_row_i, 41] = sp_extract_annualized_tax[i].pres_gross_compensation_total_gross;
+        //                xlWorkSheet.Cells[c_start_row_i, 42] = sp_extract_annualized_tax[i].pres_total_gross_txbl;
+        //                xlWorkSheet.Cells[c_start_row_i, 43] = sp_extract_annualized_tax[i].annual_tax_due;
+        //                xlWorkSheet.Cells[c_start_row_i, 44] = sp_extract_annualized_tax[i].wtax_prev_emplyr;
+        //                xlWorkSheet.Cells[c_start_row_i, 45] = sp_extract_annualized_tax[i].wtax_prsnt_emplyr;
+        //                xlWorkSheet.Cells[c_start_row_i, 46] = sp_extract_annualized_tax[i].tax_paid_dec;
+        //                xlWorkSheet.Cells[c_start_row_i, 47] = sp_extract_annualized_tax[i].over_tax_refund;
+        //                xlWorkSheet.Cells[c_start_row_i, 48] = sp_extract_annualized_tax[i].tax_wheld_adjusted;
+        //                c_start_row_i++;
+
+        //                message = "success";
+
+        //            }
+
+        //            string filename = "";
+        //            filename = par_empType + "-" + "-" + "TAX-LIST-BIR" + ".xlsx";
+        //            xlWorkBook.SaveAs(Server.MapPath("~/UploadedFile/" + filename), Excel.XlFileFormat.xlOpenXMLWorkbook,
+        //                Missing.Value, Missing.Value, Missing.Value, Missing.Value, Excel.XlSaveAsAccessMode.xlNoChange,
+        //                Excel.XlSaveConflictResolution.xlLocalSessionChanges, Missing.Value, Missing.Value,
+        //                Missing.Value, Missing.Value);
+        //            xlWorkBook.Close();
+        //            xlApp.Quit();
+        //            Marshal.ReleaseComObject(xlWorkSheet);
+        //            Marshal.ReleaseComObject(xlWorkBook);
+        //            Marshal.ReleaseComObject(xlApp);
+
+        //            filePath = "/UploadedFile/" + filename;
+        //            message = "success";
+
+        //            return JSON(new { message, sp_extract_annualized_tax, filePath }, JsonRequestBehavior.AllowGet);
+        //        }
+               
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return JSON(new { ex.Message, index_error }, JsonRequestBehavior.AllowGet);
+        //    }
+
+        //}
+
+
+
         //*********************************************************************//
         // Created By : JRV - Created Date : 09/19/2019
-        // Description: Populate Employment Type
+        // Description: HRIS_Extract for PHP Export
         //*********************************************************************//
         public ActionResult ExtractData(string par_empType, string par_payroll_year, string par_extract_type)
         {
             int index_error = 0;
             try
             {
-               
+
                 db_pacco.Database.CommandTimeout = int.MaxValue;
                 var filePath = "";
                 string message = "";
@@ -515,7 +727,7 @@ namespace HRIS_ePAccount.Controllers
                 decimal c_start_row_i = start_row;
                 if (par_extract_type == "H")
                 {
-                   
+
                     var sp_extract_annualized_tax = db_pacco.sp_extract_annualized_tax(par_payroll_year, par_empType).ToList();
 
                     Excel.Application xlApp = new Excel.Application();
@@ -532,15 +744,15 @@ namespace HRIS_ePAccount.Controllers
                         xlWorkSheet.get_Range("A" + c_start_row_i, "AZ" + c_start_row_i).PasteSpecial(Excel.XlPasteType.xlPasteAll,
                             Excel.XlPasteSpecialOperation.xlPasteSpecialOperationNone, false, false);
                         //xlWorkSheet.Cells[c_start_row_i, 1] = (i + 1);
-                        xlWorkSheet.Cells[c_start_row_i, 1] = sp_extract_annualized_tax[i].row_nbr;
-                        xlWorkSheet.Cells[c_start_row_i, 2] = sp_extract_annualized_tax[i].empl_id;
-                        xlWorkSheet.Cells[c_start_row_i, 3] = sp_extract_annualized_tax[i].account_id_nbr_ref;
-                        xlWorkSheet.Cells[c_start_row_i, 4] = sp_extract_annualized_tax[i].employee_name;
-                        xlWorkSheet.Cells[c_start_row_i, 5] = sp_extract_annualized_tax[i].department_name1;
-                        xlWorkSheet.Cells[c_start_row_i, 6] = sp_extract_annualized_tax[i].birth_date;
-                        xlWorkSheet.Cells[c_start_row_i, 7] = sp_extract_annualized_tax[i].period_from;
-                        xlWorkSheet.Cells[c_start_row_i, 8] = sp_extract_annualized_tax[i].period_to;
-                        xlWorkSheet.Cells[c_start_row_i, 9] = sp_extract_annualized_tax[i].tin_employer_prev;
+                        xlWorkSheet.Cells[c_start_row_i, 1] =  sp_extract_annualized_tax[i].row_nbr;
+                        xlWorkSheet.Cells[c_start_row_i, 2] =  sp_extract_annualized_tax[i].empl_id;
+                        xlWorkSheet.Cells[c_start_row_i, 3] =  sp_extract_annualized_tax[i].account_id_nbr_ref;
+                        xlWorkSheet.Cells[c_start_row_i, 4] =  sp_extract_annualized_tax[i].employee_name;
+                        xlWorkSheet.Cells[c_start_row_i, 5] =  sp_extract_annualized_tax[i].department_name1;
+                        xlWorkSheet.Cells[c_start_row_i, 6] =  sp_extract_annualized_tax[i].birth_date;
+                        xlWorkSheet.Cells[c_start_row_i, 7] =  sp_extract_annualized_tax[i].period_from;
+                        xlWorkSheet.Cells[c_start_row_i, 8] =  sp_extract_annualized_tax[i].period_to;
+                        xlWorkSheet.Cells[c_start_row_i, 9] =  sp_extract_annualized_tax[i].tin_employer_prev;
                         xlWorkSheet.Cells[c_start_row_i, 10] = sp_extract_annualized_tax[i].employer_name_prev;
                         xlWorkSheet.Cells[c_start_row_i, 11] = sp_extract_annualized_tax[i].ntx_basic_salary;
                         xlWorkSheet.Cells[c_start_row_i, 12] = sp_extract_annualized_tax[i].ntx_hol_pay_mwe;
@@ -608,9 +820,10 @@ namespace HRIS_ePAccount.Controllers
                     return JSON(new { message, sp_extract_annualized_tax, filePath }, JsonRequestBehavior.AllowGet);
                 }
 
-                else {
+                else
+                {
 
-                  
+
                     Excel.Application xlApp = new Excel.Application();
                     Excel.Workbook xlWorkBook = xlApp.Workbooks.Open(Server.MapPath("~/TemplateExcelFile/TAX-DETAILS-BIR.xlsx"));
 
@@ -622,7 +835,7 @@ namespace HRIS_ePAccount.Controllers
 
                     for (var i = 0; i < sp_extract_annualized_tax.Count(); i++)
                     {
-                        
+
                         xlWorkSheet.get_Range("A" + start_row_original, "AU" + start_row_original).Copy(Missing.Value);
                         xlWorkSheet.get_Range("A" + c_start_row_i, "AU" + c_start_row_i).PasteSpecial(Excel.XlPasteType.xlPasteAll,
                             Excel.XlPasteSpecialOperation.xlPasteSpecialOperationNone, false, false);
@@ -698,7 +911,7 @@ namespace HRIS_ePAccount.Controllers
 
                     return JSON(new { message, sp_extract_annualized_tax, filePath }, JsonRequestBehavior.AllowGet);
                 }
-               
+
             }
             catch (Exception ex)
             {
@@ -706,7 +919,6 @@ namespace HRIS_ePAccount.Controllers
             }
 
         }
-
 
     }   
 
