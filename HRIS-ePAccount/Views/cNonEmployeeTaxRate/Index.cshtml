@@ -23,7 +23,7 @@
         width: 27px;
     }
 </style>
-<script src="~/Angular/ng-NonEmpoloyeeTaxRate.js"></script>
+<script src="~/Angular/ng-cNonEmployeeTaxRate.js"></script>
 <!-- The Modal - Generating Report -->
 <div class="modal fade" id="Loading_master" ng-model="Loading_master">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -455,14 +455,14 @@
 
                                 </div>
                             </div>
-                            <div class="col-sm-2 text-right">
+                            @*<div class="col-sm-2 text-right">
 
                                 @if (Model.allow_add == 1)
                                 {
                                     <button class="btn btn-success" ng-show="btnAddShow" ng-click="btn_add_action()"><i id="btn_add" class="fa fa-plus-circle"> </i> Add</button>
                                 }
 
-                            </div>
+                            </div>*@
 
 
 
@@ -482,7 +482,7 @@
                             <div id="tab-1" class="tab-pane active">
                                 <div class="ibox-content">
                                     <div class="col-12 table-resposive">
-                                        <table id="datalist_grid_jo" class="table table-striped table-bordered table-hover">
+                                        <table id="datalist_grid" class="table table-striped table-bordered table-hover">
                                             <thead>
                                                 <tr>
                                                     <th width="8%">ID NBR</th>

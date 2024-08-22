@@ -10,12 +10,10 @@
 namespace HRIS_ePAccount.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class doc_rte_users_tbl1
+    public partial class sp_generate_payrollemployee_tax_dtl_Result
     {
-        public System.DateTime effective_date { get; set; }
-        public int route_ctrl_nbr { get; set; }
-        public string role_id { get; set; }
+        public string result_value { get; set; }
+        public string result_msg { get; set; }
     }
 }

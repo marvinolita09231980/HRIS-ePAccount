@@ -12,7 +12,7 @@ namespace HRIS_ePAccount.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class cashadv_hdr_tbl1
+    public partial class cashadv_hdr_tmp
     {
         public string ca_ctrl_nbr { get; set; }
         public string payroll_year { get; set; }

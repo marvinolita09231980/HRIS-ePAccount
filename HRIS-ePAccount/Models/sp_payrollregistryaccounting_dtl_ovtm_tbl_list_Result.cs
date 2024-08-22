@@ -46,5 +46,7 @@ namespace HRIS_ePAccount.Models
         public System.DateTime updated_dttm { get; set; }
         public string position_title1 { get; set; }
         public string department_name1 { get; set; }
+        public string tax_rate { get; set; }
+        public string department_code { get; set; }
     }
 }

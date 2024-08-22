@@ -10,9 +10,10 @@
 // JORGE RUSTOM VILLANUEVA       10/18/2019      Code Creation
 //**********************************************************************************
 
-ng_HRD_App.controller("cEmplTaxUpd_ctrlr", function ($scope, $compile, $http, $filter) {
+ng_HRD_App.controller("cEmplTaxUpd_ctrlr", function (commonScript,$scope, $compile, $http, $filter) {
     var s = $scope
     var h = $http
+    var cs = commonScript
 
     s.year = []
     s.employment_type_data = []
@@ -104,25 +105,32 @@ ng_HRD_App.controller("cEmplTaxUpd_ctrlr", function ($scope, $compile, $http, $f
     //}
 
     s.btn_generate_tax_click = function () {
+        cs.loading("show")
         h.post("../cEmplTaxUpd/GenerateTax",
             {
                 par_year: s.ddl_remittance_year,
                 par_empType: s.ddl_employment_type
             }).then(function (d) {
-                if (d.data.message == "success") {
-                    var icon_display = "";
-                    icon_display = "success";
+               
+                
+                if (d.data.icon == "success") {
+                    
                     if (s.ddl_employment_type == "RC") {
-                        swal("Your generation request will be executed later tonight at 10 o'clock", "Generation Message", icon_display);
+                      
+                        swal({ title: "Generation Message", text: d.data.sp_generate_annualtax_tax_rece.result_flag_message, icon: d.data.icon });
+                        cs.loading("hide")
                     }
-                    else if (s.ddl_employment_type == "JO") {
-                        swal(d.data.sp_generate_payrollemployee_tax_hdr_dtl.result_flag_message, "Generation Message", icon_display);
+                    else if (s.ddl_employment_type == "JO" || s.ddl_employment_type == "NE") {
+                        
+                        swal({ title: "Generation Message", text: d.data.sp_generate_payrollemployee_tax_hdr_dtl.result_msg, icon: d.data.icon });
+                        cs.loading("hide")
                     }
 
                 }
                 else {
-                    icon_display = "warning";
-                    swal(d.data.message, "Generation Message", icon_display);
+                   // icon_display = "warning";
+                    swal({ title: "Generation Message", text: d.data.message, icon: d.data.icon });
+                    cs.loading("hide")
                 }
 
                

@@ -26,7 +26,9 @@ namespace HRIS_ePAccount.Models
         public Nullable<decimal> ra_amount { get; set; }
         public Nullable<decimal> ta_amount { get; set; }
         public Nullable<decimal> qa_amount { get; set; }
-        public double time_days_equi { get; set; }
+        public Nullable<double> time_days_equi { get; set; }
         public string vehicle_flag { get; set; }
+        public int days_leaved { get; set; }
+        public string remarks { get; set; }
     }
 }

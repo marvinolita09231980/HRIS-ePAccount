@@ -12,15 +12,12 @@ namespace HRIS_ePAccount.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class doc_trk_act_tbl1
+    public partial class vw_remittance_dtl_all
     {
-        public int route_ctrl_nbr { get; set; }
-        public int route_seq { get; set; }
-        public string doc_ctrl_nbr { get; set; }
-        public System.DateTime doc_dttm { get; set; }
-        public string doc_user_id { get; set; }
-        public string doc_remarks { get; set; }
-        public Nullable<int> rlsd_retd_2_route_ctrl_nbr { get; set; }
-        public string document_status { get; set; }
+        public string or_nbr { get; set; }
+        public string empl_id { get; set; }
+        public string payroll_period_month { get; set; }
+        public string payroll_year { get; set; }
+        public Nullable<decimal> remittance_amt { get; set; }
     }
 }

@@ -33,6 +33,9 @@ namespace HRIS_ePAccount.Models
         public Nullable<decimal> hourly_rate { get; set; }
         public Nullable<decimal> gross_pay { get; set; }
         public Nullable<decimal> net_pay { get; set; }
+        public decimal nbr_high { get; set; }
+        public decimal nbr_moderate { get; set; }
+        public decimal nbr_low { get; set; }
         public Nullable<decimal> other_amount1 { get; set; }
         public Nullable<decimal> other_amount2 { get; set; }
         public Nullable<decimal> other_amount3 { get; set; }
@@ -66,5 +69,76 @@ namespace HRIS_ePAccount.Models
         public string fld3_type { get; set; }
         public string fld4_type { get; set; }
         public string fld5_type { get; set; }
+        public string payment_mode { get; set; }
+        public string payment_mode_descr { get; set; }
+        public string sig1_name_override { get; set; }
+        public string sig1_position_override { get; set; }
+        public string sig2_name_override { get; set; }
+        public string sig2_position_override { get; set; }
+        public string sig3_name_override { get; set; }
+        public string sig3_position_override { get; set; }
+        public string remarks { get; set; }
+        public string payrolltemplate_code { get; set; }
+        public string payrolltemplate_descr { get; set; }
+        public decimal other_ded_mand1 { get; set; }
+        public decimal other_ded_mand2 { get; set; }
+        public decimal other_ded_mand3 { get; set; }
+        public decimal other_ded_mand4 { get; set; }
+        public decimal other_ded_mand5 { get; set; }
+        public decimal other_ded_mand6 { get; set; }
+        public decimal other_ded_mand7 { get; set; }
+        public decimal other_ded_mand8 { get; set; }
+        public decimal other_ded_mand9 { get; set; }
+        public decimal other_ded_mand10 { get; set; }
+        public decimal other_ded_prem1 { get; set; }
+        public decimal other_ded_prem2 { get; set; }
+        public decimal other_ded_prem3 { get; set; }
+        public decimal other_ded_prem4 { get; set; }
+        public decimal other_ded_prem5 { get; set; }
+        public decimal other_ded_prem6 { get; set; }
+        public decimal other_ded_prem7 { get; set; }
+        public decimal other_ded_prem8 { get; set; }
+        public decimal other_ded_prem9 { get; set; }
+        public decimal other_ded_prem10 { get; set; }
+        public decimal other_ded_loan1 { get; set; }
+        public decimal other_ded_loan2 { get; set; }
+        public decimal other_ded_loan3 { get; set; }
+        public decimal other_ded_loan4 { get; set; }
+        public decimal other_ded_loan5 { get; set; }
+        public decimal other_ded_loan6 { get; set; }
+        public decimal other_ded_loan7 { get; set; }
+        public decimal other_ded_loan8 { get; set; }
+        public decimal other_ded_loan9 { get; set; }
+        public decimal other_ded_loan10 { get; set; }
+        public string other_ded_mand1_descr { get; set; }
+        public string other_ded_mand2_descr { get; set; }
+        public string other_ded_mand3_descr { get; set; }
+        public string other_ded_mand4_descr { get; set; }
+        public string other_ded_mand5_descr { get; set; }
+        public string other_ded_mand6_descr { get; set; }
+        public string other_ded_mand7_descr { get; set; }
+        public string other_ded_mand8_descr { get; set; }
+        public string other_ded_mand9_descr { get; set; }
+        public string other_ded_mand10_descr { get; set; }
+        public string other_ded_prem1_descr { get; set; }
+        public string other_ded_prem2_descr { get; set; }
+        public string other_ded_prem3_descr { get; set; }
+        public string other_ded_prem4_descr { get; set; }
+        public string other_ded_prem5_descr { get; set; }
+        public string other_ded_prem6_descr { get; set; }
+        public string other_ded_prem7_descr { get; set; }
+        public string other_ded_prem8_descr { get; set; }
+        public string other_ded_prem9_descr { get; set; }
+        public string other_ded_prem10_descr { get; set; }
+        public string other_ded_loan1_descr { get; set; }
+        public string other_ded_loan2_descr { get; set; }
+        public string other_ded_loan3_descr { get; set; }
+        public string other_ded_loan4_descr { get; set; }
+        public string other_ded_loan5_descr { get; set; }
+        public string other_ded_loan6_descr { get; set; }
+        public string other_ded_loan7_descr { get; set; }
+        public string other_ded_loan8_descr { get; set; }
+        public string other_ded_loan9_descr { get; set; }
+        public string other_ded_loan10_descr { get; set; }
     }
 }

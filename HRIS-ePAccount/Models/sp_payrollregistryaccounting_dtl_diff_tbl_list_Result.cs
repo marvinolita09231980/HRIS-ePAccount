@@ -50,5 +50,11 @@ namespace HRIS_ePAccount.Models
         public System.DateTime created_dttm { get; set; }
         public System.DateTime updated_dttm { get; set; }
         public string position_title1 { get; set; }
+        public string days_worked { get; set; }
+        public decimal salary_diff_amt_per_day { get; set; }
+        public decimal leave_earned { get; set; }
+        public string remarks { get; set; }
+        public string lates_amount { get; set; }
+        public decimal wtax_rate { get; set; }
     }
 }

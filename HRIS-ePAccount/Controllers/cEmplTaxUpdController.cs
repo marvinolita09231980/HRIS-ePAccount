@@ -90,34 +90,47 @@ namespace HRIS_ePAccount.Controllers
         //*********************************************************************//
         public ActionResult GenerateTax(string par_year, string par_empType)
         {
-            string message = "";
+            string icon = "";
             
 
             GetAllowAccess();
             db_pacco.Database.CommandTimeout = int.MaxValue;
             var sp_generate_annualtax_tax_rece = new object();
             var sp_generate_payrollemployee_tax_hdr_dtl = new object();
-            if (par_empType == "RC")
+            try
             {
-               
-                sp_generate_annualtax_tax_rece = db_pacco.sp_generate_annualtax_tax_rece(par_year, Session["user_id"].ToString()).FirstOrDefault();
-                message = "success";
-            }
+                if (par_empType == "RC")
+                {
 
-            else if (par_empType == "JO")
+                    sp_generate_annualtax_tax_rece = db_pacco.sp_generate_annualtax_tax_rece(par_year, Session["user_id"].ToString()).FirstOrDefault();
+                    icon = "success";
+                }
+
+                else if (par_empType == "JO")
+                {
+                    sp_generate_payrollemployee_tax_hdr_dtl = db_pacco.sp_generate_payrollemployee_tax_hdr_dtl(par_year, "", Session["user_id"].ToString()).FirstOrDefault();
+                    icon = "success";
+                }
+                else if (par_empType == "NE")
+                {
+                    sp_generate_payrollemployee_tax_hdr_dtl = db_pacco.sp_generate_payrollemployee_tax_dtl_ne_phic(par_year, "", Session["user_id"].ToString()).FirstOrDefault();
+                    icon = "success";
+                }
+                else
+                {
+                    icon = "error";
+                }
+
+
+
+                return JSON(new { icon, sp_generate_annualtax_tax_rece, sp_generate_payrollemployee_tax_hdr_dtl }, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
             {
-                sp_generate_payrollemployee_tax_hdr_dtl = db_pacco.sp_generate_payrollemployee_tax_hdr_dtl(par_year,"",Session["user_id"].ToString()).FirstOrDefault();
-                message = "success";
+                icon = "error";
+                var message = ex.Message;
+                return JSON(new { message, icon }, JsonRequestBehavior.AllowGet);
             }
-
-            else
-            {
-                message = "fail";
-            }
-            
-            
-
-            return JSON(new { um, message, sp_generate_annualtax_tax_rece, sp_generate_payrollemployee_tax_hdr_dtl }, JsonRequestBehavior.AllowGet);
 
         }
         public ActionResult GenerateTaxLaterNight(string par_year, string par_empType)

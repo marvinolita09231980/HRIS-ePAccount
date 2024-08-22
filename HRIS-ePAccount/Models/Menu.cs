@@ -61,5 +61,5 @@ namespace HRIS_ePAccount.Models
         public string validuntil_datetime { get; set; }
     }
 
-    
+
 }

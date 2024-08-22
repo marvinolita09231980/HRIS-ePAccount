@@ -39,5 +39,8 @@ namespace HRIS_ePAccount.Models
         public System.DateTime updated_dttm { get; set; }
         public string position_title1 { get; set; }
         public string department_name1 { get; set; }
+        public Nullable<System.DateTime> payroll_period_from { get; set; }
+        public Nullable<System.DateTime> payroll_period_to { get; set; }
+        public string remarks { get; set; }
     }
 }

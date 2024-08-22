@@ -28,18 +28,33 @@ ng_HRD_App.controller("cRECETaxUpd_ctrlr", function (commonScript,$scope, $compi
         if (tab == 1) {
             $("#rc_controls").removeClass("hidden")
             $("#jo_controls").addClass("hidden")
+            $("#ne_controls").addClass("hidden")
 
             $("#table_search_rc").removeClass("hidden")
             $("#table_search_jo").addClass("hidden")
+            $("#table_search_ne").addClass("hidden")
             $('.nav-tabs a[href="#tab-1"]').tab('show');
         }
-        else {
+        else if (tab == 2) {
             $("#jo_controls").removeClass("hidden")
             $("#rc_controls").addClass("hidden")
+            $("#ne_controls").addClass("hidden")
 
             $("#table_search_jo").removeClass("hidden")
             $("#table_search_rc").addClass("hidden")
+            $("#table_search_ne").addClass("hidden")
             $('.nav-tabs a[href="#tab-2"]').tab('show');
+        }
+        else {
+
+            $("#ne_controls").removeClass("hidden")
+            $("#rc_controls").addClass("hidden")
+            $("#jo_controls").addClass("hidden")
+
+            $("#table_search_ne").removeClass("hidden")
+            $("#table_search_rc").addClass("hidden")
+            $("#table_search_jo").addClass("hidden")
+            $('.nav-tabs a[href="#tab-3"]').tab('show');
         }
     }
 
@@ -237,8 +252,103 @@ ng_HRD_App.controller("cRECETaxUpd_ctrlr", function (commonScript,$scope, $compi
         $("div.toolbar").html('<b>Custom tool bar! Text/images etc.</b>');
     }
 
+
+    var init_table_data_ne = function (par_data) {
+        s.datalistgrid_ne = par_data;
+        s.datalistgrid_ne_Table = $('#datalist_grid_ne').dataTable(
+            {
+
+                data: s.datalistgrid_ne,
+                stateSave: false,
+                sDom: 'rt<"bottom"p>',
+                pageLength: 5,
+                columns: [
+
+                    {
+                        "mData": "empl_id", "mRender": function (data, type, full, row) {
+                            return "<div class='btn-block text-center'>" + data + "</div>";
+                        }
+                    },
+
+
+
+                    {
+                        "mData": "employee_name", "mRender": function (data, type, full, row) {
+                            return "<div class='btn-block text-left'>" + data + "</div>";
+                        }
+                    },
+
+                    {
+                        "mData": "basic_tax_rate", "mRender": function (data, type, full, row) {
+
+                            return "<div class='btn-block text-right'>" + data + "</div>";
+                        }
+                    },
+
+                    {
+                        "mData": "tax_perc", "mRender": function (data, type, full, row) {
+
+                            return "<div class='btn-block text-right'>" + data + "</div>";
+                        }
+                    },
+
+                    {
+                        "mData": "vat_perc", "mRender": function (data, type, full, row) {
+
+                            return "<div class='btn-block text-right'>" + data + "</div>";
+                        }
+                    },
+
+
+
+                    {
+                        "mData": "effective_date", "mRender": function (data, type, full, row) {
+
+                            return "<div class='btn-block text-right'>" + data + "</div>";
+                        }
+                    },
+                    {
+                        "mData": "rcrd_status", "mRender": function (data, type, full, row) {
+
+                            return "<div class='btn-block text-right'>" + data + "</div>";
+                        }
+                    },
+                    {
+                        "mData": "rcrd_status",
+                        "bSortable": false,
+                        "mRender": function (data, type, full, row) {
+
+
+                            return '<center>'
+                                + '<div class="btn-group tooltip-demo">'
+                                + '<button type="button" class="btn btn-warning btn-sm action" data-toggle="tooltip" data-placement="left" title="View Details" ng-click="btn_approve_ne(' + row["row"] + ')" > '
+                                + '<i class="fa fa-check"></i>' + '</button>'
+                                + '<button type="button" class="btn btn-info btn-sm action" data-toggle="tooltip" data-placement="left" title="Approve or Reject" ng-click="btn_reject_ne(' + row["row"] + ')" > '
+                                + '<i class="fa fa-times"></i>' + '</button>'
+                                + '</div>'
+                                + '</center> '
+
+                        }
+                    }
+
+                ],
+
+
+                "createdRow": function (row, data, index) {
+                    $(row).attr('id', index);
+                    $compile(row)($scope);  //add this to compile the DOM
+                }
+            });
+
+        s.datalistgrid_jo_Table.fnSort([[1, 'asc']]);
+
+        $("div.toolbar").html('<b>Custom tool bar! Text/images etc.</b>');
+    }
+
+
     init_table_data_rc([]);
     init_table_data_jo([]);
+    init_table_data_ne([]);
 
     init();
 
@@ -257,6 +367,12 @@ ng_HRD_App.controller("cRECETaxUpd_ctrlr", function (commonScript,$scope, $compi
                     $("#ddl_status").val("N")
                     $("#ddl_year").val(CurrentYear)
                     s.datalistgrid_jo = d.data.jo_tax_list.refreshTable("datalist_grid_jo", "")
+                }
+                else if (d.data.employment_type == "NE") {
+                    s.changeTab(3);
+                    $("#ddl_status_ne").val("N")
+                    $("#ddl_year_ne").val(CurrentYear)
+                    s.datalistgrid_ne = d.data.ne_tax_list.refreshTable("datalist_grid_ne", "")
                 }
               
             }
@@ -284,6 +400,19 @@ ng_HRD_App.controller("cRECETaxUpd_ctrlr", function (commonScript,$scope, $compi
         h.post("../cRECETaxUpd/sp_payrollemployee_tax_tbl_for_apprvl", { year: year, status: status}).then(function (d) {
             if (d.data.icon == "success") {
                 s.datalistgrid_jo = d.data.sp_payrollemployee_tax_tbl_for_apprvl.refreshTable("datalist_grid_jo", "")
+            }
+            cs.loading("hide")
+        })
+    }
+
+    s.getNEData = function () {
+
+        var year = $("#ddl_year_ne").val() == undefined ? "" : $("#ddl_year_ne").val();
+        var status = $("#ddl_status_ne").val() == undefined ? "" : $("#ddl_status_ne").val();
+        cs.loading("show")
+        h.post("../cRECETaxUpd/sp_payrollemployee_tax_tbl_for_apprvl_NE", { year: year, status: status }).then(function (d) {
+            if (d.data.icon == "success") {
+                s.datalistgrid_ne = d.data.sp_payrollemployee_tax_tbl_for_apprvl_NE.refreshTable("datalist_grid_ne", "")
             }
             cs.loading("hide")
         })
@@ -378,7 +507,7 @@ ng_HRD_App.controller("cRECETaxUpd_ctrlr", function (commonScript,$scope, $compi
         var empl_id = data.empl_id;
         var effective_date = data.effective_date;
         var payroll_year = data.payroll_year;
-        var employment_type = $("#ddlemploymenttype").val();
+        var employment_type = data.employment_type;
         var status = "";
         var swaltitle = ""
         var swaltext = ""
@@ -423,6 +552,8 @@ ng_HRD_App.controller("cRECETaxUpd_ctrlr", function (commonScript,$scope, $compi
             }
         })
     }
+    
+
 
     s.btn_reject_jo = function (row) {
         var data = s.datalistgrid_jo[row]
@@ -430,7 +561,7 @@ ng_HRD_App.controller("cRECETaxUpd_ctrlr", function (commonScript,$scope, $compi
         var empl_id = data.empl_id;
         var effective_date = data.effective_date;
         var payroll_year = data.payroll_year;
-        var employment_type = $("#ddlemploymenttype").val();
+        var employment_type = data.employment_type;
         var status = "";
         var swaltitle = ""
         var swaltext = ""
@@ -468,6 +599,111 @@ ng_HRD_App.controller("cRECETaxUpd_ctrlr", function (commonScript,$scope, $compi
                 }).then(function (d) {
                     if (d.data.icon == "success") {
                         s.datalistgrid_jo = d.data.sp_payrollemployee_tax_tbl_for_apprvl.refreshTable("datalist_grid_jo", "" + row)
+                    }
+                    cs.loading("hide")
+                    swal({ title: "Success", text: d.data.message, icon: d.data.icon })
+                })
+            }
+        })
+    }
+
+    s.btn_approve_ne = function (row) {
+        var data = s.datalistgrid_ne[row]
+
+        var empl_id = data.empl_id;
+        var effective_date = data.effective_date;
+        var payroll_year = data.payroll_year;
+        var employment_type = data.employment_type;
+        var status = "";
+        var swaltitle = ""
+        var swaltext = ""
+        if (data.rcrd_status == "N") {
+            status = "A";
+            swaltitle = "Approve this Record?";
+            swaltext = "Are you sure to approve this record?"
+        }
+        else if (data.rcrd_status == "A") {
+            status = "N";
+            swaltitle = "Set to New this Record?";
+            swaltext = "Are you sure to set New this record?"
+        }
+        else if (data.rcrd_status == "R") {
+            status = "A";
+            swaltitle = "Approve this Record?";
+            swaltext = "Are you sure to approve this record?"
+        }
+        swal({
+            title: swaltitle,
+            text: swaltext,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then(function (approve) {
+            if (approve) {
+                cs.loading("show")
+                h.post("../cRECETaxUpd/approved_reject_tax_ne", {
+                       empl_id: empl_id
+                    , effective_date: effective_date
+                    , payroll_year: payroll_year
+                    , employment_type: employment_type
+                    , nstatus: status
+                    , status: data.rcrd_status
+                }).then(function (d) {
+                    if (d.data.icon == "success") {
+                        s.datalistgrid_ne = d.data.sp_payrollemployee_tax_tbl_for_apprvl_NE.refreshTable("datalist_grid_ne", "" + row)
+                    }
+                    cs.loading("hide")
+                    swal({ title: "Success", text: d.data.message, icon: d.data.icon })
+                })
+            }
+        })
+    }
+
+
+    s.btn_reject_ne = function (row) {
+        var data = s.datalistgrid_ne[row]
+
+        var empl_id = data.empl_id;
+        var effective_date = data.effective_date;
+        var payroll_year = data.payroll_year;
+        var employment_type = data.employment_type;
+        var status = "";
+        var swaltitle = ""
+        var swaltext = ""
+        if (data.rcrd_status == "N") {
+            status = "R";
+            swaltitle = "Reject this Record?";
+            swaltext = "Are you sure to reject this record?"
+        }
+        else if (data.rcrd_status == "A") {
+            status = "R";
+            swaltitle = "Reject this Record?";
+            swaltext = "Are you sure to reject this record?"
+        }
+        else if (data.rcrd_status == "R") {
+            status = "N";
+            swaltitle = "Set to new this Record?";
+            swaltext = "Are you sure to set New this record?"
+        }
+        swal({
+            title: swaltitle,
+            text: swaltext,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then(function (reject) {
+            if (reject) {
+                cs.loading("show")
+                h.post("../cRECETaxUpd/approved_reject_tax_ne", {
+                    empl_id: empl_id
+                    , effective_date: effective_date
+                    , payroll_year: payroll_year
+                    , employment_type: employment_type
+                    , nstatus: status
+                    , status: data.rcrd_status
+                }).then(function (d) {
+                    if (d.data.icon == "success") {
+                        s.datalistgrid_ne = d.data.sp_payrollemployee_tax_tbl_for_apprvl_NE.refreshTable("datalist_grid_ne", "" + row)
                     }
                     cs.loading("hide")
                     swal({ title: "Success", text: d.data.message, icon: d.data.icon })
@@ -523,6 +759,35 @@ ng_HRD_App.controller("cRECETaxUpd_ctrlr", function (commonScript,$scope, $compi
 
                     if (d.data.icon == "success") {
                         s.datalistgrid_jo = d.data.sp_payrollemployee_tax_tbl_for_apprvl.refreshTable("datalist_grid_jo", "")
+                    }
+                    cs.loading("hide")
+                    swal({ title: "Success", text: d.data.message, icon: d.data.icon })
+                })
+            }
+        })
+    }
+
+    s.ApproveAllTaxUpdNE = function () {
+        var ddlyear = $("#ddl_year_ne").val()
+        var ddlstatus = $("#ddl_status_ne").val()
+
+        swal({
+            title: "Approve All",
+            text: "Approve all Non-employee tax update",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then(function (approve) {
+            if (approve) {
+                cs.loading("show")
+                h.post("../cRECETaxUpd/ApproveAllTaxUpdNE", {
+                     data: s.datalistgrid_ne
+                    , year: ddlyear
+                    , status: ddlstatus
+                }).then(function (d) {
+
+                    if (d.data.icon == "success") {
+                        s.datalistgrid_ne = d.data.sp_payrollemployee_tax_tbl_for_apprvl_NE.refreshTable("datalist_grid_ne", "")
                     }
                     cs.loading("hide")
                     swal({ title: "Success", text: d.data.message, icon: d.data.icon })

@@ -23,18 +23,13 @@ namespace HRIS_ePAccount.Models
         public string voucher_period_to { get; set; }
         public string voucher_descr1 { get; set; }
         public string voucher_descr2 { get; set; }
-        public string gross_pay { get; set; }
-        public string net_pay { get; set; }
         public string date_posted { get; set; }
         public string post_status { get; set; }
         public string rate_basis { get; set; }
         public string monthly_rate { get; set; }
         public string daily_rate { get; set; }
         public string hourly_rate { get; set; }
-        public Nullable<double> no_of_days { get; set; }
-        public string other_amt1 { get; set; }
-        public string other_amt2 { get; set; }
-        public string other_amt3 { get; set; }
+        public string no_of_days { get; set; }
         public string wtax { get; set; }
         public string lowp_amount_salary { get; set; }
         public string lowp_amount_pera { get; set; }
@@ -89,7 +84,66 @@ namespace HRIS_ePAccount.Models
         public string posted_by_user { get; set; }
         public System.DateTime created_dttm { get; set; }
         public System.DateTime updated_dttm { get; set; }
-        public string post_status_descr { get; set; }
         public string position_title1 { get; set; }
+        public string post_status_descr { get; set; }
+        public string voucher_type { get; set; }
+        public string total_mandatory { get; set; }
+        public string total_loans { get; set; }
+        public string total_optional { get; set; }
+        public string deduc_amt { get; set; }
+        public string gross_pay { get; set; }
+        public string net_pay { get; set; }
+        public string other_amt1 { get; set; }
+        public string other_amt2 { get; set; }
+        public string other_amt3 { get; set; }
+        public string claimant_name { get; set; }
+        public string claimant_rel { get; set; }
+        public string other_premium1 { get; set; }
+        public string other_premium2 { get; set; }
+        public string other_premium3 { get; set; }
+        public string other_premium4 { get; set; }
+        public string other_premium5 { get; set; }
+        public string other_loan1 { get; set; }
+        public string other_loan2 { get; set; }
+        public string other_loan3 { get; set; }
+        public string other_loan4 { get; set; }
+        public string other_loan5 { get; set; }
+        public string lates_mins_hrs { get; set; }
+        public string lates_amount { get; set; }
+        public string refund_sal_amt { get; set; }
+        public string department_code_trk { get; set; }
+        public string function_code_trk { get; set; }
+        public string allotment_code_trk { get; set; }
+        public string voucher_remarks { get; set; }
+        public string other_ded_mand1 { get; set; }
+        public string other_ded_mand2 { get; set; }
+        public string other_ded_mand3 { get; set; }
+        public string other_ded_mand4 { get; set; }
+        public string other_ded_mand5 { get; set; }
+        public string other_ded_mand6 { get; set; }
+        public string other_ded_mand7 { get; set; }
+        public string other_ded_mand8 { get; set; }
+        public string other_ded_mand9 { get; set; }
+        public string other_ded_mand10 { get; set; }
+        public string other_ded_prem1 { get; set; }
+        public string other_ded_prem2 { get; set; }
+        public string other_ded_prem3 { get; set; }
+        public string other_ded_prem4 { get; set; }
+        public string other_ded_prem5 { get; set; }
+        public string other_ded_prem6 { get; set; }
+        public string other_ded_prem7 { get; set; }
+        public string other_ded_prem8 { get; set; }
+        public string other_ded_prem9 { get; set; }
+        public string other_ded_prem10 { get; set; }
+        public string other_ded_loan1 { get; set; }
+        public string other_ded_loan2 { get; set; }
+        public string other_ded_loan3 { get; set; }
+        public string other_ded_loan4 { get; set; }
+        public string other_ded_loan5 { get; set; }
+        public string other_ded_loan6 { get; set; }
+        public string other_ded_loan7 { get; set; }
+        public string other_ded_loan8 { get; set; }
+        public string other_ded_loan9 { get; set; }
+        public string other_ded_loan10 { get; set; }
     }
 }

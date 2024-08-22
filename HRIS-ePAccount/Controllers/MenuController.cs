@@ -1,5 +1,6 @@
 ﻿using HRIS_eHRD.Common_Code;
 using HRIS_ePAccount.Models;
+//using HRIS_ePAccount.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
@@ -49,8 +50,9 @@ namespace HRIS_ePAccount.Controllers
                 var retax = db_pay.sp_empltaxwithheld_tbl_for_apprvl("RE").ToList().Count();
                 var cetax = db_pay.sp_empltaxwithheld_tbl_for_apprvl("CE").ToList().Count();
                 var jotax = db_pay.sp_payrollemployee_tax_tbl_for_apprvl(year, "N").ToList().Count();
+                var netax = db_pay.sp_payrollemployee_tax_tbl_for_apprvl_NE(year, "N").ToList().Count();
                 var rctax = retax + cetax;
-                int updtax = rctax + jotax;
+                int updtax = rctax + jotax + netax;
 
                 for (var x = 0; x < AllowUserTaxUpdApprove_list.Count(); x++)
                 {
@@ -58,9 +60,8 @@ namespace HRIS_ePAccount.Controllers
                     {
                         AllowUserTaxApprove = true;
                     }
-
                 }
-                return Json(new { message = "Success",  icon = "success", rctax, updtax, jotax, AllowUserTaxApprove}, JsonRequestBehavior.AllowGet);
+                return Json(new { message = "Success",  icon = "success", rctax, updtax, jotax, AllowUserTaxApprove, netax}, JsonRequestBehavior.AllowGet);
             }
             catch(Exception ex)
             {

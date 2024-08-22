@@ -105,6 +105,7 @@ namespace HRIS_ePAccount.Controllers
 
             GetAllowAccess();
 
+           
 
             string[] PreviousValuesonPage_cJOTaxRate = Session["PreviousValuesonPage_cJOTaxRate"].ToString().Split(new char[] { ',' });
 
@@ -117,9 +118,24 @@ namespace HRIS_ePAccount.Controllers
             string history                          = PreviousValuesonPage_cJOTaxRate[11].ToString().Trim();
             string effective_date                   = PreviousValuesonPage_cJOTaxRate[9].ToString().Trim();
 
-            //string position = PreviousValuesonPage_cJOTaxRate[10].ToString().Trim();
+            var sp_payrollemployee_tax_hdr_tbl_list = new object();
+
+            
+
+            var firstindex_id = empl_id[0];
+
+           //string position = PreviousValuesonPage_cJOTaxRate[10].ToString().Trim();
             var sp_payrollemployee_tax_dtl_tbl_list = db_pacco.sp_payrollemployee_tax_dtl_tbl_list(year, empl_id).ToList();
-            var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.sp_payrollemployee_tax_hdr_tbl_list(year, department_code, history).Where(a => a.empl_id == empl_id && a.effective_date == effective_date).FirstOrDefault();
+
+            if (firstindex_id == 'X')
+            {
+                sp_payrollemployee_tax_hdr_tbl_list = db_pacco.sp_payrollemployee_tax_hdr_tbl_list_ne(year, department_code, history).Where(a => a.empl_id == empl_id).FirstOrDefault();
+            }
+            else
+            {
+                sp_payrollemployee_tax_hdr_tbl_list = db_pacco.sp_payrollemployee_tax_hdr_tbl_list(year, department_code, history).Where(a => a.empl_id == empl_id && a.effective_date == effective_date).FirstOrDefault();
+            }
+             
             ////string[] payroll_type               = { "07" };
             //string[] payrolltemplate_code         = { "999", "998", "997", "995", "994", "993" };
             //var payroll_template                = db_pacco.vw_payrolltemplate_tbl_list.Where(a => a.employment_type == empl_type && payroll_type.Contains(a.payrolltemplate_type) && payrolltemplate_code.Contains(a.payrolltemplate_code)).ToList();
