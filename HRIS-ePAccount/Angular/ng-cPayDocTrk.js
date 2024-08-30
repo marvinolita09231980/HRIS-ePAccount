@@ -2820,6 +2820,16 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
             case "610":  //	Other Claims / Refund v2	RE
             case "611":  //	Other Claims / Refund v2	CE
             case "612":  //	Other Claims / Refund v2	JO
+                var emp_type = "";
+                if ($('#ddl_reports option:selected').val().trim() == "610") {
+                    emp_type = "RE";
+                }
+                if ($('#ddl_reports option:selected').val().trim() == "611") {
+                    emp_type = "CE";
+                }
+                if ($('#ddl_reports option:selected').val().trim() == "612") {
+                    emp_type = "JO";
+                }
                 sp         = "voucher_dtl_oth_claims_tbl_rep2";
                 parameters = "par_payroll_year," + s.txtb_payroll_year + ",par_payroll_month," + s.txtb_payroll_month + ",par_voucher_ctrl_nbr," + s.txtb_ctrl_no + ",par_payrolltemplate_code," + $('#ddl_reports option:selected').val() + ",par_employment_type," + emp_type;
                 ReportPath = "/Reports/cryVoucher/cryOthClaimsV2/cryOthClaimsV2.rpt";

@@ -372,7 +372,7 @@ namespace HRIS_ePAccount.Reports
                     cryRpt.Subreports["cryVoucherFooter.rpt"].SetDataSource(dtSub);
                     cryRpt.Subreports["cryVoucherHeader.rpt"].SetDataSource(dtSub);
                 }
-                if (ls_splitvalue[0].ToString().Trim() == "voucher_dtl_oth_claims_tbl_rep")
+                if (ls_splitvalue[0].ToString().Trim() == "voucher_dtl_oth_claims_tbl_rep" || ls_splitvalue[0].ToString().Trim() == "voucher_dtl_oth_claims_tbl_rep2" )
                 {
                     dtSub = new DataTable();
                     dtSub = MyCmn.RetrieveData("sp_voucher_header_footer_rep", ls_splitvalue[1], ls_splitvalue[2], ls_splitvalue[5], ls_splitvalue[6], ls_splitvalue[7], ls_splitvalue[8]);
