@@ -117,6 +117,7 @@ namespace HRIS_ePAccount.Controllers
             string department_code                  = PreviousValuesonPage_cJOTaxRate[10].ToString().Trim();
             string history                          = PreviousValuesonPage_cJOTaxRate[11].ToString().Trim();
             string effective_date                   = PreviousValuesonPage_cJOTaxRate[9].ToString().Trim();
+            string previouspage_employment_type     = Session["PreviousValuesonPage_cJOTaxRate_employment_type"].ToString().Trim();
 
             var sp_payrollemployee_tax_hdr_tbl_list = new object();
 
@@ -142,7 +143,7 @@ namespace HRIS_ePAccount.Controllers
             var sp_payrolltemplate_tbl_list7        = db_pacco.sp_payrolltemplate_tbl_list7().ToList();
             //var classification_list             = db_pacco.vw_accountclass_tbl.ToList();
 
-            return Json(new { sp_payrollemployee_tax_dtl_tbl_list,sp_payrollemployee_tax_hdr_tbl_list, empl_id, position, year, um, empl_master_details, emp_name, department_name, sp_payrolltemplate_tbl_list7 }, JsonRequestBehavior.AllowGet);
+            return Json(new { sp_payrollemployee_tax_dtl_tbl_list,sp_payrollemployee_tax_hdr_tbl_list, empl_id, position, year, um, empl_master_details, emp_name, department_name, sp_payrolltemplate_tbl_list7, previouspage_employment_type }, JsonRequestBehavior.AllowGet);
 
         }
 

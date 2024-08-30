@@ -24,7 +24,7 @@ ng_HRD_App.controller("cJOTaxRateDetails_ctrlr", function ($scope, $compile, $ht
     s.allow_delete = false
     s.allow_view = false
     s.allow_edit_history = false
-
+    s.previouspage_employment_type = ""
     s.isDisabledPERACA = true;
     s.isDisabledHazard = true;
     s.isDisabledSub = true;
@@ -77,7 +77,8 @@ ng_HRD_App.controller("cJOTaxRateDetails_ctrlr", function ($scope, $compile, $ht
             s.txtb_department       = d.data.department_name
             s.txtb_department_hdr   = d.data.department_name
 
-            s.payrolltemplate       = d.data.sp_payrolltemplate_tbl_list7
+            s.payrolltemplate = d.data.sp_payrolltemplate_tbl_list7
+            s.previouspage_employment_type = d.data.previouspage_employment_type
 
             if (d.data.sp_payrolltemplate_tbl_list7.length > 0)
             {
@@ -274,8 +275,15 @@ ng_HRD_App.controller("cJOTaxRateDetails_ctrlr", function ($scope, $compile, $ht
     //************************************// 
 
     s.BacktoTaxHeader = function () {
-        url = "/cJOTaxRate"
-        window.location.replace(url);
+        if (s.previouspage_employment_type == "JO") {
+            url = "/cJOTaxRate"
+            window.location.replace(url);
+        }
+        else if (s.previouspage_employment_type == "NE") {
+            url = "/cNonEmployeeTaxRate"
+            window.location.replace(url);
+        }
+        
     }
 
     

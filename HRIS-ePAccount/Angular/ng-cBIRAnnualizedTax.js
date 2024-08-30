@@ -19,13 +19,12 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     s.year = []
     var index_update = "";
 
-    s.allow_edit = false
-    s.allow_print = false
-    s.allow_delete = false
-    s.allow_view = false
+    s.allow_edit         = false
+    s.allow_print        = false
+    s.allow_delete       = false
+    s.allow_view         = false
     s.allow_edit_history = false
-    s.excelExportServer = ""
-
+    
     s.oTable = null;
     s.datalistgrid = null
     s.rowLen = "5"
@@ -41,32 +40,32 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         { id: 'y', alpha_name: 'Y' }, { id: 'z', alpha_name: 'Z' }
 
     ]
-
-
+    
+	
     function init() {
+		
+		
 
-
-
-        $("#loading_data").modal({ keyboard: false, backdrop: "static" })
+       $("#loading_data").modal({ keyboard: false, backdrop: "static" })
         RetrieveYear()
         h.post("../cBIRAnnualizedTax/InitializeData", { par_empType: s.employeeddl }).then(function (d) {
-            s.excelExportServer = d.data.excelExportServer
-            s.employeeddl = d.data.empType
-            s.ddl_employment_type = d.data.ddl_emp_type
-            s.ddl_letter = d.data.ddl_letter
-            s.ddl_year = d.data.ddl_year == "" || d.data.ddl_year == null ? s.ddl_year = new Date().getFullYear().toString() : d.data.ddl_year
-            s.rowLen = d.data.show_entries
+
+            s.employeeddl           = d.data.empType
+            s.ddl_employment_type   = d.data.ddl_emp_type
+            s.ddl_letter            = d.data.ddl_letter
+            s.ddl_year              = d.data.ddl_year == "" || d.data.ddl_year == null ? s.ddl_year = new Date().getFullYear().toString() : d.data.ddl_year
+            s.rowLen                = d.data.show_entries
 
             init_table_data([]);
             init_table_data2([]);
 
-            s.allow_edit = d.data.um.allow_edit
-            s.allow_print = d.data.um.allow_print
-            s.allow_delete = d.data.um.allow_delete
-            s.allow_print = d.data.um.allow_print
+            s.allow_edit         = d.data.um.allow_edit
+            s.allow_print        = d.data.um.allow_print
+            s.allow_delete       = d.data.um.allow_delete
+            s.allow_print        = d.data.um.allow_print
             s.allow_edit_history = d.data.um.allow_edit_history
-            s.allow_view = 1
-
+            s.allow_view         = 1
+            
 
             $("#datalist_grid").DataTable().search("").draw();
 
@@ -76,27 +75,30 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                 s.oTable.fnClearTable();
                 s.oTable.fnAddData(s.datalistgrid)
             }
-            else {
+            else
+            {
                 s.oTable.fnClearTable();
             }
 
-
-            sort_value = d.data.sort_value
-            page_value = d.data.page_value
-            sort_order = d.data.sort_order
-            s.rowLen = d.data.show_entries
+            
+            sort_value  = d.data.sort_value
+            page_value  = d.data.page_value
+            sort_order  = d.data.sort_order
+            s.rowLen    = d.data.show_entries
 
             $("#datalist_grid").DataTable().page.len(s.rowLen).draw();
 
             s.oTable.fnSort([[sort_value, sort_order]]);
             s.oTable.fnPageChange(page_value);
             s.search_box = d.data.search_value
-
-            if (s.search_box == undefined || s.search_box == '') {
+            
+            if (s.search_box == undefined || s.search_box == '')
+            {
                 s.search_box = ''
             }
 
-            else {
+            else
+            {
                 s.search_in_list(s.search_box, 'datalist_grid')
             }
 
@@ -104,7 +106,8 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                 $("#btn_add").hide()
             }
 
-            else {
+            else
+            {
                 $("#btn_add").show()
             }
 
@@ -123,7 +126,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                 stateSave: false,
                 sDom: 'rt<"bottom"p>',
                 pageLength: 5,
-                deferRender: true,
+				deferRender:true,
                 columns: [
                     {
                         "mData": "empl_id", "mRender": function (data, type, full, row) {
@@ -146,7 +149,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                             var retdata = currency(data)
                             return "<div class='btn-block text-right'>" + retdata + "</div>";
                         }
-
+                        
                     },
                     {
                         "mData": "tax_rate", "mRender": function (data, type, full, row) {
@@ -156,16 +159,17 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                     {
                         "mData": null,
                         "bSortable": false,
-                        "mRender": function (data, type, full, row) {
+                        "mRender": function (data, type, full, row)
+                        {
 
                             return '<center><div class="btn-group tooltip-demo">'
                                 + '<button type="button" class="btn btn-warning btn-sm action" data-toggle="tooltip" data-placement="left" title="Show Details" ng-show="' + s.allow_view + '" ng-click="btn_show_action(' + row["row"] + ')" > '
                                 + '<i class="fa fa-plus"></i>' + '</button>'
                                 + '<button type="button" class="btn btn-primary btn-sm action" style="background-color:blueviolet;color:white;border:1px solid blueviolet;" data-toggle="tooltip" data-placement="left" title="Generate Annualized Tax" ng-show="' + s.allow_edit + '" ng-click="btn_generate_action(' + row["row"] + ')" > '
-                                + '<i id="generate_icon_dtl' + row["row"] + '" class="fa fa-clipboard"></i>' + '</button>'
+                                + '<i id="generate_icon_dtl' + row["row"] + '" class="fa fa-clipboard"></i>' + '</button>' 
                                 + '<button type="button" class="btn btn-info btn-sm action" data-toggle="tooltip" data-placement="left" title="Edit" ng-show="' + s.allow_edit + '" ng-click="btn_edit_action(' + row["row"] + ')" > '
                                 + '<i id="edit_icon' + row["row"] + '" class="fa fa-edit"></i>' + '</button>' +
-                                '<button type="button" class="btn btn-danger btn-sm action" data-toggle="tooltip" data-placement="left" title="Delete" ng-show="' + s.allow_delete + '" ng-click="btn_delete_action(' + row["row"] + ')" > '
+                                 '<button type="button" class="btn btn-danger btn-sm action" data-toggle="tooltip" data-placement="left" title="Delete" ng-show="' + s.allow_delete + '" ng-click="btn_delete_action(' + row["row"] + ')" > '
                                 + '<i id="delete_icon' + row["row"] + '" class="fa fa-trash"></i>' +
                                 '<button type="button" class="btn btn-primary btn-sm action" data-toggle="tooltip" data-placement="left" title="Print" ng-show="' + s.allow_print + '" ng-click="btn_print_action(' + row["row"] + ')" > '
                                 + '<i class="fa fa-print"></i>' + '</button>' +
@@ -203,7 +207,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
                     {
                         "mData": "prc_date", "mRender": function (data, type, full, row) {
-                            return "<div class='btn-block text-center " + text_color(full["prc_status"]) + "'>" + data + "</div>";
+                            return "<div class='btn-block text-center " + text_color(full["prc_status"])+"'>" + data + "</div>";
                         }
                     },
 
@@ -211,13 +215,13 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
                     {
                         "mData": "prc_start", "mRender": function (data, type, full, row) {
-                            return "<div class='btn-block text-left " + text_color(full["prc_status"]) + "'>" + data + "</div>";
+                            return "<div class='btn-block text-left " + text_color(full["prc_status"]) +"'>" + data + "</div>";
                         }
                     },
 
                     {
                         "mData": "prc_end", "mRender": function (data, type, full, row) {
-                            return "<div class='btn-block text-center " + text_color(full["prc_status"]) + "'>" + data + "</div>";
+                            return "<div class='btn-block text-center " + text_color(full["prc_status"]) +"'>" + data + "</div>";
                         }
                     },
 
@@ -226,7 +230,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
                     {
                         "mData": "prc_status_descr", "mRender": function (data, type, full, row) {
-                            return "<div class='btn-block text-right " + text_color(full["prc_status"]) + "'>" + data + "</div>";
+                            return "<div class='btn-block text-right " + text_color(full["prc_status"]) +"'>" + data + "</div>";
                         }
 
                     },
@@ -234,12 +238,12 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
                     {
                         "mData": "prc_descr", "mRender": function (data, type, full, row) {
-                            return "<div class='btn-block text-center " + text_color(full["prc_status"]) + "'>" + data + "</div>";
+                            return "<div class='btn-block text-center " + text_color(full["prc_status"]) +"'>" + data + "</div>";
                         }
                     },
                     {
                         "mData": "prc_run_by", "mRender": function (data, type, full, row) {
-                            return "<div class='btn-block text-center " + text_color(full["prc_status"]) + "'>" + data + "</div>";
+                            return "<div class='btn-block text-center " + text_color(full["prc_status"]) +"'>" + data + "</div>";
                         }
                     },
 
@@ -257,13 +261,16 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         $("div.toolbar").html('<b>Custom tool bar! Text/images etc.</b>');
     }
 
-    function currency(d) {
+    function currency(d)
+    {
 
         var retdata = ""
-        if (d == null || d == "" || d == undefined) {
+        if (d == null || d == "" || d == undefined)
+        {
             return retdata = "0.00"
         }
-        else {
+        else
+        {
             retdata = d.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
             return retdata
         }
@@ -282,7 +289,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     //***Select-Payroll-Year-DropDown****//
     //************************************// 
     s.SelectPayrollYear = function (par_empType, par_year, par_letter) {
-        $("#loading_data").modal({ keyboard: false, backdrop: "static" })
+       $("#loading_data").modal({ keyboard: false, backdrop: "static" })
         h.post("../cBIRAnnualizedTax/SelectPayrollYear",
             {
                 par_empType: par_empType,
@@ -309,7 +316,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     //***Select-Employment-Type-DropDown****//
     //************************************// 
     s.SelectLetter = function (par_empType, par_year, par_letter) {
-        $("#loading_data").modal({ keyboard: false, backdrop: "static" })
+       $("#loading_data").modal({ keyboard: false, backdrop: "static" })
         h.post("../cBIRAnnualizedTax/SelectLetter",
             {
                 par_empType: par_empType,
@@ -338,31 +345,35 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     //************************************//
     //***Select-Employment-Type-DropDown****//
     //************************************// 
-    s.SelectEmploymentType = function (par_empType, par_year, par_letter) {
-        $("#loading_data").modal({ keyboard: false, backdrop: "static" })
+    s.SelectEmploymentType = function (par_empType, par_year,par_letter) {
+       $("#loading_data").modal({ keyboard: false, backdrop: "static" })
         h.post("../cBIRAnnualizedTax/SelectEmploymentType",
             {
-                par_empType: par_empType,
-                par_year: par_year,
-                par_letter: par_letter
+                par_empType : par_empType,
+                par_year    : par_year,
+                par_letter  : par_letter
 
-            }).then(function (d) {
+            }).then(function (d)
+            {
 
                 if (par_empType.trim() == "" || par_empType.trim() == undefined || par_empType.trim() == null) {
                     $("#btn_add").hide()
                 }
 
-                else {
+                else
+                {
                     $("#btn_add").show()
                 }
 
-                if (d.data.sp_annualtax_hdr_tbl_list.length > 0) {
+                if (d.data.sp_annualtax_hdr_tbl_list.length > 0)
+                {
 
                     s.datalistgrid = d.data.sp_annualtax_hdr_tbl_list;
                     s.oTable.fnClearTable();
                     s.oTable.fnAddData(s.datalistgrid)
                 }
-                else {
+                else
+                {
                     s.oTable.fnClearTable();
                 }
 
@@ -373,8 +384,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                     s.gTable.fnAddData(s.datalistgrid2)
                 }
                 else {
-                    gTable
-                }
+                    gTable                }
                 $("#loading_data").modal("hide")
             })
 
@@ -392,58 +402,59 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         }
 
     }
+    
 
-
-
+    
 
     function clearentry() {
-        s.txtb_empl_name = ""
-        s.txtb_empl_id = ""
-        s.txtb_position = ""
-        s.txtb_monthly_tax_due = "0.00"
-        s.txtb_employment_type = ""
-        s.txtb_monthly_tax_rate = "0.00"
-        s.txtb_gross_inc_prst = "0.00"
-        s.txtb_non_tax_exmpt = "0.00"
-        s.txtb_txbl_inc_prst = "0.00"
-        s.txtb_add_txbl_inc_prst = "0.00"
-        s.txtb_gross_txbl_inc = "0.00"
-        s.txtb_annual_tax_due = "0.00"
-        s.txtb_wheld_prst_emplyr = "0.00"
-        s.txtb_wheld_prev_emplyr = "0.00"
-        s.txtb_wheld_total = "0.00"
-        s.txtb_ntx_basic_sal_mwe = "0.00"
-        s.txtb_ntx_hol_pay_mwe = "0.00"
-        s.txtb_ntx_ot_pay_mwe = "0.00"
-        s.txtb_ntx_night_diff_mwe = "0.00"
-        s.txtb_ntx_hzrd_pay_mwe = "0.00"
-        s.txtb_ntx_13th_month = "0.00"
-        s.txtb_ntx_deminimis = "0.00"
-        s.txtb_ntx_premiums = "0.00"
-        s.txtb_ntx_salaries_oth = "0.00"
-        s.txtb_ntx_total = "0.00"
-        s.txtb_txbl_basic_sal = "0.00"
-        s.txtb_txbl_ra = "0.00"
-        s.txtb_txbl_ta = "0.00"
-        s.txtb_txbl_cola = "0.00"
-        s.txtb_txbl_fxd_hsng_allo = "0.00"
-        s.txtb_txbl_othA = "0.00"
-        s.txtb_txbl_othB = "0.00"
-        s.txtb_txbl_total = "0.00"
-        s.txbl_sup_com = "0.00"
-        s.txtb_sup_proft_s = "0.00"
-        s.txtb_sup_dir_fee = "0.00"
-        s.txtb_sup_13_oth = "0.00"
-        s.txtb_sup_hzrd_pay = "0.00"
-        s.txtb_sup_ot_pay = "0.00"
-        s.txtb_sup_othA = "0.00"
-        s.txtb_sup_othB = "0.00"
-        s.txtb_sup_total = "0.00"
+        s.txtb_empl_name            = ""
+        s.txtb_empl_id              = ""
+        s.txtb_position             = ""
+        s.txtb_monthly_tax_due      = "0.00"
+        s.txtb_employment_type      = ""
+        s.txtb_monthly_tax_rate     = "0.00"
+        s.txtb_gross_inc_prst       = "0.00"
+        s.txtb_non_tax_exmpt        = "0.00"
+        s.txtb_txbl_inc_prst        = "0.00"
+        s.txtb_add_txbl_inc_prst    = "0.00"
+        s.txtb_gross_txbl_inc       = "0.00"
+        s.txtb_annual_tax_due       = "0.00"
+        s.txtb_wheld_prst_emplyr    = "0.00"
+        s.txtb_wheld_prev_emplyr    = "0.00"
+        s.txtb_wheld_total          = "0.00"
+        s.txtb_ntx_basic_sal_mwe      = "0.00"
+        s.txtb_ntx_hol_pay_mwe      = "0.00"
+        s.txtb_ntx_ot_pay_mwe       = "0.00"
+        s.txtb_ntx_night_diff_mwe   = "0.00"
+        s.txtb_ntx_hzrd_pay_mwe     = "0.00"
+        s.txtb_ntx_13th_month       = "0.00"
+        s.txtb_ntx_deminimis        = "0.00"
+        s.txtb_ntx_premiums         = "0.00"
+        s.txtb_ntx_salaries_oth     = "0.00"
+        s.txtb_ntx_total            = "0.00"
+        s.txtb_txbl_basic_sal       = "0.00"
+        s.txtb_txbl_ra              = "0.00"
+        s.txtb_txbl_ta              = "0.00"
+        s.txtb_txbl_cola            = "0.00"
+        s.txtb_txbl_fxd_hsng_allo   = "0.00"
+        s.txtb_txbl_othA            = "0.00"
+        s.txtb_txbl_othB            = "0.00"
+        s.txtb_txbl_total           = "0.00"
+        s.txbl_sup_com              = "0.00"
+        s.txtb_sup_proft_s          = "0.00"
+        s.txtb_sup_dir_fee          = "0.00"
+        s.txtb_sup_13_oth           = "0.00"
+        s.txtb_sup_hzrd_pay         = "0.00"
+        s.txtb_sup_ot_pay           = "0.00"
+        s.txtb_sup_othA             = "0.00"
+        s.txtb_sup_othB             = "0.00"
+        s.txtb_sup_total            = "0.00"
         FieldValidationColorChanged(false, "ALL");
     }
 
 
-    s.btn_generate_action = function (id_ss) {
+    s.btn_generate_action = function (id_ss)
+    {
         index_update = ""
         index_update = id_ss
 
@@ -456,22 +467,23 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         }).then(function (willDelete) {
             if (willDelete) {
 
-
+                
                 $("#generate_icon_dtl" + id_ss).removeClass("fa fa-edit");
                 $("#generate_icon_dtl" + id_ss).addClass("fa fa-spinner fa-spin");
 
                 h.post("../cBIRAnnualizedTax/GenerateByEmployee", {
-                    par_empl_id: s.datalistgrid[id_ss].empl_id
-                    , par_payroll_year: s.datalistgrid[id_ss].payroll_year
+                     par_empl_id     : s.datalistgrid[id_ss].empl_id
+                    ,par_payroll_year: s.datalistgrid[id_ss].payroll_year
                     , par_letter: $("#ddl_letter option:selected").val()
                     , par_employment: $("#ddl_employment_type").val()
                 }).then(function (d) {
 
-                    if (d.data.message == "success") {
+                    if (d.data.message == "success")
+                    {
                         $("#generate_icon_dtl" + id_ss).removeClass("fa fa-spinner fa-spin");
                         $("#generate_icon_dtl" + id_ss).addClass("fa fa-edit");
 
-
+                        
 
                         if (d.data.sp_annualtax_hdr_tbl_list.length > 0) {
                             s.txtb_monthly_tax_due = currency(d.data.sp_annualtax_hdr_tbl_list2.monthly_tax_due)
@@ -540,10 +552,10 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                         }
 
                         swal("Successfully Updated!", "Existing record successfully Updated!", "success")
-
+                        
                     }
 
-                })
+                 })
 
             }
         })
@@ -562,65 +574,67 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                 $("#btn_generate_icon").addClass("fa fa-spinner fa-spin");
 
                 h.post("../cBIRAnnualizedTax/GenerateByEmployee", {
-                    par_empl_id: $("#ddl_employee_name").val()
-                    , par_payroll_year: $("#ddl_year").val()
-                    , par_letter: $("#ddl_letter option:selected").val()
-                    , par_employment: $("#ddl_employment_type option:selected").val()
+                     par_empl_id     : $("#ddl_employee_name").val()
+                    ,par_payroll_year: $("#ddl_year").val()
+                    ,par_letter      : $("#ddl_letter option:selected").val()
+                    ,par_employment  : $("#ddl_employment_type option:selected").val()
                 }).then(function (d) {
 
-                    if (d.data.message == "success") {
+                    if (d.data.message == "success")
+                    {
 
                         s.ishowsave = true;
                         //updateListGrid()
-                        if (d.data.sp_annualtax_hdr_tbl_list.length > 0) {
-                            s.txtb_monthly_tax_due = currency(d.data.sp_annualtax_hdr_tbl_list2.monthly_tax_due)
-                            s.txtb_employment_type = d.data.sp_annualtax_hdr_tbl_list2.employmenttype_description
-                            s.txtb_monthly_tax_rate = currency(d.data.sp_annualtax_hdr_tbl_list2.tax_rate)
+                        if (d.data.sp_annualtax_hdr_tbl_list.length > 0)
+                        {
+                            s.txtb_monthly_tax_due      = currency(d.data.sp_annualtax_hdr_tbl_list2.monthly_tax_due)
+                            s.txtb_employment_type      = d.data.sp_annualtax_hdr_tbl_list2.employmenttype_description
+                            s.txtb_monthly_tax_rate     = currency(d.data.sp_annualtax_hdr_tbl_list2.tax_rate)
 
-                            s.txtb_add_txbl_inc_prst = currency(d.data.sp_annualtax_hdr_tbl_list2.addl_txbl_comp_prsnt)
+                            s.txtb_add_txbl_inc_prst    = currency(d.data.sp_annualtax_hdr_tbl_list2.addl_txbl_comp_prsnt)
 
-                            s.txtb_annual_tax_due = currency(d.data.sp_annualtax_hdr_tbl_list2.annual_tax_due)
-                            s.txtb_wheld_prst_emplyr = currency(d.data.sp_annualtax_hdr_tbl_list2.wtax_prsnt_emplyr)
-                            s.txtb_wheld_prev_emplyr = currency(d.data.sp_annualtax_hdr_tbl_list2.wtax_prev_emplyr)
+                            s.txtb_annual_tax_due       = currency(d.data.sp_annualtax_hdr_tbl_list2.annual_tax_due)
+                            s.txtb_wheld_prst_emplyr    = currency(d.data.sp_annualtax_hdr_tbl_list2.wtax_prsnt_emplyr)
+                            s.txtb_wheld_prev_emplyr    = currency(d.data.sp_annualtax_hdr_tbl_list2.wtax_prev_emplyr)
 
-                            s.txtb_ntx_basic_sal_mwe = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_basic_salary)
-                            s.txtb_ntx_hol_pay_mwe = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_hol_pay_mwe)
-                            s.txtb_ntx_ot_pay_mwe = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_ot_pay_mwe)
-                            s.txtb_ntx_night_diff_mwe = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_night_diff_mwe)
-                            s.txtb_ntx_hzrd_pay_mwe = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_hzrd_pay_mwe)
-                            s.txtb_ntx_13th_month = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_13th_14th)
-                            s.txtb_ntx_deminimis = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_de_minimis)
-                            s.txtb_ntx_premiums = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_gsis_phic_hdmf)
-                            s.txtb_ntx_salaries_oth = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_salaries_oth)
-
-
-
-                            s.txtb_txbl_basic_sal = currency(d.data.sp_annualtax_hdr_tbl_list2.txbl_basic_salary)
-                            s.txtb_txbl_ra = currency(d.data.sp_annualtax_hdr_tbl_list2.txbl_representation)
-                            s.txtb_txbl_ta = currency(d.data.sp_annualtax_hdr_tbl_list2.txbl_transportation)
-                            s.txtb_txbl_cola = currency(d.data.sp_annualtax_hdr_tbl_list2.txbl_cola)
-                            s.txtb_txbl_fxd_hsng_allo = currency(d.data.sp_annualtax_hdr_tbl_list2.txbl_fh_allowance)
-                            s.txtb_txbl_othA = currency(d.data.sp_annualtax_hdr_tbl_list2.txbl_otherA)
-                            s.txtb_txbl_othB = currency(d.data.sp_annualtax_hdr_tbl_list2.txbl_otherB)
+                            s.txtb_ntx_basic_sal_mwe    = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_basic_salary)
+                            s.txtb_ntx_hol_pay_mwe      = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_hol_pay_mwe)
+                            s.txtb_ntx_ot_pay_mwe       = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_ot_pay_mwe)
+                            s.txtb_ntx_night_diff_mwe   = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_night_diff_mwe)
+                            s.txtb_ntx_hzrd_pay_mwe     = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_hzrd_pay_mwe)
+                            s.txtb_ntx_13th_month       = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_13th_14th)
+                            s.txtb_ntx_deminimis        = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_de_minimis)
+                            s.txtb_ntx_premiums         = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_gsis_phic_hdmf)
+                            s.txtb_ntx_salaries_oth     = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_salaries_oth)
 
 
-                            s.txbl_sup_com = currency(d.data.sp_annualtax_hdr_tbl_list2.sup_commission)
-                            s.txtb_sup_proft_s = currency(d.data.sp_annualtax_hdr_tbl_list2.sup_prof_sharing)
-                            s.txtb_sup_dir_fee = currency(d.data.sp_annualtax_hdr_tbl_list2.sup_fi_drctr_fees)
-                            s.txtb_sup_13_oth = currency(d.data.sp_annualtax_hdr_tbl_list2.sup_13th_14th)
-                            s.txtb_sup_hzrd_pay = currency(d.data.sp_annualtax_hdr_tbl_list2.sup_hzrd_pay)
-                            s.txtb_sup_ot_pay = currency(d.data.sp_annualtax_hdr_tbl_list2.sup_ot_pay)
-                            s.txtb_sup_othA = currency(d.data.sp_annualtax_hdr_tbl_list2.sup_otherA)
-                            s.txtb_sup_othB = currency(d.data.sp_annualtax_hdr_tbl_list2.sup_otherB)
+
+                            s.txtb_txbl_basic_sal       = currency(d.data.sp_annualtax_hdr_tbl_list2.txbl_basic_salary)
+                            s.txtb_txbl_ra              = currency(d.data.sp_annualtax_hdr_tbl_list2.txbl_representation)
+                            s.txtb_txbl_ta              = currency(d.data.sp_annualtax_hdr_tbl_list2.txbl_transportation)
+                            s.txtb_txbl_cola            = currency(d.data.sp_annualtax_hdr_tbl_list2.txbl_cola)
+                            s.txtb_txbl_fxd_hsng_allo   = currency(d.data.sp_annualtax_hdr_tbl_list2.txbl_fh_allowance)
+                            s.txtb_txbl_othA            = currency(d.data.sp_annualtax_hdr_tbl_list2.txbl_otherA)
+                            s.txtb_txbl_othB            = currency(d.data.sp_annualtax_hdr_tbl_list2.txbl_otherB)
+
+
+                            s.txbl_sup_com              = currency(d.data.sp_annualtax_hdr_tbl_list2.sup_commission)
+                            s.txtb_sup_proft_s          = currency(d.data.sp_annualtax_hdr_tbl_list2.sup_prof_sharing)
+                            s.txtb_sup_dir_fee          = currency(d.data.sp_annualtax_hdr_tbl_list2.sup_fi_drctr_fees)
+                            s.txtb_sup_13_oth           = currency(d.data.sp_annualtax_hdr_tbl_list2.sup_13th_14th)
+                            s.txtb_sup_hzrd_pay         = currency(d.data.sp_annualtax_hdr_tbl_list2.sup_hzrd_pay)
+                            s.txtb_sup_ot_pay           = currency(d.data.sp_annualtax_hdr_tbl_list2.sup_ot_pay)
+                            s.txtb_sup_othA             = currency(d.data.sp_annualtax_hdr_tbl_list2.sup_otherA)
+                            s.txtb_sup_othB             = currency(d.data.sp_annualtax_hdr_tbl_list2.sup_otherB)
                             $("#ddl_employer_type").val(d.data.sp_annualtax_hdr_tbl_list2.employer_type)
-                            s.txtb_foreign_add = d.data.sp_annualtax_hdr_tbl_list2.foreign_address
-                            s.txtb_stat_daily = currency(d.data.sp_annualtax_hdr_tbl_list2.stat_daily_rate)
-                            s.txtb_stat_monthly = currency(d.data.sp_annualtax_hdr_tbl_list2.stat_monthly_rate)
+                            s.txtb_foreign_add          = d.data.sp_annualtax_hdr_tbl_list2.foreign_address
+                            s.txtb_stat_daily           = currency(d.data.sp_annualtax_hdr_tbl_list2.stat_daily_rate)
+                            s.txtb_stat_monthly         = currency(d.data.sp_annualtax_hdr_tbl_list2.stat_monthly_rate)
                             $("#ddl_wage_earner").val(d.data.sp_annualtax_hdr_tbl_list2.min_wage_earner.toString().toUpperCase())
-                            s.txtb_tin_prev = d.data.sp_annualtax_hdr_tbl_list2.tin_employer_prev
-                            s.txtb_empl_name_prev = d.data.sp_annualtax_hdr_tbl_list2.employer_name_prev
-                            s.txtb_address_prev = d.data.sp_annualtax_hdr_tbl_list2.employer_add_prev
-                            s.txtb_zip_prev = d.data.sp_annualtax_hdr_tbl_list2.employer_zip_prev
+                            s.txtb_tin_prev             = d.data.sp_annualtax_hdr_tbl_list2.tin_employer_prev
+                            s.txtb_empl_name_prev       = d.data.sp_annualtax_hdr_tbl_list2.employer_name_prev
+                            s.txtb_address_prev         = d.data.sp_annualtax_hdr_tbl_list2.employer_add_prev
+                            s.txtb_zip_prev             = d.data.sp_annualtax_hdr_tbl_list2.employer_zip_prev
                             calculatetaxable()
                             calculatenontaxable()
                             calculatetaxable_supplementary()
@@ -634,7 +648,8 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                             s.oTable.fnClearTable();
                             s.oTable.fnAddData(s.datalistgrid)
                         }
-                        else {
+                        else
+                        {
                             s.oTable.fnClearTable();
                         }
 
@@ -661,21 +676,22 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         }).then(function (willDelete) {
             if (willDelete) {
 
-                $("#loading_data").modal({ keyboard: false, backdrop: "static" })
+               $("#loading_data").modal({ keyboard: false, backdrop: "static" })
 
                 h.post("../cBIRAnnualizedTax/GenerateByEmployee", {
                     par_empl_id: ""
-                    , par_payroll_year: $("#ddl_year option:selected").val()
-                    , par_letter: $("#ddl_letter option:selected").val()
+                    ,par_payroll_year: $("#ddl_year option:selected").val()
+                    ,par_letter: $("#ddl_letter option:selected").val()
                 }).then(function (d) {
 
-                    if (d.data.message == "success") {
+                    if (d.data.message == "success")
+                    {
 
                         s.datalistgrid = d.data.sp_annualtax_hdr_tbl_list
                         s.oTable.fnClearTable();
                         s.oTable.fnAddData(s.datalistgrid);
                         s.oTable.fnSort([[sort_value, sort_order]]);
-
+                        
                         swal("Successfully Updated!", "All records successfully Updated!", "success")
                     }
 
@@ -687,26 +703,27 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         })
     }
 
-    s.btn_show_action = function (id_ss) {
+    s.btn_show_action = function (id_ss)
+    {
         var table = $('#datalist_grid').DataTable();
         var info = table.page.info();
         var url = "";
         h.post("../cBIRAnnualizedTax/PreviousValuesonPage_cBIRAnnualizedTax",
             {
 
-                par_year: $("#ddl_year option:selected").val()
-                , par_tax_due: s.datalistgrid[id_ss].monthly_tax_due
-                , par_tax_rate: s.datalistgrid[id_ss].tax_rate
-                , par_empl_id: s.datalistgrid[id_ss].empl_id
-                , par_emp_type: $("#ddl_employment_type option:selected").val()
-                , par_emp_type_descr: s.datalistgrid[id_ss].employmenttype_description
-                , par_letter: $("#ddl_letter option:selected").val()
-                , par_show_entries: $("#ddl_show_entries option:selected").val()
-                , par_page_nbr: info.page
-                , par_search: s.search_box
-                , par_sort_value: sort_value
-                , par_sort_order: sort_order
-                , par_position: s.datalistgrid[id_ss].position_title1
+                 par_year           : $("#ddl_year option:selected").val()
+                ,par_tax_due        : s.datalistgrid[id_ss].monthly_tax_due
+                ,par_tax_rate       : s.datalistgrid[id_ss].tax_rate
+                ,par_empl_id        : s.datalistgrid[id_ss].empl_id
+                ,par_emp_type       : $("#ddl_employment_type option:selected").val()
+                ,par_emp_type_descr : s.datalistgrid[id_ss].employmenttype_description
+                ,par_letter         : $("#ddl_letter option:selected").val()
+                ,par_show_entries   : $("#ddl_show_entries option:selected").val()
+                ,par_page_nbr       : info.page
+                ,par_search         : s.search_box
+                ,par_sort_value     : sort_value
+                ,par_sort_order     : sort_order
+                ,par_position       : s.datalistgrid[id_ss].position_title1
             }).then(function (d) {
 
                 url = "/cBIRAnnualizedTaxDetails";
@@ -715,15 +732,17 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
     }
 
-    s.SelectEmployeeNameClear = function () {
-        s.txtb_empl_id = ""
-        s.txtb_position = ""
-        s.txtb_employment_type = ""
-        s.txtb_employment_type_val = ""
+    s.SelectEmployeeNameClear = function ()
+    {
+        s.txtb_empl_id              = ""
+        s.txtb_position             = ""
+        s.txtb_employment_type      = ""
+        s.txtb_employment_type_val  = ""
         $("#btn_generate").hide()
     }
 
-    s.SelectEmployeeName = function (data) {
+    s.SelectEmployeeName = function (data)
+    {
 
         $("#btn_generate").show()
         s.txtb_empl_id = data.empl_id
@@ -731,7 +750,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         s.txtb_employment_type = data.employmenttype_description
         s.txtb_employment_type_val = data.employment_type
 
-
+       
 
         //h.post("../cBIRAnnualizedTax/SelectEmployeeName",
         //    {
@@ -741,22 +760,22 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         //        par_empl_id     : data.empl_id
 
         //    }).then(function (d) {
-
+                
         //        if (d.data.message == "success") {
-
+                    
         //            if (d.data.sp_tax_prjtd_per_empl_id != null) {
-
+                        
         //                s.txtb_empl_id = d.data.sp_tax_prjtd_per_empl_id.empl_id
         //                s.txtb_monthly_tax_due = currency(d.data.sp_tax_prjtd_per_empl_id.monthly_tax_due)
-
+                        
         //                s.txtb_monthly_tax_rate = currency(d.data.sp_tax_prjtd_per_empl_id.tax_rate)
-
+                        
         //                s.txtb_add_txbl_inc_prst = currency(d.data.sp_tax_prjtd_per_empl_id.addl_txbl_comp_prsnt)
-
+                       
         //                s.txtb_annual_tax_due = currency(d.data.sp_tax_prjtd_per_empl_id.annual_tax_due)
         //                s.txtb_wheld_prst_emplyr = currency(d.data.sp_tax_prjtd_per_empl_id.wtax_prsnt_emplyr)
         //                s.txtb_wheld_prev_emplyr = currency(d.data.sp_tax_prjtd_per_empl_id.wtax_prev_emplyr)
-
+                        
 
         //                s.txtb_ntx_basic_sal_mwe = currency(d.data.sp_tax_prjtd_per_empl_id.ntx_basic_salary)
         //                s.txtb_ntx_hol_pay_mwe = currency(d.data.sp_tax_prjtd_per_empl_id.ntx_hol_pay_mwe)
@@ -768,7 +787,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         //                s.txtb_ntx_premiums = currency(d.data.sp_tax_prjtd_per_empl_id.ntx_gsis_phic_hdmf)
         //                s.txtb_ntx_salaries_oth = currency(d.data.sp_tax_prjtd_per_empl_id.ntx_salaries_oth)
 
-
+                        
         //                s.txtb_txbl_basic_sal = currency(d.data.sp_tax_prjtd_per_empl_id.txbl_basic_salary)
         //                s.txtb_txbl_ra = currency(d.data.sp_tax_prjtd_per_empl_id.txbl_representation)
         //                s.txtb_txbl_ta = currency(d.data.sp_tax_prjtd_per_empl_id.txbl_transportation)
@@ -786,7 +805,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         //                s.txtb_sup_ot_pay = currency(d.data.sp_tax_prjtd_per_empl_id.sup_ot_pay)
         //                s.txtb_sup_othA = currency(d.data.sp_tax_prjtd_per_empl_id.sup_otherA)
         //                s.txtb_sup_othB = currency(d.data.sp_tax_prjtd_per_empl_id.sup_otherB)
-
+                       
 
         //                calculatetaxable()
         //                calculatenontaxable()
@@ -819,7 +838,8 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         //    })
     }
 
-    function getFromValue() {
+    function getFromValue()
+    {
         var empl_name = "";
         if (s.txtb_empl_name == "" || s.txtb_empl_name == null) {
 
@@ -827,63 +847,64 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
         }
 
-        else {
+        else
+        {
             empl_name = s.txtb_empl_name
         }
 
-
+        
 
         var data =
         {
 
-            payroll_year: $("#ddl_year option:selected").val()
-            , empl_id: s.txtb_empl_id
-            , employee_name: empl_name
-            , employment_type: s.txtb_employment_type_val
-            , employmenttype_description: s.txtb_employment_type
-            , position_title1: s.txtb_position
-            , addl_txbl_comp_prsnt: toDecimalFormat(s.txtb_add_txbl_inc_prst)
-            , annual_tax_due: toDecimalFormat(s.txtb_annual_tax_due)
-            , wtax_prsnt_emplyr: toDecimalFormat(s.txtb_wheld_prst_emplyr)
-            , wtax_prev_emplyr: toDecimalFormat(s.txtb_wheld_prev_emplyr)
-            , ntx_basic_salary: toDecimalFormat(s.txtb_ntx_basic_sal_mwe)
-            , ntx_hol_pay_mwe: toDecimalFormat(s.txtb_ntx_hol_pay_mwe)
-            , ntx_ot_pay_mwe: toDecimalFormat(s.txtb_ntx_ot_pay_mwe)
-            , ntx_night_diff_mwe: toDecimalFormat(s.txtb_ntx_night_diff_mwe)
-            , ntx_hzrd_pay_mwe: toDecimalFormat(s.txtb_ntx_hzrd_pay_mwe)
-            , ntx_13th_14th: toDecimalFormat(s.txtb_ntx_13th_month)
-            , ntx_de_minimis: toDecimalFormat(s.txtb_ntx_deminimis)
-            , ntx_gsis_phic_hdmf: toDecimalFormat(s.txtb_ntx_premiums)
-            , ntx_salaries_oth: toDecimalFormat(s.txtb_ntx_salaries_oth)
-            , txbl_basic_salary: toDecimalFormat(s.txtb_txbl_basic_sal)
-            , txbl_representation: toDecimalFormat(s.txtb_txbl_ra)
-            , txbl_transportation: toDecimalFormat(s.txtb_txbl_ta)
-            , txbl_cola: toDecimalFormat(s.txtb_txbl_cola)
-            , txbl_fh_allowance: toDecimalFormat(s.txtb_txbl_fxd_hsng_allo)
-            , txbl_otherA: toDecimalFormat(s.txtb_txbl_othA)
-            , txbl_otherB: toDecimalFormat(s.txtb_txbl_othB)
-            , sup_commission: toDecimalFormat(s.txbl_sup_com)
-            , sup_prof_sharing: toDecimalFormat(s.txtb_sup_proft_s)
-            , sup_fi_drctr_fees: toDecimalFormat(s.txtb_sup_dir_fee)
-            , sup_13th_14th: toDecimalFormat(s.txtb_sup_13_oth)
-            , sup_hzrd_pay: toDecimalFormat(s.txtb_sup_hzrd_pay)
-            , sup_ot_pay: toDecimalFormat(s.txtb_sup_ot_pay)
-            , sup_otherA: toDecimalFormat(s.txtb_sup_othA)
-            , sup_otherB: toDecimalFormat(s.txtb_sup_othB)
-            , annual_txbl_income: toDecimalFormat(s.txtb_gross_txbl_inc)
-            , annual_tax_wheld: toDecimalFormat(s.txtb_wheld_total)
-            , monthly_tax_due: toDecimalFormat(s.txtb_monthly_tax_due)
-            , tax_rate: toDecimalFormat(s.txtb_monthly_tax_rate)
-            , employer_type: $("#ddl_employer_type option:selected").val()
-            , foreign_address: s.txtb_foreign_add
-            , stat_daily_rate: toDecimalFormat(s.txtb_stat_daily)
-            , stat_monthly_rate: toDecimalFormat(s.txtb_stat_monthly)
-            , min_wage_earner: $("#ddl_wage_earner").val()
-            , tin_employer_prev: s.txtb_tin_prev
-            , employer_name_prev: s.txtb_empl_name_prev
-            , employer_add_prev: s.txtb_address_prev
-            , employer_zip_prev: s.txtb_zip_prev
-            , substituted: $("#ddl_subs_type").val()
+            payroll_year            : $("#ddl_year option:selected").val()
+            ,empl_id                : s.txtb_empl_id
+            ,employee_name          : empl_name
+            ,employment_type        : s.txtb_employment_type_val
+            ,employmenttype_description: s.txtb_employment_type
+            ,position_title1        : s.txtb_position
+            ,addl_txbl_comp_prsnt   : toDecimalFormat(s.txtb_add_txbl_inc_prst)
+            ,annual_tax_due         : toDecimalFormat(s.txtb_annual_tax_due)
+            ,wtax_prsnt_emplyr      : toDecimalFormat(s.txtb_wheld_prst_emplyr)
+            ,wtax_prev_emplyr       : toDecimalFormat(s.txtb_wheld_prev_emplyr)
+            ,ntx_basic_salary       : toDecimalFormat(s.txtb_ntx_basic_sal_mwe)
+            ,ntx_hol_pay_mwe        : toDecimalFormat(s.txtb_ntx_hol_pay_mwe)
+            ,ntx_ot_pay_mwe         : toDecimalFormat(s.txtb_ntx_ot_pay_mwe)
+            ,ntx_night_diff_mwe     : toDecimalFormat(s.txtb_ntx_night_diff_mwe)
+            ,ntx_hzrd_pay_mwe       : toDecimalFormat(s.txtb_ntx_hzrd_pay_mwe)
+            ,ntx_13th_14th          : toDecimalFormat(s.txtb_ntx_13th_month)
+            ,ntx_de_minimis         : toDecimalFormat(s.txtb_ntx_deminimis)
+            ,ntx_gsis_phic_hdmf     : toDecimalFormat(s.txtb_ntx_premiums)
+            ,ntx_salaries_oth       : toDecimalFormat(s.txtb_ntx_salaries_oth)
+            ,txbl_basic_salary      : toDecimalFormat(s.txtb_txbl_basic_sal)
+            ,txbl_representation    : toDecimalFormat(s.txtb_txbl_ra)
+            ,txbl_transportation    : toDecimalFormat(s.txtb_txbl_ta)
+            ,txbl_cola              : toDecimalFormat(s.txtb_txbl_cola)
+            ,txbl_fh_allowance      : toDecimalFormat(s.txtb_txbl_fxd_hsng_allo)
+            ,txbl_otherA            : toDecimalFormat(s.txtb_txbl_othA)
+            ,txbl_otherB            : toDecimalFormat(s.txtb_txbl_othB)
+            ,sup_commission         : toDecimalFormat(s.txbl_sup_com)
+            ,sup_prof_sharing       : toDecimalFormat(s.txtb_sup_proft_s)
+            ,sup_fi_drctr_fees      : toDecimalFormat(s.txtb_sup_dir_fee)
+            ,sup_13th_14th          : toDecimalFormat(s.txtb_sup_13_oth)
+            ,sup_hzrd_pay           : toDecimalFormat(s.txtb_sup_hzrd_pay)
+            ,sup_ot_pay             : toDecimalFormat(s.txtb_sup_ot_pay)
+            ,sup_otherA             : toDecimalFormat(s.txtb_sup_othA)
+            ,sup_otherB             : toDecimalFormat(s.txtb_sup_othB)
+            ,annual_txbl_income     : toDecimalFormat(s.txtb_gross_txbl_inc)
+            ,annual_tax_wheld       : toDecimalFormat(s.txtb_wheld_total)
+            ,monthly_tax_due        : toDecimalFormat(s.txtb_monthly_tax_due)
+            ,tax_rate               : toDecimalFormat(s.txtb_monthly_tax_rate)
+            ,employer_type          : $("#ddl_employer_type option:selected").val()
+            ,foreign_address        : s.txtb_foreign_add
+            ,stat_daily_rate        : toDecimalFormat(s.txtb_stat_daily)
+            ,stat_monthly_rate      : toDecimalFormat(s.txtb_stat_monthly)
+            , min_wage_earner       : $("#ddl_wage_earner").val()
+            ,tin_employer_prev      : s.txtb_tin_prev
+            ,employer_name_prev     : s.txtb_empl_name_prev
+            ,employer_add_prev      : s.txtb_address_prev
+            ,employer_zip_prev      : s.txtb_zip_prev
+            ,substituted            : $("#ddl_subs_type").val()
 
         }
 
@@ -906,63 +927,69 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
             return val;
         }
     }
+    
 
-
-    function updateListGrid() {
+    function updateListGrid()
+    {
 
         var table = $('#datalist_grid').DataTable();
         var info = table.page.info();
-        s.datalistgrid[index_update].addl_txbl_comp_prsnt = toDecimalFormat(s.txtb_add_txbl_inc_prst)
-        s.datalistgrid[index_update].wtax_prev_emplyr = toDecimalFormat(s.txtb_wheld_prev_emplyr)
-        s.datalistgrid[index_update].ntx_basic_salary = toDecimalFormat(s.txtb_ntx_basic_sal_mwe)
-        s.datalistgrid[index_update].ntx_hol_pay_mwe = toDecimalFormat(s.txtb_ntx_hol_pay_mwe)
-        s.datalistgrid[index_update].ntx_ot_pay_mwe = toDecimalFormat(s.txtb_ntx_ot_pay_mwe)
-        s.datalistgrid[index_update].ntx_night_diff_mwe = toDecimalFormat(s.txtb_ntx_night_diff_mwe)
-        s.datalistgrid[index_update].ntx_hzrd_pay_mwe = toDecimalFormat(s.txtb_ntx_hzrd_pay_mwe)
-        s.datalistgrid[index_update].txbl_representation = toDecimalFormat(s.txtb_txbl_ra)
-        s.datalistgrid[index_update].txbl_transportation = toDecimalFormat(s.txtb_txbl_ta)
-        s.datalistgrid[index_update].txbl_cola = toDecimalFormat(s.txtb_txbl_cola)
-        s.datalistgrid[index_update].txbl_fh_allowance = toDecimalFormat(s.txtb_txbl_fxd_hsng_allo)
-        s.datalistgrid[index_update].sup_commission = toDecimalFormat(s.txbl_sup_com)
-        s.datalistgrid[index_update].sup_prof_sharing = toDecimalFormat(s.txtb_sup_proft_s)
-        s.datalistgrid[index_update].sup_fi_drctr_fees = toDecimalFormat(s.txtb_sup_dir_fee)
-        s.datalistgrid[index_update].employer_type = $("#ddl_employer_type option:selected").val()
-        s.datalistgrid[index_update].foreign_address = s.txtb_foreign_add
-        s.datalistgrid[index_update].stat_daily_rate = s.txtb_stat_daily
-        s.datalistgrid[index_update].stat_monthly_rate = s.txtb_stat_monthly
-        s.datalistgrid[index_update].min_wage_earner = $("#ddl_wage_earner").val()
-        s.datalistgrid[index_update].tin_employer_prev = s.txtb_tin_prev
-        s.datalistgrid[index_update].employer_name_prev = s.txtb_empl_name_prev
-        s.datalistgrid[index_update].employer_add_prev = s.txtb_address_prev
-        s.datalistgrid[index_update].employer_zip_prev = s.txtb_zip_prev
-        s.datalistgrid[index_update].substituted = $("#ddl_subs_type").val()
+        s.datalistgrid[index_update].addl_txbl_comp_prsnt   = toDecimalFormat(s.txtb_add_txbl_inc_prst)
+        s.datalistgrid[index_update].wtax_prev_emplyr       = toDecimalFormat(s.txtb_wheld_prev_emplyr)
+        s.datalistgrid[index_update].ntx_basic_salary       = toDecimalFormat(s.txtb_ntx_basic_sal_mwe)
+        s.datalistgrid[index_update].ntx_hol_pay_mwe        = toDecimalFormat(s.txtb_ntx_hol_pay_mwe)
+        s.datalistgrid[index_update].ntx_ot_pay_mwe         = toDecimalFormat(s.txtb_ntx_ot_pay_mwe)
+        s.datalistgrid[index_update].ntx_night_diff_mwe     = toDecimalFormat(s.txtb_ntx_night_diff_mwe)
+        s.datalistgrid[index_update].ntx_hzrd_pay_mwe       = toDecimalFormat(s.txtb_ntx_hzrd_pay_mwe)
+        s.datalistgrid[index_update].txbl_representation    = toDecimalFormat(s.txtb_txbl_ra)
+        s.datalistgrid[index_update].txbl_transportation    = toDecimalFormat(s.txtb_txbl_ta)
+        s.datalistgrid[index_update].txbl_cola              = toDecimalFormat(s.txtb_txbl_cola)
+        s.datalistgrid[index_update].txbl_fh_allowance      = toDecimalFormat(s.txtb_txbl_fxd_hsng_allo)
+        s.datalistgrid[index_update].sup_commission         = toDecimalFormat(s.txbl_sup_com)
+        s.datalistgrid[index_update].sup_prof_sharing       = toDecimalFormat(s.txtb_sup_proft_s)
+        s.datalistgrid[index_update].sup_fi_drctr_fees      = toDecimalFormat(s.txtb_sup_dir_fee)
+        s.datalistgrid[index_update].employer_type          = $("#ddl_employer_type option:selected").val()
+        s.datalistgrid[index_update].foreign_address        = s.txtb_foreign_add
+        s.datalistgrid[index_update].stat_daily_rate        = s.txtb_stat_daily
+        s.datalistgrid[index_update].stat_monthly_rate      = s.txtb_stat_monthly
+        s.datalistgrid[index_update].min_wage_earner        = $("#ddl_wage_earner").val()
+        s.datalistgrid[index_update].tin_employer_prev      = s.txtb_tin_prev
+        s.datalistgrid[index_update].employer_name_prev     = s.txtb_empl_name_prev
+        s.datalistgrid[index_update].employer_add_prev      = s.txtb_address_prev
+        s.datalistgrid[index_update].employer_zip_prev      = s.txtb_zip_prev
+        s.datalistgrid[index_update].substituted            = $("#ddl_subs_type").val()
         s.oTable.fnClearTable();
         s.oTable.fnAddData(s.datalistgrid);
         page_value = info.page
 
         s.oTable.fnSort([[sort_value, sort_order]]);
-
-        for (var x = 1; x <= $('#datalist_grid').DataTable().page.info().pages; x++) {
-            if (get_page(s.datalistgrid[index_update].empl_id) == false) {
+        
+        for (var x = 1; x <= $('#datalist_grid').DataTable().page.info().pages; x++)
+        {
+            if (get_page(s.datalistgrid[index_update].empl_id) == false)
+            {
                 s.oTable.fnPageChange(x);
             }
-            else {
+            else
+            {
                 break;
             }
         }
+        
+            
+     }
 
 
-    }
-
-
-    s.btn_save = function () {
+    s.btn_save = function ()
+    {
 
         var dt = getFromValue()
-
+      
         $("#btn_save").removeClass("fa fa-save");
         $("#btn_save").addClass("fa fa-spinner fa-spin");
 
-        if (isdataValidated()) {
+        if (isdataValidated())
+        {
             h.post("../cBIRAnnualizedTax/CheckData", {
                 par_payroll_year: $("#ddl_year option:selected").val()
                 , par_empType: s.txtb_employment_type_val
@@ -976,15 +1003,15 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                     h.post("../cBIRAnnualizedTax/SaveEDITInDatabase",
                         {
                             data: dt
-                            , par_payroll_year: $("#ddl_year option:selected").val()
-                            , par_empl_id: s.txtb_empl_id
+                            ,par_payroll_year: $("#ddl_year option:selected").val()
+                            ,par_empl_id: s.txtb_empl_id
                         }).then(function (d) {
                             if (d.data.message == "success") {
 
                                 $("#main_modal").modal("hide")
                                 updateListGrid()
-
-                                swal("Successfully Updated!", "Existing record successfully Updated!", "success")
+                               
+                                swal("Successfully Updated!","Existing record successfully Updated!", "success")
                                 $("#btn_save").removeClass("fa fa-spinner fa-spin");
                                 $("#btn_save").addClass("fa fa-save");
                             }
@@ -1027,18 +1054,19 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
         }
 
-
-
+        
+        
     }
 
-    s.btn_edit_action = function (id_ss) {
+    s.btn_edit_action = function (id_ss)
+    {
 
         $("#btn_save").removeClass("fa fa-spinner fa-spin");
         $("#btn_save").addClass("fa fa-save");
 
         $("#edit_icon" + id_ss).removeClass("fa fa-edit");
         $("#edit_icon" + id_ss).addClass("fa fa-spinner fa-spin");
-
+        
         $("#btn_generate").hide()
         s.isShowNameSelect = false;
         s.isShowNameInput = true;
@@ -1046,82 +1074,83 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         index_update = id_ss
         clearentry()
         s.isAction = "EDIT"
-        s.ModalTitle = "Edit This Record"
+        s.ModalTitle = "Edit This Record" 
         s.txtb_employment_type_val = s.datalistgrid[id_ss].employment_type
-        s.txtb_empl_name = s.datalistgrid[id_ss].employee_name
-        s.txtb_empl_id = s.datalistgrid[id_ss].empl_id
-        s.txtb_position = s.datalistgrid[id_ss].position_title1
-
+        s.txtb_empl_name           = s.datalistgrid[id_ss].employee_name  
+        s.txtb_empl_id             = s.datalistgrid[id_ss].empl_id
+        s.txtb_position            = s.datalistgrid[id_ss].position_title1
+        
         h.post("../cBIRAnnualizedTax/CheckData", {
             par_payroll_year: $("#ddl_year option:selected").val()
-            , par_empType: s.txtb_employment_type_val
-            , par_letter: $("#ddl_letter option:selected").val()
-            , par_empl_id: s.datalistgrid[id_ss].empl_id
-            , par_action: s.isAction
+            ,par_empType    : s.txtb_employment_type_val
+            ,par_letter     : $("#ddl_letter option:selected").val()
+            ,par_empl_id    : s.datalistgrid[id_ss].empl_id
+            ,par_action     : s.isAction
         }).then(function (d) {
 
-            if (d.data.message == "success") {
+            if (d.data.message == "success")
+            {
                 $("#main_modal").modal("show")
 
-
+               
                 $("#edit_icon" + id_ss).removeClass("fa fa-spinner fa-spin");
                 $("#edit_icon" + id_ss).addClass("fa fa-edit");
-                var actual_counter = parseInt(d.data.sp_get_actual_tax_counter[0].actual_counter)
-                if (actual_counter < 0) {
-                    actual_counter = 0
-                }
+				var actual_counter = parseInt(d.data.sp_get_actual_tax_counter[0].actual_counter)
+				if(actual_counter < 0) {
+					actual_counter = 0
+				}
+					
+                s.txtb_no_install 		   = actual_counter
+                s.txtb_monthly_tax_due     = currency(s.datalistgrid[id_ss].monthly_tax_due)
+                s.txtb_employment_type     = s.datalistgrid[id_ss].employmenttype_description
+                s.txtb_monthly_tax_rate    = currency(s.datalistgrid[id_ss].tax_rate)
+       
+                s.txtb_add_txbl_inc_prst    = currency(s.datalistgrid[id_ss].addl_txbl_comp_prsnt)
+       
+                s.txtb_annual_tax_due       = currency(s.datalistgrid[id_ss].annual_tax_due)
+                s.txtb_wheld_prst_emplyr    = currency(s.datalistgrid[id_ss].wtax_prsnt_emplyr)
+                s.txtb_wheld_prev_emplyr    = currency(s.datalistgrid[id_ss].wtax_prev_emplyr)
+                
+                s.txtb_ntx_basic_sal_mwe    = currency(s.datalistgrid[id_ss].ntx_basic_salary)
+                s.txtb_ntx_hol_pay_mwe      = currency(s.datalistgrid[id_ss].ntx_hol_pay_mwe)
+                s.txtb_ntx_ot_pay_mwe       = currency(s.datalistgrid[id_ss].ntx_ot_pay_mwe)
+                s.txtb_ntx_night_diff_mwe   = currency(s.datalistgrid[id_ss].ntx_night_diff_mwe)
+                s.txtb_ntx_hzrd_pay_mwe     = currency(s.datalistgrid[id_ss].ntx_hzrd_pay_mwe)
+                s.txtb_ntx_13th_month       = currency(s.datalistgrid[id_ss].ntx_13th_14th)
+                s.txtb_ntx_deminimis        = currency(s.datalistgrid[id_ss].ntx_de_minimis)
+                s.txtb_ntx_premiums         = currency(s.datalistgrid[id_ss].ntx_gsis_phic_hdmf)
+                s.txtb_ntx_salaries_oth     = currency(s.datalistgrid[id_ss].ntx_salaries_oth)
+                
 
-                s.txtb_no_install = actual_counter
-                s.txtb_monthly_tax_due = currency(s.datalistgrid[id_ss].monthly_tax_due)
-                s.txtb_employment_type = s.datalistgrid[id_ss].employmenttype_description
-                s.txtb_monthly_tax_rate = currency(s.datalistgrid[id_ss].tax_rate)
-
-                s.txtb_add_txbl_inc_prst = currency(s.datalistgrid[id_ss].addl_txbl_comp_prsnt)
-
-                s.txtb_annual_tax_due = currency(s.datalistgrid[id_ss].annual_tax_due)
-                s.txtb_wheld_prst_emplyr = currency(s.datalistgrid[id_ss].wtax_prsnt_emplyr)
-                s.txtb_wheld_prev_emplyr = currency(s.datalistgrid[id_ss].wtax_prev_emplyr)
-
-                s.txtb_ntx_basic_sal_mwe = currency(s.datalistgrid[id_ss].ntx_basic_salary)
-                s.txtb_ntx_hol_pay_mwe = currency(s.datalistgrid[id_ss].ntx_hol_pay_mwe)
-                s.txtb_ntx_ot_pay_mwe = currency(s.datalistgrid[id_ss].ntx_ot_pay_mwe)
-                s.txtb_ntx_night_diff_mwe = currency(s.datalistgrid[id_ss].ntx_night_diff_mwe)
-                s.txtb_ntx_hzrd_pay_mwe = currency(s.datalistgrid[id_ss].ntx_hzrd_pay_mwe)
-                s.txtb_ntx_13th_month = currency(s.datalistgrid[id_ss].ntx_13th_14th)
-                s.txtb_ntx_deminimis = currency(s.datalistgrid[id_ss].ntx_de_minimis)
-                s.txtb_ntx_premiums = currency(s.datalistgrid[id_ss].ntx_gsis_phic_hdmf)
-                s.txtb_ntx_salaries_oth = currency(s.datalistgrid[id_ss].ntx_salaries_oth)
+                
+                s.txtb_txbl_basic_sal       = currency(s.datalistgrid[id_ss].txbl_basic_salary)
+                s.txtb_txbl_ra              = currency(s.datalistgrid[id_ss].txbl_representation)
+                s.txtb_txbl_ta              = currency(s.datalistgrid[id_ss].txbl_transportation)
+                s.txtb_txbl_cola            = currency(s.datalistgrid[id_ss].txbl_cola)
+                s.txtb_txbl_fxd_hsng_allo   = currency(s.datalistgrid[id_ss].txbl_fh_allowance)
+                s.txtb_txbl_othA            = currency(s.datalistgrid[id_ss].txbl_otherA)
+                s.txtb_txbl_othB            = currency(s.datalistgrid[id_ss].txbl_otherB)
 
 
-
-                s.txtb_txbl_basic_sal = currency(s.datalistgrid[id_ss].txbl_basic_salary)
-                s.txtb_txbl_ra = currency(s.datalistgrid[id_ss].txbl_representation)
-                s.txtb_txbl_ta = currency(s.datalistgrid[id_ss].txbl_transportation)
-                s.txtb_txbl_cola = currency(s.datalistgrid[id_ss].txbl_cola)
-                s.txtb_txbl_fxd_hsng_allo = currency(s.datalistgrid[id_ss].txbl_fh_allowance)
-                s.txtb_txbl_othA = currency(s.datalistgrid[id_ss].txbl_otherA)
-                s.txtb_txbl_othB = currency(s.datalistgrid[id_ss].txbl_otherB)
-
-
-                s.txbl_sup_com = currency(s.datalistgrid[id_ss].sup_commission)
-                s.txtb_sup_proft_s = currency(s.datalistgrid[id_ss].sup_prof_sharing)
-                s.txtb_sup_dir_fee = currency(s.datalistgrid[id_ss].sup_fi_drctr_fees)
-                s.txtb_sup_13_oth = currency(s.datalistgrid[id_ss].sup_13th_14th)
-                s.txtb_sup_hzrd_pay = currency(s.datalistgrid[id_ss].sup_hzrd_pay)
-                s.txtb_sup_ot_pay = currency(s.datalistgrid[id_ss].sup_ot_pay)
-                s.txtb_sup_othA = currency(s.datalistgrid[id_ss].sup_otherA)
-                s.txtb_sup_othB = currency(s.datalistgrid[id_ss].sup_otherB)
+                s.txbl_sup_com              = currency(s.datalistgrid[id_ss].sup_commission)
+                s.txtb_sup_proft_s          = currency(s.datalistgrid[id_ss].sup_prof_sharing)
+                s.txtb_sup_dir_fee          = currency(s.datalistgrid[id_ss].sup_fi_drctr_fees)
+                s.txtb_sup_13_oth           = currency(s.datalistgrid[id_ss].sup_13th_14th)
+                s.txtb_sup_hzrd_pay         = currency(s.datalistgrid[id_ss].sup_hzrd_pay)
+                s.txtb_sup_ot_pay           = currency(s.datalistgrid[id_ss].sup_ot_pay)
+                s.txtb_sup_othA             = currency(s.datalistgrid[id_ss].sup_otherA)
+                s.txtb_sup_othB             = currency(s.datalistgrid[id_ss].sup_otherB)
                 $("#ddl_employer_type").val(s.datalistgrid[id_ss].employer_type)
-                $("#ddl_subs_type").val(s.datalistgrid[id_ss].substituted)
-                s.txtb_foreign_add = s.datalistgrid[id_ss].foreign_address
-                s.txtb_stat_daily = currency(s.datalistgrid[id_ss].stat_daily_rate)
-                s.txtb_stat_monthly = currency(s.datalistgrid[id_ss].stat_monthly_rate)
+                $("#ddl_subs_type").val(s.datalistgrid[id_ss].substituted)  
+                s.txtb_foreign_add          = s.datalistgrid[id_ss].foreign_address
+                s.txtb_stat_daily           = currency(s.datalistgrid[id_ss].stat_daily_rate)
+                s.txtb_stat_monthly         = currency(s.datalistgrid[id_ss].stat_monthly_rate)
                 //s.chk_min_wage              = s.datalistgrid[id_ss].min_wage_earner
                 $("#ddl_wage_earner").val(s.datalistgrid[id_ss].min_wage_earner.toString().toUpperCase())
-                s.txtb_tin_prev = s.datalistgrid[id_ss].tin_employer_prev
-                s.txtb_empl_name_prev = s.datalistgrid[id_ss].employer_name_prev
-                s.txtb_address_prev = s.datalistgrid[id_ss].employer_add_prev
-                s.txtb_zip_prev = s.datalistgrid[id_ss].employer_zip_prev
+                s.txtb_tin_prev             = s.datalistgrid[id_ss].tin_employer_prev
+                s.txtb_empl_name_prev       = s.datalistgrid[id_ss].employer_name_prev
+                s.txtb_address_prev         = s.datalistgrid[id_ss].employer_add_prev
+                s.txtb_zip_prev             = s.datalistgrid[id_ss].employer_zip_prev
                 calculatetaxable()
                 calculatenontaxable()
                 calculatetaxable_supplementary()
@@ -1133,7 +1162,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
             }
 
-            else {
+       else {
                 swal("Unable to Update, Data has been deleted by other user/s!", { icon: "warning", });
                 var tname = "oTable";
 
@@ -1151,7 +1180,8 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
                 }
 
-                else {
+                else
+                {
                     s.oTable.fnClearTable();
                     s.oTable.fnAddData(s.datalistgrid)
                 }
@@ -1160,8 +1190,8 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
 
             }
-        })
-
+            })
+        
     }
 
     //this fucntion is called after refreshTable to return to the current dataTable page
@@ -1182,7 +1212,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
 
     Array.prototype.refreshTable = function (table, id) {
-
+       
         if (this.length == 0) {
             s.oTable.fnClearTable();
 
@@ -1193,7 +1223,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         }
 
         var el_id = s[table][0].id
-
+        
         if (id != "") {
             for (var x = 1; x <= $("#" + el_id).DataTable().page.info().pages; x++) {
                 if (id.get_page(table) == false) {
@@ -1243,7 +1273,8 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     }
 
     //delete row in dataTable
-    s.btn_delete_action = function (id_ss) {
+    s.btn_delete_action = function (id_ss)
+    {
         s.isAction = "DELETE"
         var tname = "oTable"
         swal({
@@ -1252,7 +1283,8 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
             icon: "warning",
             buttons: true,
             dangerMode: true,
-        }).then(function (willDelete) {
+        }).then(function (willDelete)
+        {
             if (willDelete) {
 
                 $("#delete_icon" + id_ss).removeClass("fa fa-trash");
@@ -1260,11 +1292,12 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
                 h.post("../cBIRAnnualizedTax/CheckData", {
                     par_payroll_year: $("#ddl_year option:selected").val()
-                    , par_empType: s.datalistgrid[id_ss].employment_type
-                    , par_letter: $("#ddl_letter option:selected").val()
-                    , par_empl_id: s.datalistgrid[id_ss].empl_id
-                    , par_action: s.isAction
-                }).then(function (d) {
+                    ,par_empType    : s.datalistgrid[id_ss].employment_type
+                    ,par_letter     : $("#ddl_letter option:selected").val()
+                    ,par_empl_id    : s.datalistgrid[id_ss].empl_id
+                    ,par_action     : s.isAction
+                }).then(function (d)
+                {
                     if (d.data.message == "success") {
 
                         $("#delete_icon" + id_ss).removeClass("fa fa-spinner fa-spin");
@@ -1272,7 +1305,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
                         h.post("../cBIRAnnualizedTax/DeleteFromDatabase", {
                             par_empl_id: s.datalistgrid[id_ss].empl_id
-                            , par_payroll_year: $("#ddl_year option:selected").val()
+                            ,par_payroll_year: $("#ddl_year option:selected").val()
                         }).then(function (d) {
 
                             if (d.data.message = "success") {
@@ -1293,9 +1326,10 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                         })
                     }
 
-                    else {
+                    else
+                    {
                         swal("Unable to Delete, Data has been deleted by other user/s!", { icon: "warning", });
-
+                        
 
                         var id = s[tname][0].id;
                         ////var page = $("#" + id).DataTable().page.info().page
@@ -1322,7 +1356,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
 
             }
-
+            
         })
     }
 
@@ -1333,7 +1367,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         var total_adjst = 0;
         total_adjst =
             parseFloat(s.txtb_wheld_prst_emplyr.replace(/,/g, ''))
-            + parseFloat(s.txtb_wheld_prev_emplyr.replace(/,/g, ''))
+        + parseFloat(s.txtb_wheld_prev_emplyr.replace(/,/g, ''))
 
         s.txtb_wheld_total = currency(total_adjst).toString()
 
@@ -1344,8 +1378,8 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     //******************************************// 
     function calculategrosstxblincome() {
         var gross_txb_inc = 0;
-        gross_txb_inc =
-            parseFloat(s.txtb_txbl_inc_prst.replace(/,/g, ''))
+            gross_txb_inc =
+                parseFloat(s.txtb_txbl_inc_prst.replace(/,/g, ''))
             + parseFloat(s.txtb_add_txbl_inc_prst.replace(/,/g, ''))
 
         s.txtb_gross_txbl_inc = currency(gross_txb_inc).toString()
@@ -1355,11 +1389,12 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     //******************************************//
     //***CALCULATE COMPENSATION INCOME PRESENT***//
     //******************************************// 
-    function calculatecompincomepresent() {
+    function calculatecompincomepresent()
+    {
         var txbl_comp_inc_pres = 0;
         txbl_comp_inc_pres =
             parseFloat(s.txtb_gross_inc_prst.replace(/,/g, ''))
-            - parseFloat(s.txtb_non_tax_exmpt.replace(/,/g, ''))
+        - parseFloat(s.txtb_non_tax_exmpt.replace(/,/g, ''))
 
         s.txtb_txbl_inc_prst = currency(txbl_comp_inc_pres).toString()
     }
@@ -1371,7 +1406,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         var tax_diff = 0;
         tax_diff =
             parseFloat(s.txtb_annual_tax_due.replace(/,/g, ''))
-            - (parseFloat(s.txtb_wheld_prst_emplyr.replace(/,/g, '')) + parseFloat(s.txtb_wheld_prev_emplyr.replace(/,/g, '')))
+        - (parseFloat(s.txtb_wheld_prst_emplyr.replace(/,/g, '')) + parseFloat(s.txtb_wheld_prev_emplyr.replace(/,/g, '')))
 
         s.txtb_cal_tax_payable = currency(tax_diff).toString()
     }
@@ -1380,13 +1415,14 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     //***CALCULATE NON TAXABLE***//
     //******************************************// 
 
-    function calculategrossincome() {
+    function calculategrossincome()
+    {
         var total_gross = 0;
 
-        total_gross =
+        total_gross = 
             parseFloat(s.txtb_ntx_total.replace(/,/g, ''))
-            + parseFloat(s.txtb_txbl_total.replace(/,/g, ''))
-            + parseFloat(s.txtb_sup_total.replace(/,/g, ''))
+        + parseFloat(s.txtb_txbl_total.replace(/,/g, ''))
+        + parseFloat(s.txtb_sup_total.replace(/,/g, ''))
 
         s.txtb_gross_inc_prst = currency(total_gross).toString()
     }
@@ -1395,7 +1431,8 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     //***CALCULATE NON TAXABLE***//
     //******************************************// 
 
-    function calculatenontaxable() {
+    function calculatenontaxable()
+    {
         var total_nontax = 0;
 
         total_nontax = parseFloat(s.txtb_ntx_basic_sal_mwe.replace(/,/g, ''))
@@ -1406,8 +1443,8 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
             + parseFloat(s.txtb_ntx_13th_month.replace(/,/g, ''))
             + parseFloat(s.txtb_ntx_deminimis.replace(/,/g, ''))
             + parseFloat(s.txtb_ntx_premiums.replace(/,/g, ''))
-            + parseFloat(s.txtb_ntx_salaries_oth.replace(/,/g, ''))
-
+            + parseFloat(s.txtb_ntx_salaries_oth.replace(/,/g, ''))  
+        
         s.txtb_ntx_total = currency(total_nontax).toString()
         s.txtb_non_tax_exmpt = currency(total_nontax).toString()
     }
@@ -1416,16 +1453,17 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     //***CALCULATE TAXABLE***//
     //******************************************// 
 
-    function calculatetaxable() {
+    function calculatetaxable()
+    {
         var total_taxable = 0;
 
-        total_taxable = parseFloat(s.txtb_txbl_basic_sal.replace(/,/g, ''))
-            + parseFloat(s.txtb_txbl_ra.replace(/,/g, ''))
-            + parseFloat(s.txtb_txbl_ta.replace(/,/g, ''))
-            + parseFloat(s.txtb_txbl_cola.replace(/,/g, ''))
-            + parseFloat(s.txtb_txbl_fxd_hsng_allo.replace(/,/g, ''))
-            + parseFloat(s.txtb_txbl_othA.replace(/,/g, ''))
-            + parseFloat(s.txtb_txbl_othB.replace(/,/g, ''))
+        total_taxable = parseFloat(s.txtb_txbl_basic_sal.replace(/,/g, ''))  
+            + parseFloat(s.txtb_txbl_ra.replace(/,/g, ''))  
+            + parseFloat(s.txtb_txbl_ta.replace(/,/g, ''))  
+            + parseFloat(s.txtb_txbl_cola.replace(/,/g, ''))  
+            + parseFloat(s.txtb_txbl_fxd_hsng_allo.replace(/,/g, ''))  
+            + parseFloat(s.txtb_txbl_othA.replace(/,/g, ''))  
+            + parseFloat(s.txtb_txbl_othB.replace(/,/g, ''))    
 
         s.txtb_txbl_total = currency(total_taxable).toString()
     }
@@ -1433,24 +1471,25 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     function calculatetaxable_supplementary() {
         var total_taxable_sup = 0;
 
-        total_taxable_sup = parseFloat(s.txbl_sup_com.replace(/,/g, ''))
-            + parseFloat(s.txtb_sup_proft_s.replace(/,/g, ''))
-            + parseFloat(s.txtb_sup_dir_fee.replace(/,/g, ''))
-            + parseFloat(s.txtb_sup_13_oth.replace(/,/g, ''))
-            + parseFloat(s.txtb_sup_hzrd_pay.replace(/,/g, ''))
-            + parseFloat(s.txtb_sup_ot_pay.replace(/,/g, ''))
-            + parseFloat(s.txtb_sup_othA.replace(/,/g, ''))
-            + parseFloat(s.txtb_sup_othB.replace(/,/g, ''))
+        total_taxable_sup = parseFloat(s.txbl_sup_com.replace(/,/g, ''))  
+            + parseFloat(s.txtb_sup_proft_s.replace(/,/g, ''))  
+            + parseFloat(s.txtb_sup_dir_fee.replace(/,/g, ''))  
+            + parseFloat(s.txtb_sup_13_oth.replace(/,/g, ''))  
+            + parseFloat(s.txtb_sup_hzrd_pay.replace(/,/g, ''))  
+            + parseFloat(s.txtb_sup_ot_pay.replace(/,/g, ''))  
+            + parseFloat(s.txtb_sup_othA.replace(/,/g, ''))  
+            + parseFloat(s.txtb_sup_othB.replace(/,/g, ''))         
 
         s.txtb_sup_total = currency(total_taxable_sup).toString()
     }
 
-    s.btn_add_action = function () {
+    s.btn_add_action = function ()
+    {
         clearentry()
         s.isShowNameSelect = true;
         s.isShowNameInput = false;
         s.ishowsave = false;
-        $("#loading_data").modal({ keyboard: false, backdrop: "static" })
+       $("#loading_data").modal({ keyboard: false, backdrop: "static" })
         s.ModalTitle = "Add New Record"
         s.isAction = "ADD"
         $("#btn_generate").hide()
@@ -1463,16 +1502,18 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                 par_empType: $("#ddl_employment_type option:selected").val(),
                 par_payroll_year: $("#ddl_year option:selected").val()
             }).then(function (d) {
-
-                if (d.data.message == "success") {
+                
+                if (d.data.message == "success")
+                {
                     if (d.data.sp_personnelnames_annualtax_hdr_combolist.length > 0) {
                         s.employeenames = d.data.sp_personnelnames_annualtax_hdr_combolist
                     }
 
-                    else {
+                    else
+                    {
                         s.employeenames = null;
                     }
-
+                    
                 }
                 $("#loading_data").modal("hide")
                 $("#main_modal").modal("show")
@@ -1481,15 +1522,16 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
             })
 
-
+        
     }
 
     //s.btn_extract_action = function (extract_type)
     //{
+
     //    //$("#btn_extract_icon").removeClass("fa fa-file-excel-o");
     //    //$("#btn_extract_icon").addClass("fa fa-spinner fa-spin");
     //   $("#loading_data").modal({ keyboard: false, backdrop: "static" })
-
+    
     //    h.post("../cBIRAnnualizedTax/ExtractData",
     //        {
     //            par_empType: $("#ddl_employment_type option:selected").val(),
@@ -1518,7 +1560,11 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     //                    dangerMode: true,
     //                })
     //            }
+               
+                
     //        })
+
+     
     //}
 
     s.btn_extract_action = function (extract_type) {
@@ -1531,7 +1577,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         h.post("../Menu/GetToken")
             .then(function (d) {
                 var token = { token: d.data.token }
-                h.post(s.excelExportServer + "/api/remittance/verify-token", token, { responseType: 'arraybuffer' }
+                h.post("http://192.168.6.198/api/remittance/verify-token", token, { responseType: 'arraybuffer' }
 
                 )
                     .then(function (response) {
@@ -1545,13 +1591,13 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                                 })
                                 .then(function (d) {
 
-                                    var empType = $("#ddl_employment_type option:selected").val()
-                                    var payroll_year = $("#ddl_year option:selected").val()
+                                    var empType      =  $("#ddl_employment_type option:selected").val()
+                                    var payroll_year =  $("#ddl_year option:selected").val()
 
                                     if (extract_type == 'H') {
                                         var sp_extract_annualized_tax = d.data.sp_extract_annualized_tax
 
-                                        h.post(s.excelExportServer + "/api/export/hris-extract", {
+                                        h.post("http://127.0.0.1:8000/api/export/hris-extract", {
                                             data: sp_extract_annualized_tax
                                         }, { responseType: 'arraybuffer' }
                                         ).then(function (response2) {
@@ -1582,7 +1628,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
                                         var sp_extract_annualized_tax = d.data.sp_extract_annualized_tax
 
-                                        h.post(s.excelExportServer + "/api/export/bir-extract", {
+                                        h.post("http://127.0.0.1:8000/api/export/bir-extract", {
                                             data: sp_extract_annualized_tax
                                         }, { responseType: 'arraybuffer' }
                                         ).then(function (response2) {
@@ -1692,7 +1738,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
     //    })
     //}
-
+    
     //**************************************//
     //***Get Page Number****//
     //**************************************//
@@ -1724,27 +1770,30 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         FieldValidationColorChanged(false, "ALL");
 
         var validatedSaved = true
-
-        if ($("#ddl_employee_name option:selected").val() == "" && s.isAction == "ADD") {
+        
+        if ($("#ddl_employee_name option:selected").val() == "" && s.isAction == "ADD")
+        {
             FieldValidationColorChanged(true, "ddl_employee_name")
             validatedSaved = false;
             $("#btn_save").removeClass("fa fa-spinner fa-spin");
             $("#btn_save").addClass("fa fa-save");
         }
 
-        if (isNaN(validatenumber($("#txtb_add_txbl_inc_prst").val()))) {
-
+        if (isNaN(validatenumber($("#txtb_add_txbl_inc_prst").val())))
+        {
+            
             $('.nav-tabs a[href="#tab-1"]').tab('show');
             FieldValidationColorChanged(true, "txtb_add_txbl_inc_prst_numeric")
             validatedSaved = false;
             $("#btn_save").removeClass("fa fa-spinner fa-spin");
             $("#btn_save").addClass("fa fa-save");
 
-
-
+         
+            
         }
 
-        if ($("#txtb_add_txbl_inc_prst").val().trim() == "") {
+        if ($("#txtb_add_txbl_inc_prst").val().trim() == "")
+        {
             $('.nav-tabs a[href="#tab-1"]').tab('show');
             FieldValidationColorChanged(true, "txtb_add_txbl_inc_prst")
             validatedSaved = false;
@@ -1784,7 +1833,8 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
             $("#btn_save").addClass("fa fa-save");
         }
 
-        if ($("#txtb_ntx_hol_pay_mwe").val().trim() == "") {
+        if ($("#txtb_ntx_hol_pay_mwe").val().trim() == "")
+        {
             $('.nav-tabs a[href="#tab-2"]').tab('show');
             FieldValidationColorChanged(true, "txtb_ntx_hol_pay_mwe")
             validatedSaved = false;
@@ -1792,7 +1842,8 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
             $("#btn_save").addClass("fa fa-save");
         }
 
-        if (isNaN(validatenumber($("#txtb_ntx_hol_pay_mwe").val()))) {
+        if (isNaN(validatenumber($("#txtb_ntx_hol_pay_mwe").val())))
+        {
             $('.nav-tabs a[href="#tab-2"]').tab('show');
             FieldValidationColorChanged(true, "txtb_ntx_hol_pay_mwe_numeric")
             validatedSaved = false;
@@ -1848,7 +1899,8 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
             $("#btn_save").addClass("fa fa-save");
         }
 
-        if ($("#txtb_txbl_ra").val().trim() == "") {
+        if ($("#txtb_txbl_ra").val().trim() == "")
+        {
             $('.nav-tabs a[href="#tab-3"]').tab('show');
             FieldValidationColorChanged(true, "txtb_txbl_ra")
             validatedSaved = false;
@@ -1863,9 +1915,10 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
             $("#btn_save").removeClass("fa fa-spinner fa-spin");
             $("#btn_save").addClass("fa fa-save");
         }
+        
 
-
-        if ($("#txtb_txbl_ta").val().trim() == "") {
+        if ($("#txtb_txbl_ta").val().trim() == "")
+        {
             $('.nav-tabs a[href="#tab-3"]').tab('show');
             FieldValidationColorChanged(true, "txtb_txbl_ta")
             validatedSaved = false;
@@ -1992,108 +2045,117 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
             $("#btn_save").removeClass("fa fa-spinner fa-spin");
             $("#btn_save").addClass("fa fa-save");
         }
-
+        
         return validatedSaved;
 
     }
     //**************************************//
     //***Field-Validation-Color-Changed-****//
     //**************************************//
-    function FieldValidationColorChanged(pMode, pObjectName) {
+    function FieldValidationColorChanged(pMode, pObjectName)
+    {
 
-        if (pMode) {
+        if (pMode)
+        {
 
-            if (pObjectName == "txtb_add_txbl_inc_prst_numeric") {
-                $("#txtb_add_txbl_inc_prst").addClass("required");
-                $("#lbl_txtb_add_txbl_inc_prst_req").text("Numeric Values Only!");
-            }
+                    if (pObjectName == "txtb_add_txbl_inc_prst_numeric")
+                    {
+                        $("#txtb_add_txbl_inc_prst").addClass("required");
+                        $("#lbl_txtb_add_txbl_inc_prst_req").text("Numeric Values Only!");
+                    }
 
-            if (pObjectName == "txtb_wheld_prev_emplyr_numeric") {
-                $("#txtb_wheld_prev_emplyr").addClass("required");
-                $("#lbl_txtb_wheld_prev_emplyr_req").text("Numeric Values Only!");
-            }
+                    if (pObjectName == "txtb_wheld_prev_emplyr_numeric")
+                    {
+                        $("#txtb_wheld_prev_emplyr").addClass("required");
+                        $("#lbl_txtb_wheld_prev_emplyr_req").text("Numeric Values Only!");
+                    }
 
-            if (pObjectName == "txtb_ntx_basic_sal_mwe_numeric") {
-                $("#txtb_ntx_basic_sal_mwe").addClass("required");
-                $("#lbl_txtb_ntx_basic_sal_mwe_req").text("Numeric Values Only!");
-            }
+                    if (pObjectName == "txtb_ntx_basic_sal_mwe_numeric")
+                    {
+                        $("#txtb_ntx_basic_sal_mwe").addClass("required");
+                        $("#lbl_txtb_ntx_basic_sal_mwe_req").text("Numeric Values Only!");
+                    }
 
-            if (pObjectName == "txtb_ntx_hol_pay_mwe_numeric") {
-                $("#txtb_ntx_hol_pay_mwe").addClass("required");
-                $("#lbl_txtb_ntx_hol_pay_mwe_req").text("Numeric Values Only!");
-            }
+                    if (pObjectName == "txtb_ntx_hol_pay_mwe_numeric")
+                    {
+                        $("#txtb_ntx_hol_pay_mwe").addClass("required");
+                        $("#lbl_txtb_ntx_hol_pay_mwe_req").text("Numeric Values Only!");
+                    }
 
-            if (pObjectName == "txtb_ntx_ot_pay_mwe_numeric") {
-                $("#txtb_ntx_ot_pay_mwe").addClass("required");
-                $("#lbl_txtb_ntx_ot_pay_mwe_req").text("Numeric Values Only!");
-            }
+                    if (pObjectName == "txtb_ntx_ot_pay_mwe_numeric") {
+                        $("#txtb_ntx_ot_pay_mwe").addClass("required");
+                        $("#lbl_txtb_ntx_ot_pay_mwe_req").text("Numeric Values Only!");
+                    }
 
-            if (pObjectName == "txtb_ntx_night_diff_mwe_numeric") {
-                $("#txtb_ntx_night_diff_mwe").addClass("required");
-                $("#lbl_txtb_ntx_night_diff_mwe_req").text("Numeric Values Only!");
-            }
+                    if (pObjectName == "txtb_ntx_night_diff_mwe_numeric") {
+                        $("#txtb_ntx_night_diff_mwe").addClass("required");
+                        $("#lbl_txtb_ntx_night_diff_mwe_req").text("Numeric Values Only!");
+                    }
 
-            if (pObjectName == "txtb_ntx_hzrd_pay_mwe_numeric") {
-                $("#txtb_ntx_hzrd_pay_mwe").addClass("required");
-                $("#lbl_txtb_ntx_hzrd_pay_mwe_req").text("Numeric Values Only!");
-            }
+                    if (pObjectName == "txtb_ntx_hzrd_pay_mwe_numeric") {
+                        $("#txtb_ntx_hzrd_pay_mwe").addClass("required");
+                        $("#lbl_txtb_ntx_hzrd_pay_mwe_req").text("Numeric Values Only!");
+                    }
 
-            if (pObjectName == "txtb_txbl_ra_numeric") {
-                $("#txtb_txbl_ra").addClass("required");
-                $("#lbl_txtb_txbl_ra_req").text("Numeric Values Only!");
-            }
+                    if (pObjectName == "txtb_txbl_ra_numeric") {
+                        $("#txtb_txbl_ra").addClass("required");
+                        $("#lbl_txtb_txbl_ra_req").text("Numeric Values Only!");
+                    }
 
-            if (pObjectName == "txtb_txbl_ta_numeric") {
-                $("#txtb_txbl_ta").addClass("required");
-                $("#lbl_txtb_txbl_ta_req").text("Numeric Values Only!");
-            }
+                    if (pObjectName == "txtb_txbl_ta_numeric") {
+                        $("#txtb_txbl_ta").addClass("required");
+                        $("#lbl_txtb_txbl_ta_req").text("Numeric Values Only!");
+                    }
 
-            if (pObjectName == "txtb_txbl_cola_numeric") {
-                $("#txtb_txbl_cola").addClass("required");
-                $("#lbl_txtb_txbl_cola_req").text("Numeric Values Only!");
-            }
+                    if (pObjectName == "txtb_txbl_cola_numeric") {
+                        $("#txtb_txbl_cola").addClass("required");
+                        $("#lbl_txtb_txbl_cola_req").text("Numeric Values Only!");
+                    }
 
-            if (pObjectName == "txtb_txbl_fxd_hsng_allo_numeric") {
-                $("#txtb_txbl_fxd_hsng_allo").addClass("required");
-                $("#lbl_txtb_txbl_fxd_hsng_allo_req").text("Numeric Values Only!");
-            }
+                    if (pObjectName == "txtb_txbl_fxd_hsng_allo_numeric") {
+                        $("#txtb_txbl_fxd_hsng_allo").addClass("required");
+                        $("#lbl_txtb_txbl_fxd_hsng_allo_req").text("Numeric Values Only!");
+                    }
 
-            if (pObjectName == "txbl_sup_com_numeric") {
-                $("#txbl_sup_com").addClass("required");
-                $("#lbl_txbl_sup_com_req").text("Numeric Values Only!");
-            }
+                    if (pObjectName == "txbl_sup_com_numeric") {
+                        $("#txbl_sup_com").addClass("required");
+                        $("#lbl_txbl_sup_com_req").text("Numeric Values Only!");
+                    }
 
-            if (pObjectName == "txtb_sup_proft_s_numeric") {
-                $("#txtb_sup_proft_s").addClass("required");
-                $("#lbl_txtb_sup_proft_s_req").text("Numeric Values Only!");
-            }
+                    if (pObjectName == "txtb_sup_proft_s_numeric") {
+                        $("#txtb_sup_proft_s").addClass("required");
+                        $("#lbl_txtb_sup_proft_s_req").text("Numeric Values Only!");
+                    }
 
-            if (pObjectName == "txtb_sup_dir_fee_numeric") {
-                $("#txtb_sup_dir_fee").addClass("required");
-                $("#lbl_txtb_sup_dir_fee_req").text("Numeric Values Only!");
-            }
+                    if (pObjectName == "txtb_sup_dir_fee_numeric") {
+                        $("#txtb_sup_dir_fee").addClass("required");
+                        $("#lbl_txtb_sup_dir_fee_req").text("Numeric Values Only!");
+                    }
 
-            if (pObjectName == "txtb_stat_daily_numeric") {
-                $("#txtb_stat_daily").addClass("required");
-                $("#lbl_txtb_stat_daily_req").text("Numeric Values Only!");
-            }
+                    if (pObjectName == "txtb_stat_daily_numeric") {
+                        $("#txtb_stat_daily").addClass("required");
+                        $("#lbl_txtb_stat_daily_req").text("Numeric Values Only!");
+                    }
 
-            if (pObjectName == "txtb_stat_monthly_numeric") {
-                $("#txtb_stat_monthly").addClass("required");
-                $("#lbl_txtb_stat_monthly_req").text("Numeric Values Only!");
-            }
+                    if (pObjectName == "txtb_stat_monthly_numeric") {
+                        $("#txtb_stat_monthly").addClass("required");
+                        $("#lbl_txtb_stat_monthly_req").text("Numeric Values Only!");
+                    }
+        
 
+                    else
+                    {
+                        $("#" + pObjectName).addClass("required");
+                        $("#lbl_" + pObjectName + "_req").text("Required Field!");
+                    }
 
-            else {
-                $("#" + pObjectName).addClass("required");
-                $("#lbl_" + pObjectName + "_req").text("Required Field!");
-            }
+                
 
-
-
-        }
-        else if (!pMode) {
-            switch (pObjectName) {
+         }
+        else if (!pMode)
+        {
+            switch (pObjectName)
+            {
 
                 case "ALL":
                     {
@@ -2149,7 +2211,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         index_update = id_ss
         s.ModalTitle = "Report Options"
         //$("#modal_print").modal("show")
-
+     
         var table = $('#datalist_grid').DataTable();
         var info = table.page.info();
 
@@ -2165,18 +2227,18 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         h.post("../cBIRAnnualizedTax/PreviousValuesonPage_cBIRAnnualizedTax",
             {
                 par_year: $("#ddl_year option:selected").val()
-                , par_tax_due: s.datalistgrid[id_ss].monthly_tax_due
-                , par_tax_rate: s.datalistgrid[id_ss].tax_rate
-                , par_empl_id: s.datalistgrid[id_ss].empl_id
-                , par_emp_type: $("#ddl_employment_type option:selected").val()
-                , par_emp_type_descr: s.datalistgrid[id_ss].employmenttype_description
-                , par_letter: $("#ddl_letter option:selected").val()
-                , par_show_entries: $("#ddl_show_entries option:selected").val()
-                , par_page_nbr: info.page
-                , par_search: s.search_box
-                , par_sort_value: sort_value
-                , par_sort_order: sort_order
-                , par_position: s.datalistgrid[id_ss].position_title1
+                ,par_tax_due: s.datalistgrid[id_ss].monthly_tax_due
+                ,par_tax_rate: s.datalistgrid[id_ss].tax_rate
+                ,par_empl_id: s.datalistgrid[id_ss].empl_id
+                ,par_emp_type: $("#ddl_employment_type option:selected").val()
+                ,par_emp_type_descr: s.datalistgrid[id_ss].employmenttype_description
+                ,par_letter: $("#ddl_letter option:selected").val()
+                ,par_show_entries: $("#ddl_show_entries option:selected").val()
+                ,par_page_nbr: info.page
+                ,par_search: s.search_box
+                ,par_sort_value: sort_value
+                ,par_sort_order: sort_order
+                ,par_position: s.datalistgrid[id_ss].position_title1
             }).then(function (d) {
 
                 h.post("../cBIRAnnualizedTax/ReportCount",
@@ -2205,7 +2267,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                         }
                     });
 
-
+               
             })
 
 
@@ -2214,12 +2276,12 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
     }
 
+  
 
+    
 
-
-
-
-
+    
+    
 
 
     Array.prototype.remove = function (code, prop) {
@@ -2233,9 +2295,10 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         var value = value.split(",").join("")
         return value
     }
+    
 
-
-    s.search_in_list = function (value, table) {
+    s.search_in_list = function (value, table)
+    {
         $("#" + table).DataTable().search(value).draw();
     }
 

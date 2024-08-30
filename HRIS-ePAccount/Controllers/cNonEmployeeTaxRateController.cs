@@ -352,7 +352,7 @@ namespace HRIS_ePAccount.Controllers
                 message = "success";
                 db_pacco.SaveChanges();
 
-
+             
                 var vw_phic_share_empl_tbl_ACT = db_pacco.vw_phic_share_empl_tbl_ACT.Where(a => a.department_code == department_code && a.employment_type == "JO").ToList();
 
                 return Json(new { message, vw_phic_share_empl_tbl_ACT }, JsonRequestBehavior.AllowGet);
@@ -466,6 +466,7 @@ namespace HRIS_ePAccount.Controllers
                                                           + "," + par_history;
 
             Session["PreviousValuesonPage_cJOTaxRate_empl_name"] = par_empl_name;
+            Session["PreviousValuesonPage_cJOTaxRate_employment_type"] = "NE";
             return Json("success", JsonRequestBehavior.AllowGet);
         }
 

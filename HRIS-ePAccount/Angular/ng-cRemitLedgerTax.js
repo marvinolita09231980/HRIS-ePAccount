@@ -27,8 +27,11 @@ ng_HRD_App.controller("cRemitLedgerTax_ctrlr", function ($scope, $compile, $http
     //Initialize Request to backend to get the data for employment type and remittance type
     function init() {
         //Initialize and request backend data...
+
         $('#loading_msg').html("Initializing data");
         $("#modal_generating_remittance").modal();
+
+
         h.post("../cRemitLedgerTax/InitializeData",
             {
                 p_department_code: s.ddl_departments,
@@ -882,7 +885,7 @@ ng_HRD_App.controller("cRemitLedgerTax_ctrlr", function ($scope, $compile, $http
     //********************************************************************/
     s.btn_view_report = function (year,month)
     {
-     
+        
         h.post("../cRemitAutoGen/PrintBIRMonthly").then(function (d)
         {
             if (d.data.message == "success") {

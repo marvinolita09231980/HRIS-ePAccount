@@ -482,6 +482,7 @@ namespace HRIS_ePAccount.Controllers
                                                           + "," + par_history;
 
             Session["PreviousValuesonPage_cJOTaxRate_empl_name"] = par_empl_name;
+            Session["PreviousValuesonPage_cJOTaxRate_employment_type"] = "JO";
             return Json("success", JsonRequestBehavior.AllowGet);
         }
 
