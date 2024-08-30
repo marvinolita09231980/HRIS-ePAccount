@@ -197,11 +197,6 @@ namespace HRIS_ePAccount.Controllers
         {
             try
             {
-                //var header_table = db_pacco.remittance_hdr_tbl.Where(a => a.remittance_ctrl_nbr == par_remittance_ctrl_no).FirstOrDefault();
-                //db_pacco.remittance_hdr_tbl.Remove(header_table);
-
-                //db_pacco.SaveChanges();
-
                 var header_table = db_pacco.sp_delete_remittance_hdr_tbl(par_remittance_ctrl_no).FirstOrDefault();
 
                 if (header_table.exec_code == 0)
@@ -294,22 +289,28 @@ namespace HRIS_ePAccount.Controllers
 
                 return Json(new { message = "success" }, JsonRequestBehavior.AllowGet);
             }
-            catch (DbEntityValidationException e)
+            catch (Exception e)
             {
-                string message = "";
-                foreach (var eve in e.EntityValidationErrors)
-                {
-                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
-                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
-                    foreach (var ve in eve.ValidationErrors)
-                    {
-                        message = "- Property: \"{0}\", Error: \"{1}\"" + ve.PropertyName + "  :  " + ve.ErrorMessage;
-                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
-                        ve.PropertyName, ve.ErrorMessage);
-                    }
-                }
+                string message = e.Message;
+               
                 return Json(message, JsonRequestBehavior.AllowGet);
             }
+            //catch (DbEntityValidationException e)
+            //{
+            //    string message = "";
+            //    foreach (var eve in e.EntityValidationErrors)
+            //    {
+            //        Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+            //            eve.Entry.Entity.GetType().Name, eve.Entry.State);
+            //        foreach (var ve in eve.ValidationErrors)
+            //        {
+            //            message = "- Property: \"{0}\", Error: \"{1}\"" + ve.PropertyName + "  :  " + ve.ErrorMessage;
+            //            Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+            //            ve.PropertyName, ve.ErrorMessage);
+            //        }
+            //    }
+            //    return Json(message, JsonRequestBehavior.AllowGet);
+            //}
         }
         //*********************************************************************//
         // Created By  : VJA - Created Date : 09/19/2019

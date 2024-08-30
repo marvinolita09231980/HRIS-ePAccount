@@ -10,15 +10,10 @@
 namespace HRIS_ePAccount.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class doc_rte_act_tbl1
+    public partial class sp_generate_remittance_CNA_Result
     {
-        public System.DateTime effective_date { get; set; }
-        public int route_ctrl_nbr { get; set; }
-        public string route_descr { get; set; }
-        public string rcvd_status { get; set; }
-        public string rlsd_status { get; set; }
-        public string retd_status { get; set; }
+        public string result_value { get; set; }
+        public string result_value_descr { get; set; }
     }
 }

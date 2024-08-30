@@ -13,6 +13,7 @@ namespace HRIS_ePAccount.Models
     
     public partial class sp_employeecard_re_ce_rep_Result
     {
+        public Nullable<long> row_nbr { get; set; }
         public string payroll_year { get; set; }
         public string empl_id { get; set; }
         public string employment_type { get; set; }
@@ -20,13 +21,15 @@ namespace HRIS_ePAccount.Models
         public string position_title1 { get; set; }
         public string employmenttype_description { get; set; }
         public string department_name1 { get; set; }
-        public string effective_date { get; set; }
         public string payrolltemplate_code { get; set; }
+        public string payrolltemplate_descr { get; set; }
+        public string effective_date { get; set; }
         public string payroll_period_from { get; set; }
         public string payroll_period_to { get; set; }
         public string payroll_period_descr { get; set; }
         public string date_posted { get; set; }
         public string voucher_nbr { get; set; }
+        public string payroll_registry_nbr { get; set; }
         public string monthly_rate { get; set; }
         public string pera_amt { get; set; }
         public string gross_pay { get; set; }
@@ -88,6 +91,7 @@ namespace HRIS_ePAccount.Models
         public string nico_ln { get; set; }
         public string network_ln { get; set; }
         public string ccmpc_ln { get; set; }
+        public string tagumcoop_ln { get; set; }
         public string other_loan1 { get; set; }
         public string other_loan2 { get; set; }
         public string other_loan3 { get; set; }
@@ -101,5 +105,20 @@ namespace HRIS_ePAccount.Models
         public string subsistence_pay { get; set; }
         public string laundry_pay { get; set; }
         public string remarks { get; set; }
+        public Nullable<bool> hasDuplicate { get; set; }
+        public string payroll_descr_amt1 { get; set; }
+        public string payroll_descr_amt2 { get; set; }
+        public string payroll_descr_amt3 { get; set; }
+        public string payroll_descr_amt4 { get; set; }
+        public string payroll_descr_amt5 { get; set; }
+        public string other_amt1 { get; set; }
+        public string other_amt2 { get; set; }
+        public string other_amt3 { get; set; }
+        public string other_amt4 { get; set; }
+        public string other_amt5 { get; set; }
+        public string other_ded_mand1 { get; set; }
+        public string other_ded_mand2 { get; set; }
+        public string other_ded_mand1_descr { get; set; }
+        public string other_ded_mand2_descr { get; set; }
     }
 }

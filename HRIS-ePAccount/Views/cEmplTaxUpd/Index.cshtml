@@ -6,7 +6,7 @@
 @{
     ViewBag.Title = "Index";
 }
-<script src="~/Angular/ng-cEmplTaxUpd.js"></script>
+<script src="~/Angular/ng-cEmplTaxUpd.js?v=2"></script>
 <div class="modal fade" id="modal_generating_tax">
     <div class="modal-dialog text-center">
         @*<span class="fa fa-spinner fa-spin fa-3x text-white"></span>*@
@@ -63,6 +63,7 @@
                             <select class="form-control" id="ddl_employment_type" ng-model="ddl_employment_type">
                                 <option value="">--Select Here--</option>
                                 <option ng-repeat="empl_type in employment_type_data" value="{{empl_type.employment_type}}">{{empl_type.employment_type_descr}}</option>
+                                <option value="NE">Non-employees</option>
                             </select>
                             <label id="lbl_ddl_employment_type_req" class="lbl_required"></label>
                         </div>

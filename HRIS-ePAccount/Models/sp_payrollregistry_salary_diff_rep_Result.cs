@@ -65,5 +65,12 @@ namespace HRIS_ePAccount.Models
         public string organization_address2 { get; set; }
         public string organization_address3 { get; set; }
         public string organization_address4 { get; set; }
+        public decimal days_worked { get; set; }
+        public decimal salary_diff_amt_per_day { get; set; }
+        public decimal leave_earned { get; set; }
+        public string payment_mode { get; set; }
+        public string payment_mode_descr { get; set; }
+        public string remarks { get; set; }
+        public decimal lates_amount { get; set; }
     }
 }

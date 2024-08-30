@@ -40,5 +40,8 @@ namespace HRIS_ePAccount.Models
         public string cafund_descr { get; set; }
         public string pacco_head { get; set; }
         public string pto_head { get; set; }
+        public string ca_ctrl_nbr { get; set; }
+        public string dv_address { get; set; }
+        public string dv_data_d { get; set; }
     }
 }

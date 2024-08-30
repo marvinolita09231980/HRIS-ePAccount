@@ -75,6 +75,9 @@ namespace HRIS_ePAccount.Models
         public string p_other_loan3 { get; set; }
         public string u_other_loan3 { get; set; }
         public string o_other_loan3 { get; set; }
+        public string p_other_loan5 { get; set; }
+        public string u_other_loan5 { get; set; }
+        public string o_other_loan5 { get; set; }
         public string payroll_amount_gs { get; set; }
         public string payroll_amount_ps { get; set; }
         public string uploaded_amount_gs { get; set; }

@@ -28,6 +28,7 @@ namespace HRIS_ePAccount.Models
         public string act_other_amt1 { get; set; }
         public string act_other_amt2 { get; set; }
         public string act_other_amt3 { get; set; }
+        public string act_other_amt4 { get; set; }
         public string payroll_date_descr { get; set; }
         public string function_code { get; set; }
         public string charge_to { get; set; }
@@ -41,6 +42,7 @@ namespace HRIS_ePAccount.Models
         public Nullable<decimal> sum_oth_amt1 { get; set; }
         public Nullable<decimal> sum_oth_amt2 { get; set; }
         public Nullable<decimal> sum_oth_amt3 { get; set; }
+        public Nullable<decimal> sum_oth_amt4 { get; set; }
         public decimal tot_amt { get; set; }
     }
 }

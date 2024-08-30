@@ -59,10 +59,7 @@ namespace HRIS_ePAccount.Models
         public string hdmf_loyalty_card { get; set; }
         public string date_posted { get; set; }
         public string department_code { get; set; }
-        public string subdepartment_code { get; set; }
-        public string division_code { get; set; }
-        public string section_code { get; set; }
-        public string fund_code { get; set; }
+        public string department_name1 { get; set; }
         public string voucher_nbr { get; set; }
         public string created_by_user { get; set; }
         public string updated_by_user { get; set; }
@@ -70,5 +67,45 @@ namespace HRIS_ePAccount.Models
         public System.DateTime created_dttm { get; set; }
         public System.DateTime updated_dttm { get; set; }
         public string position_title1 { get; set; }
+        public string nbr_days_absent { get; set; }
+        public double nod_work_1st_010 { get; set; }
+        public double days_worked_010 { get; set; }
+        public double hours_worked_010 { get; set; }
+        public string nbr_days_absent_010 { get; set; }
+        public string hours_ot { get; set; }
+        public string hours_ot_010 { get; set; }
+        public string hours_sal { get; set; }
+        public string hours_sal_010 { get; set; }
+        public string other_ded_mand1 { get; set; }
+        public string other_ded_mand2 { get; set; }
+        public string other_ded_mand3 { get; set; }
+        public string other_ded_mand4 { get; set; }
+        public string other_ded_mand5 { get; set; }
+        public string other_ded_mand6 { get; set; }
+        public string other_ded_mand7 { get; set; }
+        public string other_ded_mand8 { get; set; }
+        public string other_ded_mand9 { get; set; }
+        public string other_ded_mand10 { get; set; }
+        public string other_ded_prem1 { get; set; }
+        public string other_ded_prem2 { get; set; }
+        public string other_ded_prem3 { get; set; }
+        public string other_ded_prem4 { get; set; }
+        public string other_ded_prem5 { get; set; }
+        public string other_ded_prem6 { get; set; }
+        public string other_ded_prem7 { get; set; }
+        public string other_ded_prem8 { get; set; }
+        public string other_ded_prem9 { get; set; }
+        public string other_ded_prem10 { get; set; }
+        public string other_ded_loan1 { get; set; }
+        public string other_ded_loan2 { get; set; }
+        public string other_ded_loan3 { get; set; }
+        public string other_ded_loan4 { get; set; }
+        public string other_ded_loan5 { get; set; }
+        public string other_ded_loan6 { get; set; }
+        public string other_ded_loan7 { get; set; }
+        public string other_ded_loan8 { get; set; }
+        public string other_ded_loan9 { get; set; }
+        public string other_ded_loan10 { get; set; }
+        public string payroll_group_nbr { get; set; }
     }
 }

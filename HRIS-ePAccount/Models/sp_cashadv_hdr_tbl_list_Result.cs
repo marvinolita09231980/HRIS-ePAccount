@@ -38,6 +38,6 @@ namespace HRIS_ePAccount.Models
         public string downloaded_by { get; set; }
         public string downloaded_by_name { get; set; }
         public Nullable<System.DateTime> downloaded_dttm { get; set; }
-        public Nullable<decimal> summary { get; set; }
+        public decimal summary { get; set; }
     }
 }

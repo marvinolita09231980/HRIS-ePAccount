@@ -75,5 +75,18 @@ namespace HRIS_ePAccount.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_payrollemployee_tax_tbl_for_apprvl_Result>("sp_payrollemployee_tax_tbl_for_apprvl", par_yearParameter, par_rcrd_statusParameter);
         }
+    
+        public virtual ObjectResult<sp_payrollemployee_tax_tbl_for_apprvl_NE_Result> sp_payrollemployee_tax_tbl_for_apprvl_NE(string par_year, string par_rcrd_status)
+        {
+            var par_yearParameter = par_year != null ?
+                new ObjectParameter("par_year", par_year) :
+                new ObjectParameter("par_year", typeof(string));
+    
+            var par_rcrd_statusParameter = par_rcrd_status != null ?
+                new ObjectParameter("par_rcrd_status", par_rcrd_status) :
+                new ObjectParameter("par_rcrd_status", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_payrollemployee_tax_tbl_for_apprvl_NE_Result>("sp_payrollemployee_tax_tbl_for_apprvl_NE", par_yearParameter, par_rcrd_statusParameter);
+        }
     }
 }

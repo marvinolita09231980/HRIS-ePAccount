@@ -18,8 +18,9 @@ namespace HRIS_ePAccount.Models
         public string payroll_month { get; set; }
         public string payroll_registry_nbr { get; set; }
         public string payrolltemplate_descr { get; set; }
-        public string remarks { get; set; }
         public string employment_type { get; set; }
+        public string remarks { get; set; }
+        public string employment_type1 { get; set; }
         public Nullable<System.DateTime> payroll_period_from { get; set; }
         public Nullable<System.DateTime> payroll_period_to { get; set; }
         public string empl_id { get; set; }

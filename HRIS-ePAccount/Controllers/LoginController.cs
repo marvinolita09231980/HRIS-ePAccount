@@ -5,16 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
-using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
-
 
 namespace HRIS_ePAccount.Controllers
 {
     public class LoginController : Controller
     {
-  
+
         // GET: Login
         HRIS_PACCO_DEVEntities db = new HRIS_PACCO_DEVEntities();
         CommonDB Cmn = new CommonDB();
@@ -24,7 +22,6 @@ namespace HRIS_ePAccount.Controllers
         public ActionResult Index()
         {
             string excelExportServer = System.Configuration.ConfigurationManager.AppSettings["ExcelExportServerIP"];
-
             dvn.DVName = "(" + db.Database.Connection.DataSource.ToString().Split('\\')[db.Database.Connection.DataSource.ToString().Split('\\').Length - 1] + ")";
             if (Session["user_id"] != null)
             {

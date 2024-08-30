@@ -1,6 +1,7 @@
 ﻿using HRIS_ePAccount.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -250,7 +251,7 @@ namespace HRIS_ePAccount.Controllers
         ////// Created By : JRV - Created Date : 09/19/2019
         ////// Description: Select EmployeeName
         //////*********************************************************************//
-        public ActionResult SaveEDITInDatabase(payrollemployee_tax_hdr_tbl data, string par_effective_date, string par_empl_id, string par_action)
+        public ActionResult SaveEDITInDatabase(payrollemployee_tax_hdr_tbl data, string par_effective_date, string par_empl_id, string par_action,string department_code)
         {
             try
             {
@@ -292,45 +293,51 @@ namespace HRIS_ePAccount.Controllers
                 else if (par_action == "EDIT")
                 {
 
-                    var payrollemployee_tax_hdr_tbl = db_pacco.payrollemployee_tax_hdr_tbl.Where(a => a.effective_date == current_date && a.empl_id == par_empl_id).FirstOrDefault();
+                    var payrollemployee_tax_hdr_tbl = db_pacco.payrollemployee_tax_hdr_tbl.Where(a => a.effective_date == effective_date && a.empl_id == par_empl_id).FirstOrDefault();
+                    var payrollemployee_tax_tbl = db_pay.payrollemployee_tax_tbl.Where(a => a.effective_date == effective_date && a.empl_id == par_empl_id).FirstOrDefault();
 
                     if (payrollemployee_tax_hdr_tbl != null)
                     {
-
-                        payrollemployee_tax_hdr_tbl.bir_class = data.bir_class;
-                        payrollemployee_tax_hdr_tbl.with_sworn = data.with_sworn;
-                        payrollemployee_tax_hdr_tbl.fixed_rate = data.fixed_rate;
-                        payrollemployee_tax_hdr_tbl.total_gross_pay = data.total_gross_pay;
-                        payrollemployee_tax_hdr_tbl.dedct_status = data.dedct_status;
-                        payrollemployee_tax_hdr_tbl.rcrd_status = "N";
-                        payrollemployee_tax_hdr_tbl.user_id_updated_by = Session["user_id"].ToString(); ;
-                        payrollemployee_tax_hdr_tbl.updated_dttm = DateTime.Now;
-                        payrollemployee_tax_hdr_tbl.w_tax_perc = data.w_tax_perc;
-                        payrollemployee_tax_hdr_tbl.bus_tax_perc = data.bus_tax_perc;
-                        payrollemployee_tax_hdr_tbl.vat_perc = data.vat_perc;
-                        payrollemployee_tax_hdr_tbl.exmpt_amt = data.exmpt_amt;
+                        if (payrollemployee_tax_tbl == null)
+                        {
+                            payrollemployee_tax_hdr_tbl.bir_class = data.bir_class;
+                            payrollemployee_tax_hdr_tbl.with_sworn = data.with_sworn;
+                            payrollemployee_tax_hdr_tbl.fixed_rate = data.fixed_rate;
+                            payrollemployee_tax_hdr_tbl.total_gross_pay = data.total_gross_pay;
+                            payrollemployee_tax_hdr_tbl.dedct_status = data.dedct_status;
+                            payrollemployee_tax_hdr_tbl.rcrd_status = "N";
+                            payrollemployee_tax_hdr_tbl.user_id_updated_by = Session["user_id"].ToString(); ;
+                            payrollemployee_tax_hdr_tbl.updated_dttm = DateTime.Now;
+                            payrollemployee_tax_hdr_tbl.w_tax_perc = data.w_tax_perc;
+                            payrollemployee_tax_hdr_tbl.bus_tax_perc = data.bus_tax_perc;
+                            payrollemployee_tax_hdr_tbl.vat_perc = data.vat_perc;
+                            payrollemployee_tax_hdr_tbl.exmpt_amt = data.exmpt_amt;
+                        }
                     }
                     else
                     {
-                        payrollemployee_tax_hdr_tbl tbl = new payrollemployee_tax_hdr_tbl();
+                        if (payrollemployee_tax_tbl == null)
+                        {
+                            payrollemployee_tax_hdr_tbl tbl = new payrollemployee_tax_hdr_tbl();
 
-                        tbl.empl_id = data.empl_id;
-                        tbl.effective_date = current_date;
-                        tbl.bir_class = data.bir_class;
-                        tbl.with_sworn = isCheckBool(data.with_sworn.ToString());
-                        tbl.fixed_rate = isCheckBool(data.fixed_rate.ToString());
-                        tbl.total_gross_pay = data.total_gross_pay;
-                        tbl.dedct_status = isCheckBool(data.dedct_status.ToString());
-                        tbl.rcrd_status = "N";
-                        tbl.user_id_created_by = Session["user_id"].ToString();
-                        tbl.created_dttm = DateTime.Now;
-                        tbl.user_id_updated_by = "";
-                        tbl.w_tax_perc = data.w_tax_perc;
-                        tbl.bus_tax_perc = data.bus_tax_perc;
-                        tbl.vat_perc = data.vat_perc;
-                        tbl.exmpt_amt = data.exmpt_amt;
-                        tbl.updated_dttm = Convert.ToDateTime("1900-01-01");
-                        db_pacco.payrollemployee_tax_hdr_tbl.Add(tbl);
+                            tbl.empl_id = data.empl_id;
+                            tbl.effective_date = effective_date;
+                            tbl.bir_class = data.bir_class;
+                            tbl.with_sworn = isCheckBool(data.with_sworn.ToString());
+                            tbl.fixed_rate = isCheckBool(data.fixed_rate.ToString());
+                            tbl.total_gross_pay = data.total_gross_pay;
+                            tbl.dedct_status = isCheckBool(data.dedct_status.ToString());
+                            tbl.rcrd_status = "N";
+                            tbl.user_id_created_by = Session["user_id"].ToString();
+                            tbl.created_dttm = DateTime.Now;
+                            tbl.user_id_updated_by = "";
+                            tbl.w_tax_perc = data.w_tax_perc;
+                            tbl.bus_tax_perc = data.bus_tax_perc;
+                            tbl.vat_perc = data.vat_perc;
+                            tbl.exmpt_amt = data.exmpt_amt;
+                            tbl.updated_dttm = Convert.ToDateTime("1900-01-01");
+                            db_pacco.payrollemployee_tax_hdr_tbl.Add(tbl);
+                        }
 
                     }
 
@@ -345,11 +352,15 @@ namespace HRIS_ePAccount.Controllers
                 message = "success";
                 db_pacco.SaveChanges();
 
-                return Json(new { message }, JsonRequestBehavior.AllowGet);
+
+                var vw_phic_share_empl_tbl_ACT = db_pacco.vw_phic_share_empl_tbl_ACT.Where(a => a.department_code == department_code && a.employment_type == "JO").ToList();
+
+                return Json(new { message, vw_phic_share_empl_tbl_ACT }, JsonRequestBehavior.AllowGet);
             }
-            catch (Exception ex)
+            catch (DbEntityValidationException e)
             {
-                return Json(new { ex.Message }, JsonRequestBehavior.AllowGet);
+                var msg = DbEntityValidationExceptionError(e);
+                return Json(new { message = msg, icon = "error" }, JsonRequestBehavior.AllowGet);
             }
 
         }
@@ -551,6 +562,25 @@ namespace HRIS_ePAccount.Controllers
             Session["history_page"] = Request.UrlReferrer.ToString();
             var reportcount = db_pacco.sp_annualtax_hdr_tbl_rep(par_payroll_year, par_empl_id).ToList();
             return Json(new { reportcount }, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+        public String DbEntityValidationExceptionError(DbEntityValidationException e)
+        {
+            string message = "";
+            foreach (var eve in e.EntityValidationErrors)
+            {
+                Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                    eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                foreach (var ve in eve.ValidationErrors)
+                {
+                    message = "- Property: \"{0}\", Error: \"{1}\"" + ve.PropertyName + "  :  " + ve.ErrorMessage;
+                    Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                        ve.PropertyName, ve.ErrorMessage);
+                }
+            }
+            return message;
         }
 
     }

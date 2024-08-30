@@ -879,7 +879,7 @@
             else {
                 loan_name = ""
             }
-
+            console.log(excelExportServer)
             h.post("../Menu/GetToken").then(function (d) {
                 var token = { token: d.data.token }
                 h.post(excelExportServer +"/api/remittance/verify-token", token, { responseType: 'arraybuffer' }

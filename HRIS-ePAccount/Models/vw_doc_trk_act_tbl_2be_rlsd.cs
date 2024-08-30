@@ -14,7 +14,7 @@ namespace HRIS_ePAccount.Models
     
     public partial class vw_doc_trk_act_tbl_2be_rlsd
     {
-        public int route_ctrl_nbr { get; set; }
+        public Nullable<int> route_ctrl_nbr { get; set; }
         public Nullable<int> route_seq { get; set; }
         public string doc_ctrl_nbr { get; set; }
         public string remarks { get; set; }

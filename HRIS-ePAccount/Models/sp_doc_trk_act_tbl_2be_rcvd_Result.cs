@@ -13,7 +13,7 @@ namespace HRIS_ePAccount.Models
     
     public partial class sp_doc_trk_act_tbl_2be_rcvd_Result
     {
-        public Nullable<int> route_ctrl_nbr { get; set; }
+        public int route_ctrl_nbr { get; set; }
         public Nullable<int> route_seq { get; set; }
         public string doc_ctrl_nbr { get; set; }
         public string remarks { get; set; }
@@ -33,6 +33,5 @@ namespace HRIS_ePAccount.Models
         public string doc_voucher_nbr { get; set; }
         public string doc_check_nbr { get; set; }
         public string doc_othr_info { get; set; }
-        public Nullable<decimal> obr_tot_amt { get; set; }
     }
 }

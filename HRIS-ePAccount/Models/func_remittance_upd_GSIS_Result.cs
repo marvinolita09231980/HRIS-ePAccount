@@ -48,6 +48,8 @@ namespace HRIS_ePAccount.Models
         public Nullable<decimal> genspcl { get; set; }
         public Nullable<decimal> gsis_help { get; set; }
         public Nullable<decimal> gfal { get; set; }
+        public Nullable<decimal> mpl { get; set; }
+        public Nullable<decimal> cpl { get; set; }
         public string uploaded_status { get; set; }
         public string empl_id { get; set; }
         public string remittance_ctrl_nbr { get; set; }
