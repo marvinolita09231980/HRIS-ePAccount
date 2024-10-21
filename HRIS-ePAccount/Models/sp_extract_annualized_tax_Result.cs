@@ -61,7 +61,7 @@ namespace HRIS_ePAccount.Models
         public Nullable<decimal> wtax_prsnt_emplyr { get; set; }
         public Nullable<decimal> wtax_prev_emplyr { get; set; }
         public Nullable<decimal> total_tax_jan_nov { get; set; }
-        public decimal tax_paid_dec { get; set; }
+        public Nullable<decimal> tax_paid_dec { get; set; }
         public Nullable<decimal> over_tax_refund { get; set; }
         public Nullable<decimal> tax_wheld_adjusted { get; set; }
         public Nullable<decimal> tax_due_payable { get; set; }

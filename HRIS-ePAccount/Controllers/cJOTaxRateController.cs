@@ -27,7 +27,7 @@ namespace HRIS_ePAccount.Controllers
     public class cJOTaxRateController : Controller
     {
 
-        HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+       HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
        HRIS_DEVEntities db_pay = new HRIS_DEVEntities();
         User_Menu um = new User_Menu();
         //*********************************************************************//
@@ -408,27 +408,39 @@ namespace HRIS_ePAccount.Controllers
 
                 DateTime par_effective_date = Convert.ToDateTime(effective_date);
 
+                var tx = db_pay.payrollemployee_tax_tbl.Where(a => a.effective_date == par_effective_date && a.empl_id == par_empl_id).FirstOrDefault();
+
+                if(tx != null)
+                {
+                    if(tx.rcrd_status == "A")
+                    {
+                        throw new Exception("Cannot delete, tax record already approved!");
+                    }
+                }
+
                 var dt = db_pacco.payrollemployee_tax_hdr_tbl.Where(a =>
                                a.effective_date == par_effective_date &&
                                a.empl_id == par_empl_id).FirstOrDefault();
 
-                db_pacco.payrollemployee_tax_hdr_tbl.Remove(dt);
-
                 if (dt == null)
                 {
-                    message = "fail";
+                    throw new Exception("Deletion failed!");
                 }
 
-                else
-                {
-                    message = "success";
-                }
+                db_pacco.payrollemployee_tax_hdr_tbl.Remove(dt);
+                db_pay.payrollemployee_tax_tbl.Remove(tx);
+
+               
+
+               
+               message = "success";
+                
                 db_pacco.SaveChanges();
-                return Json(message, JsonRequestBehavior.AllowGet);
+                return Json( new{ message,icon= "success"}, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                return Json(new { ex.Message }, JsonRequestBehavior.AllowGet);
+                return Json(new { ex.Message,icon="error" }, JsonRequestBehavior.AllowGet);
             }
 
         }
@@ -470,6 +482,7 @@ namespace HRIS_ePAccount.Controllers
                                                           + "," + par_history;
 
             Session["PreviousValuesonPage_cJOTaxRate_empl_name"] = par_empl_name;
+            Session["PreviousValuesonPage_cJOTaxRate_employment_type"] = "JO";
             return Json("success", JsonRequestBehavior.AllowGet);
         }
 

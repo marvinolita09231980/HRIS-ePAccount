@@ -1,18 +1,21 @@
-﻿using HRIS_ePAccount.Models;
+﻿using HRIS_ePAccount.Filter;
+using HRIS_ePAccount.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
 namespace HRIS_ePAccount.Controllers
 {
+    [SessionExpire]
     public class cRemitLedgerController : Controller
     {
-        
-        HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+        private string cs = GlobalClass.connetionString_act;
+        HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
         //*********************************************************************//
         // Created By : VJA - Created Date : 09/19/2019
         // Description: Get the User Role
@@ -197,11 +200,13 @@ namespace HRIS_ePAccount.Controllers
         {
             try
             {
-                var header_table = db_pacco.remittance_hdr_tbl.Where(a => a.remittance_ctrl_nbr == par_remittance_ctrl_no).FirstOrDefault();
-                db_pacco.remittance_hdr_tbl.Remove(header_table);
-               
-                db_pacco.SaveChanges();
-                
+                var header_table = db_pacco.sp_delete_remittance_hdr_tbl(par_remittance_ctrl_no).FirstOrDefault();
+
+                if (header_table.exec_code == 0)
+                {
+                    throw new Exception("Failed to delete remittance header!");
+                }
+
                 switch (par_remittancetype_code)
                 {
                     case "01"://GSIS Details
@@ -287,22 +292,28 @@ namespace HRIS_ePAccount.Controllers
 
                 return Json(new { message = "success" }, JsonRequestBehavior.AllowGet);
             }
-            catch (DbEntityValidationException e)
+            catch (Exception e)
             {
-                string message = "";
-                foreach (var eve in e.EntityValidationErrors)
-                {
-                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
-                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
-                    foreach (var ve in eve.ValidationErrors)
-                    {
-                        message = "- Property: \"{0}\", Error: \"{1}\"" + ve.PropertyName + "  :  " + ve.ErrorMessage;
-                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
-                        ve.PropertyName, ve.ErrorMessage);
-                    }
-                }
+                string message = e.Message;
+               
                 return Json(message, JsonRequestBehavior.AllowGet);
             }
+            //catch (DbEntityValidationException e)
+            //{
+            //    string message = "";
+            //    foreach (var eve in e.EntityValidationErrors)
+            //    {
+            //        Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+            //            eve.Entry.Entity.GetType().Name, eve.Entry.State);
+            //        foreach (var ve in eve.ValidationErrors)
+            //        {
+            //            message = "- Property: \"{0}\", Error: \"{1}\"" + ve.PropertyName + "  :  " + ve.ErrorMessage;
+            //            Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+            //            ve.PropertyName, ve.ErrorMessage);
+            //        }
+            //    }
+            //    return Json(message, JsonRequestBehavior.AllowGet);
+            //}
         }
         //*********************************************************************//
         // Created By  : VJA - Created Date : 09/19/2019
@@ -330,28 +341,58 @@ namespace HRIS_ePAccount.Controllers
         {
             try
             {
-                //Update payroll registry details
-                
+              
+
                 string defaultdate = "1900-01-01";
 
-                remittance_hdr_tbl tbl = db_pacco.remittance_hdr_tbl.Where(a => a.remittance_ctrl_nbr == par_remittance_ctrl_nbr).SingleOrDefault();
-                tbl.remittance_ctrl_nbr           = par_remittance_ctrl_nbr        ;
-                tbl.remittance_year               = par_remittance_year            ;
-                tbl.remittance_month              = par_remittance_month           ;
-                tbl.employment_type               = par_employment_type            ;
-                tbl.remittancetype_code           = par_remittancetype_code        ;
-                tbl.remittance_descr              = par_remittance_descr           ;
-                tbl.remittance_status             = par_remittance_status          ;
-                //tbl.remittance_dttm_created       = DateTime.Now;
-                //tbl.user_id_created_by            = Session["user_id"].ToString() ;
-                tbl.remittance_dttm_updated       = DateTime.Now;
-                tbl.user_id_updated_by            = Session["user_id"].ToString();
-                tbl.remittance_dttm_released      = par_remittance_dttm_released == "" || par_remittance_dttm_released == null ? Convert.ToDateTime(defaultdate) : Convert.ToDateTime(par_remittance_dttm_released);
-                tbl.user_id_released_by           = par_user_id_released_by           ;
-                tbl.remittance_dttm_remitted      = par_remittance_dttm_remitted == "" || par_remittance_dttm_remitted == null ? Convert.ToDateTime(defaultdate) : Convert.ToDateTime(par_remittance_dttm_remitted);
-                tbl.user_id_remitted_by           = par_user_id_remitted_by;
+               
+
+                var updateQuery = "UPDATE remittance_hdr_tbl SET remittance_descr =' "+ par_remittance_descr + "' WHERE remittance_ctrl_nbr = '" + par_remittance_ctrl_nbr+"'";
+
+                using (SqlConnection connection = new SqlConnection(cs))
+                {
+                    connection.Open(); // Open the connection
+
+                    // Create SqlCommand inside another using block
+                    using (SqlCommand command = new SqlCommand(updateQuery, connection))
+                    {
+                        // Add parameters to the command to prevent SQL injection
+                        command.Parameters.AddWithValue("@remittance_descr", par_remittance_descr);
+                        command.Parameters.AddWithValue("@remittance_ctrl_nbr", par_remittance_ctrl_nbr);
+
+                        // Execute the update command
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        // Check if the update was successful
+                        if (rowsAffected < 1)
+                        {
+                            throw new Exception("Update Failed!");
+                        }
+                        
+                    } // SqlCommand disposed here
+                } 
+
+
+                //var tbl = db_pacco.remittance_hdr_tbl.Where(a => a.remittance_ctrl_nbr == par_remittance_ctrl_nbr).FirstOrDefault();
+
+                //tbl.remittance_year               = par_remittance_year            ;
+                //tbl.remittance_month              = par_remittance_month           ;
+                //tbl.employment_type               = par_employment_type            ;
+                //tbl.remittancetype_code           = par_remittancetype_code        ;
+                //tbl.remittance_descr              = par_remittance_descr           ;
+                //tbl.remittance_status             = par_remittance_status          ;
+                ////tbl.remittance_dttm_created       = DateTime.Now;
+                ////tbl.user_id_created_by            = Session["user_id"].ToString() ;
+                //tbl.remittance_dttm_updated       = DateTime.Now;
+                //tbl.user_id_updated_by            = Session["user_id"].ToString();
+                //tbl.remittance_dttm_released      = par_remittance_dttm_released == "" || par_remittance_dttm_released == null ? Convert.ToDateTime(defaultdate) : Convert.ToDateTime(par_remittance_dttm_released);
+                //tbl.user_id_released_by           = par_user_id_released_by           ;
+                //tbl.remittance_dttm_remitted      = par_remittance_dttm_remitted == "" || par_remittance_dttm_remitted == null ? Convert.ToDateTime(defaultdate) : Convert.ToDateTime(par_remittance_dttm_remitted);
+                //tbl.user_id_remitted_by           = par_user_id_remitted_by;
                 
-                db_pacco.SaveChanges();
+                //db_pacco.SaveChanges();
+
+
                 return Json(new { message = "success" }, JsonRequestBehavior.AllowGet);
             }
             catch (DbEntityValidationException e)

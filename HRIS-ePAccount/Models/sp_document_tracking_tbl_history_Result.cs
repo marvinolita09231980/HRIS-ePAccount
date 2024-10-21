@@ -33,5 +33,11 @@ namespace HRIS_ePAccount.Models
         public string payrolltemplate_code { get; set; }
         public string payrolltemplate_descr { get; set; }
         public string spent_time { get; set; }
+        public string spent_time_tot { get; set; }
+        public string doc_voucher_nbr_pay { get; set; }
+        public string doc_voucher_nbr_ca { get; set; }
+        public string payroll_registry_nbr_upd { get; set; }
+        public string ca_ctrl_nbr_upd { get; set; }
+        public string employee_name { get; set; }
     }
 }

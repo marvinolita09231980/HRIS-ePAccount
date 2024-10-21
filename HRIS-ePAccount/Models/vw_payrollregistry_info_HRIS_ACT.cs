@@ -92,6 +92,36 @@ namespace HRIS_ePAccount.Models
         public Nullable<System.DateTime> updated_dttm { get; set; }
         public System.DateTime date_posted { get; set; }
         public string post_status { get; set; }
+        public decimal other_ded_mand1 { get; set; }
+        public decimal other_ded_mand2 { get; set; }
+        public decimal other_ded_mand3 { get; set; }
+        public decimal other_ded_mand4 { get; set; }
+        public decimal other_ded_mand5 { get; set; }
+        public decimal other_ded_mand6 { get; set; }
+        public decimal other_ded_mand7 { get; set; }
+        public decimal other_ded_mand8 { get; set; }
+        public decimal other_ded_mand9 { get; set; }
+        public decimal other_ded_mand10 { get; set; }
+        public decimal other_ded_prem1 { get; set; }
+        public decimal other_ded_prem2 { get; set; }
+        public decimal other_ded_prem3 { get; set; }
+        public decimal other_ded_prem4 { get; set; }
+        public decimal other_ded_prem5 { get; set; }
+        public decimal other_ded_prem6 { get; set; }
+        public decimal other_ded_prem7 { get; set; }
+        public decimal other_ded_prem8 { get; set; }
+        public decimal other_ded_prem9 { get; set; }
+        public decimal other_ded_prem10 { get; set; }
+        public decimal other_ded_loan1 { get; set; }
+        public decimal other_ded_loan2 { get; set; }
+        public decimal other_ded_loan3 { get; set; }
+        public decimal other_ded_loan4 { get; set; }
+        public decimal other_ded_loan5 { get; set; }
+        public decimal other_ded_loan6 { get; set; }
+        public decimal other_ded_loan7 { get; set; }
+        public decimal other_ded_loan8 { get; set; }
+        public decimal other_ded_loan9 { get; set; }
+        public decimal other_ded_loan10 { get; set; }
         public string employee_name { get; set; }
         public string last_name { get; set; }
         public string first_name { get; set; }

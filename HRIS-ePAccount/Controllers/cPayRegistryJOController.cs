@@ -24,7 +24,7 @@ namespace HRIS_ePAccount.Controllers
     public class cPayRegistryJOController : Controller
     {
         
-        HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+        HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
         //*********************************************************************//
         // Created By : JRV - Created Date : 09/19/2019
         // Description: Get the User Role

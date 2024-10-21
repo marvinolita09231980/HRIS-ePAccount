@@ -63,5 +63,8 @@ namespace HRIS_ePAccount.Models
         public string organization_address2 { get; set; }
         public string organization_address3 { get; set; }
         public string organization_address4 { get; set; }
+        public string payment_mode { get; set; }
+        public string payment_mode_descr { get; set; }
+        public string payrolltemplate_code { get; set; }
     }
 }

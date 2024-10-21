@@ -24,6 +24,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     s.allow_delete       = false
     s.allow_view         = false
     s.allow_edit_history = false
+    s.excelExportServer = "";
     
     s.oTable = null;
     s.datalistgrid = null
@@ -49,7 +50,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
        $("#loading_data").modal({ keyboard: false, backdrop: "static" })
         RetrieveYear()
         h.post("../cBIRAnnualizedTax/InitializeData", { par_empType: s.employeeddl }).then(function (d) {
-
+            s.excelExportServer = d.data.excelExportServer
             s.employeeddl           = d.data.empType
             s.ddl_employment_type   = d.data.ddl_emp_type
             s.ddl_letter            = d.data.ddl_letter
@@ -1525,47 +1526,153 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         
     }
 
-    s.btn_extract_action = function (extract_type)
-    {
+    //s.btn_extract_action = function (extract_type)
+    //{
+
+    //    //$("#btn_extract_icon").removeClass("fa fa-file-excel-o");
+    //    //$("#btn_extract_icon").addClass("fa fa-spinner fa-spin");
+    //   $("#loading_data").modal({ keyboard: false, backdrop: "static" })
+    
+    //    h.post("../cBIRAnnualizedTax/ExtractData",
+    //        {
+    //            par_empType: $("#ddl_employment_type option:selected").val(),
+    //            par_payroll_year: $("#ddl_year option:selected").val(),
+    //            par_extract_type: extract_type
+    //        }).then(function (d) {
+
+    //            if (d.data.message == "success") {
+    //                window.open(d.data.filePath, '', '');
+    //                $("#loading_data").modal("hide")
+    //                //$("#btn_extract_icon").removeClass("fa fa-spinner fa-spin");
+    //                //$("#btn_extract_icon").addClass("fa fa-file-excel-o");
+    //            }
+
+    //            else {
+
+    //                console.log(d.data.index_error)
+    //                //$("#btn_extract_icon").removeClass("fa fa-spinner fa-spin");
+    //                //$("#btn_extract_icon").addClass("fa fa-file-excel-o");
+    //                $("#loading_data").modal("hide")
+    //                swal({
+    //                    title: "Not Data Found!",
+    //                    text: "No Data Found!",
+    //                    icon: "warning",
+    //                    buttons: true,
+    //                    dangerMode: true,
+    //                })
+    //            }
+               
+                
+    //        })
+
+     
+    //}
+
+    s.btn_extract_action = function (extract_type) {
 
         //$("#btn_extract_icon").removeClass("fa fa-file-excel-o");
         //$("#btn_extract_icon").addClass("fa fa-spinner fa-spin");
-       $("#loading_data").modal({ keyboard: false, backdrop: "static" })
-    
-        h.post("../cBIRAnnualizedTax/ExtractData",
-            {
-                par_empType: $("#ddl_employment_type option:selected").val(),
-                par_payroll_year: $("#ddl_year option:selected").val(),
-                par_extract_type: extract_type
-            }).then(function (d) {
+        $("#loading_data").modal({ keyboard: false, backdrop: "static" })
+        //$("#extracting_data").modal("show");
 
-                if (d.data.message == "success") {
-                    window.open(d.data.filePath, '', '');
-                    $("#loading_data").modal("hide")
-                    //$("#btn_extract_icon").removeClass("fa fa-spinner fa-spin");
-                    //$("#btn_extract_icon").addClass("fa fa-file-excel-o");
-                }
+        h.post("../Menu/GetToken")
+            .then(function (d) {
+                var token = { token: d.data.token }
+                h.post(excelExportServer+"/api/remittance/verify-token", token, { responseType: 'arraybuffer' }
 
-                else {
+                )
+                    .then(function (response) {
+                        if (response.data) {
 
-                    console.log(d.data.index_error)
-                    //$("#btn_extract_icon").removeClass("fa fa-spinner fa-spin");
-                    //$("#btn_extract_icon").addClass("fa fa-file-excel-o");
-                    $("#loading_data").modal("hide")
-                    swal({
-                        title: "Not Data Found!",
-                        text: "No Data Found!",
-                        icon: "warning",
-                        buttons: true,
-                        dangerMode: true,
-                    })
-                }
-               
-                
+                            h.post("../cBIRAnnualizedTax/ExtractDataToPHP",
+                                {
+                                    par_empType: $("#ddl_employment_type option:selected").val(),
+                                    par_payroll_year: $("#ddl_year option:selected").val(),
+                                    par_extract_type: extract_type
+                                })
+                                .then(function (d) {
+
+                                    var empType      =  $("#ddl_employment_type option:selected").val()
+                                    var payroll_year =  $("#ddl_year option:selected").val()
+
+                                    if (extract_type == 'H') {
+                                        var sp_extract_annualized_tax = d.data.sp_extract_annualized_tax
+
+                                        h.post(excelExportServer + "/api/export/hris-extract", {
+                                            data: sp_extract_annualized_tax
+                                        }, { responseType: 'arraybuffer' }
+                                        ).then(function (response2) {
+                                            if (response2.data) {
+                                                const csvBlob = new Blob([response2.data], { type: 'text/csv;charset=utf-8;' });
+                                                const downloadUrl = window.URL.createObjectURL(csvBlob);
+                                                console.log(downloadUrl)
+                                                const link = document.createElement('a');
+                                                link.href = downloadUrl;
+                                                const name = "HRIS-Extract-" + payroll_year + "-" + empType + ".xlsx"
+                                                link.setAttribute('download', name);
+                                                console.log(link)
+                                                document.body.appendChild(link);
+                                                link.click();
+                                                document.body.removeChild(link);
+                                                window.URL.revokeObjectURL(downloadUrl);
+                                                $("#loading_data").modal("hide")
+                                            } else {
+                                                console.error('The response data is empty or undefined.');
+                                                $("#loading_data").modal("hide")
+                                            }
+                                        }).catch(function (error) {
+                                            console.error('There was a problem with the POST request:', error);
+                                            $("#loading_data").modal("hide")
+                                        });
+                                    }
+                                    else {
+
+                                        var sp_extract_annualized_tax = d.data.sp_extract_annualized_tax
+
+                                        h.post(excelExportServer + "/api/export/bir-extract", {
+                                            data: sp_extract_annualized_tax
+                                        }, { responseType: 'arraybuffer' }
+                                        ).then(function (response2) {
+                                            if (response2.data) {
+                                                console.log(response2.data)
+                                                const csvBlob = new Blob([response2.data], { type: 'text/csv;charset=utf-8;' });
+                                                const downloadUrl = window.URL.createObjectURL(csvBlob);
+                                                console.log(downloadUrl)
+                                                const link = document.createElement('a');
+                                                link.href = downloadUrl;
+                                                const name = "BIR-Extract-" + payroll_year + "-" + empType + ".xlsx"
+                                                link.setAttribute('download', name);
+                                                console.log(link)
+                                                document.body.appendChild(link);
+                                                link.click();
+                                                document.body.removeChild(link);
+                                                window.URL.revokeObjectURL(downloadUrl);
+                                                $("#loading_data").modal("hide")
+                                            } else {
+                                                console.error('The response data is empty or undefined.');
+                                                $("#loading_data").modal("hide")
+                                            }
+                                        }).catch(function (error) {
+                                            console.error('There was a problem with the POST request:', error);
+                                            $("#loading_data").modal("hide")
+                                        });
+                                    }
+
+                                })
+                        }
+
+                    }).catch(function (error, response) {
+                        swal("Token expired! please generate new token.", { icon: "error" })
+                        console.error('Token expired! please generate new token :', error);
+                        $("#loading_data").modal("hide")
+                    });
+
+
+
             })
-
-     
     }
+
+   
     
     //**************************************//
     //***Get Page Number****//

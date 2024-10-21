@@ -5,6 +5,55 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="HRIS_PAYModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="application_token_tbl">
+          <Key>
+            <PropertyRef Name="token" />
+          </Key>
+          <Property Name="token" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="user_id" Type="varchar" MaxLength="10" />
+          <Property Name="application_name" Type="varchar" MaxLength="100" />
+          <Property Name="created_datetime" Type="datetime" />
+          <Property Name="validuntil_datetime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="empl_taxwithheld_tbl">
+          <Key>
+            <PropertyRef Name="effective_date" />
+            <PropertyRef Name="empl_id" />
+            <PropertyRef Name="payroll_year" />
+          </Key>
+          <Property Name="effective_date" Type="date" Nullable="false" />
+          <Property Name="empl_id" Type="varchar" MaxLength="8" Nullable="false" />
+          <Property Name="payroll_year" Type="varchar" MaxLength="4" Nullable="false" />
+          <Property Name="tax_rate" Type="money" />
+          <Property Name="wtax_amt" Type="money" />
+          <Property Name="rcrd_status" Type="varchar" MaxLength="1" />
+          <Property Name="user_id_created_by" Type="varchar" MaxLength="30" />
+          <Property Name="created_dttm" Type="datetime" />
+          <Property Name="user_id_updated_by" Type="varchar" MaxLength="30" />
+          <Property Name="updated_dttm" Type="datetime" />
+        </EntityType>
+        <EntityType Name="payrollemployee_tax_phic_rece_tbl">
+          <Key>
+            <PropertyRef Name="empl_id" />
+            <PropertyRef Name="effective_date" />
+          </Key>
+          <Property Name="empl_id" Type="varchar" MaxLength="8" Nullable="false" />
+          <Property Name="effective_date" Type="date" Nullable="false" />
+          <Property Name="bir_class" Type="varchar" MaxLength="1" />
+          <Property Name="with_sworn" Type="bit" />
+          <Property Name="fixed_rate" Type="bit" />
+          <Property Name="total_gross_pay" Type="money" />
+          <Property Name="dedct_status" Type="bit" />
+          <Property Name="rcrd_status" Type="varchar" MaxLength="1" />
+          <Property Name="user_id_created_by" Type="varchar" MaxLength="30" />
+          <Property Name="created_dttm" Type="datetime" />
+          <Property Name="user_id_updated_by" Type="varchar" MaxLength="30" />
+          <Property Name="updated_dttm" Type="datetime" />
+          <Property Name="w_tax_perc" Type="money" />
+          <Property Name="bus_tax_perc" Type="money" />
+          <Property Name="vat_perc" Type="money" />
+          <Property Name="exmpt_amt" Type="money" />
+        </EntityType>
         <EntityType Name="payrollemployee_tax_tbl">
           <Key>
             <PropertyRef Name="empl_id" />
@@ -68,10 +117,52 @@
           <Property Name="citizenship_type" Type="bit" />
           <Property Name="citizenship_nature" Type="bit" />
           <Property Name="citizenship_country" Type="varchar" MaxLength="25" />
+          <Property Name="ethnicity_id" Type="int" />
+          <Property Name="religion_id" Type="int" />
+          <Property Name="pwd_type_id" Type="int" />
+          <Property Name="gender2" Type="varchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="usersprofile_tbl">
+          <Key>
+            <PropertyRef Name="user_id" />
+          </Key>
+          <Property Name="user_id" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="user_password" Type="varchar" MaxLength="255" />
+          <Property Name="empl_id" Type="varchar" MaxLength="8" />
+          <Property Name="allow_edit_history" Type="bit" />
+          <Property Name="status" Type="bit" />
+          <Property Name="locked_account" Type="bit" />
+          <Property Name="change_password" Type="bit" />
+          <Property Name="created_date" Type="date" />
+          <Property Name="created_by" Type="varchar" MaxLength="30" />
+          <Property Name="last_updated_date" Type="date" />
+          <Property Name="last_updated_by" Type="varchar" MaxLength="30" />
+          <Property Name="user_accesslevel" Type="varchar" MaxLength="1" />
+        </EntityType>
+        <Function Name="sp_empltaxwithheld_tbl_for_apprvl" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="p_employment_type" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_payrollemployee_tax_hdr_tbl_update" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="par_empl_id" Type="varchar" Mode="In" />
+          <Parameter Name="par_effective_date" Type="date" Mode="In" />
+          <Parameter Name="par_rcrd_status" Type="varchar" Mode="In" />
+          <Parameter Name="par_user_id_updated_by" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_payrollemployee_tax_tbl_for_apprvl" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="par_year" Type="varchar" Mode="In" />
+          <Parameter Name="par_rcrd_status" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_payrollemployee_tax_tbl_for_apprvl_NE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="par_year" Type="varchar" Mode="In" />
+          <Parameter Name="par_rcrd_status" Type="varchar" Mode="In" />
+        </Function>
         <EntityContainer Name="HRIS_PAYModelStoreContainer">
+          <EntitySet Name="application_token_tbl" EntityType="Self.application_token_tbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="empl_taxwithheld_tbl" EntityType="Self.empl_taxwithheld_tbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="payrollemployee_tax_phic_rece_tbl" EntityType="Self.payrollemployee_tax_phic_rece_tbl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="payrollemployee_tax_tbl" EntityType="Self.payrollemployee_tax_tbl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="personnel_tbl" EntityType="Self.personnel_tbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="usersprofile_tbl" EntityType="Self.usersprofile_tbl" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -102,6 +193,27 @@
         <EntityContainer Name="HRIS_DEVEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="payrollemployee_tax_tbl" EntityType="Self.payrollemployee_tax_tbl" />
           <EntitySet Name="personnel_tbl" EntityType="HRIS_PAYModel.personnel_tbl" />
+          <EntitySet Name="usersprofile_tbl" EntityType="HRIS_PAYModel.usersprofile_tbl" />
+          <EntitySet Name="application_token_tbl" EntityType="HRIS_PAYModel.application_token_tbl" />
+          <EntitySet Name="empl_taxwithheld_tbl" EntityType="HRIS_PAYModel.empl_taxwithheld_tbl" />
+          <FunctionImport Name="sp_empltaxwithheld_tbl_for_apprvl" ReturnType="Collection(HRIS_PAYModel.sp_empltaxwithheld_tbl_for_apprvl_Result)">
+          <Parameter Name="p_employment_type" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_payrollemployee_tax_hdr_tbl_update">
+            <Parameter Name="par_empl_id" Mode="In" Type="String" />
+            <Parameter Name="par_effective_date" Mode="In" Type="DateTime" />
+            <Parameter Name="par_rcrd_status" Mode="In" Type="String" />
+            <Parameter Name="par_user_id_updated_by" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_payrollemployee_tax_tbl_for_apprvl" ReturnType="Collection(HRIS_PAYModel.sp_payrollemployee_tax_tbl_for_apprvl_Result)">
+            <Parameter Name="par_year" Mode="In" Type="String" />
+            <Parameter Name="par_rcrd_status" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_payrollemployee_tax_tbl_for_apprvl_NE" ReturnType="Collection(HRIS_PAYModel.sp_payrollemployee_tax_tbl_for_apprvl_NE_Result)">
+            <Parameter Name="par_year" Mode="In" Type="String" />
+            <Parameter Name="par_rcrd_status" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="payrollemployee_tax_phic_rece_tbl" EntityType="HRIS_PAYModel.payrollemployee_tax_phic_rece_tbl" />
         </EntityContainer>
         <EntityType Name="personnel_tbl">
           <Key>
@@ -144,6 +256,108 @@
           <Property Name="citizenship_type" Type="Boolean" />
           <Property Name="citizenship_nature" Type="Boolean" />
           <Property Name="citizenship_country" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="ethnicity_id" Type="Int32" />
+          <Property Name="religion_id" Type="Int32" />
+          <Property Name="pwd_type_id" Type="Int32" />
+          <Property Name="gender2" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="usersprofile_tbl">
+          <Key>
+            <PropertyRef Name="user_id" />
+          </Key>
+          <Property Name="user_id" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="user_password" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="empl_id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="allow_edit_history" Type="Boolean" />
+          <Property Name="status" Type="Boolean" />
+          <Property Name="locked_account" Type="Boolean" />
+          <Property Name="change_password" Type="Boolean" />
+          <Property Name="created_date" Type="DateTime" Precision="0" />
+          <Property Name="created_by" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="last_updated_date" Type="DateTime" Precision="0" />
+          <Property Name="last_updated_by" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="user_accesslevel" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="application_token_tbl">
+          <Key>
+            <PropertyRef Name="token" />
+          </Key>
+          <Property Name="token" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="user_id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="application_name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="created_datetime" Type="DateTime" Precision="3" />
+          <Property Name="validuntil_datetime" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="empl_taxwithheld_tbl">
+          <Key>
+            <PropertyRef Name="effective_date" />
+            <PropertyRef Name="empl_id" />
+            <PropertyRef Name="payroll_year" />
+          </Key>
+          <Property Name="effective_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="empl_id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="payroll_year" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="tax_rate" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="wtax_amt" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="rcrd_status" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="user_id_created_by" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="created_dttm" Type="DateTime" Precision="3" />
+          <Property Name="user_id_updated_by" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="updated_dttm" Type="DateTime" Precision="3" />
+        </EntityType>
+        <ComplexType Name="sp_empltaxwithheld_tbl_for_apprvl_Result">
+          <Property Type="String" Name="empl_id" Nullable="false" MaxLength="8" />
+          <Property Type="String" Name="employee_name" Nullable="true" MaxLength="211" />
+          <Property Type="String" Name="tax_rate" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="wtax_amt" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="effective_date" Nullable="true" MaxLength="22" />
+          <Property Type="String" Name="rcrd_status" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="rcrd_status_descr" Nullable="false" MaxLength="3" />
+          <Property Type="String" Name="payroll_year" Nullable="false" MaxLength="4" />
+        </ComplexType>
+        <ComplexType Name="sp_payrollemployee_tax_tbl_for_apprvl_Result">
+          <Property Type="String" Name="empl_id" Nullable="false" MaxLength="8" />
+          <Property Type="String" Name="employee_name" Nullable="true" MaxLength="211" />
+          <Property Type="Decimal" Name="basic_tax_rate" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="tax_perc" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="vat_perc" Nullable="true" Precision="19" />
+          <Property Type="String" Name="rcrd_status" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="rcrd_status_descr" Nullable="false" MaxLength="9" />
+          <Property Type="String" Name="effective_date" Nullable="true" MaxLength="22" />
+          <Property Type="String" Name="payroll_year" Nullable="true" MaxLength="4" />
+        </ComplexType>
+        <ComplexType Name="sp_payrollemployee_tax_tbl_for_apprvl_NE_Result">
+          <Property Type="String" Name="empl_id" Nullable="false" MaxLength="8" />
+          <Property Type="String" Name="employee_name" Nullable="true" MaxLength="200" />
+          <Property Type="Decimal" Name="basic_tax_rate" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="tax_perc" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="vat_perc" Nullable="true" Precision="19" />
+          <Property Type="String" Name="rcrd_status" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="rcrd_status_descr" Nullable="false" MaxLength="9" />
+          <Property Type="String" Name="effective_date" Nullable="true" MaxLength="22" />
+          <Property Type="String" Name="payroll_year" Nullable="true" MaxLength="4" />
+        </ComplexType>
+        <EntityType Name="payrollemployee_tax_phic_rece_tbl">
+          <Key>
+            <PropertyRef Name="empl_id" />
+            <PropertyRef Name="effective_date" />
+          </Key>
+          <Property Name="empl_id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="effective_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="bir_class" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="with_sworn" Type="Boolean" />
+          <Property Name="fixed_rate" Type="Boolean" />
+          <Property Name="total_gross_pay" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="dedct_status" Type="Boolean" />
+          <Property Name="rcrd_status" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="user_id_created_by" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="created_dttm" Type="DateTime" Precision="3" />
+          <Property Name="user_id_updated_by" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="updated_dttm" Type="DateTime" Precision="3" />
+          <Property Name="w_tax_perc" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="bus_tax_perc" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="vat_perc" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="exmpt_amt" Type="Decimal" Precision="19" Scale="4" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -176,6 +390,10 @@
           <EntitySetMapping Name="personnel_tbl">
             <EntityTypeMapping TypeName="HRIS_PAYModel.personnel_tbl">
               <MappingFragment StoreEntitySet="personnel_tbl">
+                <ScalarProperty Name="gender2" ColumnName="gender2" />
+                <ScalarProperty Name="pwd_type_id" ColumnName="pwd_type_id" />
+                <ScalarProperty Name="religion_id" ColumnName="religion_id" />
+                <ScalarProperty Name="ethnicity_id" ColumnName="ethnicity_id" />
                 <ScalarProperty Name="citizenship_country" ColumnName="citizenship_country" />
                 <ScalarProperty Name="citizenship_nature" ColumnName="citizenship_nature" />
                 <ScalarProperty Name="citizenship_type" ColumnName="citizenship_type" />
@@ -212,6 +430,118 @@
                 <ScalarProperty Name="umid" ColumnName="umid" />
                 <ScalarProperty Name="empl_photo" ColumnName="empl_photo" />
                 <ScalarProperty Name="bir_tin" ColumnName="bir_tin" />
+                <ScalarProperty Name="empl_id" ColumnName="empl_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="usersprofile_tbl">
+            <EntityTypeMapping TypeName="HRIS_PAYModel.usersprofile_tbl">
+              <MappingFragment StoreEntitySet="usersprofile_tbl">
+                <ScalarProperty Name="user_accesslevel" ColumnName="user_accesslevel" />
+                <ScalarProperty Name="last_updated_by" ColumnName="last_updated_by" />
+                <ScalarProperty Name="last_updated_date" ColumnName="last_updated_date" />
+                <ScalarProperty Name="created_by" ColumnName="created_by" />
+                <ScalarProperty Name="created_date" ColumnName="created_date" />
+                <ScalarProperty Name="change_password" ColumnName="change_password" />
+                <ScalarProperty Name="locked_account" ColumnName="locked_account" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="allow_edit_history" ColumnName="allow_edit_history" />
+                <ScalarProperty Name="empl_id" ColumnName="empl_id" />
+                <ScalarProperty Name="user_password" ColumnName="user_password" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="application_token_tbl">
+            <EntityTypeMapping TypeName="HRIS_PAYModel.application_token_tbl">
+              <MappingFragment StoreEntitySet="application_token_tbl">
+                <ScalarProperty Name="validuntil_datetime" ColumnName="validuntil_datetime" />
+                <ScalarProperty Name="created_datetime" ColumnName="created_datetime" />
+                <ScalarProperty Name="application_name" ColumnName="application_name" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="token" ColumnName="token" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="empl_taxwithheld_tbl">
+            <EntityTypeMapping TypeName="HRIS_PAYModel.empl_taxwithheld_tbl">
+              <MappingFragment StoreEntitySet="empl_taxwithheld_tbl">
+                <ScalarProperty Name="updated_dttm" ColumnName="updated_dttm" />
+                <ScalarProperty Name="user_id_updated_by" ColumnName="user_id_updated_by" />
+                <ScalarProperty Name="created_dttm" ColumnName="created_dttm" />
+                <ScalarProperty Name="user_id_created_by" ColumnName="user_id_created_by" />
+                <ScalarProperty Name="rcrd_status" ColumnName="rcrd_status" />
+                <ScalarProperty Name="wtax_amt" ColumnName="wtax_amt" />
+                <ScalarProperty Name="tax_rate" ColumnName="tax_rate" />
+                <ScalarProperty Name="payroll_year" ColumnName="payroll_year" />
+                <ScalarProperty Name="empl_id" ColumnName="empl_id" />
+                <ScalarProperty Name="effective_date" ColumnName="effective_date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_empltaxwithheld_tbl_for_apprvl" FunctionName="HRIS_PAYModel.Store.sp_empltaxwithheld_tbl_for_apprvl">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HRIS_PAYModel.sp_empltaxwithheld_tbl_for_apprvl_Result">
+                <ScalarProperty Name="empl_id" ColumnName="empl_id" />
+                <ScalarProperty Name="employee_name" ColumnName="employee_name" />
+                <ScalarProperty Name="tax_rate" ColumnName="tax_rate" />
+                <ScalarProperty Name="wtax_amt" ColumnName="wtax_amt" />
+                <ScalarProperty Name="effective_date" ColumnName="effective_date" />
+                <ScalarProperty Name="rcrd_status" ColumnName="rcrd_status" />
+                <ScalarProperty Name="rcrd_status_descr" ColumnName="rcrd_status_descr" />
+                <ScalarProperty Name="payroll_year" ColumnName="payroll_year" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_payrollemployee_tax_hdr_tbl_update" FunctionName="HRIS_PAYModel.Store.sp_payrollemployee_tax_hdr_tbl_update" />
+          <FunctionImportMapping FunctionImportName="sp_payrollemployee_tax_tbl_for_apprvl" FunctionName="HRIS_PAYModel.Store.sp_payrollemployee_tax_tbl_for_apprvl">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HRIS_PAYModel.sp_payrollemployee_tax_tbl_for_apprvl_Result">
+                <ScalarProperty Name="empl_id" ColumnName="empl_id" />
+                <ScalarProperty Name="employee_name" ColumnName="employee_name" />
+                <ScalarProperty Name="basic_tax_rate" ColumnName="basic_tax_rate" />
+                <ScalarProperty Name="tax_perc" ColumnName="tax_perc" />
+                <ScalarProperty Name="vat_perc" ColumnName="vat_perc" />
+                <ScalarProperty Name="rcrd_status" ColumnName="rcrd_status" />
+                <ScalarProperty Name="rcrd_status_descr" ColumnName="rcrd_status_descr" />
+                <ScalarProperty Name="effective_date" ColumnName="effective_date" />
+                <ScalarProperty Name="payroll_year" ColumnName="payroll_year" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_payrollemployee_tax_tbl_for_apprvl_NE" FunctionName="HRIS_PAYModel.Store.sp_payrollemployee_tax_tbl_for_apprvl_NE">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HRIS_PAYModel.sp_payrollemployee_tax_tbl_for_apprvl_NE_Result">
+                <ScalarProperty Name="empl_id" ColumnName="empl_id" />
+                <ScalarProperty Name="employee_name" ColumnName="employee_name" />
+                <ScalarProperty Name="basic_tax_rate" ColumnName="basic_tax_rate" />
+                <ScalarProperty Name="tax_perc" ColumnName="tax_perc" />
+                <ScalarProperty Name="vat_perc" ColumnName="vat_perc" />
+                <ScalarProperty Name="rcrd_status" ColumnName="rcrd_status" />
+                <ScalarProperty Name="rcrd_status_descr" ColumnName="rcrd_status_descr" />
+                <ScalarProperty Name="effective_date" ColumnName="effective_date" />
+                <ScalarProperty Name="payroll_year" ColumnName="payroll_year" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="payrollemployee_tax_phic_rece_tbl">
+            <EntityTypeMapping TypeName="HRIS_PAYModel.payrollemployee_tax_phic_rece_tbl">
+              <MappingFragment StoreEntitySet="payrollemployee_tax_phic_rece_tbl">
+                <ScalarProperty Name="exmpt_amt" ColumnName="exmpt_amt" />
+                <ScalarProperty Name="vat_perc" ColumnName="vat_perc" />
+                <ScalarProperty Name="bus_tax_perc" ColumnName="bus_tax_perc" />
+                <ScalarProperty Name="w_tax_perc" ColumnName="w_tax_perc" />
+                <ScalarProperty Name="updated_dttm" ColumnName="updated_dttm" />
+                <ScalarProperty Name="user_id_updated_by" ColumnName="user_id_updated_by" />
+                <ScalarProperty Name="created_dttm" ColumnName="created_dttm" />
+                <ScalarProperty Name="user_id_created_by" ColumnName="user_id_created_by" />
+                <ScalarProperty Name="rcrd_status" ColumnName="rcrd_status" />
+                <ScalarProperty Name="dedct_status" ColumnName="dedct_status" />
+                <ScalarProperty Name="total_gross_pay" ColumnName="total_gross_pay" />
+                <ScalarProperty Name="fixed_rate" ColumnName="fixed_rate" />
+                <ScalarProperty Name="with_sworn" ColumnName="with_sworn" />
+                <ScalarProperty Name="bir_class" ColumnName="bir_class" />
+                <ScalarProperty Name="effective_date" ColumnName="effective_date" />
                 <ScalarProperty Name="empl_id" ColumnName="empl_id" />
               </MappingFragment>
             </EntityTypeMapping>

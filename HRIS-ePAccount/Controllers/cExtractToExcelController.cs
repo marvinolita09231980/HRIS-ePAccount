@@ -18,7 +18,7 @@ namespace HRIS_ePAccount.Controllers
     public class cExtractToExcelController : Controller
     {
 
-        HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+        HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
         public string url_name = "cExtractToExcel";
         User_Menu um = new User_Menu();
 
@@ -44,6 +44,13 @@ namespace HRIS_ePAccount.Controllers
                 
             }
             return View(um);
+        }
+
+        public ActionResult Initialize()
+        {
+            string excelExportServer = System.Configuration.ConfigurationManager.AppSettings["ExcelExportServerIP"];
+           
+            return JSON(new {excelExportServer }, JsonRequestBehavior.AllowGet);
         }
 
         protected JsonResult JSON(object data, JsonRequestBehavior behavior)
@@ -137,7 +144,41 @@ namespace HRIS_ePAccount.Controllers
             return JSON(new { message, filePath }, JsonRequestBehavior.AllowGet);
             
         }
-        
-        
+
+        public ActionResult ExtractExcel_PHP(string par_extract_type, string par_year, string par_month, string par_month_descr)
+        {
+            db_pacco.Database.CommandTimeout = int.MaxValue;
+
+            var message = "";
+            var filePath = "";
+            List<sp_extract_refund_2_Result> data_extract = new List<sp_extract_refund_2_Result>();
+            try
+            {
+                if (par_extract_type == "REFUND")
+                {
+                    var user_id = Session["user_id"].ToString().Trim();
+                    var date_extract = DateTime.Now.ToString("yyyy_MM_dd_HHmm");
+
+                    string extract_type = par_extract_type;
+                    
+                    data_extract = db_pacco.sp_extract_refund_2(par_year, par_month).ToList();
+                    
+                }
+                message = "success";
+                return JSON(new { message, data_extract }, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception e)
+            {
+
+                message = e.Message.ToString();
+                return JSON(new { message, filePath }, JsonRequestBehavior.AllowGet);
+
+            }
+
+           
+
+        }
+
     }
 }

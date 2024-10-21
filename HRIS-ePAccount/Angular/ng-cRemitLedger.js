@@ -168,7 +168,8 @@
                                 full["remittancetype_code"] == "05" ||
                                 full["remittancetype_code"] == "06" ||
                                 full["remittancetype_code"] == "01" ||
-                                full["remittancetype_code"] == "07" 
+                                full["remittancetype_code"] == "07" ||
+                                full["remittancetype_code"] == "18" 
                             )
                             {
                                 printable = false;
@@ -845,6 +846,16 @@
                 , { report_name: "cryRemittance_Smry.rpt", report_descr: "Tagum Coop Remittance Summary By Office" }
                 ];
         }
+        else if (s.datalistgrid[lst].remittancetype_code == "18") {
+            $('#lbl_dynamic_month').html("<b>Remittance Month:</b>");
+            $('#txtb_rpt_quarter').val($('#ddl_month option:selected').html());
+            s.reports =
+                [
+                { report_name: "cryRemittanceJO_UNIFORM.rpt", report_descr: "Job Order Uniform Remittance" }
+                , { report_name: "cryRemittance_Smry.rpt", report_descr: "Job Order Uniform Remittance Summary By Office" }
+                ];
+        }
+
 
         $('#modalLabelSmall').html(s.datalistgrid[lst].remittancetype_descr + " REPORT OPTIONS");
         $('#modal_print_option').modal({ keyboard: false, backdrop: "static" });
@@ -897,8 +908,7 @@
 
                     }
 
-                    else
-                    {
+                    else {
                         sp = "sp_remittance_GSIS_smry_rep,p_remittance_ctrl_nbr," + data.remittance_ctrl_nbr;
                     }
 
@@ -924,11 +934,11 @@
                     data.remittancetype_code == "11" ||
                     data.remittancetype_code == "12" ||
                     data.remittancetype_code == "13" ||
-                    data.remittancetype_code == "16" || 
-                    data.remittancetype_code == "17" 
-                    
+                    data.remittancetype_code == "16" ||
+                    data.remittancetype_code == "17"
+
                 ) {
-                   
+
                     if ($('#ddl_reports option:selected').attr('ngx-data') == "0" && data.remittancetype_code != "16") {
                         sp = "sp_remittance_OTHERS_rep,p_remittance_ctrl_nbr," + data.remittance_ctrl_nbr;
                     }
@@ -942,7 +952,7 @@
 
                     }
 
-                    
+
 
                     else {
                         sp = "sp_remittance_OTHERS_smry_rep,p_remittance_ctrl_nbr," + data.remittance_ctrl_nbr;
@@ -954,7 +964,7 @@
                     else {
                         ReportPath = "~/Reports/cryRemittanceOTHERS1/" + s.ddl_reports + "";
                     }
-                 
+
 
                 }
 
@@ -964,9 +974,8 @@
                     || data.remittancetype_code == "05"
                     || data.remittancetype_code == "06") //HDMF PREMIUMS 
                 {
-                  
-                    if ($('#ddl_reports option:selected').attr('ngx-data') == "0")
-                    {
+
+                    if ($('#ddl_reports option:selected').attr('ngx-data') == "0") {
 
                         var parameters = "p_remittancetype_code," + data.remittancetype_code + ",p_employment_type," + data.employment_type + ",p_remit_year," + data.remittance_year + ",p_remit_month," + data.remittance_month + ",p_remittance_ctrl_nbr," + data.remittance_ctrl_nbr
                         sp = "sp_monthly_remittance_hdmf_rep," + parameters
@@ -980,8 +989,7 @@
                     ReportPath = "~/Reports/cryRemittanceOTHERS1/" + s.ddl_reports + "";
                 }
 
-                else if (data.remittancetype_code == "07")
-                {
+                else if (data.remittancetype_code == "07") {
 
                     if ($('#ddl_reports option:selected').attr('ngx-data') == "0") {
 
@@ -997,23 +1005,31 @@
                     ReportPath = "~/Reports/cryRemittanceOTHERS1/" + s.ddl_reports + "";
                 }
 
-                  
 
-                else if (data.remittancetype_code == "14")
-                { 
 
-                    if (s.ddl_reports == "cryRemittance_SmryTax.rpt")
-                    {
+                else if (data.remittancetype_code == "14") {
+
+                    if (s.ddl_reports == "cryRemittance_SmryTax.rpt") {
                         sp = "sp_remittance_TAX_smry_rep,p_remittance_ctrl_nbr," + data.remittance_ctrl_nbr;
-                       
+
                     }
-                    else
-                    {
+                    else {
                         var parameters = "p_remittancetype_code," + "14" + ",p_employment_type," + data.employment_type + ",p_remit_year," + data.remittance_year + ",p_remit_month," + data.remittance_month + ",p_remittance_ctrl_nbr," + data.remittance_ctrl_nbr
                         sp = "sp_monthly_remittance_tax_rep," + parameters;
-                        
+
                     }
-                    ReportPath = "~/Reports/cryRemittanceOTHERS1/" + s.ddl_reports + ""; 
+                    ReportPath = "~/Reports/cryRemittanceOTHERS1/" + s.ddl_reports + "";
+                }
+                else if (data.remittancetype_code == "18") {
+                    if (s.ddl_reports == "cryRemittanceJO_UNIFORM.rpt") {
+
+                        sp = "sp_remittance_OTHERS_rep,p_remittance_ctrl_nbr," + data.remittance_ctrl_nbr;
+                       
+                    }
+                    else {
+                        sp = "sp_remittance_OTHERS_smry_rep,p_remittance_ctrl_nbr," + data.remittance_ctrl_nbr;
+                    }
+                    ReportPath = "~/Reports/cryRemittanceOTHERS1/" + s.ddl_reports + "";
                 }
                 
                 s.loading_r = true;

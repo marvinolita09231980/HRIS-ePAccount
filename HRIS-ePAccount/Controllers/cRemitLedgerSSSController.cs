@@ -42,7 +42,7 @@ namespace HRIS_ePAccount.Controllers
     public class cRemitLedgerSSSController : Controller
     {
         
-        HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+        HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
         string remittance_ctrl_nbr  = "";
         string remittance_year      = "";
         string remittance_month     = "";
@@ -83,6 +83,7 @@ namespace HRIS_ePAccount.Controllers
         //*********************************************************************//
         public ActionResult InitializeData(string p_department_code, string p_starts_letter, int p_batch_nbr)
         {
+            string excelExportServer = System.Configuration.ConfigurationManager.AppSettings["ExcelExportServerIP"];
             db_pacco.Database.CommandTimeout = int.MaxValue;
             string[] prevValues = Session["PreviousValuesonPage_cRemitLedger"].ToString().Split(new char[] { ',' });
             remittance_ctrl_nbr = prevValues[7].ToString().Trim();
@@ -92,7 +93,7 @@ namespace HRIS_ePAccount.Controllers
             remittance_type = prevValues[5].ToString().Trim();
             var department_list = db_pacco.vw_departments_tbl_list.ToList().OrderBy(a => a.department_code);
             var listgrid = db_pacco.sp_remittance_ledger_info_SSS(remittance_ctrl_nbr, p_department_code, p_starts_letter, p_batch_nbr,"","").ToList();
-            return JSON(new { prevValues, listgrid, department_list }, JsonRequestBehavior.AllowGet);
+            return JSON(new { prevValues, listgrid, department_list, excelExportServer}, JsonRequestBehavior.AllowGet);
         }
 
         //*********************************************************************//
@@ -728,7 +729,52 @@ namespace HRIS_ePAccount.Controllers
                 return JSON(new { message = message }, JsonRequestBehavior.AllowGet);
             }
         }
-        
+
+
+        public ActionResult ExctractToExcelSSS_PHP(string p_employment_type, string p_employmenttype_descr, string p_remittance_year, int p_quarter_rep, string p_empl_id, int p_batch_nbr, string p_sq_m)
+        {
+
+            db_pacco.Database.CommandTimeout = int.MaxValue;
+           
+            try
+            {
+                if (p_sq_m == "Q")
+                {
+                  
+                    var SSS_result = db_pacco.sp_remittance_SSS_qtrly_rep_2(p_employment_type, p_remittance_year, p_quarter_rep, p_empl_id, p_batch_nbr).ToList();
+                    return JSON(new { message = "success", SSS_result }, JsonRequestBehavior.AllowGet);
+
+                }
+                //else if (p_sq_m == "M")
+                else
+                {
+
+                    object misValue = System.Reflection.Missing.Value;
+                    string[] prevValues = Session["PreviousValuesonPage_cRemitLedger"].ToString().Split(new char[] { ',' });
+                    remittance_ctrl_nbr = prevValues[7].ToString().Trim();
+                    remittance_year = prevValues[0].ToString().Trim();
+                    remittance_month = prevValues[1].ToString().Trim();
+                    employment_type = prevValues[3].ToString().Trim();
+                    remittance_type = prevValues[5].ToString().Trim();
+
+                    var SSS_result = db_pacco.sp_remittance_ledger_info_SSS_2(remittance_ctrl_nbr, "", "", p_batch_nbr, "", "").GroupBy(a => a.payroll_month).ToList();
+                        
+
+
+                    return JSON(new { message = "success", SSS_result }, JsonRequestBehavior.AllowGet);
+                }
+
+              
+
+            }
+            catch (DbEntityValidationException e)
+            {
+                string message = DbEntityValidationExceptionError(e);
+
+                return JSON(new { message = message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         //*********************************************************************//
         // Created By   : Lorraine I. Ale 
         // Created Date : 11/23/2019

@@ -31,5 +31,6 @@ namespace HRIS_ePAccount.Models
         public string footer_02 { get; set; }
         public string remittance_sig_acct_name { get; set; }
         public string remittance_sig_acct_desg { get; set; }
+        public byte[] org_logo { get; set; }
     }
 }

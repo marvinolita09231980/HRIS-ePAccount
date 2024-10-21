@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\WORKING FOLDER\WORKING SOLUTION\ePAccount\HRIS-ePAccount 2022-08-30\HRIS-ePAccount\Models\cnHRIS_ePAccount.edmx'. 
+﻿// T4 code generation is enabled for model 'D:\GIT\HRIS-ePAccount - Development\HRIS-ePAccount\Models\cnHRIS_ePAccount.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

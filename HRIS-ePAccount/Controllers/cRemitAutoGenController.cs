@@ -22,7 +22,7 @@ namespace HRIS_ePAccount.Controllers
     {
         // GET: cRemitAutoGen
         
-        HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+        HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
 
         public ActionResult Index()
         {

@@ -25,6 +25,8 @@ namespace HRIS_ePAccount.Models
         public Nullable<decimal> nhmfc_hsing { get; set; }
         public Nullable<decimal> philamlife_ps { get; set; }
         public Nullable<decimal> ccmpc_ln { get; set; }
+        public decimal tgm_coop_ln { get; set; }
+        public Nullable<decimal> uniform_amt { get; set; }
         public string employee_name { get; set; }
         public string last_name { get; set; }
         public string first_name { get; set; }
@@ -33,7 +35,5 @@ namespace HRIS_ePAccount.Models
         public string payroll_registry_nbr { get; set; }
         public string payroll_year { get; set; }
         public string payroll_month { get; set; }
-        public decimal tgm_coop_ln { get; set; }
-        public Nullable<decimal> uniform_amt { get; set; }
     }
 }

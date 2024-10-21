@@ -13,7 +13,7 @@ ng_HRD_App.controller("cExtractToExcel_ctrlr", function ($scope, $compile, $http
 
     var s = $scope;
     var h = $http;
-
+    var excelExportServer = "";
     s.year = [];
 
     s.show_deduction        = false
@@ -26,6 +26,11 @@ ng_HRD_App.controller("cExtractToExcel_ctrlr", function ($scope, $compile, $http
     {
         RetrieveYear();
         s.ddl_payroll_year = new Date().getFullYear().toString();
+        h.post("../cExtractToExcel/Initialize").then(function (d) {
+
+               excelExportServer = d.data.excelExportServer;
+
+        })
     }
 
     init();
@@ -55,32 +60,81 @@ ng_HRD_App.controller("cExtractToExcel_ctrlr", function ($scope, $compile, $http
             if (s.ddl_report_type == "REFUND")
             {
                 $("#modal_generating_tax").modal({ keyboard: false, backdrop: "static" });
-                h.post("../cExtractToExcel/ExtractExcel",
-                {
-                    par_extract_type : s.ddl_report_type,
-                    par_year         : s.ddl_payroll_year,
-                    par_month        : s.ddl_payroll_month,
-                    par_month_descr  : $("#ddl_payroll_month option:selected").text().toString().trim()
 
-                }).then(function (d)
-                { 
-                    if (d.data.message == "success")
-                    {
-                        window.open(d.data.filePath, '', '');
-                        //swal("Successfully Extracted", "Generation Message", "success");
+                h.post("../Menu/GetToken").then(function (d) {
+                    var token = { token: d.data.token }
+
+                    console.log(excelExportServer)
+
+                    h.post(excelExportServer + "/api/remittance/verify-token", token, { responseType: 'arraybuffer' }
+                    ).then(function (response) {
+                        if (response.data) {
+                            h.post("../cExtractToExcel/ExtractExcel_PHP",
+                                {
+                                    par_extract_type: s.ddl_report_type,
+                                    par_year: s.ddl_payroll_year,
+                                    par_month: s.ddl_payroll_month,
+                                    par_month_descr: $("#ddl_payroll_month option:selected").text().toString().trim()
+                                }).then(function (d) {
+                                    if (d.data.message == "success") {
+                                        var data_extract = d.data.data_extract
+                                    h.post(excelExportServer + "/api/export/hris-refund-export", {
+                                            data: data_extract
+                                        }, { responseType: 'arraybuffer' }
+                                        ).then(function (response2) {
+                                            console.log(response2)
+                                            // Check the response data
+                                            if (response2.data) {
+                                                // Create a Blob from the response data
+                                                const csvBlob = new Blob([response2.data], { type: 'text/csv;charset=utf-8;' });
+                                                // Generate a URL for the Blob
+                                                const downloadUrl = window.URL.createObjectURL(csvBlob);
+
+                                                // Create an anchor element and set its href attribute to the Blob URL
+                                                const link = document.createElement('a');
+                                                link.href = downloadUrl;
+
+                                                // Set the download attribute with a dynamic filename
+                                                //const name = new Date().toLocaleString().replace(/[/,\\:*?"<>|]/g, '_');
+                                                const name = "HRIS-Refund-" + s.ddl_payroll_year + "-" + s.ddl_payroll_month + ".xlsx"
+                                                link.setAttribute('download', name);
+                                                console.log(link)
+                                                // Append the link to the document body and click it to initiate the download
+                                                document.body.appendChild(link);
+                                                link.click();
+
+                                                // Clean up by removing the link element and revoking the Blob URL
+                                                document.body.removeChild(link);
+                                                window.URL.revokeObjectURL(downloadUrl);
+                                                $("#modal_generating_tax").modal("hide");
+                                            } else {
+                                                console.error('The response data is empty or undefined.');
+                                                $("#modal_generating_tax").modal("hide");
+                                            }
+                                        }).catch(function (error) {
+                                            console.error('There was a problem with the POST request:', error);
+                                            $("#modal_generating_tax").modal("hide");
+                                        });
+                                }
+                                else {
+                                    $("#modal_generating_tax").modal("hide");
+                                    swal(d.data.message, { icon: "success" });
+                                }
+
+
+
+                            })
+                        }
+
+                    }).catch(function (error, response) {
+                        swal("Token expired! please generate new token.", { icon: "error" })
                         $("#modal_generating_tax").modal("hide");
-                    }
-                    else if (d.data.message == "no-data-found")
-                    {
-                        $("#modal_generating_tax").modal("hide");
-                        swal("No Data Found!", "Generation Message", "warning");
-                    }
-                    else
-                    {
-                        $("#modal_generating_tax").modal("hide");
-                        swal(d.data.message, "Generation Message", "error");
-                    }
+                    });
+
+
                 })
+
+                
             }
             if (s.ddl_report_type == "TAX-PAYABLE")
             {

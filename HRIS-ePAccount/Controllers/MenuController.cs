@@ -1,21 +1,26 @@
 ﻿
+using HRIS_eHRD.Common_Code;
+using HRIS_ePAccount.Filter;
 using HRIS_ePAccount.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Text;
-using System.Web;
 using System.Web.Mvc;
+
 
 namespace HRIS_ePAccount.Controllers
 {
+    [SessionExpire]
     public class MenuController : Controller
     {
-
+       
         //
         HRIS_DEVEntities db_pay = new HRIS_DEVEntities();
-        HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+        HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
+        applicationtoken at = new applicationtoken();
         // GET: Menu
         public ActionResult Index()
         {
@@ -35,40 +40,102 @@ namespace HRIS_ePAccount.Controllers
         }
 
 
+        public ActionResult GetTaxToUpdate()
+        {
+            db_pay.Database.CommandTimeout = int.MaxValue;
+            String[] AllowUserTaxUpdApprove_list;
+            bool AllowUserTaxApprove = false;
+            var userid = Session["user_id"].ToString();
+            var year = DateTime.Now.Year.ToString();
+            AllowUserTaxUpdApprove_list = System.Configuration.ConfigurationManager.AppSettings["AllowApprovetaxUpdateUser"].Split(',');
+            try
+            {
+                var retax = db_pay.sp_empltaxwithheld_tbl_for_apprvl("RE").ToList().Count();
+                var cetax = db_pay.sp_empltaxwithheld_tbl_for_apprvl("CE").ToList().Count();
+                var jotax = db_pay.sp_payrollemployee_tax_tbl_for_apprvl(year, "N").ToList().Count();
+                var netax = db_pay.sp_payrollemployee_tax_tbl_for_apprvl_NE(year, "N").ToList().Count();
+                var rctax = retax + cetax;
+                int updtax = rctax + jotax + netax;
+
+                for (var x = 0; x < AllowUserTaxUpdApprove_list.Count(); x++)
+                {
+                    if (userid == AllowUserTaxUpdApprove_list[x])
+                    {
+                        AllowUserTaxApprove = true;
+                    }
+                }
+                return Json(new { message = "Success",  icon = "success", rctax, updtax, jotax, AllowUserTaxApprove, netax}, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                var message = ex.Message;
+                return Json(new { message = message,icon="error" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         public ActionResult GetMenuList()
         {
 
+            List<sp_user_menu_access_role_list_ACT_Result> menu_data = new List<sp_user_menu_access_role_list_ACT_Result>();
+
             var message = "";
+            var year = DateTime.Now.Year.ToString();
             //menulst = (List<Object>)Session["menu"];
             try
             {
 
+                string imgDataURL = "";
+                var userid = Session["user_id"].ToString();
+
                 if (Session["user_id"] != null)
                 {
                     var empl_id = Session["empl_id"].ToString();
-
-
-                   var emp_photo_byte_arr = db_pay.personnel_tbl.Where(a => a.empl_id == empl_id).FirstOrDefault().empl_photo_img;
-
-                    //string imreBase64Data = "";
-                    string imgDataURL = "";
                     string current_url = Request.UrlReferrer.ToString().Replace("Index", "").Trim('/').Split('/')[Request.UrlReferrer.ToString().Replace("Index", "").Trim('/').Split('/').Count() - 1].ToString();
                     int already_in_fav = 0;
-                    //***************convert byte array to image***********************************
-                    if (emp_photo_byte_arr != null)
+
+                    if (Session["imgDataURL"] == null)
                     {
-                        //imreBase64Data = Convert.ToBase64String(emp_photo_byte_arr);
-                        //imgDataURL = string.Format("data:image/png;base64,{0}", imreBase64Data);
-                        imgDataURL = "http://192.168.5.218/storage/images" + emp_photo_byte_arr;
+                        var emp_photo_byte_arr = db_pay.personnel_tbl.Where(a => a.empl_id == empl_id).FirstOrDefault().empl_photo_img;
+
+                        //string imreBase64Data = "";
+                      
+                       
+                        //***************convert byte array to image***********************************
+                        if (emp_photo_byte_arr != null)
+                        {
+                            //imreBase64Data = Convert.ToBase64String(emp_photo_byte_arr);
+                            //imgDataURL = string.Format("data:image/png;base64,{0}", imreBase64Data);
+                            imgDataURL = "http://192.168.5.218/storage/images" + emp_photo_byte_arr;
+
+                            HttpContext.Session["imgDataURL"] = imgDataURL;
+                        }
+                        else
+                        {
+                            imgDataURL = "../ResourcesImages/upload_profile.png";
+                        }
                     }
                     else
                     {
-                        imgDataURL = "../ResourcesImages/upload_profile.png";
+                        imgDataURL = HttpContext.Session["imgDataURL"].ToString();
                     }
 
-                    var data = db_pacco.sp_user_menu_access_role_list_ACT(Session["user_id"].ToString()).ToList();
+                    if (Session["session_menu"] == null)
+                    {
+                        menu_data = db_pacco.sp_user_menu_access_role_list_ACT(Session["user_id"].ToString()).ToList();
+                        HttpContext.Session["session_menu"] = menu_data;
+                    }
+                    else
+                    {
+                        menu_data = (List<sp_user_menu_access_role_list_ACT_Result>)HttpContext.Session["session_menu"];
+                    }
 
-                    for (int x = 0; x < data.Count; x++)
+                     var data = menu_data;
+
+
+
+
+
+                    for (int x = 0; x < data.Count(); x++)
                     {
                         if (data[x].url_name == current_url)
                         {
@@ -82,7 +149,7 @@ namespace HRIS_ePAccount.Controllers
 
                         return JSON(new { data = data, expanded = Session["expanded"], photo = imgDataURL, success = 1, username = User_Name, already_in_fav }, JsonRequestBehavior.AllowGet);
                     }
-                    else return JSON(new { data = data, expanded = 0, photo = imgDataURL, success = 1, username = User_Name, already_in_fav }, JsonRequestBehavior.AllowGet);
+                    else return JSON(new { data = data, expanded = 0, photo = imgDataURL, success = 1, username = User_Name, already_in_fav}, JsonRequestBehavior.AllowGet);
 
                     
                 }
@@ -204,5 +271,29 @@ namespace HRIS_ePAccount.Controllers
                 return JSON(new { success = 0, e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+
+        public ActionResult GetToken()
+        {
+            var token = "";
+            try
+            {
+                var user_id = Session["user_id"].ToString();
+                var app = at.app_name;
+                var user_token_tbl = db_pay.application_token_tbl.Where(a => a.user_id == user_id && a.application_name == app).OrderByDescending(a => a.created_datetime).FirstOrDefault();
+                if (user_token_tbl != null)
+                {
+                    token = user_token_tbl.token;
+                }
+
+                return JSON(new { success = 1, token}, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                return JSON(new { success = 0, e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+       
     }
 }

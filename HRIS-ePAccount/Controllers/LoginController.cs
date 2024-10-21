@@ -14,14 +14,14 @@ namespace HRIS_ePAccount.Controllers
     {
 
         // GET: Login
-        HRIS_PACCO_DEVEntities db = new HRIS_PACCO_DEVEntities();
+        HRIS_ACTEntities db = new HRIS_ACTEntities();
         CommonDB Cmn = new CommonDB();
         Dev_Version_Name dvn = new Dev_Version_Name();
        
         // GET: Login
         public ActionResult Index()
         {
-
+            string excelExportServer = System.Configuration.ConfigurationManager.AppSettings["ExcelExportServerIP"];
             dvn.DVName = "(" + db.Database.Connection.DataSource.ToString().Split('\\')[db.Database.Connection.DataSource.ToString().Split('\\').Length - 1] + ")";
             if (Session["user_id"] != null)
             {
@@ -34,20 +34,21 @@ namespace HRIS_ePAccount.Controllers
             }
 
         }
-        public ActionResult GetUserIsLogin()
-        {
 
-            if (Session["user_id"] != null)
-            {
-                return Json(new { data = Session["user_id"], success = 1 }, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                return Json(new { data = 0, success = 0 }, JsonRequestBehavior.AllowGet);
-            }
+        //public ActionResult GetUserIsLogin()
+        //{
+        //    if (Session["user_id"] != null)
+        //    {
+        //        return Json(new { data = Session["user_id"], success = 1 }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    else
+        //    {
+        //        return Json(new { data = 0, success = 0 }, JsonRequestBehavior.AllowGet);
+        //    }
+        //}
 
 
-        }
+
         public ActionResult isUserLogin()
         {
             if (Session["user_id"] != null)

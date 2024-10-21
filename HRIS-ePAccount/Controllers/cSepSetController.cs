@@ -35,7 +35,7 @@ namespace HRIS_ePAccount.Controllers
     public class cSepSetController : Controller
     {
 
-        HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+        HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
         User_Menu um = new User_Menu();
         //*********************************************************************//
         // Created By : JRV - Created Date : 09/19/2019
@@ -155,22 +155,22 @@ namespace HRIS_ePAccount.Controllers
         // Created By : JRV - Created Date : 09/19/2019
         // Description: Populate Employment Type
         //*********************************************************************//
-        public ActionResult RetrieveEmployeeList(string par_empType, string par_payroll_year)
-        {
-            try
-            {
-                db_pacco.Database.CommandTimeout = int.MaxValue;
-                var sp_personnelnames_annualtax_hdr_combolist = db_pacco.sp_personnelnames_annualtax_hdr_combolist(par_empType, par_payroll_year).ToList();
+        //public ActionResult RetrieveEmployeeList(string par_empType, string par_payroll_year) --COMMENT BY MARVIN 2024-08-22
+        //{
+        //    try
+        //    {
+        //        db_pacco.Database.CommandTimeout = int.MaxValue;
+        //        var sp_personnelnames_annualtax_hdr_combolist = db_pacco.sp_personnelnames_annualtax_hdr_combolist(par_empType, par_payroll_year).ToList();
 
-                return JSON(new { message = "success", sp_personnelnames_annualtax_hdr_combolist }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return JSON(new { ex.Message }, JsonRequestBehavior.AllowGet);
-            }
+        //        return JSON(new { message = "success", sp_personnelnames_annualtax_hdr_combolist }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return JSON(new { ex.Message }, JsonRequestBehavior.AllowGet);
+        //    }
 
-        }
-        
+        //}
+
 
         //////*********************************************************************//
         ////// Created By : JRV - Created Date : 09/19/2019

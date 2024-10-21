@@ -51,7 +51,7 @@ namespace HRIS_ePAccount.Models
         public Nullable<decimal> total_nontaxable { get; set; }
         public Nullable<decimal> pres_basic_salary { get; set; }
         public Nullable<decimal> pres_txbl_13th_14th { get; set; }
-        public decimal pres_txbl_oth_sal { get; set; }
+        public Nullable<decimal> pres_txbl_oth_sal { get; set; }
         public Nullable<decimal> total_gross_txbl { get; set; }
         public Nullable<decimal> pres_gross_compensation_total_gross { get; set; }
         public Nullable<decimal> pres_total_gross_txbl { get; set; }

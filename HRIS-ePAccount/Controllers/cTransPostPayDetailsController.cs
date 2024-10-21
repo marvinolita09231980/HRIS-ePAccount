@@ -10,7 +10,7 @@
 // Joseph M. Tombo Jr       12/02/2019      Code Creation
 //**********************************************************************************
 using System;
-using HRIS_ePAccount.Models;
+//using HRIS_ePAccount.Models;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
@@ -21,14 +21,15 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Text;
+using HRIS_ePAccount.Models;
 
 namespace HRIS_ePAccount.Controllers
 {
     public class cTransPostPayDetailsController : Controller
     {
-        User_Menu               um          = new User_Menu();
-      
-        HRIS_PACCO_DEVEntities  db_pacco    = new HRIS_PACCO_DEVEntities();
+        User_Menu um = new User_Menu();
+
+        HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
 
         // GET: cTransPostPayDetails
         public ActionResult Index()
@@ -62,6 +63,7 @@ namespace HRIS_ePAccount.Controllers
         {
             string[] prevValues = null;
             string batch_nbr    = "";
+            
             db_pacco.Database.CommandTimeout = Int32.MaxValue;
             if (Session["PreviousValuesonPage_cTransPostPay"] == null || Session["PreviousValuesonPage_cTransPostPay"].ToString().Trim() == "")
             {

@@ -7,6 +7,7 @@
 // Updated Date : October 20, 2020
 // Updated By   : Jorge Rustom Villanueva
 // ***********************************************************
+using HRIS_ePAccount.Filter;
 using HRIS_ePAccount.Models;
 using System;
 using System.Collections.Generic;
@@ -24,10 +25,11 @@ using System.Web.Mvc;
 using Excel = Microsoft.Office.Interop.Excel;
 namespace HRIS_ePAccount.Controllers
 {
+    [SessionExpire]
     public class cRemitLedgerPHICController : Controller
     {
         
-        HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+        HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
 
         User_Menu um;
         //*********************************************************************//
@@ -87,14 +89,15 @@ namespace HRIS_ePAccount.Controllers
         //*********************************************************************//
         public ActionResult InitializeData(String ltr)
         {
-
+            string excelExportServer = System.Configuration.ConfigurationManager.AppSettings["ExcelExportServerIP"];
             db_pacco.Database.CommandTimeout = int.MaxValue;
             string[] prevValues = Session["PreviousValuesonPage_cRemitLedger"].ToString().Split(new char[] { ',' });
-            var sp_remittance_dtl_phic_tbl_list = db_pacco.sp_remittance_ledger_info_PHIC(prevValues[7].ToString().Trim(), "", ltr,"","").ToList();
+            var remittance_ctrl_nbr = prevValues[7].ToString().Trim();
+            var sp_remittance_dtl_phic_tbl_list = db_pacco.sp_remittance_ledger_info_PHIC(remittance_ctrl_nbr, "", ltr,"","").ToList();
             var sp_departments_tbl_list = db_pacco.sp_departments_tbl_list("N").ToList();
             var remit_ctrl_nbr = prevValues[7].ToString().Trim();
             var rs = db_pacco.remittance_hdr_tbl.Where(a => a.remittance_ctrl_nbr == remit_ctrl_nbr).FirstOrDefault();
-            return JSON(new { prevValues, sp_remittance_dtl_phic_tbl_list, sp_departments_tbl_list, remittance_status = rs.remittance_status }, JsonRequestBehavior.AllowGet);
+            return JSON(new { prevValues, sp_remittance_dtl_phic_tbl_list, sp_departments_tbl_list, remittance_status = rs.remittance_status, excelExportServer }, JsonRequestBehavior.AllowGet);
         }
         //*********************************************************************//
         // Created By  : VJA - Created Date : 10/21/2019
@@ -453,6 +456,36 @@ namespace HRIS_ePAccount.Controllers
 
         }
 
+        public ActionResult ExtractToExcelJO_monthly_php()
+        {
+            db_pacco.Database.CommandTimeout = int.MaxValue;
+            var message = "";
+            var icon = "";
+
+            string[] prevValues = Session["PreviousValuesonPage_cRemitLedger"].ToString().Split(new char[] { ',' });
+            string rmtCtrlnbr           = prevValues[7].Trim().ToString();
+            string rmtyear              = prevValues[0].Trim().ToString();
+            string rmtmonth             = prevValues[1].Trim().ToString();
+            string rmtempltype          = prevValues[3].Trim().ToString();
+
+            try
+            {
+                var sp_remittance_PHIC_monthly_rep = db_pacco.sp_remittance_PHIC_monthly_rep(rmtCtrlnbr).ToList();
+
+                message = "Success";
+                icon = "success";
+                return JSON(new { message, sp_remittance_PHIC_monthly_rep, rmtCtrlnbr, rmtyear, rmtmonth, rmtempltype, icon}, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                icon = "error";
+                return JSON(new { message, icon }, JsonRequestBehavior.AllowGet);
+            }
+
+          
+        }
+
 
         public ActionResult ExtractToExcelJO_monthly()
         {
@@ -522,7 +555,7 @@ namespace HRIS_ePAccount.Controllers
                 return JSON(new { message, sp_remittance_PHIC_monthly_rep, filePath }, JsonRequestBehavior.AllowGet);
         }
             //To Merge with Jorge
-            public ActionResult ExtractToExcelCheck()
+        public ActionResult ExtractToExcelCheck()
         {
             db_pacco.Database.CommandTimeout = int.MaxValue;
             var message = "";
@@ -1016,6 +1049,42 @@ namespace HRIS_ePAccount.Controllers
             }
             }
         }
+
+        public ActionResult ExtractToExcelCheck_PHP()
+        {
+            db_pacco.Database.CommandTimeout = int.MaxValue;
+            var message = "";
+            string[] prevValues = Session["PreviousValuesonPage_cRemitLedger"].ToString().Split(new char[] { ',' });
+            string rmtCtrlnbr = prevValues[7].Trim().ToString();
+            string rmtyear = prevValues[0].Trim().ToString();
+            string rmtmonth = prevValues[1].Trim().ToString();
+
+            var phic = db_pacco.sp_remittance_ledger_info_PHIC(rmtCtrlnbr, "", "", "", "").GroupBy(b => b.payroll_month).OrderBy(grouping => grouping.Max(m => m.payroll_month)).ToList();
+
+            int minimum_value = 10; //MINIMUM VALUE FOR LESS THAN 10 EMPLOYEES
+
+            try
+            {
+                if (phic.Count() > 0)
+                {
+                    message = "success";
+                }
+                else
+                {
+                    throw new Exception("No data extracted");
+                }
+
+                return JSON(new { message, phic }, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                return JSON(new { message = message }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
 
         //To Merge with Jade
         public ActionResult ExtractToExcel()

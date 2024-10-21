@@ -29,7 +29,7 @@ namespace HRIS_ePAccount.Controllers
     public class cPayDocTrkController : Controller
     {
         
-        HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+        HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
         string role_id = "";
 
         //*********************************************************************//
@@ -500,39 +500,39 @@ namespace HRIS_ePAccount.Controllers
         // Description: Report for Received, Released and Returned Documents
         // Update Date and By : VJA - 2021-03-18 
         ////*********************************************************************//
-        public ActionResult ReportDocuments(string par_doc_status, DateTime periodfrom, DateTime periodto)
-        {
-            try
-            {
-                var dept = Session["department_code"].ToString();
-                var data = (object)2;
+        //public ActionResult ReportDocuments(string par_doc_status, DateTime periodfrom, DateTime periodto) --COMMENT BY MARVIN 2024-08-22
+        //{
+        //    try
+        //    {
+        //        var dept = Session["department_code"].ToString();
+        //        var data = (object)2;
 
-                //var par_datefrom = Convert.ToDateTime(periodfrom.ToString()).ToString("yyyy-MM-dd");
-                //var par_dateto   = Convert.ToDateTime(periodto.ToString()).ToString("yyyy-MM-dd");
-                var par_datefrom = Convert.ToDateTime(periodfrom.ToString());
-                var par_dateto = Convert.ToDateTime(periodto.ToString());
+        //        //var par_datefrom = Convert.ToDateTime(periodfrom.ToString()).ToString("yyyy-MM-dd");
+        //        //var par_dateto   = Convert.ToDateTime(periodto.ToString()).ToString("yyyy-MM-dd");
+        //        var par_datefrom = Convert.ToDateTime(periodfrom.ToString());
+        //        var par_dateto = Convert.ToDateTime(periodto.ToString());
 
-                if (par_doc_status == "V")
-                {
-                    data = db_pacco.sp_idoc_trk_tbl_rcvd_list(par_datefrom, par_dateto).ToList();
-                }
-                else if (par_doc_status == "L")
-                {
-                    data = db_pacco.sp_idoc_trk_tbl_rlsd_list(par_datefrom, par_dateto).ToList();
-                }
-                else if (par_doc_status == "T")
-                {
-                    data = db_pacco.sp_idoc_trk_tbl_retd_list(par_datefrom, par_dateto).ToList();
-                }
-                Session["history_page"] = Request.UrlReferrer.ToString();
+        //        if (par_doc_status == "V")
+        //        {
+        //            data = db_pacco.sp_idoc_trk_tbl_rcvd_list(par_datefrom, par_dateto).ToList();
+        //        }
+        //        else if (par_doc_status == "L")
+        //        {
+        //            data = db_pacco.sp_idoc_trk_tbl_rlsd_list(par_datefrom, par_dateto).ToList();
+        //        }
+        //        else if (par_doc_status == "T")
+        //        {
+        //            data = db_pacco.sp_idoc_trk_tbl_retd_list(par_datefrom, par_dateto).ToList();
+        //        }
+        //        Session["history_page"] = Request.UrlReferrer.ToString();
 
-                return JSON(new { data }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return JSON(new { ex.Message }, JsonRequestBehavior.AllowGet);
-            }
-        }
+        //        return JSON(new { data }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return JSON(new { ex.Message }, JsonRequestBehavior.AllowGet);
+        //    }
+        //}
 
         //*********************************************************************//
         // Created By : VJA - Created Date : 01/21/2020

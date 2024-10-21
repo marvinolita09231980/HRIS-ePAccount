@@ -24,17 +24,24 @@ ng_HRD_App.controller("cRemitLedgerTax_ctrlr", function ($scope, $compile, $http
     s.show_extract = false;
     s.show_view_report = false;
     s.show_rec_report = false;
+
+    var excelExportServer = ""
     //Initialize Request to backend to get the data for employment type and remittance type
     function init() {
         //Initialize and request backend data...
+
         $('#loading_msg').html("Initializing data");
         $("#modal_generating_remittance").modal();
+
+
         h.post("../cRemitLedgerTax/InitializeData",
             {
                 p_department_code: s.ddl_departments,
                 p_starts_letter: s.ddl_lastname_letter,
                 p_batch_nbr: s.ddl_batch_nbr
             }).then(function (d) {
+
+                excelExportServer = d.data.excelExportServer
              
                 s.txtb_remittance_year = d.data.prevValues[0];
                 s.txtb_remittance_month = d.data.prevValues[2];
@@ -811,28 +818,150 @@ ng_HRD_App.controller("cRemitLedgerTax_ctrlr", function ($scope, $compile, $http
 
     }
 
-    s.ExctractToExcel = function (year, month)
-    {
+    //s.ExctractToExcel = function (year, month)
+    //{
+    //    $('#loading_msg').html("Extracting data");
+    //    $('#modal_generating_remittance').modal({ keyboard: false, backdrop: "static" });
+    //    h.post("../cRemitLedgerTax/ExctractToExcelTAX",
+    //        {
+    //            p_remittance_ctrl_nbr: s.txtb_remittance_ctrl_nbr,
+    //            p_year: year,
+    //            p_month: month
+    //        }
+    //    ).then(function (d) {
+    //        if (d.data.message == "success") {
+    //            $("#modal_generating_remittance").modal("hide")
+    //            window.open(d.data.filePath, '', '');
+    //        }
+    //        else {
+    //            $("#modal_generating_remittance").modal("hide")
+    //            swal(d.data.message, { icon: "success" });
+    //        }
+    //    })
+
+    //}
+
+    s.ExctractToExcel = function (year, month) {
         $('#loading_msg').html("Extracting data");
         $('#modal_generating_remittance').modal({ keyboard: false, backdrop: "static" });
-        h.post("../cRemitLedgerTax/ExctractToExcelTAX",
-            {
-                p_remittance_ctrl_nbr: s.txtb_remittance_ctrl_nbr,
-                p_year: year,
-                p_month: month
-            }
-        ).then(function (d) {
-            if (d.data.message == "success") {
-                $("#modal_generating_remittance").modal("hide")
-                window.open(d.data.filePath, '', '');
-            }
-            else {
-                $("#modal_generating_remittance").modal("hide")
-                swal(d.data.message, { icon: "success" });
-            }
+        h.post("../Menu/GetToken").then(function (d) {
+            var token = { token: d.data.token }
+
+            h.post(excelExportServer + "/api/remittance/verify-token", token, { responseType: 'arraybuffer' }
+
+            ).then(function (response) {
+
+                if (response.data) {
+                    h.post("../cRemitLedgerTax/ExctractToExcelTAX_PHP", {
+                        p_remittance_ctrl_nbr: s.txtb_remittance_ctrl_nbr,
+                    }).then(function (d) {
+                        if (d.data.icon == "success") {
+                            var remittance_year = d.data.listgrid[0].remittance_year
+                            var remittance_month = d.data.listgrid[0].remittance_month
+                            var remittance_empl_type = d.data.listgrid[0].employment_type
+                            var listgrid = d.data.listgrid
+                       
+                            if (remittance_empl_type == "NE") {
+                                h.post(excelExportServer + "/api/export/bir-monthly-remittance-ne-extract", {
+                                    data: listgrid
+                                }, { responseType: 'arraybuffer' }
+                                ).then(function (response2) {
+
+                                    // Check the response data
+                                    if (response2.data) {
+                                        // Create a Blob from the response data
+                                        const csvBlob = new Blob([response2.data], { type: 'text/csv;charset=utf-8;' });
+                                        // Generate a URL for the Blob
+                                        const downloadUrl = window.URL.createObjectURL(csvBlob);
+
+                                        // Create an anchor element and set its href attribute to the Blob URL
+                                        const link = document.createElement('a');
+                                        link.href = downloadUrl;
+
+                                        // Set the download attribute with a dynamic filename
+                                        //const name = new Date().toLocaleString().replace(/[/,\\:*?"<>|]/g, '_');
+                                        const name = "Monthly Tax-" + remittance_empl_type + " -" + remittance_year + "-" + remittance_month + "-" + s.txtb_remittance_ctrl_nbr + ".xlsx"
+                                        link.setAttribute('download', name);
+                                        console.log(link)
+                                        // Append the link to the document body and click it to initiate the download
+                                        document.body.appendChild(link);
+                                        link.click();
+
+                                        // Clean up by removing the link element and revoking the Blob URL
+                                        document.body.removeChild(link);
+                                        window.URL.revokeObjectURL(downloadUrl);
+                                        $("#modal_generating_remittance").modal("hide");
+                                    } else {
+                                        console.error('The response data is empty or undefined.');
+                                        $("#modal_generating_remittance").modal("hide");
+                                    }
+                                }).catch(function (error) {
+                                    console.error('There was a problem with the POST request:', error);
+                                    $("#modal_generating_remittance").modal("hide");
+                                });
+                            }
+                            else {
+                                h.post(excelExportServer + "/api/export/bir-monthly-remittance-extract", {
+                                    data: listgrid
+                                }, { responseType: 'arraybuffer' }
+                                ).then(function (response2) {
+
+                                    // Check the response data
+                                    if (response2.data) {
+                                        // Create a Blob from the response data
+                                        const csvBlob = new Blob([response2.data], { type: 'text/csv;charset=utf-8;' });
+                                        // Generate a URL for the Blob
+                                        const downloadUrl = window.URL.createObjectURL(csvBlob);
+
+                                        // Create an anchor element and set its href attribute to the Blob URL
+                                        const link = document.createElement('a');
+                                        link.href = downloadUrl;
+
+                                        // Set the download attribute with a dynamic filename
+                                        //const name = new Date().toLocaleString().replace(/[/,\\:*?"<>|]/g, '_');
+                                        const name = "Monthly Tax-" + remittance_empl_type + " -" + remittance_year + "-" + remittance_month + "-" + s.txtb_remittance_ctrl_nbr + ".xlsx"
+                                        link.setAttribute('download', name);
+                                        console.log(link)
+                                        // Append the link to the document body and click it to initiate the download
+                                        document.body.appendChild(link);
+                                        link.click();
+
+                                        // Clean up by removing the link element and revoking the Blob URL
+                                        document.body.removeChild(link);
+                                        window.URL.revokeObjectURL(downloadUrl);
+                                        $("#modal_generating_remittance").modal("hide");
+                                    } else {
+                                        console.error('The response data is empty or undefined.');
+                                        $("#modal_generating_remittance").modal("hide");
+                                    }
+                                }).catch(function (error) {
+                                    console.error('There was a problem with the POST request:', error);
+                                    $("#modal_generating_remittance").modal("hide");
+                                });
+                            }
+                        }
+                        else {
+                            $("#modal_generating_remittance").modal("hide");
+                            alert(d.data.message)
+                        }
+
+                    })
+                }
+                else {
+                    $("#modal_generating_remittance").modal("hide");
+                }
+
+            }).catch(function (error, response) {
+                swal("Token expired! please generate new token.", { icon: "error" })
+                console.error('Token expired! please generate new token :', error);
+                $("#modal_generating_remittance").modal("hide");
+            });
+
+
         })
 
     }
+    
 
     s.btn_extract_exceldata = function (year, month) {
 
@@ -882,7 +1011,7 @@ ng_HRD_App.controller("cRemitLedgerTax_ctrlr", function ($scope, $compile, $http
     //********************************************************************/
     s.btn_view_report = function (year,month)
     {
-     
+        
         h.post("../cRemitAutoGen/PrintBIRMonthly").then(function (d)
         {
             if (d.data.message == "success") {

@@ -12,7 +12,7 @@ namespace HRIS_ePAccount.Controllers
     public class cRemitCertController : Controller
     {
         
-        HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+        HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
         // GET: cRemitCert
         public ActionResult Index()
         {

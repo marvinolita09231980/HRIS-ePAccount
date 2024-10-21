@@ -28,13 +28,15 @@ using System.Globalization;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Drawing;
 using System.Reflection;
+using HRIS_ePAccount.Filter;
 
 namespace HRIS_ePAccount.Controllers
 {
+    [SessionExpire]
     public class cBIRAnnualizedTaxController : Controller
     {
       
-        HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+        HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
         User_Menu um = new User_Menu();
         //*********************************************************************//
         // Created By : JRV - Created Date : 09/19/2019
@@ -108,8 +110,25 @@ namespace HRIS_ePAccount.Controllers
         public ActionResult InitializeData(string par_empType)
         {
             object payroll_template = new object();
+            List<vw_employmenttypes_tbl_list> empType = new List<vw_employmenttypes_tbl_list>();
             db_pacco.Database.CommandTimeout = int.MaxValue;
             GetAllowAccess();
+
+            string excelExportServer = System.Configuration.ConfigurationManager.AppSettings["ExcelExportServerIP"];
+
+            if (Session["empType"] == null)
+            {
+                empType = db_pacco.vw_employmenttypes_tbl_list.Where(a => !a.employment_type.Contains("JO")).ToList();
+                HttpContext.Session["empType"] = empType;
+            }
+            else
+            {
+                empType = (List<vw_employmenttypes_tbl_list>)HttpContext.Session["empType"];
+            }
+
+            //HttpContext.Session["sp_annualtax_hdr_tbl_list"] = sp_annualtax_hdr_tbl_list;
+            List<sp_annualtax_hdr_tbl_list_Result> sp_annualtax_hdr_tbl_list = new List<sp_annualtax_hdr_tbl_list_Result>();
+
             if (Session["PreviousValuesonPage_cBIRAnnualizedTax"] == null)
             {
                 Session["PreviousValuesonPage_cBIRAnnualizedTax"] = null;
@@ -118,13 +137,13 @@ namespace HRIS_ePAccount.Controllers
                 string sort_order = "asc";
                 string show_entries = "5";
                 string ddl_emp_type = "";
-                var empType = db_pacco.vw_employmenttypes_tbl_list.Where(a => !a.employment_type.Contains("JO")).ToList();
+               
                 string ddl_letter = "";
-                var sp_annualtax_hdr_tbl_list = db_pacco.sp_annualtax_hdr_tbl_list("", "", "").ToList();
-                return JSON(new { empType, ddl_letter, ddl_emp_type, sp_annualtax_hdr_tbl_list, sort_value, page_value, sort_order, show_entries, um }, JsonRequestBehavior.AllowGet);
+               
+               
+                return JSON(new { empType, ddl_letter, ddl_emp_type, sp_annualtax_hdr_tbl_list, sort_value, page_value, sort_order, show_entries, um, excelExportServer}, JsonRequestBehavior.AllowGet);
 
             }
-
 
             else
             {
@@ -140,10 +159,17 @@ namespace HRIS_ePAccount.Controllers
                 int sort_value      = Convert.ToInt32(PreviousValuesonPage_cPayRegistry[10].ToString().Trim());
                 string sort_order   = PreviousValuesonPage_cPayRegistry[11].ToString().Trim();
 
-                var empType = db_pacco.vw_employmenttypes_tbl_list.Where(a => !a.employment_type.Contains("JO")).ToList();
-                var sp_annualtax_hdr_tbl_list = db_pacco.sp_annualtax_hdr_tbl_list(ddl_year, ddl_emp_type, ddl_letter).ToList();
+               if(HttpContext.Session["sp_annualtax_hdr_tbl_list"] == null)
+                {
+                     sp_annualtax_hdr_tbl_list = db_pacco.sp_annualtax_hdr_tbl_list(ddl_year, ddl_emp_type, ddl_letter).ToList();
+                }
+                else
+                {
+                    sp_annualtax_hdr_tbl_list = (List<sp_annualtax_hdr_tbl_list_Result>)HttpContext.Session["sp_annualtax_hdr_tbl_list"];
+                }
+               
 
-                return JSON(new { empType, sp_annualtax_hdr_tbl_list, ddl_year, empl_id, ddl_emp_type, ddl_letter, show_entries, page_value, search_value, sort_value, sort_order, um }, JsonRequestBehavior.AllowGet);
+                return JSON(new { empType, sp_annualtax_hdr_tbl_list, ddl_year, empl_id, ddl_emp_type, ddl_letter, show_entries, page_value, search_value, sort_value, sort_order, um, excelExportServer}, JsonRequestBehavior.AllowGet);
 
 
             }
@@ -177,21 +203,21 @@ namespace HRIS_ePAccount.Controllers
         // Created By : JRV - Created Date : 09/19/2019
         // Description: Populate Employment Type
         //*********************************************************************//
-        public ActionResult RetrieveEmployeeList(string par_empType, string par_payroll_year)
-        {
-            try
-            {
-                db_pacco.Database.CommandTimeout = int.MaxValue;
-                var sp_personnelnames_annualtax_hdr_combolist = db_pacco.sp_personnelnames_annualtax_hdr_combolist(par_empType, par_payroll_year).ToList();
+        //public ActionResult RetrieveEmployeeList(string par_empType, string par_payroll_year) --COMMENT BY MARVIN 2024-08-22
+        //{
+        //    try
+        //    {
+        //        db_pacco.Database.CommandTimeout = int.MaxValue;
+        //        var sp_personnelnames_annualtax_hdr_combolist = db_pacco.sp_personnelnames_annualtax_hdr_combolist(par_empType, par_payroll_year).ToList();
 
-                return JSON(new { message = "success", sp_personnelnames_annualtax_hdr_combolist }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return JSON(new { ex.Message }, JsonRequestBehavior.AllowGet);
-            }
+        //        return JSON(new { message = "success", sp_personnelnames_annualtax_hdr_combolist }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return JSON(new { ex.Message }, JsonRequestBehavior.AllowGet);
+        //    }
 
-        }
+        //}
 
         //*********************************************************************//
         // Created By : JRV - Created Date : 09/19/2019
@@ -410,6 +436,8 @@ namespace HRIS_ePAccount.Controllers
                 if (par_letter == null)
                 { par_letter = ""; }
                 var sp_annualtax_hdr_tbl_list = db_pacco.sp_annualtax_hdr_tbl_list(par_year, par_empType, par_letter).ToList();
+                HttpContext.Session["sp_annualtax_hdr_tbl_list"] = sp_annualtax_hdr_tbl_list;
+
                 var sp_prcmonitor_tbl = db_pacco.sp_prcmonitor_tbl(par_year,"" , par_empType).ToList();
 
                 return JSON(new { sp_annualtax_hdr_tbl_list, sp_prcmonitor_tbl }, JsonRequestBehavior.AllowGet);
@@ -433,7 +461,7 @@ namespace HRIS_ePAccount.Controllers
                 if (par_letter == null)
                 { par_letter = ""; }
                 var sp_annualtax_hdr_tbl_list = db_pacco.sp_annualtax_hdr_tbl_list(par_year, par_empType, par_letter).ToList();
-
+                HttpContext.Session["sp_annualtax_hdr_tbl_list"] = sp_annualtax_hdr_tbl_list;
                 return JSON(new { sp_annualtax_hdr_tbl_list }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -497,16 +525,16 @@ namespace HRIS_ePAccount.Controllers
         }
 
 
-        //*********************************************************************//
-        // Created By : JRV - Created Date : 09/19/2019
-        // Description: Populate Employment Type
-        //*********************************************************************//
+        ////*********************************************************************//
+        //// Created By : JRV - Created Date : 09/19/2019
+        //// Description: Populate Employment Type
+        ////*********************************************************************//
         public ActionResult ExtractData(string par_empType, string par_payroll_year, string par_extract_type)
         {
             int index_error = 0;
             try
             {
-               
+
                 db_pacco.Database.CommandTimeout = int.MaxValue;
                 var filePath = "";
                 string message = "";
@@ -515,7 +543,7 @@ namespace HRIS_ePAccount.Controllers
                 decimal c_start_row_i = start_row;
                 if (par_extract_type == "H")
                 {
-                   
+
                     var sp_extract_annualized_tax = db_pacco.sp_extract_annualized_tax(par_payroll_year, par_empType).ToList();
 
                     Excel.Application xlApp = new Excel.Application();
@@ -608,9 +636,10 @@ namespace HRIS_ePAccount.Controllers
                     return JSON(new { message, sp_extract_annualized_tax, filePath }, JsonRequestBehavior.AllowGet);
                 }
 
-                else {
+                else
+                {
 
-                  
+
                     Excel.Application xlApp = new Excel.Application();
                     Excel.Workbook xlWorkBook = xlApp.Workbooks.Open(Server.MapPath("~/TemplateExcelFile/TAX-DETAILS-BIR.xlsx"));
 
@@ -622,7 +651,7 @@ namespace HRIS_ePAccount.Controllers
 
                     for (var i = 0; i < sp_extract_annualized_tax.Count(); i++)
                     {
-                        
+
                         xlWorkSheet.get_Range("A" + start_row_original, "AU" + start_row_original).Copy(Missing.Value);
                         xlWorkSheet.get_Range("A" + c_start_row_i, "AU" + c_start_row_i).PasteSpecial(Excel.XlPasteType.xlPasteAll,
                             Excel.XlPasteSpecialOperation.xlPasteSpecialOperationNone, false, false);
@@ -698,7 +727,7 @@ namespace HRIS_ePAccount.Controllers
 
                     return JSON(new { message, sp_extract_annualized_tax, filePath }, JsonRequestBehavior.AllowGet);
                 }
-               
+
             }
             catch (Exception ex)
             {
@@ -707,6 +736,49 @@ namespace HRIS_ePAccount.Controllers
 
         }
 
+
+
+        //*********************************************************************//
+        // Created By : JRV - Created Date : 09/19/2019
+        // Description: HRIS_Extract for PHP Export
+        //*********************************************************************//
+        public ActionResult ExtractDataToPHP(string par_empType, string par_payroll_year, string par_extract_type)
+        {
+            int index_error = 0;
+            try
+            {
+
+                db_pacco.Database.CommandTimeout = int.MaxValue;
+                
+                string message = "";
+                decimal start_row = 2;
+                decimal c_start_row_i = start_row;
+                if (par_extract_type == "H")
+                {
+
+                    var sp_extract_annualized_tax = db_pacco.sp_extract_annualized_tax_forPHP(par_payroll_year, par_empType).ToList();
+                   
+                    message = "success";
+                    return JSON(new { message, sp_extract_annualized_tax}, JsonRequestBehavior.AllowGet);
+                }
+
+                else
+                {
+
+                    var sp_extract_annualized_tax = db_pacco.sp_extract_annualized_tax_bir_forPHP(par_payroll_year, par_empType).ToList();
+                   
+                    message = "success";
+
+                    return JSON(new { message, sp_extract_annualized_tax}, JsonRequestBehavior.AllowGet);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return JSON(new { ex.Message, index_error }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
 
     }   
 

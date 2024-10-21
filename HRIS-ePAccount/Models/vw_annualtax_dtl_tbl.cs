@@ -16,12 +16,15 @@ namespace HRIS_ePAccount.Models
     {
         public string payroll_year { get; set; }
         public string empl_id { get; set; }
-        public Nullable<decimal> clothing_allowance { get; set; }
-        public Nullable<decimal> productivity_ei { get; set; }
+        public Nullable<decimal> taxable { get; set; }
+        public Nullable<decimal> non_taxable { get; set; }
         public Nullable<decimal> cash_gift { get; set; }
+        public Nullable<decimal> clothing_allowance { get; set; }
         public Nullable<decimal> loyalty_bonus { get; set; }
-        public Nullable<decimal> overtime_amt { get; set; }
+        public Nullable<decimal> productivity_ei { get; set; }
+        public Nullable<decimal> other_deminimis { get; set; }
         public Nullable<decimal> pera_amt { get; set; }
+        public Nullable<decimal> overtime_amt { get; set; }
         public Nullable<decimal> bac_honorarium_amt { get; set; }
         public Nullable<decimal> phic_share_amt { get; set; }
         public Nullable<decimal> gsis_ps { get; set; }
@@ -31,8 +34,5 @@ namespace HRIS_ePAccount.Models
         public Nullable<decimal> subsistence_allowance { get; set; }
         public Nullable<decimal> laundry_allowance { get; set; }
         public Nullable<decimal> wtax_amt { get; set; }
-        public Nullable<decimal> taxable { get; set; }
-        public Nullable<decimal> non_taxable { get; set; }
-        public Nullable<decimal> other_deminimis { get; set; }
     }
 }

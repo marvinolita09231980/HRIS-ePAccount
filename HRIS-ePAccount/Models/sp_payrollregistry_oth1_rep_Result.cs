@@ -53,5 +53,13 @@ namespace HRIS_ePAccount.Models
         public string organization_address4 { get; set; }
         public string sig_certification_2nd { get; set; }
         public string empl_department_short_name { get; set; }
+        public string payment_mode { get; set; }
+        public string payment_mode_descr { get; set; }
+        public decimal other_amount1 { get; set; }
+        public decimal other_amount2 { get; set; }
+        public decimal other_amount3 { get; set; }
+        public decimal other_amount4 { get; set; }
+        public decimal other_amount5 { get; set; }
+        public string remarks { get; set; }
     }
 }

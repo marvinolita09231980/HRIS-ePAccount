@@ -43,6 +43,7 @@ ng_HRD_App.run(function () {
     //**********************************//
 
     Array.prototype.refreshTable = function (table, id) {
+        console.log(table)
 
         if (this.length == 0) {
             $("#" + table).dataTable().fnClearTable();

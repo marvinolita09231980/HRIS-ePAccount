@@ -19,6 +19,13 @@ ng_HRD_App.controller("SharedLayoutCtrlr", function ($scope, $http, $filter) {
     s.showAddFav = false;
     s.showRemoveFav = false;
     s.isShowFavorites = true
+    s.updtax = 0;
+    s.rctax = 0;
+    s.jotax = 0;
+    s.netax = 0;
+    s.imgprofile = "";
+
+    s.AllowUserTaxApprove = false
 
 	var group = new Array()
    
@@ -26,9 +33,106 @@ ng_HRD_App.controller("SharedLayoutCtrlr", function ($scope, $http, $filter) {
     {
         
 
-        CheckSession();
+        //CheckSession();
         var url = window.location.href;
         var lastSeven = url.substr(url.length - 7); // => "Tabs1"
+
+        
+
+        h.post("../Menu/GetMenuList").then(function (d) {
+
+            
+            s.MenuList = d.data.data
+            s.username = d.data.username
+            var photo = d.data.photo
+            s.imgprofile = photo;
+
+
+
+
+
+            $('#i_fav').removeClass('text-warning');
+            $('#span_fav').removeClass('text-warning');
+            if (d.data.already_in_fav == 1) {
+                $('#i_fav').addClass('text-warning');
+                $('#span_fav').addClass('text-warning');
+                s.showRemoveFav = true;
+                s.showAddFav = false;
+            }
+
+            else {
+                $('#i_fav').removeClass('text-warning');
+                $('#span_fav').removeClass('text-warning');
+                s.showRemoveFav = false;
+                s.showAddFav = true;
+            }
+
+            if (d.data.expanded != 0) {
+                angular.forEach(s.MenuList, function (value) {
+                    if (value.url_name == null || value.url_name == "") value.hasUrl = 0
+                    else value.hasUrl = 1
+                    var exp = d.data.expanded.filter(function (d) {
+                        return d == value.id.toString()
+                    })
+                    if (exp == value.id.toString()) {
+                        value.isOpen = 1
+                        group.push(value.id);
+                    }
+                })
+
+            }
+            else {
+                angular.forEach(s.MenuList, function (value) {
+                    if (value.url_name == null || value.url_name == "") value.hasUrl = 0
+                    else value.hasUrl = 1
+                    value.isOpen = 0;
+                })
+            }
+
+            
+
+            h.post("../Menu/GetTaxToUpdate").then(function (d) {
+                s.AllowUserTaxApprove = d.data.AllowUserTaxApprove
+                s.updtax = d.data.updtax
+                s.rctax = d.data.rctax
+                s.jotax = d.data.jotax
+                s.netax = d.data.netax
+
+
+
+                if (s.updtax > 0) {
+                    $("#updtax_span").removeClass("hidden")
+                }
+                else {
+                    $("#updtax_span").addClass("hidden")
+                }
+
+                if (s.rctax > 0) {
+                    $("#rctax_span").removeClass("hidden")
+                }
+                else {
+                    $("#rctax_span").addClass("hidden")
+                }
+
+                if (s.jotax > 0) {
+                    $("#jotax_span").removeClass("hidden")
+                }
+                else {
+                    $("#jotax_span").addClass("hidden")
+                }
+
+                if (s.netax > 0) {
+                    $("#netax_span").removeClass("hidden")
+                }
+                else {
+                    $("#netax_span").addClass("hidden")
+                }
+            });
+           
+        })
+
+
+        
         if (lastSeven == "Details")
         {
             s.isShowFavorites = false
@@ -39,7 +143,48 @@ ng_HRD_App.controller("SharedLayoutCtrlr", function ($scope, $http, $filter) {
             s.isShowFavorites = true
         }
 	}
-   
+
+    var TAX_UPDATE = function () {
+        h.post("../Menu/GetTaxToUpdate").then(function (d) {
+            s.AllowUserTaxApprove = d.data.AllowUserTaxApprove
+            s.updtax = d.data.updtax
+            s.rctax = d.data.rctax
+            s.jotax = d.data.jotax
+            s.netax = d.data.netax
+
+
+
+            if (s.updtax > 0) {
+                $("#updtax_span").removeClass("hidden")
+            }
+            else {
+                $("#updtax_span").addClass("hidden")
+            }
+
+            if (s.rctax > 0) {
+                $("#rctax_span").removeClass("hidden")
+            }
+            else {
+                $("#rctax_span").addClass("hidden")
+            }
+
+            if (s.jotax > 0) {
+                $("#jotax_span").removeClass("hidden")
+            }
+            else {
+                $("#jotax_span").addClass("hidden")
+            }
+
+            if (s.netax > 0) {
+                $("#netax_span").removeClass("hidden")
+            }
+            else {
+                $("#netax_span").addClass("hidden")
+            }
+        });
+
+
+    }
 
 	init();
 	
@@ -96,6 +241,8 @@ ng_HRD_App.controller("SharedLayoutCtrlr", function ($scope, $http, $filter) {
                 }
             });
     }
+
+
 
     s.removeToFavorite = function ()
     {
@@ -241,14 +388,17 @@ ng_HRD_App.controller("SharedLayoutCtrlr", function ($scope, $http, $filter) {
 	        if (d.data == "expire") {
 	            location.href = "../Login/Index"
 	        }
-	        else if (d.data == "active") {
-	            h.post("../Menu/GetMenuList").then(function (d) {
+            else if (d.data == "active") {
 
+	            h.post("../Menu/GetMenuList").then(function (d) {
 	                s.MenuList = d.data.data
-                    
 	                s.username = d.data.username
 	                var photo = d.data.photo
                     s.imgprofile = photo;
+
+                  
+
+                        
                     
                     $('#i_fav').removeClass('text-warning');
                     $('#span_fav').removeClass('text-warning');
@@ -366,6 +516,10 @@ ng_HRD_App.controller("SharedLayoutCtrlr", function ($scope, $http, $filter) {
         })
     }
 
+
+    s.goToTaxUpd = function (type) {
+        location.href = "../cRECETaxUpd/Index?type=" + type;
+    }
 
 	//***********************Functions end*************************************************************//
 

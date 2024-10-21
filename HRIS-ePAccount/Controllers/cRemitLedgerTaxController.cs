@@ -30,7 +30,7 @@ namespace HRIS_ePAccount.Controllers
     public class cRemitLedgerTaxController : Controller
     {
 
-        HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+        HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
         string remittance_ctrl_nbr = "";
         string remittance_year = "";
         string remittance_month = "";
@@ -71,7 +71,9 @@ namespace HRIS_ePAccount.Controllers
         //*********************************************************************//
         public ActionResult InitializeData(string p_department_code, string p_starts_letter, int p_batch_nbr)
         {
+            string excelExportServer = System.Configuration.ConfigurationManager.AppSettings["ExcelExportServerIP"];
             db_pacco.Database.CommandTimeout = int.MaxValue;
+
             string[] prevValues = Session["PreviousValuesonPage_cRemitLedger"].ToString().Split(new char[] { ',' });
             remittance_ctrl_nbr = prevValues[7].ToString().Trim();
             remittance_year = prevValues[0].ToString().Trim();
@@ -80,7 +82,7 @@ namespace HRIS_ePAccount.Controllers
             remittance_type = prevValues[5].ToString().Trim();
             var department_list = db_pacco.vw_departments_tbl_list.ToList().OrderBy(a => a.department_code);
             var listgrid = db_pacco.sp_remittance_ledger_info_TAX(remittance_ctrl_nbr, p_department_code, p_starts_letter, "", "").ToList();
-            return JSON(new { prevValues, listgrid, department_list }, JsonRequestBehavior.AllowGet);
+            return JSON(new { prevValues, listgrid, department_list, excelExportServer}, JsonRequestBehavior.AllowGet);
         }
 
         //*********************************************************************//
@@ -241,6 +243,33 @@ namespace HRIS_ePAccount.Controllers
                 return JSON(new { message = message }, JsonRequestBehavior.AllowGet);
             }
         }
+
+        public ActionResult ExctractToExcelTAX_PHP(string p_remittance_ctrl_nbr, string p_year, string p_month)
+        {
+
+            db_pacco.Database.CommandTimeout = int.MaxValue;
+           
+            try
+            {
+                string[] prevValues = Session["PreviousValuesonPage_cRemitLedger"].ToString().Split(new char[] { ',' });
+
+                var listgrid = db_pacco.sp_remittance_ledger_info_TAX_extract(p_remittance_ctrl_nbr, "", "", "", "").ToList();
+
+                if(listgrid.Count() == 0)
+                {
+                    throw new Exception("No Data Found!");
+                }
+                return JSON(new { message = "success",icon= "success", listgrid}, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception e)
+            {
+              var message = e.Message;
+
+                return JSON(new { message = message, icon = "error" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
 
 
         public ActionResult ExctractToExcelTAX(string p_remittance_ctrl_nbr, string p_year, string p_month)

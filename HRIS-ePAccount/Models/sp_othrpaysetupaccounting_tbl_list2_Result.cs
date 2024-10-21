@@ -25,11 +25,11 @@ namespace HRIS_ePAccount.Models
         public string fld3_type { get; set; }
         public string fld4_type { get; set; }
         public string fld5_type { get; set; }
-        public decimal fld1_fixed_amt { get; set; }
-        public decimal fld2_fixed_amt { get; set; }
-        public decimal fld3_fixed_amt { get; set; }
-        public decimal fld4_fixed_amt { get; set; }
-        public decimal fld5_fixed_amt { get; set; }
+        public string fld1_fixed_amt { get; set; }
+        public string fld2_fixed_amt { get; set; }
+        public string fld3_fixed_amt { get; set; }
+        public string fld4_fixed_amt { get; set; }
+        public string fld5_fixed_amt { get; set; }
         public string account_code { get; set; }
         public string account_sub_code { get; set; }
         public string account_title { get; set; }

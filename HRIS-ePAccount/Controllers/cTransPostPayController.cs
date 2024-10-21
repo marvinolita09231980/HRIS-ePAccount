@@ -28,7 +28,7 @@ namespace HRIS_ePAccount.Controllers
     {
         User_Menu um                    = new User_Menu();
        
-        HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+        HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
 
         // GET: cTransPostPay
         public ActionResult Index()

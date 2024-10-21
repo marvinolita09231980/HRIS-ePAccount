@@ -14,9 +14,12 @@ namespace HRIS_eHRD.Common_Code
     {
         const string connectstring = "cnHRIS_HRD";
         public string CONST_WORDENCRYPTOR = "userprofile";
-       
+      
+
         private const string initVector = "pemgail9uzpgzl88";
         private const int keysize = 256;
+
+        
         public string EncryptString(string plainText, string passPhrase)
         {
             byte[] initVectorBytes = Encoding.UTF8.GetBytes(initVector);
@@ -48,6 +51,20 @@ namespace HRIS_eHRD.Common_Code
             {
                 return null;
             }
+        }
+    }
+
+    public class applicationtoken
+    {
+       public string app_name;
+       public string _alg;
+
+       
+
+        public applicationtoken()
+        {
+            app_name = "ePAccount";
+            _alg = "HmacSHA256";
         }
     }
    

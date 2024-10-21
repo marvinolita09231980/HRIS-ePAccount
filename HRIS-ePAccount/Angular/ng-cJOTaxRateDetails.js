@@ -24,7 +24,7 @@ ng_HRD_App.controller("cJOTaxRateDetails_ctrlr", function ($scope, $compile, $ht
     s.allow_delete = false
     s.allow_view = false
     s.allow_edit_history = false
-
+    s.previouspage_employment_type = ""
     s.isDisabledPERACA = true;
     s.isDisabledHazard = true;
     s.isDisabledSub = true;
@@ -52,76 +52,70 @@ ng_HRD_App.controller("cJOTaxRateDetails_ctrlr", function ($scope, $compile, $ht
         $("#loading_data").modal("show")
 
         h.post("../cJOTaxRateDetails/InitializeData", { par_empType: s.employeeddl }).then(function (d) {
-            
-            s.txtb_ddl_year         = d.data.year
-            s.txtb_empl_name_hdr    = d.data.emp_name
+           
+                s.txtb_ddl_year = d.data.year
+                s.txtb_empl_name_hdr = d.data.emp_name
 
-            if (d.data.sp_payrollemployee_tax_hdr_tbl_list.with_sworn.toString().toUpperCase() == "TRUE" || d.data.sp_payrollemployee_tax_hdr_tbl_list.with_sworn.toString().toUpperCase() == "1")
-            {
-                s.txtb_bus_tax_hdr = currency(parseFloat(d.data.sp_payrollemployee_tax_hdr_tbl_list.wi_sworn_perc))
-                s.txtb_bus_tax     = currency(parseFloat(d.data.sp_payrollemployee_tax_hdr_tbl_list.wi_sworn_perc))
-            }
-
-            else if (d.data.sp_payrollemployee_tax_hdr_tbl_list.with_sworn.toString().toUpperCase() == "FALSE" || d.data.sp_payrollemployee_tax_hdr_tbl_list.with_sworn.toString().toUpperCase() == "0")
-            {
-                s.txtb_bus_tax_hdr  = currency(parseFloat(d.data.sp_payrollemployee_tax_hdr_tbl_list.wo_sworn_perc))
-                s.txtb_bus_tax      = currency(parseFloat(d.data.sp_payrollemployee_tax_hdr_tbl_list.wo_sworn_perc))
-            }
-            
-            s.txtb_w_tax_hdr        = currency(parseFloat(d.data.sp_payrollemployee_tax_hdr_tbl_list.tax_perc))
-            s.txtb_w_tax            = currency(parseFloat(d.data.sp_payrollemployee_tax_hdr_tbl_list.tax_perc))
-
-            s.txtb_empl_id          = d.data.empl_id
-            s.txtb_empl_name        = d.data.emp_name
-            s.txtb_position         = d.data.position
-            s.txtb_department       = d.data.department_name
-            s.txtb_department_hdr   = d.data.department_name
-
-            s.payrolltemplate       = d.data.sp_payrolltemplate_tbl_list7
-
-            if (d.data.sp_payrolltemplate_tbl_list7.length > 0)
-            {
-                var count = d.data.sp_payrolltemplate_tbl_list7.length;
-                for (var i = 0; i < count; i++)
-                {
-                    templatelist_to_add[i] = s.payrolltemplate[i].payrolltemplate_code
+                if (d.data.sp_payrollemployee_tax_hdr_tbl_list.with_sworn.toString().toUpperCase() == "TRUE" || d.data.sp_payrollemployee_tax_hdr_tbl_list.with_sworn.toString().toUpperCase() == "1") {
+                    s.txtb_bus_tax_hdr = currency(parseFloat(d.data.sp_payrollemployee_tax_hdr_tbl_list.wi_sworn_perc))
+                    s.txtb_bus_tax = currency(parseFloat(d.data.sp_payrollemployee_tax_hdr_tbl_list.wi_sworn_perc))
                 }
-            }
+                else if (d.data.sp_payrollemployee_tax_hdr_tbl_list.with_sworn.toString().toUpperCase() == "FALSE" || d.data.sp_payrollemployee_tax_hdr_tbl_list.with_sworn.toString().toUpperCase() == "0") {
+                    s.txtb_bus_tax_hdr = currency(parseFloat(d.data.sp_payrollemployee_tax_hdr_tbl_list.wo_sworn_perc))
+                    s.txtb_bus_tax = currency(parseFloat(d.data.sp_payrollemployee_tax_hdr_tbl_list.wo_sworn_perc))
+                }
+
+                s.txtb_w_tax_hdr = currency(parseFloat(d.data.sp_payrollemployee_tax_hdr_tbl_list.tax_perc))
+                s.txtb_w_tax = currency(parseFloat(d.data.sp_payrollemployee_tax_hdr_tbl_list.tax_perc))
+
+                s.txtb_empl_id = d.data.empl_id
+                s.txtb_empl_name = d.data.emp_name
+                s.txtb_position = d.data.position
+                s.txtb_department = d.data.department_name
+                s.txtb_department_hdr = d.data.department_name
+
+                s.payrolltemplate = d.data.sp_payrolltemplate_tbl_list7
+                s.previouspage_employment_type = d.data.previouspage_employment_type
+
+                if (d.data.sp_payrolltemplate_tbl_list7.length > 0) {
+                    var count = d.data.sp_payrolltemplate_tbl_list7.length;
+                    for (var i = 0; i < count; i++) {
+                        templatelist_to_add[i] = s.payrolltemplate[i].payrolltemplate_code
+                    }
+                }
+
+
+                s.ddl_month = MonthFormat((new Date().getMonth() + 1))
+                payroll_template_list = d.data.sp_payrolltemplate_tbl_list7
+
+                //s.txtb_employment_type_val = d.data.empl_type
+                ////s.txtb_employment_type  = d.data.emp_type_descr
+                //s.txtb_monthly_tax_due = currency(parseFloat(d.data.tax_due))
+                //s.txtb_monthly_tax_rate = currency(parseFloat(d.data.tax_rate))
+
+
+                init_table_data([]);
+
+                s.allow_edit = d.data.um.allow_edit
+                s.allow_print = d.data.um.allow_print
+                s.allow_delete = d.data.um.allow_delete
+                s.allow_print = d.data.um.allow_print
+                s.allow_edit_history = d.data.um.allow_edit_history
+                s.allow_view = 1
+
+
+                $("#datalist_grid").DataTable().search("").draw();
+
+                if (d.data.sp_payrollemployee_tax_dtl_tbl_list.length > 0) {
+
+                    s.datalistgrid = d.data.sp_payrollemployee_tax_dtl_tbl_list;
+                    s.oTable.fnClearTable();
+                    s.oTable.fnAddData(s.datalistgrid)
+                }
+                else {
+                    s.oTable.fnClearTable();
+                }
             
-            
-            s.ddl_month = MonthFormat((new Date().getMonth() + 1))
-            payroll_template_list = d.data.sp_payrolltemplate_tbl_list7
-            
-            //s.txtb_employment_type_val = d.data.empl_type
-            ////s.txtb_employment_type  = d.data.emp_type_descr
-            //s.txtb_monthly_tax_due = currency(parseFloat(d.data.tax_due))
-            //s.txtb_monthly_tax_rate = currency(parseFloat(d.data.tax_rate))
-
-
-            init_table_data([]);
-
-            s.allow_edit            = d.data.um.allow_edit
-            s.allow_print           = d.data.um.allow_print
-            s.allow_delete          = d.data.um.allow_delete
-            s.allow_print           = d.data.um.allow_print
-            s.allow_edit_history    = d.data.um.allow_edit_history
-            s.allow_view = 1
-            
-
-            $("#datalist_grid").DataTable().search("").draw();
-
-            if (d.data.sp_payrollemployee_tax_dtl_tbl_list.length > 0)
-            {
-
-                s.datalistgrid = d.data.sp_payrollemployee_tax_dtl_tbl_list;
-                s.oTable.fnClearTable();
-                s.oTable.fnAddData(s.datalistgrid)
-            }
-            else
-            {
-                s.oTable.fnClearTable();
-            }
-
             $("#loading_data").modal("hide")
         })
     }
@@ -274,8 +268,15 @@ ng_HRD_App.controller("cJOTaxRateDetails_ctrlr", function ($scope, $compile, $ht
     //************************************// 
 
     s.BacktoTaxHeader = function () {
-        url = "/cJOTaxRate"
-        window.location.replace(url);
+        if (s.previouspage_employment_type == "JO") {
+            url = "/cJOTaxRate"
+            window.location.replace(url);
+        }
+        else if (s.previouspage_employment_type == "NE") {
+            url = "/cNonEmployeeTaxRate"
+            window.location.replace(url);
+        }
+        
     }
 
     

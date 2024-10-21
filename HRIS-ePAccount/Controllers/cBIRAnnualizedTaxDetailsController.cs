@@ -22,13 +22,15 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Text;
+using HRIS_ePAccount.Filter;
 
 namespace HRIS_ePAccount.Controllers
 {
+    [SessionExpire]
     public class cBIRAnnualizedTaxDetailsController : Controller
     {
        
-        HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+        HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
         User_Menu um = new User_Menu();
         //*********************************************************************//
         // Created By : JRV - Created Date : 09/19/2019

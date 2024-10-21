@@ -5,6 +5,7 @@
 // Created Date : December 2, 2019
 // Updated Date : -- -- ---
 // ***********************************************************
+using HRIS_ePAccount.Filter;
 using HRIS_ePAccount.Models;
 using System;
 using System.Collections.Generic;
@@ -17,10 +18,11 @@ using System.Web.Mvc;
 
 namespace HRIS_ePAccount.Controllers
 {
+    [SessionExpire]
     public class cCashAdvDTLController : Controller
     {
         //
-        HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+        HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
         //*********************************************************************//
         // Created By : VJA - Created Date : 09/19/2019
         // Description: Get the User Role

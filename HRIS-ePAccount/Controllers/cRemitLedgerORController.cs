@@ -11,7 +11,7 @@ namespace HRIS_ePAccount.Controllers
     public class cRemitLedgerORController : Controller
     {
         
-        HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+        HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
         public string url_name = "cRemitLedgerOR";
       
         User_Menu um;

@@ -1,4 +1,5 @@
-﻿using HRIS_ePAccount.Models;
+﻿using HRIS_ePAccount.Filter;
+using HRIS_ePAccount.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
@@ -9,10 +10,11 @@ using System.Web.Mvc;
 
 namespace HRIS_ePAccount.Controllers
 {
+    [SessionExpire]
     public class cCashAdvFundController : Controller
     {
        
-        HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+        HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
         // GET: cCashAdvFund
         public ActionResult Index()
         {

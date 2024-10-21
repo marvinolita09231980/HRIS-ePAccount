@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -25,6 +26,8 @@
     </IISExpressUseClassicPipelineMode>
     <Use64BitIISExpress />
     <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,6 +56,18 @@
     <Reference Include="CrystalDecisions.Shared, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="CrystalDecisions.VSDesigner, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="CrystalDecisions.Web, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.2.0.123\lib\net461\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Humanizer, Version=2.8.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Humanizer.Core.2.8.26\lib\netstandard2.0\Humanizer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -64,8 +79,17 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.Office.Tools.Excel.v4.0.Utilities, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="SqlKata, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SqlKata.2.4.0\lib\netstandard2.0\SqlKata.dll</HintPath>
+    </Reference>
+    <Reference Include="SqlKata.Execution, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SqlKata.Execution.2.4.0\lib\netstandard2.0\SqlKata.Execution.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -75,6 +99,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Entity.Design" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -132,12 +157,6 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
@@ -186,6 +205,7 @@
     <Compile Include="Common_Code\HRIS_Common.cs" />
     <Compile Include="Controllers\cADAFnlApprController.cs" />
     <Compile Include="Controllers\cADAFnlApprDTLController.cs" />
+    <Compile Include="Controllers\cApplicationTokenController.cs" />
     <Compile Include="Controllers\cBIRAnnualizedTaxController.cs" />
     <Compile Include="Controllers\cBIRAnnualizedTaxDetailsController.cs" />
     <Compile Include="Controllers\cCashAdvController.cs" />
@@ -202,6 +222,7 @@
     <Compile Include="Controllers\cJOTaxRateController.cs" />
     <Compile Include="Controllers\cJOTaxRateDetailsController.cs" />
     <Compile Include="Controllers\cMainPageController.cs" />
+    <Compile Include="Controllers\cNonEmployeeTaxRateController.cs" />
     <Compile Include="Controllers\cPASystemSetupController.cs" />
     <Compile Include="Controllers\cPayAuditPostingController.cs" />
     <Compile Include="Controllers\cPayDocTrkController.cs" />
@@ -215,6 +236,7 @@
     <Compile Include="Controllers\cPayRegistrySalaryRegularController.cs" />
     <Compile Include="Controllers\cPaySalaryDifferentialController.cs" />
     <Compile Include="Controllers\cPayVoucherController.cs" />
+    <Compile Include="Controllers\cRECETaxUpdController.cs" />
     <Compile Include="Controllers\cRemitAutoGenController.cs" />
     <Compile Include="Controllers\cRemitCertController.cs" />
     <Compile Include="Controllers\cRemitCertDetailsController.cs" />
@@ -242,10 +264,21 @@
     <Compile Include="cRemitLedgerPHIC_FileUpload.ashx.cs">
       <DependentUpon>cRemitLedgerPHIC_FileUpload.ashx</DependentUpon>
     </Compile>
+    <Compile Include="Filter\SessionExpireAttribute .cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="GlobalClass.cs" />
     <Compile Include="Models\accountingsystemsetup_tbl.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\account_tax_excepmt_tbl.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\act_counter_tbl.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\act_generator.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\annualtax_dtl_tbl.cs">
@@ -257,10 +290,16 @@
     <Compile Include="Models\annualtax_separation_tbl.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\application_token_tbl.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\bank_transmittal_override_tbl.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\cashadv_dtl_tbl.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\cashadv_dtl_tmp.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\cashadv_fund_sub_tbl.cs">
@@ -270,6 +309,9 @@
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\cashadv_hdr_tbl.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\cashadv_hdr_tmp.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\cashadv_type_tbl.cs">
@@ -290,6 +332,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>cnHRIS_ePAccount.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\c_tax_prjctn2actual_tbl_temp.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\c_tax_prjctn_tbl_temp.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Dev_Version_Name.cs" />
     <Compile Include="Models\doc_rte_act_tbl.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
@@ -303,6 +351,12 @@
     <Compile Include="Models\employeecard_remarks_tbl.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\empl_taxwithheld_tbl.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\func_get_personnel_names_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\func_remittance_upd_GSIS_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
@@ -313,6 +367,9 @@
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\idoc_trk_tbl.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\idoc_trk_tbl_ret_chk.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\jo_tax_tbl.cs">
@@ -334,14 +391,26 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\obr_tracking_tbl.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\payrollemployee_tax_dtl_tbl.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\payrollemployee_tax_hdr_tbl.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\payrollemployee_tax_hdr_tbl_backup.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\payrollemployee_tax_phic_rece_tbl.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\payrollemployee_tax_tbl.cs">
       <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\payrollregistryaccounting_hdr_ret_tbl.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\payrollregistryaccounting_hdr_tbl.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
@@ -404,6 +473,9 @@
     <Compile Include="Models\remittance_dtl_others_tbl.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\remittance_dtl_others_tbl_TEMP.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\remittance_dtl_phic_month_tbl.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
@@ -440,13 +512,31 @@
     <Compile Include="Models\sp_annualtax_dtl_tbl_list_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_annualtax_hdr_tbl_list_2_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_annualtax_hdr_tbl_list_3_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_annualtax_hdr_tbl_list_hrcompare_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_annualtax_hdr_tbl_list_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_annualtax_hdr_tbl_list_wactcounter_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_annualtax_hdr_tbl_rep_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_annualtax_separation_tbl_list_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_calculate_monthly_income_all_rep_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_cashadv_ada_rep_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_cashadv_dtl_tbl_list_Result.cs">
@@ -459,6 +549,9 @@
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_cashadv_hdr_tbl_list_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_cashadv_rep2_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_cashadv_rep_Result.cs">
@@ -474,6 +567,15 @@
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_check_voucher_nbr_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_consolidated_tax_data_RECE_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_define_actcounter_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_delete_remittance_hdr_tbl_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_departments_tbl_list_Result.cs">
@@ -506,6 +608,9 @@
     <Compile Include="Models\sp_doc_trk_nbrs_tbl_update_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_doc_trk_release_2_route2_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_doc_trk_release_2_route_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
@@ -521,25 +626,55 @@
     <Compile Include="Models\sp_employeecard_remarks_dtl_list_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_employeecard_re_ce_nocard_rep_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_employeecard_re_ce_rep_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_employmenttypes_tbl_list4_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_empltaxwithheld_tbl_for_apprvl_Result.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_exam_schedule_tbl_2_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_extract_annualized_tax_bir_forPHP_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_extract_annualized_tax_bir_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_extract_annualized_tax_forPHP_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_extract_annualized_tax_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_extract_payrolldeductions_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_extract_refund_2_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_extract_refund_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_extract_taxrate_taxamount_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_extract_tax_payable_2_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_extract_tax_payable_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_generate_annualized_tax_hdr_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\sp_generate_annualized_tax_Result.cs">
+    <Compile Include="Models\sp_generate_annualized_tax_TEST_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_generate_annualtax_tax_rece_laternight_Result.cs">
@@ -548,13 +683,31 @@
     <Compile Include="Models\sp_generate_annualtax_tax_rece_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_generate_payrollemployee_tax_dtl_ne_phic_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_generate_payrollemployee_tax_dtl_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_generate_payrollemployee_tax_hdr_dtl_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_generate_payrollemployee_tax_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_generate_remittance_CNA_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_generate_remittance_GSIS_2_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_generate_remittance_GSIS_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_generate_remittance_HDMF_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_generate_remittance_LBP_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_generate_remittance_OTHERS_Result.cs">
@@ -567,6 +720,9 @@
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_generate_remittance_SSS_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_generate_remittance_TAX_NE_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_get_actual_tax_counter_Result.cs">
@@ -590,12 +746,6 @@
     <Compile Include="Models\sp_idoc_trk_tbl_details_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\sp_idoc_trk_tbl_rcvd_list_Result.cs">
-      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sp_idoc_trk_tbl_retd_list_Result.cs">
-      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\sp_idoc_trk_tbl_rlsd_list_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
@@ -608,7 +758,22 @@
     <Compile Include="Models\sp_lbp_posting_invoke_bcp_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\sp_mysql_dtr_generate_Result.cs">
+    <Compile Include="Models\sp_monthly_remittance_cna_rep_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_monthly_remittance_gsis_rep_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_monthly_remittance_hdmf_rep_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_monthly_remittance_lbp_rep_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_monthly_remittance_phic_rep_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_monthly_remittance_tax_rep_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_new_remittance_PHIC_rep_Result.cs">
@@ -623,8 +788,20 @@
     <Compile Include="Models\sp_payrollemployee_tax_dtl_tbl_list_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_payrollemployee_tax_hdr_tbl_list_ne_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_payrollemployee_tax_hdr_tbl_list_non_employee_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_payrollemployee_tax_hdr_tbl_list_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_payrollemployee_tax_tbl_for_apprvl_NE_Result.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_payrollemployee_tax_tbl_for_apprvl_Result.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_payrollregistryaccounting_dtl_ce_tbl_list_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
@@ -662,6 +839,18 @@
     <Compile Include="Models\sp_payrollregistryaccounting_template_combolist_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_payrollregistry_bac_rep_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_payrollregistry_cafao_rep_new_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_payrollregistry_cafao_sub_rep_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_payrollregistry_header_footer_sub_rep_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_payrollregistry_info3_HRIS_ACT_list_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
@@ -683,9 +872,6 @@
     <Compile Include="Models\sp_payrollregistry_obr_rep_ACT_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\sp_payrollregistry_obr_rep_Result.cs">
-      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\sp_payrollregistry_oth1_rep_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
@@ -693,6 +879,9 @@
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_payrollregistry_ovtm_rep_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_payrollregistry_phic_share_rep_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_payrollregistry_rata_rep_Result.cs">
@@ -722,19 +911,22 @@
     <Compile Include="Models\sp_personnelnamesaccounting_combolist_rata_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\sp_personnelnames_annualtax_hdr_combolist_Result.cs">
-      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\sp_personnelnames_carding_re_ce_combolist_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_personnelnames_combolist_tax_jo_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_personnelnames_combolist_tax_non_employee_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_personnelnames_list1_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_personnel_names_list1_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_prcmonitor_tbl_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_rata_rate_skedaccounting_tbl_list2_Result.cs">
@@ -761,13 +953,22 @@
     <Compile Include="Models\sp_remittance_grand_totals_list_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_remittance_GSIS_rep_2_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_remittance_GSIS_rep_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_remittance_GSIS_smry_rep_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_remittance_HDMF_rep2_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_remittance_HDMF_rep_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_remittance_HDMF_smry_rep_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_remittance_hdr_tbl_list_Result.cs">
@@ -788,7 +989,13 @@
     <Compile Include="Models\sp_remittance_ledger_info_OTHERS_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_remittance_ledger_info_PHIC_2_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_remittance_ledger_info_PHIC_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_remittance_ledger_info_SSS_2_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_remittance_ledger_info_SSS_Result.cs">
@@ -809,6 +1016,9 @@
     <Compile Include="Models\sp_remittance_or_posting_hdr_tbl_list_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_remittance_OTHERS_recon_rep_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_remittance_OTHERS_rep_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
@@ -827,13 +1037,31 @@
     <Compile Include="Models\sp_remittance_phic_rep_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_remittance_PHIC_smry_rep_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_remittance_rejected_GSIS_dtl_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_remittance_SSS_monthly_rep_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_remittance_SSS_qtrly_rep_2_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_remittance_SSS_qtrly_rep_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_remittance_TAX_smry_rep2_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_remittance_TAX_smry_rep_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_save_upd_overrides_HDMF_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_taxrate_percentage_tbl_list_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_transmital_postpay_dtl_tbl_list_Result.cs">
@@ -842,13 +1070,13 @@
     <Compile Include="Models\sp_transmital_postpay_tbl_list_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_update_schedule_GATRCI_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_uploaded_data_PHIC_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_uploaded_data_rep_GSIS_Result.cs">
-      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sp_upload_file_from_GSIS_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_upload_file_from_PHIC_Result.cs">
@@ -872,6 +1100,12 @@
     <Compile Include="Models\sp_voucher_combolist_info4_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_voucher_dtl_tbl_rep_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_voucher_header_footer_rep_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_voucher_not_in_remittance_HDMF03_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
@@ -890,10 +1124,22 @@
     <Compile Include="Models\sp_voucher_tbl_repo_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sysdiagram.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\taxrate_percentage_tbl.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tax_tbl.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\usersprofile_tbl.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\voucher_dtl_oth_claims_tbl_rep2_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\voucher_dtl_oth_claims_tbl_rep_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\vw_accountclass_tbl.cs">
@@ -902,10 +1148,19 @@
     <Compile Include="Models\vw_annualtax_dtl_tbl.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\vw_annualtax_dtl_tbl_cna.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_annualtax_dtl_tbl_pbb.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\vw_cashadv_for_transmmittal_list.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\vw_cashadv_fund_sub_tbl.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_CE_employee_income_for_annual_tax.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\vw_departments_tbl_list.cs">
@@ -929,10 +1184,19 @@
     <Compile Include="Models\vw_doc_trk_act_tbl_2be_rlsd.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\vw_employee_exempted.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_employee_income_for_annual.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\vw_employmenttypes_tbl.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\vw_employmenttypes_tbl_list.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_idoc_cashadv_ada_list.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\vw_idoc_trk_tbl_2be_rcvd.cs">
@@ -950,7 +1214,13 @@
     <Compile Include="Models\vw_idoc_trk_tbl_return.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\vw_lbp_transmittal_list.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\vw_organizations_info_HRIS_ACT.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_othrpaysetup_tbl_list2.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\vw_payregistry_CA_info_list_ACT.cs">
@@ -962,7 +1232,19 @@
     <Compile Include="Models\vw_payrollemployeemaster_info_HRIS_ACT.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\vw_payrollemployeemaster_latest_asg_tbl.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_payrollemployeemaster_tbl_ref_list_all.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_payrollemployee_tax_tbl_ACT.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\vw_payrollregistryaccounting_template_combolist.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_payrollregistry_info17_HRIS_ACT.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\vw_payrollregistry_info2_HRIS_ACT.cs">
@@ -974,10 +1256,49 @@
     <Compile Include="Models\vw_payrollregistry_info4_HRIS_ACT.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\vw_payrollregistry_info5_HRIS_ACT.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_payrollregistry_info6_HRIS_ACT.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_payrollregistry_info7_01_HRIS_ACT.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_payrollregistry_info7_02_06_HRIS_ACT.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_payrollregistry_info7_07_HRIS_ACT.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_payrollregistry_info7_08_HRIS_ACT.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_payrollregistry_info7_16_HRIS_ACT.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_payrollregistry_info7_CARDING.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_payrollregistry_info7_HRIS_ACT.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_payrollregistry_info7_HRIS_ACT_post_status.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\vw_payrollregistry_info_HRIS_ACT.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\vw_payrollregistry_info_HRIS_ACT_18.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_payrollregistry_info_HRIS_ACT_takehome.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\vw_payrolltemplate_tbl_list.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_personneladdress_contact_id_tbl_HRIS_ACT.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\vw_personnelnames_tbl2_HRIS_ACT.cs">
@@ -986,7 +1307,19 @@
     <Compile Include="Models\vw_personnelnames_tbl_HRIS_ACT.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\vw_personnelnames_tbl_HRIS_ACT2.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\vw_personnel_tbl_image.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_phic_share_empl_tbl_ACT.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_phic_share_empl_tbl_rc.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_phic_share_rece_tbl_ACT.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\vw_positions_tbl.cs">
@@ -995,7 +1328,16 @@
     <Compile Include="Models\vw_rata_rate_sked_tbl_list2.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\vw_remittancetype_tbl.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\vw_remittancetype_tbl2.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_remittance_CNA.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_remittance_dtl_all.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\vw_remittance_GSIS.cs">
@@ -1025,10 +1367,19 @@
     <Compile Include="Models\vw_remittance_info_ALL.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\vw_remittance_info_ALL1.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_remittance_info_CNA.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\vw_remittance_info_GSIS.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\vw_remittance_info_HDMF.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_remittance_info_LBP.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\vw_remittance_info_OTHERS.cs">
@@ -1040,6 +1391,12 @@
     <Compile Include="Models\vw_remittance_info_SSS.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\vw_remittance_info_TAX.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_remittance_LBP.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\vw_remittance_OTHERS.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
@@ -1049,13 +1406,28 @@
     <Compile Include="Models\vw_remittance_OTHERS10.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\vw_remittance_OTHERS11.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\vw_remittance_OTHERS12.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\vw_remittance_OTHERS13.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\vw_remittance_OTHERS14.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_remittance_OTHERS17.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_remittance_OTHERS18.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\vw_remittance_PHIC.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vw_remittance_SSS.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\vw_sections_tbl_list.cs">
@@ -1129,6 +1501,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>cryHonRemit.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\cryJobOrderReports\cryOvertimeJO\cryOvertimeJO1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>cryOvertimeJO.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\cryOtherPayroll\cryOthpay\cryOthPay1.cs">
@@ -1640,6 +2018,7 @@
     <Content Include="Angular\ng-cAccountClass.js" />
     <Content Include="Angular\ng-cADAFnlAppr.js" />
     <Content Include="Angular\ng-cADAFnlApprDTL.js" />
+    <Content Include="Angular\ng-cApplicationToken.js" />
     <Content Include="Angular\ng-cBIRAnnualizedTax.js" />
     <Content Include="Angular\ng-cBIRAnnualizedTaxDetails.js" />
     <Content Include="Angular\ng-cCashAdvDTL.js" />
@@ -1653,6 +2032,7 @@
     <Content Include="Angular\ng-cEmplTaxUpd.js" />
     <Content Include="Angular\ng-cJOTaxRate.js" />
     <Content Include="Angular\ng-cJOTaxRateDetails.js" />
+    <Content Include="Angular\ng-cNonEmployeeTaxRate.js" />
     <Content Include="Angular\ng-cPASystemSetup.js" />
     <Content Include="Angular\ng-cPayAuditPosting.js" />
     <Content Include="Angular\ng-cPayDocTrk.js" />
@@ -1667,6 +2047,7 @@
     <Content Include="Angular\ng-cPaySalaryDifferential.js" />
     <Content Include="Angular\ng-cPayVoucher.js" />
     <Content Include="Angular\ng-cCashAdv.js" />
+    <Content Include="Angular\ng-cRECETaxUpd.js" />
     <Content Include="Angular\ng-cRemitCert.js" />
     <Content Include="Angular\ng-cRemitCertDetails.js" />
     <Content Include="Angular\ng-cRemitLedger.js" />
@@ -2481,19 +2862,19 @@
     <Content Include="ManualDoc\RemittanceLedgerPHIC.pdf" />
     <Content Include="ManualDoc\RemittanceLedgerPHILAMLIFE-ONENETWORKBANK-NHMFC.pdf" />
     <Content Include="ManualDoc\RemittanceLedgerSSS.pdf" />
-    <EntityDeploy Include="Models\cnHRIS_ePAccount.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>cnHRIS_ePAccount.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\cnHRIS_ePAccount.edmx.diagram">
-      <DependentUpon>cnHRIS_ePAccount.edmx</DependentUpon>
-    </Content>
     <EntityDeploy Include="Models\Model1.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Model1.Designer.cs</LastGenOutput>
     </EntityDeploy>
     <Content Include="Models\Model1.edmx.diagram">
       <DependentUpon>Model1.edmx</DependentUpon>
+    </Content>
+    <EntityDeploy Include="Models\cnHRIS_ePAccount.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>cnHRIS_ePAccount.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\cnHRIS_ePAccount.edmx.diagram">
+      <DependentUpon>cnHRIS_ePAccount.edmx</DependentUpon>
     </Content>
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Reports\cryRemittanceOTHERS1\OtherRecon\cryRemittanceJOUniform.rpt" />
@@ -2676,7 +3057,6 @@
     <Content Include="TemplateExcelFile\MP2.xlsx" />
     <Content Include="TemplateExcelFile\PHIC.xlsx" />
     <Content Include="TemplateExcelFile\SSSExtractTemplate.xlsx" />
-    <Content Include="TemplateExcelFile\~%24LOAN.xlsx" />
     <Content Include="Views\cPayDocTrk\Index.cshtml" />
     <Content Include="Views\cCashAdvFundSub\Index.cshtml" />
     <Content Include="TemplateExcelFile\HL_TEMPLATE.xlsx" />
@@ -2712,11 +3092,13 @@
     <Content Include="Views\cEmployeeCardRemarksDetails\Index.cshtml" />
     <Content Include="Views\cEmployeeCardRemarks\Index.cshtml" />
     <Content Include="Views\cSepSet\Index.cshtml" />
+    <Content Include="Views\cNonEmployeeTaxRate\Index.cshtml" />
+    <Content Include="Views\cApplicationToken\Index.cshtml" />
+    <Content Include="Views\cRECETaxUpd\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Reports\cryOtherPayroll\cryAttachment\" />
-    <Folder Include="Views\Menu\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -3493,6 +3875,260 @@
       <LastGenOutput>cryVoucherHeader1.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="CRDESIGNERLib">
+      <Guid>{C0AA5023-C763-4A4B-AFED-ADCF78D6C08B}</Guid>
+      <VersionMajor>13</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CRQUERYENGINE">
+      <Guid>{E4B81D51-FB89-4D07-84A3-00BA9B71D76E}</Guid>
+      <VersionMajor>13</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CRReportPromptEMFLib">
+      <Guid>{7A4E36DC-A11A-4CAF-BC2A-700ECC668FD6}</Guid>
+      <VersionMajor>13</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CRREPORTSOURCEBRIDGELib">
+      <Guid>{80F19574-9245-4DFA-A0A6-8A21874282D3}</Guid>
+      <VersionMajor>13</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CrystalActiveXReportViewerLib13">
+      <Guid>{B816E96D-D151-4000-BADB-53A2D8F3FC65}</Guid>
+      <VersionMajor>13</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CrystalAnalysisCommLayerLib">
+      <Guid>{AAA3345B-2177-4D19-8D75-21688FE36251}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CrystalAnalysisCommonControlsLib">
+      <Guid>{E377F909-BCFE-4E8E-B17C-8B1CBC7C7243}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CrystalAnalysisRequestModelLib">
+      <Guid>{3FD134DF-56E0-4860-B065-BF986A086176}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CrystalAnalysisXmlSerializeLib">
+      <Guid>{2743F9AF-ED45-4CA5-8625-2709B908D63C}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CrystalClientDocLib">
+      <Guid>{A8E20FDA-4A89-4545-8DFF-EBFA68E8C0F9}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CrystalDocMgmtUndoManagerLib">
+      <Guid>{5DF0757C-75A4-4227-AF7B-0479FC6E7A55}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CrystalPrintControlLib">
+      <Guid>{62862E3F-F35B-455E-9459-49EAADE80A25}</Guid>
+      <VersionMajor>13</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CrystalReportsCommonObjectModelLib">
+      <Guid>{FDB9B69E-BA79-4B13-9E96-8373AF162AEA}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CrystalReportsControllersLib">
+      <Guid>{FA810FF5-70DA-4F98-A5E3-387D9577EF24}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CrystalReportsCubeDefModelLib">
+      <Guid>{44AD71D4-4905-491D-B179-B5D91EB57374}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CrystalReportsDataDefModelLib">
+      <Guid>{9B2F3E7B-8D45-47E8-95D3-3A9C1B22437F}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CrystalReportsDTSAgentLib">
+      <Guid>{3D5D05F6-E97D-43A0-90DC-5D8A6C6C6DB1}</Guid>
+      <VersionMajor>13</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CrystalReportsLocalConnectionMgrLib">
+      <Guid>{EC39F6C4-A9F2-4341-806B-1529E049A945}</Guid>
+      <VersionMajor>13</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CrystalReportsObjectFactoryLib">
+      <Guid>{A25D82D0-1501-4A89-BA92-B7E5B002EC4F}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CrystalReportsReportDefModelLib">
+      <Guid>{BF40B97D-06EA-4AB1-91DE-18CB29A2B25A}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CrystalReportViewerExportLib">
+      <Guid>{5C21A516-C6AC-42F2-A7B7-846FFE1B122A}</Guid>
+      <VersionMajor>13</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CrystalReportViewerWebReportSourceLib">
+      <Guid>{14173BA7-071D-4216-8C9B-EAB29A55E2D4}</Guid>
+      <VersionMajor>13</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="EMFGENLib">
+      <Guid>{C097B4CF-2CEA-442F-B025-610D2B0C05C8}</Guid>
+      <VersionMajor>13</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="PAGEOBJECTMODELLib">
+      <Guid>{237F4BEC-8AE5-41E1-AE84-B194E4670597}</Guid>
+      <VersionMajor>13</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="PROMPTINGLib">
+      <Guid>{8106BAD6-FB6E-49D5-8368-3F7030C9F6E7}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="SAXSERIALIZELib">
+      <Guid>{6EF0D172-0FAB-4FC3-BDBB-C6C0D9D69A10}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="stdole">
+      <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VLELib">
+      <Guid>{ACF55B94-B31C-4604-912A-314B00C1595D}</Guid>
+      <VersionMajor>13</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -3521,6 +4157,14 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

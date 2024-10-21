@@ -5,6 +5,7 @@
 // Created Date : March 11, 2021
 // Updated Date : -- -- ---
 // ***********************************************************
+using HRIS_ePAccount.Filter;
 using HRIS_ePAccount.Models;
 using System;
 using System.Collections.Generic;
@@ -19,9 +20,10 @@ using System.Web.Mvc;
 
 namespace HRIS_ePAccount.Controllers
 {
+    [SessionExpire]
     public class cADAFnlApprController : Controller
     {
-        HRIS_PACCO_DEVEntities db_pacco = new HRIS_PACCO_DEVEntities();
+        HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
         //*********************************************************************//
         // Created By : JMTJR - Created Date : 03/11/2021
         // Description: Get the User Role

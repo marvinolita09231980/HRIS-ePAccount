@@ -1224,7 +1224,7 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
             ,par_empl_id                : s.datalistgrid[id_ss].empl_id
             ,par_effective_date         : s.datalistgrid[id_ss].effective_date
         }).then(function (d) {
-            console.log(s.datalistgrid[id_ss])
+          
             if (d.data.message == "success")
             {
 
@@ -1423,7 +1423,7 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
                             ,effective_date : s.datalistgrid[id_ss].effective_date
                         }).then(function (d) {
 
-                            if (d.data.message = "success") {
+                            if (d.data.icon = "success") {
                                 var id = s[tname][0].id;
                                 var page = $("#" + id).DataTable().page.info().page
                                 s[tname].fnDeleteRow(id_ss, null, true);
