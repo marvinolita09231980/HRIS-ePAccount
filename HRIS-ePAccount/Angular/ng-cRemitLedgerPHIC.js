@@ -1192,7 +1192,7 @@ ng_HRD_App.controller("cRemitLedgerPHIC_ctrlr", function ($scope, $compile, $htt
                         var phic = d.data.phic
                         console.log(phic)
                         if (d.data.message == "success") {
-                            h.post("http://127.0.0.1:8000/api/export/phic-premium-forchecking-export", {
+                            h.post(excelExportServer + "/api/export/phic-premium-forchecking-export", {
                                 data: phic
                             }, { responseType: 'arraybuffer' }
                             ).then(function (response2) {

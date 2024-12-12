@@ -1578,7 +1578,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         h.post("../Menu/GetToken")
             .then(function (d) {
                 var token = { token: d.data.token }
-                h.post(excelExportServer+"/api/remittance/verify-token", token, { responseType: 'arraybuffer' }
+                h.post(s.excelExportServer+"/api/remittance/verify-token", token, { responseType: 'arraybuffer' }
 
                 )
                     .then(function (response) {
@@ -1598,7 +1598,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                                     if (extract_type == 'H') {
                                         var sp_extract_annualized_tax = d.data.sp_extract_annualized_tax
 
-                                        h.post(excelExportServer + "/api/export/hris-extract", {
+                                        h.post(s.excelExportServer + "/api/export/hris-extract", {
                                             data: sp_extract_annualized_tax
                                         }, { responseType: 'arraybuffer' }
                                         ).then(function (response2) {
@@ -1629,7 +1629,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
                                         var sp_extract_annualized_tax = d.data.sp_extract_annualized_tax
 
-                                        h.post(excelExportServer + "/api/export/bir-extract", {
+                                        h.post(s.excelExportServer + "/api/export/bir-extract", {
                                             data: sp_extract_annualized_tax
                                         }, { responseType: 'arraybuffer' }
                                         ).then(function (response2) {

@@ -51,5 +51,6 @@ namespace HRIS_ePAccount.Models
         public Nullable<decimal> other_loan4 { get; set; }
         public Nullable<decimal> other_loan5 { get; set; }
         public decimal other_ded_loan4 { get; set; }
+        public decimal other_ded_loan5 { get; set; }
     }
 }

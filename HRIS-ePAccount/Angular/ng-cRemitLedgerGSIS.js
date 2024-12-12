@@ -216,7 +216,7 @@
         s.GSIS_Rej_Data = par_data;
         s.RejTable = $('#rejected_grid').dataTable(
             {
-                data: s.GSIS_Table_Data,
+                data: s.GSIS_Rej_Data,
                 sDom: 'rt<"bottom"ip>',
                 "order": [[1, "asc"]],
                 pageLength: 10,
@@ -746,6 +746,7 @@
             ,u_other_loan3				:"0.00"
             , o_other_loan3: "0.00"
             , gfaleducnl_ln: fd.txtb_gfaleducnl_ln
+            , mpl_lite_ln: fd.txtb_mpl_lite_ln
         }
         
         var tname = "GSISTable"
@@ -1088,6 +1089,7 @@
                 if (response.data) {
                     h.post("../cRemitLedgerGSIS/ExtractToPhpExcel").then(function (d) {
                         var sp_remittance_GSIS_rep = d.data.sp_remittance_GSIS_rep_2
+                       
                         h.post(excelExportServer + "/export", {
                             data: sp_remittance_GSIS_rep
                         }, { responseType: 'arraybuffer' }
@@ -2152,6 +2154,7 @@
         s.fd.txtb_other_loan1 = currency(f.p_other_loan1)
         s.fd.txtb_other_loan3 = currency(f.p_other_loan3)
         s.fd.txtb_gfaleducnl_ln = currency(f.gfaleducnl_ln)
+        s.fd.txtb_mpl_lite_ln = currency(f.mpl_lite_ln)
 
 
         //if ((elEmpty(f.o_gsis_ps) || f.o_gsis_ps == 0) && (elEmpty(f.o_gsis_gs)|| f.o_gsis_ps == 0))
