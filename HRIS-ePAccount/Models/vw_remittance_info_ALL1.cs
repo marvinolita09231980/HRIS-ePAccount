@@ -88,5 +88,6 @@ namespace HRIS_ePAccount.Models
         public string remittance_ctrl_ref { get; set; }
         public Nullable<decimal> uploaded_amount { get; set; }
         public Nullable<decimal> gfaleducnl_ln { get; set; }
+        public Nullable<decimal> mpl_lite_ln { get; set; }
     }
 }

@@ -87,5 +87,6 @@ namespace HRIS_ePAccount.Models
         public string payroll_amount { get; set; }
         public string uploaded_amount { get; set; }
         public string gfaleducnl_ln { get; set; }
+        public string mpl_lite_ln { get; set; }
     }
 }

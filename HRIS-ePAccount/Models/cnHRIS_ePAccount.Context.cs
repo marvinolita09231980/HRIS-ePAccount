@@ -3258,15 +3258,6 @@ namespace HRIS_ePAccount.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_remittance_dtl_phic_tbl_list", par_remittance_ctrl_nbrParameter);
         }
     
-        public virtual ObjectResult<sp_remittance_grand_totals_list_Result> sp_remittance_grand_totals_list(string par_remittance_ctrl_nbr)
-        {
-            var par_remittance_ctrl_nbrParameter = par_remittance_ctrl_nbr != null ?
-                new ObjectParameter("par_remittance_ctrl_nbr", par_remittance_ctrl_nbr) :
-                new ObjectParameter("par_remittance_ctrl_nbr", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_remittance_grand_totals_list_Result>("sp_remittance_grand_totals_list", par_remittance_ctrl_nbrParameter);
-        }
-    
         public virtual ObjectResult<sp_remittance_GSIS_rep_Result> sp_remittance_GSIS_rep(string p_remittance_ctrl_nbr, string p_remittance_year, string p_remittance_month)
         {
             var p_remittance_ctrl_nbrParameter = p_remittance_ctrl_nbr != null ?
@@ -4540,6 +4531,15 @@ namespace HRIS_ePAccount.Models
                 new ObjectParameter("p_remittance_month", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_remittance_GSIS_rep_2_Result>("sp_remittance_GSIS_rep_2", p_remittance_ctrl_nbrParameter, p_remittance_yearParameter, p_remittance_monthParameter);
+        }
+    
+        public virtual ObjectResult<sp_remittance_grand_totals_list_Result> sp_remittance_grand_totals_list(string par_remittance_ctrl_nbr)
+        {
+            var par_remittance_ctrl_nbrParameter = par_remittance_ctrl_nbr != null ?
+                new ObjectParameter("par_remittance_ctrl_nbr", par_remittance_ctrl_nbr) :
+                new ObjectParameter("par_remittance_ctrl_nbr", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_remittance_grand_totals_list_Result>("sp_remittance_grand_totals_list", par_remittance_ctrl_nbrParameter);
         }
     }
 }

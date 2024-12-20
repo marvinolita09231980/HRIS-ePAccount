@@ -3564,6 +3564,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_payrollregistry_info7_CARDING' doe
           <Property Name="other_loan4" Type="numeric" Precision="19" Scale="4" />
           <Property Name="other_loan5" Type="numeric" Precision="19" Scale="4" />
           <Property Name="gfaleducnl_ln" Type="numeric" Precision="38" Scale="2" />
+          <Property Name="mpl_lite_ln" Type="numeric" Precision="38" Scale="2" />
           <Property Name="uniform_amt" Type="numeric" Precision="38" Scale="2" />
           <Property Name="bir_tax" Type="numeric" Precision="38" Scale="2" />
           <Property Name="payroll_source" Type="varchar" MaxLength="2" Nullable="false" />
@@ -4579,6 +4580,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_remittance_info_ALL1' does not hav
           <Property Name="remittance_ctrl_ref" Type="varchar" MaxLength="8" />
           <Property Name="uploaded_amount" Type="numeric" Precision="19" Scale="4" />
           <Property Name="gfaleducnl_ln" Type="money" />
+          <Property Name="mpl_lite_ln" Type="money" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'HRIS_ACT.dbo.vw_remittance_info_CNA' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -8752,6 +8754,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
     [vw_payrollregistry_info7_CARDING].[other_loan4] AS [other_loan4], 
     [vw_payrollregistry_info7_CARDING].[other_loan5] AS [other_loan5], 
     [vw_payrollregistry_info7_CARDING].[gfaleducnl_ln] AS [gfaleducnl_ln], 
+    [vw_payrollregistry_info7_CARDING].[mpl_lite_ln] AS [mpl_lite_ln], 
     [vw_payrollregistry_info7_CARDING].[uniform_amt] AS [uniform_amt], 
     [vw_payrollregistry_info7_CARDING].[bir_tax] AS [bir_tax], 
     [vw_payrollregistry_info7_CARDING].[payroll_source] AS [payroll_source], 
@@ -9505,7 +9508,8 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
     [vw_remittance_info_ALL1].[payroll_amount] AS [payroll_amount], 
     [vw_remittance_info_ALL1].[remittance_ctrl_ref] AS [remittance_ctrl_ref], 
     [vw_remittance_info_ALL1].[uploaded_amount] AS [uploaded_amount], 
-    [vw_remittance_info_ALL1].[gfaleducnl_ln] AS [gfaleducnl_ln]
+    [vw_remittance_info_ALL1].[gfaleducnl_ln] AS [gfaleducnl_ln], 
+    [vw_remittance_info_ALL1].[mpl_lite_ln] AS [mpl_lite_ln]
     FROM [dbo].[vw_remittance_info_ALL1] AS [vw_remittance_info_ALL1]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vw_remittance_info_CNA" EntityType="Self.vw_remittance_info_CNA" store:Type="Views" store:Schema="dbo">
@@ -12403,9 +12407,6 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <FunctionImport Name="sp_remittance_dtl_phic_tbl_list">
           <Parameter Name="par_remittance_ctrl_nbr" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="sp_remittance_grand_totals_list" ReturnType="Collection(HRIS_ACTModel.sp_remittance_grand_totals_list_Result)">
-          <Parameter Name="par_remittance_ctrl_nbr" Mode="In" Type="String" />
-          </FunctionImport>
           <FunctionImport Name="sp_remittance_GSIS_rep" ReturnType="Collection(HRIS_ACTModel.sp_remittance_GSIS_rep_Result)">
             <Parameter Name="p_remittance_ctrl_nbr" Mode="In" Type="String" />
             <Parameter Name="p_remittance_year" Mode="In" Type="String" />
@@ -12774,6 +12775,9 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
             <Parameter Name="p_remittance_ctrl_nbr" Mode="In" Type="String" />
             <Parameter Name="p_remittance_year" Mode="In" Type="String" />
             <Parameter Name="p_remittance_month" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_remittance_grand_totals_list" ReturnType="Collection(HRIS_ACTModel.sp_remittance_grand_totals_list_Result)">
+            <Parameter Name="par_remittance_ctrl_nbr" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="idoc_trk_tbl_ret_chk">
@@ -15060,6 +15064,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Name="wages_amt" Type="Decimal" Nullable="false" Precision="38" Scale="2" />
           <Property Name="seq_no" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="gfaleducnl_ln" Type="Decimal" Precision="38" Scale="2" />
+          <Property Name="mpl_lite_ln" Type="Decimal" Precision="38" Scale="2" />
         </EntityType>
         <EntityType Name="vw_payrollregistry_info7_HRIS_ACT">
           <Key>
@@ -15996,6 +16001,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Name="remittance_ctrl_ref" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="uploaded_amount" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="gfaleducnl_ln" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="mpl_lite_ln" Type="Decimal" Precision="19" Scale="4" />
         </EntityType>
         <EntityType Name="vw_remittance_info_CNA">
           <Key>
@@ -21101,82 +21107,6 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Type="DateTime" Name="updated_by_dttm" Nullable="true" Precision="23" />
           <Property Type="String" Name="employee_name_format_2" Nullable="true" MaxLength="211" />
         </ComplexType>
-        <ComplexType Name="sp_remittance_grand_totals_list_Result">
-          <Property Type="String" Name="remittance_ctrl_nbr" Nullable="false" MaxLength="8" />
-          <Property Type="String" Name="remittance_year" Nullable="true" MaxLength="4" />
-          <Property Type="String" Name="remittance_month" Nullable="true" MaxLength="2" />
-          <Property Type="String" Name="employment_type" Nullable="true" MaxLength="2" />
-          <Property Type="String" Name="remittancetype_code" Nullable="true" MaxLength="2" />
-          <Property Type="String" Name="remittancetype_descr" Nullable="true" MaxLength="255" />
-          <Property Type="String" Name="remittance_descr" Nullable="true" MaxLength="255" />
-          <Property Type="String" Name="remittance_status" Nullable="true" MaxLength="1" />
-          <Property Type="String" Name="remittance_status_descr" Nullable="false" MaxLength="18" />
-          <Property Type="DateTime" Name="remittance_dttm_created" Nullable="false" Precision="23" />
-          <Property Type="String" Name="user_id_created_by" Nullable="false" MaxLength="30" />
-          <Property Type="DateTime" Name="remittance_dttm_updated" Nullable="false" Precision="23" />
-          <Property Type="String" Name="user_id_updated_by" Nullable="false" MaxLength="30" />
-          <Property Type="DateTime" Name="remittance_dttm_released" Nullable="false" Precision="23" />
-          <Property Type="String" Name="user_id_released_by" Nullable="false" MaxLength="30" />
-          <Property Type="DateTime" Name="remittance_dttm_remitted" Nullable="false" Precision="23" />
-          <Property Type="String" Name="user_id_remitted_by" Nullable="false" MaxLength="30" />
-          <Property Type="String" Name="p_gsis_gs" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="p_gsis_ps" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="p_sif_gs" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="p_gsis_uoli" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="p_gsis_ehp" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="p_gsis_hip" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="p_gsis_ceap" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="p_gsis_addl_ins" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="p_gsis_conso_ln" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="p_gsis_policy_reg_ln" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="p_gsis_policy_opt_ln" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="p_gsis_emergency_ln" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="p_gsis_ecard_ln" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="p_gsis_educ_asst_ln" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="p_gsis_real_state_ln" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="p_gsis_sos_ln" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="p_gsis_help" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_gsis_gs" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_gsis_ps" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_sif_gs" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_gsis_uoli" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_gsis_ehp" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_gsis_hip" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_gsis_ceap" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_gsis_addl_ins" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_gsis_conso_ln" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_gsis_policy_reg_ln" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_gsis_policy_opt_ln" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_gsis_emergency_ln" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_gsis_ecard_ln" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_gsis_educ_asst_ln" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_gsis_real_state_ln" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_gsis_sos_ln" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_gsis_help" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="o_gsis_gs" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="o_gsis_ps" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="p_other_loan1" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="p_other_loan2" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_other_loan1" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_other_loan2" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="o_other_loan1" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="o_other_loan2" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="p_other_loan3" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_other_loan3" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="o_other_loan3" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="p_other_loan5" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="u_other_loan5" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="o_other_loan5" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="payroll_amount_gs" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="payroll_amount_ps" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="uploaded_amount_gs" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="uploaded_amount_ps" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="override_amount_gs" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="override_amount_ps" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="payroll_amount" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="uploaded_amount" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="gfaleducnl_ln" Nullable="true" MaxLength="4000" />
-        </ComplexType>
         <ComplexType Name="sp_remittance_GSIS_rep_Result">
           <Property Type="String" Name="due_month" Nullable="true" MaxLength="8" />
           <Property Type="String" Name="gsis_bpno" Nullable="false" MaxLength="50" />
@@ -23526,6 +23456,83 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Type="String" Name="remittance_id1" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="remittance_id2" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="employment_type" Nullable="true" MaxLength="2" />
+        </ComplexType>
+        <ComplexType Name="sp_remittance_grand_totals_list_Result">
+          <Property Type="String" Name="remittance_ctrl_nbr" Nullable="false" MaxLength="8" />
+          <Property Type="String" Name="remittance_year" Nullable="true" MaxLength="4" />
+          <Property Type="String" Name="remittance_month" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="employment_type" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="remittancetype_code" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="remittancetype_descr" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="remittance_descr" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="remittance_status" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="remittance_status_descr" Nullable="false" MaxLength="18" />
+          <Property Type="DateTime" Name="remittance_dttm_created" Nullable="false" Precision="23" />
+          <Property Type="String" Name="user_id_created_by" Nullable="false" MaxLength="30" />
+          <Property Type="DateTime" Name="remittance_dttm_updated" Nullable="false" Precision="23" />
+          <Property Type="String" Name="user_id_updated_by" Nullable="false" MaxLength="30" />
+          <Property Type="DateTime" Name="remittance_dttm_released" Nullable="false" Precision="23" />
+          <Property Type="String" Name="user_id_released_by" Nullable="false" MaxLength="30" />
+          <Property Type="DateTime" Name="remittance_dttm_remitted" Nullable="false" Precision="23" />
+          <Property Type="String" Name="user_id_remitted_by" Nullable="false" MaxLength="30" />
+          <Property Type="String" Name="p_gsis_gs" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="p_gsis_ps" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="p_sif_gs" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="p_gsis_uoli" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="p_gsis_ehp" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="p_gsis_hip" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="p_gsis_ceap" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="p_gsis_addl_ins" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="p_gsis_conso_ln" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="p_gsis_policy_reg_ln" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="p_gsis_policy_opt_ln" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="p_gsis_emergency_ln" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="p_gsis_ecard_ln" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="p_gsis_educ_asst_ln" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="p_gsis_real_state_ln" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="p_gsis_sos_ln" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="p_gsis_help" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_gsis_gs" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_gsis_ps" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_sif_gs" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_gsis_uoli" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_gsis_ehp" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_gsis_hip" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_gsis_ceap" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_gsis_addl_ins" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_gsis_conso_ln" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_gsis_policy_reg_ln" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_gsis_policy_opt_ln" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_gsis_emergency_ln" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_gsis_ecard_ln" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_gsis_educ_asst_ln" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_gsis_real_state_ln" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_gsis_sos_ln" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_gsis_help" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="o_gsis_gs" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="o_gsis_ps" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="p_other_loan1" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="p_other_loan2" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_other_loan1" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_other_loan2" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="o_other_loan1" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="o_other_loan2" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="p_other_loan3" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_other_loan3" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="o_other_loan3" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="p_other_loan5" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="u_other_loan5" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="o_other_loan5" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="payroll_amount_gs" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="payroll_amount_ps" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="uploaded_amount_gs" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="uploaded_amount_ps" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="override_amount_gs" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="override_amount_ps" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="payroll_amount" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="uploaded_amount" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="gfaleducnl_ln" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="mpl_lite_ln" Nullable="true" MaxLength="4000" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -26539,6 +26546,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <EntitySetMapping Name="vw_payrollregistry_info7_CARDING">
             <EntityTypeMapping TypeName="HRIS_ACTModel.vw_payrollregistry_info7_CARDING">
               <MappingFragment StoreEntitySet="vw_payrollregistry_info7_CARDING">
+                <ScalarProperty Name="mpl_lite_ln" ColumnName="mpl_lite_ln" />
                 <ScalarProperty Name="gfaleducnl_ln" ColumnName="gfaleducnl_ln" />
                 <ScalarProperty Name="seq_no" ColumnName="seq_no" />
                 <ScalarProperty Name="wages_amt" ColumnName="wages_amt" />
@@ -27350,6 +27358,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <EntitySetMapping Name="vw_remittance_info_ALL1">
             <EntityTypeMapping TypeName="HRIS_ACTModel.vw_remittance_info_ALL1">
               <MappingFragment StoreEntitySet="vw_remittance_info_ALL1">
+                <ScalarProperty Name="mpl_lite_ln" ColumnName="mpl_lite_ln" />
                 <ScalarProperty Name="gfaleducnl_ln" ColumnName="gfaleducnl_ln" />
                 <ScalarProperty Name="uploaded_amount" ColumnName="uploaded_amount" />
                 <ScalarProperty Name="remittance_ctrl_ref" ColumnName="remittance_ctrl_ref" />
@@ -33020,86 +33029,6 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_remittance_dtl_phic_tbl_list" FunctionName="HRIS_ACTModel.Store.sp_remittance_dtl_phic_tbl_list" />
-          <FunctionImportMapping FunctionImportName="sp_remittance_grand_totals_list" FunctionName="HRIS_ACTModel.Store.sp_remittance_grand_totals_list">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="HRIS_ACTModel.sp_remittance_grand_totals_list_Result">
-                <ScalarProperty Name="remittance_ctrl_nbr" ColumnName="remittance_ctrl_nbr" />
-                <ScalarProperty Name="remittance_year" ColumnName="remittance_year" />
-                <ScalarProperty Name="remittance_month" ColumnName="remittance_month" />
-                <ScalarProperty Name="employment_type" ColumnName="employment_type" />
-                <ScalarProperty Name="remittancetype_code" ColumnName="remittancetype_code" />
-                <ScalarProperty Name="remittancetype_descr" ColumnName="remittancetype_descr" />
-                <ScalarProperty Name="remittance_descr" ColumnName="remittance_descr" />
-                <ScalarProperty Name="remittance_status" ColumnName="remittance_status" />
-                <ScalarProperty Name="remittance_status_descr" ColumnName="remittance_status_descr" />
-                <ScalarProperty Name="remittance_dttm_created" ColumnName="remittance_dttm_created" />
-                <ScalarProperty Name="user_id_created_by" ColumnName="user_id_created_by" />
-                <ScalarProperty Name="remittance_dttm_updated" ColumnName="remittance_dttm_updated" />
-                <ScalarProperty Name="user_id_updated_by" ColumnName="user_id_updated_by" />
-                <ScalarProperty Name="remittance_dttm_released" ColumnName="remittance_dttm_released" />
-                <ScalarProperty Name="user_id_released_by" ColumnName="user_id_released_by" />
-                <ScalarProperty Name="remittance_dttm_remitted" ColumnName="remittance_dttm_remitted" />
-                <ScalarProperty Name="user_id_remitted_by" ColumnName="user_id_remitted_by" />
-                <ScalarProperty Name="p_gsis_gs" ColumnName="p_gsis_gs" />
-                <ScalarProperty Name="p_gsis_ps" ColumnName="p_gsis_ps" />
-                <ScalarProperty Name="p_sif_gs" ColumnName="p_sif_gs" />
-                <ScalarProperty Name="p_gsis_uoli" ColumnName="p_gsis_uoli" />
-                <ScalarProperty Name="p_gsis_ehp" ColumnName="p_gsis_ehp" />
-                <ScalarProperty Name="p_gsis_hip" ColumnName="p_gsis_hip" />
-                <ScalarProperty Name="p_gsis_ceap" ColumnName="p_gsis_ceap" />
-                <ScalarProperty Name="p_gsis_addl_ins" ColumnName="p_gsis_addl_ins" />
-                <ScalarProperty Name="p_gsis_conso_ln" ColumnName="p_gsis_conso_ln" />
-                <ScalarProperty Name="p_gsis_policy_reg_ln" ColumnName="p_gsis_policy_reg_ln" />
-                <ScalarProperty Name="p_gsis_policy_opt_ln" ColumnName="p_gsis_policy_opt_ln" />
-                <ScalarProperty Name="p_gsis_emergency_ln" ColumnName="p_gsis_emergency_ln" />
-                <ScalarProperty Name="p_gsis_ecard_ln" ColumnName="p_gsis_ecard_ln" />
-                <ScalarProperty Name="p_gsis_educ_asst_ln" ColumnName="p_gsis_educ_asst_ln" />
-                <ScalarProperty Name="p_gsis_real_state_ln" ColumnName="p_gsis_real_state_ln" />
-                <ScalarProperty Name="p_gsis_sos_ln" ColumnName="p_gsis_sos_ln" />
-                <ScalarProperty Name="p_gsis_help" ColumnName="p_gsis_help" />
-                <ScalarProperty Name="u_gsis_gs" ColumnName="u_gsis_gs" />
-                <ScalarProperty Name="u_gsis_ps" ColumnName="u_gsis_ps" />
-                <ScalarProperty Name="u_sif_gs" ColumnName="u_sif_gs" />
-                <ScalarProperty Name="u_gsis_uoli" ColumnName="u_gsis_uoli" />
-                <ScalarProperty Name="u_gsis_ehp" ColumnName="u_gsis_ehp" />
-                <ScalarProperty Name="u_gsis_hip" ColumnName="u_gsis_hip" />
-                <ScalarProperty Name="u_gsis_ceap" ColumnName="u_gsis_ceap" />
-                <ScalarProperty Name="u_gsis_addl_ins" ColumnName="u_gsis_addl_ins" />
-                <ScalarProperty Name="u_gsis_conso_ln" ColumnName="u_gsis_conso_ln" />
-                <ScalarProperty Name="u_gsis_policy_reg_ln" ColumnName="u_gsis_policy_reg_ln" />
-                <ScalarProperty Name="u_gsis_policy_opt_ln" ColumnName="u_gsis_policy_opt_ln" />
-                <ScalarProperty Name="u_gsis_emergency_ln" ColumnName="u_gsis_emergency_ln" />
-                <ScalarProperty Name="u_gsis_ecard_ln" ColumnName="u_gsis_ecard_ln" />
-                <ScalarProperty Name="u_gsis_educ_asst_ln" ColumnName="u_gsis_educ_asst_ln" />
-                <ScalarProperty Name="u_gsis_real_state_ln" ColumnName="u_gsis_real_state_ln" />
-                <ScalarProperty Name="u_gsis_sos_ln" ColumnName="u_gsis_sos_ln" />
-                <ScalarProperty Name="u_gsis_help" ColumnName="u_gsis_help" />
-                <ScalarProperty Name="o_gsis_gs" ColumnName="o_gsis_gs" />
-                <ScalarProperty Name="o_gsis_ps" ColumnName="o_gsis_ps" />
-                <ScalarProperty Name="p_other_loan1" ColumnName="p_other_loan1" />
-                <ScalarProperty Name="p_other_loan2" ColumnName="p_other_loan2" />
-                <ScalarProperty Name="u_other_loan1" ColumnName="u_other_loan1" />
-                <ScalarProperty Name="u_other_loan2" ColumnName="u_other_loan2" />
-                <ScalarProperty Name="o_other_loan1" ColumnName="o_other_loan1" />
-                <ScalarProperty Name="o_other_loan2" ColumnName="o_other_loan2" />
-                <ScalarProperty Name="p_other_loan3" ColumnName="p_other_loan3" />
-                <ScalarProperty Name="u_other_loan3" ColumnName="u_other_loan3" />
-                <ScalarProperty Name="o_other_loan3" ColumnName="o_other_loan3" />
-                <ScalarProperty Name="p_other_loan5" ColumnName="p_other_loan5" />
-                <ScalarProperty Name="u_other_loan5" ColumnName="u_other_loan5" />
-                <ScalarProperty Name="o_other_loan5" ColumnName="o_other_loan5" />
-                <ScalarProperty Name="payroll_amount_gs" ColumnName="payroll_amount_gs" />
-                <ScalarProperty Name="payroll_amount_ps" ColumnName="payroll_amount_ps" />
-                <ScalarProperty Name="uploaded_amount_gs" ColumnName="uploaded_amount_gs" />
-                <ScalarProperty Name="uploaded_amount_ps" ColumnName="uploaded_amount_ps" />
-                <ScalarProperty Name="override_amount_gs" ColumnName="override_amount_gs" />
-                <ScalarProperty Name="override_amount_ps" ColumnName="override_amount_ps" />
-                <ScalarProperty Name="payroll_amount" ColumnName="payroll_amount" />
-                <ScalarProperty Name="uploaded_amount" ColumnName="uploaded_amount" />
-                <ScalarProperty Name="gfaleducnl_ln" ColumnName="gfaleducnl_ln" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_remittance_GSIS_rep" FunctionName="HRIS_ACTModel.Store.sp_remittance_GSIS_rep">
             <ResultMapping>
               <ComplexTypeMapping TypeName="HRIS_ACTModel.sp_remittance_GSIS_rep_Result">
@@ -35701,6 +35630,87 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
                 <ScalarProperty Name="remittance_id1" ColumnName="remittance_id1" />
                 <ScalarProperty Name="remittance_id2" ColumnName="remittance_id2" />
                 <ScalarProperty Name="employment_type" ColumnName="employment_type" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_remittance_grand_totals_list" FunctionName="HRIS_ACTModel.Store.sp_remittance_grand_totals_list">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HRIS_ACTModel.sp_remittance_grand_totals_list_Result">
+                <ScalarProperty Name="remittance_ctrl_nbr" ColumnName="remittance_ctrl_nbr" />
+                <ScalarProperty Name="remittance_year" ColumnName="remittance_year" />
+                <ScalarProperty Name="remittance_month" ColumnName="remittance_month" />
+                <ScalarProperty Name="employment_type" ColumnName="employment_type" />
+                <ScalarProperty Name="remittancetype_code" ColumnName="remittancetype_code" />
+                <ScalarProperty Name="remittancetype_descr" ColumnName="remittancetype_descr" />
+                <ScalarProperty Name="remittance_descr" ColumnName="remittance_descr" />
+                <ScalarProperty Name="remittance_status" ColumnName="remittance_status" />
+                <ScalarProperty Name="remittance_status_descr" ColumnName="remittance_status_descr" />
+                <ScalarProperty Name="remittance_dttm_created" ColumnName="remittance_dttm_created" />
+                <ScalarProperty Name="user_id_created_by" ColumnName="user_id_created_by" />
+                <ScalarProperty Name="remittance_dttm_updated" ColumnName="remittance_dttm_updated" />
+                <ScalarProperty Name="user_id_updated_by" ColumnName="user_id_updated_by" />
+                <ScalarProperty Name="remittance_dttm_released" ColumnName="remittance_dttm_released" />
+                <ScalarProperty Name="user_id_released_by" ColumnName="user_id_released_by" />
+                <ScalarProperty Name="remittance_dttm_remitted" ColumnName="remittance_dttm_remitted" />
+                <ScalarProperty Name="user_id_remitted_by" ColumnName="user_id_remitted_by" />
+                <ScalarProperty Name="p_gsis_gs" ColumnName="p_gsis_gs" />
+                <ScalarProperty Name="p_gsis_ps" ColumnName="p_gsis_ps" />
+                <ScalarProperty Name="p_sif_gs" ColumnName="p_sif_gs" />
+                <ScalarProperty Name="p_gsis_uoli" ColumnName="p_gsis_uoli" />
+                <ScalarProperty Name="p_gsis_ehp" ColumnName="p_gsis_ehp" />
+                <ScalarProperty Name="p_gsis_hip" ColumnName="p_gsis_hip" />
+                <ScalarProperty Name="p_gsis_ceap" ColumnName="p_gsis_ceap" />
+                <ScalarProperty Name="p_gsis_addl_ins" ColumnName="p_gsis_addl_ins" />
+                <ScalarProperty Name="p_gsis_conso_ln" ColumnName="p_gsis_conso_ln" />
+                <ScalarProperty Name="p_gsis_policy_reg_ln" ColumnName="p_gsis_policy_reg_ln" />
+                <ScalarProperty Name="p_gsis_policy_opt_ln" ColumnName="p_gsis_policy_opt_ln" />
+                <ScalarProperty Name="p_gsis_emergency_ln" ColumnName="p_gsis_emergency_ln" />
+                <ScalarProperty Name="p_gsis_ecard_ln" ColumnName="p_gsis_ecard_ln" />
+                <ScalarProperty Name="p_gsis_educ_asst_ln" ColumnName="p_gsis_educ_asst_ln" />
+                <ScalarProperty Name="p_gsis_real_state_ln" ColumnName="p_gsis_real_state_ln" />
+                <ScalarProperty Name="p_gsis_sos_ln" ColumnName="p_gsis_sos_ln" />
+                <ScalarProperty Name="p_gsis_help" ColumnName="p_gsis_help" />
+                <ScalarProperty Name="u_gsis_gs" ColumnName="u_gsis_gs" />
+                <ScalarProperty Name="u_gsis_ps" ColumnName="u_gsis_ps" />
+                <ScalarProperty Name="u_sif_gs" ColumnName="u_sif_gs" />
+                <ScalarProperty Name="u_gsis_uoli" ColumnName="u_gsis_uoli" />
+                <ScalarProperty Name="u_gsis_ehp" ColumnName="u_gsis_ehp" />
+                <ScalarProperty Name="u_gsis_hip" ColumnName="u_gsis_hip" />
+                <ScalarProperty Name="u_gsis_ceap" ColumnName="u_gsis_ceap" />
+                <ScalarProperty Name="u_gsis_addl_ins" ColumnName="u_gsis_addl_ins" />
+                <ScalarProperty Name="u_gsis_conso_ln" ColumnName="u_gsis_conso_ln" />
+                <ScalarProperty Name="u_gsis_policy_reg_ln" ColumnName="u_gsis_policy_reg_ln" />
+                <ScalarProperty Name="u_gsis_policy_opt_ln" ColumnName="u_gsis_policy_opt_ln" />
+                <ScalarProperty Name="u_gsis_emergency_ln" ColumnName="u_gsis_emergency_ln" />
+                <ScalarProperty Name="u_gsis_ecard_ln" ColumnName="u_gsis_ecard_ln" />
+                <ScalarProperty Name="u_gsis_educ_asst_ln" ColumnName="u_gsis_educ_asst_ln" />
+                <ScalarProperty Name="u_gsis_real_state_ln" ColumnName="u_gsis_real_state_ln" />
+                <ScalarProperty Name="u_gsis_sos_ln" ColumnName="u_gsis_sos_ln" />
+                <ScalarProperty Name="u_gsis_help" ColumnName="u_gsis_help" />
+                <ScalarProperty Name="o_gsis_gs" ColumnName="o_gsis_gs" />
+                <ScalarProperty Name="o_gsis_ps" ColumnName="o_gsis_ps" />
+                <ScalarProperty Name="p_other_loan1" ColumnName="p_other_loan1" />
+                <ScalarProperty Name="p_other_loan2" ColumnName="p_other_loan2" />
+                <ScalarProperty Name="u_other_loan1" ColumnName="u_other_loan1" />
+                <ScalarProperty Name="u_other_loan2" ColumnName="u_other_loan2" />
+                <ScalarProperty Name="o_other_loan1" ColumnName="o_other_loan1" />
+                <ScalarProperty Name="o_other_loan2" ColumnName="o_other_loan2" />
+                <ScalarProperty Name="p_other_loan3" ColumnName="p_other_loan3" />
+                <ScalarProperty Name="u_other_loan3" ColumnName="u_other_loan3" />
+                <ScalarProperty Name="o_other_loan3" ColumnName="o_other_loan3" />
+                <ScalarProperty Name="p_other_loan5" ColumnName="p_other_loan5" />
+                <ScalarProperty Name="u_other_loan5" ColumnName="u_other_loan5" />
+                <ScalarProperty Name="o_other_loan5" ColumnName="o_other_loan5" />
+                <ScalarProperty Name="payroll_amount_gs" ColumnName="payroll_amount_gs" />
+                <ScalarProperty Name="payroll_amount_ps" ColumnName="payroll_amount_ps" />
+                <ScalarProperty Name="uploaded_amount_gs" ColumnName="uploaded_amount_gs" />
+                <ScalarProperty Name="uploaded_amount_ps" ColumnName="uploaded_amount_ps" />
+                <ScalarProperty Name="override_amount_gs" ColumnName="override_amount_gs" />
+                <ScalarProperty Name="override_amount_ps" ColumnName="override_amount_ps" />
+                <ScalarProperty Name="payroll_amount" ColumnName="payroll_amount" />
+                <ScalarProperty Name="uploaded_amount" ColumnName="uploaded_amount" />
+                <ScalarProperty Name="gfaleducnl_ln" ColumnName="gfaleducnl_ln" />
+                <ScalarProperty Name="mpl_lite_ln" ColumnName="mpl_lite_ln" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

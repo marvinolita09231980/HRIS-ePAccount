@@ -2558,6 +2558,8 @@
                     s.txtb_override_amount_ps = d.data.data.override_amount_ps
                     s.txtb_payroll_amount = d.data.data.payroll_amount
                     s.txtb_uploaded_amount = d.data.data.uploaded_amount
+                    s.txtb_gfaleducnl_ln = d.data.data.gfaleducnl_ln
+                    s.txtb_mpl_lite_ln = d.data.data.mpl_lite_ln
 
 
 
@@ -2593,6 +2595,8 @@
                         + toDecimalFormat(d.data.data.p_other_loan1)
                         + toDecimalFormat(d.data.data.p_other_loan2)
                         + toDecimalFormat(d.data.data.p_other_loan3)
+                        + toDecimalFormat(d.data.data.gfaleducnl_ln)
+                        + toDecimalFormat(d.data.data.mpl_lite_ln)
 
                     total_uploaded =
 
