@@ -1075,6 +1075,7 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
         s.allow_return              = false
     }
 
+
     function SaveRoute(dt)
     {
         var nextroute = ""
@@ -1101,9 +1102,9 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
             nextroute = s.data_vl[0].vlt_code
         }
         //Added by Joseph M. Tombo JR 10-21-2021
-        $("button#rlsd").prop('disabled', true);
-        $("button#rcvd").prop('disabled', true);
-        $("button#retd").prop('disabled', true);
+        //$("button#rlsd").prop('disabled', true);
+        //$("button#rcvd").prop('disabled', true);
+        //$("button#retd").prop('disabled', true);
 
         h.post("../cPayDocTrk/sp_document_tracking_nbrs_tbl_update", { det: s.data_vl[0], dt: dt, doc_nbr_show: s.doc_nbr_show }).then(function (d)
         {
@@ -1182,7 +1183,7 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
 
     s.ReceiveRoute = function (D)
     {
-      
+        $("button#rcvd").prop('disabled', true);
         cs.spinnerAdd("btn_rcvd", "fa-backward")
         var date_dttm       = ""
         s.a_flag            = 'V'
@@ -1368,6 +1369,7 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
     ////for btn_release ng-click 
     s.ReleaseRoute = function (D)
     {
+        $("button#rlsd").prop('disabled', true);
         cs.spinnerAdd("btn_rlsd", "fa-forward")
         var vnbr    = "";
         var cfonbr  = "";
@@ -1594,6 +1596,7 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
     //for btn_return ng-click 
     s.ReturnRoute = function (D)
     {
+        $("button#retd").prop('disabled', true);
         cs.spinnerAdd("btn_retd", "fa-times")
         if (s.show_return_btn == false)
         {
