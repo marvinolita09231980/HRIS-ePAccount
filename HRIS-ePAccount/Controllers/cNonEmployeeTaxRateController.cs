@@ -164,9 +164,19 @@ namespace HRIS_ePAccount.Controllers
                 string show_entries = "5";
                 string ddl_emp_type = "";
                 string department_code = "";
-               
-               
-               
+
+                sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_empl_tbl_ACT.Where(a => a.department_code == department_code).ToList();
+
+                //if (HttpContext.Session["vw_phic_share_empl_tbl_ACT"] == null)
+                //{
+                //    sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_empl_tbl_ACT.Where(a => a.department_code == department_code).ToList();
+                //    HttpContext.Session["vw_phic_share_empl_tbl_ACT"] = sp_payrollemployee_tax_hdr_tbl_list;
+                //}
+                //else
+                //{
+                //    sp_payrollemployee_tax_hdr_tbl_list = (List<vw_phic_share_empl_tbl_ACT>)HttpContext.Session["vw_phic_share_empl_tbl_ACT"];
+                //}
+
                 return JSON(new { empType, ddl_emp_type, sp_payrollemployee_tax_hdr_tbl_list, sort_value, page_value, sort_order, show_entries, um, department_list, bir_class_list, taxrate_percentage_tbl_list, department_code }, JsonRequestBehavior.AllowGet);
 
             }
@@ -321,70 +331,188 @@ namespace HRIS_ePAccount.Controllers
         {
             try
             {
+                var insertType = "";
+                string message = "";
+
+                DateTime newEffectiveDate = new DateTime();
+
+                DateTime effective_date = Convert.ToDateTime(par_effective_date.ToString());
+
+                
+
+                DateTime current_date = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
+
+              
+               
+
+                
+                var payrollemployee_tax_tbl = db_pay.payrollemployee_tax_tbl.Where(a => a.empl_id == par_empl_id).OrderByDescending(a => a.effective_date).FirstOrDefault();
+
+                if (payrollemployee_tax_tbl.effective_date >= current_date)
+                {
+                    insertType = "update";
+                    newEffectiveDate = payrollemployee_tax_tbl.effective_date;
+                }
+                else
+                {
+                    insertType = "new";
+                    newEffectiveDate = current_date;
+                }
+
+                if (payrollemployee_tax_tbl != null)
+                {
+                    if (insertType == "update")
+                    {
+                        payrollemployee_tax_tbl.bir_class = data.bir_class;
+                        payrollemployee_tax_tbl.with_sworn = data.with_sworn;
+                        payrollemployee_tax_tbl.fixed_rate = data.fixed_rate;
+                        payrollemployee_tax_tbl.total_gross_pay = data.total_gross_pay;
+                        payrollemployee_tax_tbl.dedct_status = data.dedct_status;
+                        payrollemployee_tax_tbl.rcrd_status = "N";
+                        payrollemployee_tax_tbl.user_id_updated_by = Session["user_id"].ToString(); ;
+                        payrollemployee_tax_tbl.updated_dttm = DateTime.Now;
+                        payrollemployee_tax_tbl.w_tax_perc = data.w_tax_perc;
+                        payrollemployee_tax_tbl.bus_tax_perc = data.bus_tax_perc;
+                        payrollemployee_tax_tbl.vat_perc = data.vat_perc;
+                        payrollemployee_tax_tbl.exmpt_amt = data.exmpt_amt;
+                        
+                    }
+                    else
+                    {
+                        payrollemployee_tax_tbl PETX = new payrollemployee_tax_tbl();
+                        PETX.empl_id = data.empl_id;
+                        PETX.effective_date = newEffectiveDate;
+                        PETX.bir_class = data.bir_class;
+                        PETX.with_sworn = isCheckBool(data.with_sworn.ToString());
+                        PETX.fixed_rate = isCheckBool(data.fixed_rate.ToString());
+                        PETX.total_gross_pay = data.total_gross_pay;
+                        PETX.dedct_status = isCheckBool(data.dedct_status.ToString());
+                        PETX.rcrd_status = "N";
+                        PETX.user_id_created_by = Session["user_id"].ToString();
+                        PETX.created_dttm = DateTime.Now;
+                        PETX.user_id_updated_by = "";
+                        PETX.w_tax_perc = data.w_tax_perc;
+                        PETX.bus_tax_perc = data.bus_tax_perc;
+                        PETX.vat_perc = data.vat_perc;
+                        PETX.exmpt_amt = data.exmpt_amt;
+                        PETX.updated_dttm = Convert.ToDateTime("1900-01-01");
+                        db_pay.payrollemployee_tax_tbl.Add(PETX);
+                    }
+
+                    var payrollemployee_tax_hdr_tbl = db_pacco.payrollemployee_tax_hdr_tbl.Where(a => a.empl_id == par_empl_id && a.effective_date == newEffectiveDate).FirstOrDefault();
+
+                    if (payrollemployee_tax_hdr_tbl != null)
+                    {
+
+                        payrollemployee_tax_hdr_tbl.bir_class = data.bir_class;
+                        payrollemployee_tax_hdr_tbl.with_sworn = data.with_sworn;
+                        payrollemployee_tax_hdr_tbl.fixed_rate = data.fixed_rate;
+                        payrollemployee_tax_hdr_tbl.total_gross_pay = data.total_gross_pay;
+                        payrollemployee_tax_hdr_tbl.dedct_status = data.dedct_status;
+                        payrollemployee_tax_hdr_tbl.rcrd_status = "N";
+                        payrollemployee_tax_hdr_tbl.user_id_updated_by = Session["user_id"].ToString(); ;
+                        payrollemployee_tax_hdr_tbl.updated_dttm = DateTime.Now;
+                        payrollemployee_tax_hdr_tbl.w_tax_perc = data.w_tax_perc;
+                        payrollemployee_tax_hdr_tbl.bus_tax_perc = data.bus_tax_perc;
+                        payrollemployee_tax_hdr_tbl.vat_perc = data.vat_perc;
+                        payrollemployee_tax_hdr_tbl.exmpt_amt = data.exmpt_amt;
+                    }
+                    else
+                    {
+                        payrollemployee_tax_hdr_tbl tbl = new payrollemployee_tax_hdr_tbl();
+
+                        tbl.empl_id = data.empl_id;
+                        tbl.effective_date = newEffectiveDate;
+                        tbl.bir_class = data.bir_class;
+                        tbl.with_sworn = isCheckBool(data.with_sworn.ToString());
+                        tbl.fixed_rate = isCheckBool(data.fixed_rate.ToString());
+                        tbl.total_gross_pay = data.total_gross_pay;
+                        tbl.dedct_status = isCheckBool(data.dedct_status.ToString());
+                        tbl.rcrd_status = "N";
+                        tbl.user_id_created_by = Session["user_id"].ToString();
+                        tbl.created_dttm = DateTime.Now;
+                        tbl.user_id_updated_by = "";
+                        tbl.w_tax_perc = data.w_tax_perc;
+                        tbl.bus_tax_perc = data.bus_tax_perc;
+                        tbl.vat_perc = data.vat_perc;
+                        tbl.exmpt_amt = data.exmpt_amt;
+                        tbl.updated_dttm = Convert.ToDateTime("1900-01-01");
+                        db_pacco.payrollemployee_tax_hdr_tbl.Add(tbl);
+                    }
+
+
+                }
+
+
+                
+
+
+                message = "success";
+                db_pay.SaveChanges();
+                db_pacco.SaveChanges();
+
+             
+                var vw_phic_share_empl_tbl_ACT = db_pacco.vw_phic_share_empl_tbl_ACT.Where(a => a.department_code == department_code && a.employment_type == "JO").ToList();
+                
+                HttpContext.Session["vw_phic_share_empl_tbl_ACT"] = vw_phic_share_empl_tbl_ACT;
+
+                return Json(new { message, vw_phic_share_empl_tbl_ACT }, JsonRequestBehavior.AllowGet);
+            }
+            catch (DbEntityValidationException e)
+            {
+                var msg = DbEntityValidationExceptionError(e);
+                return Json(new { message = msg, icon = "error" }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        public ActionResult SaveEDITInDatabase_2(payrollemployee_tax_phic_rece_tbl data, string par_effective_date, string par_empl_id, string par_action, string department_code,string employment_type)
+        {
+            try
+            {
                 string message = "";
 
                 DateTime effective_date = Convert.ToDateTime(par_effective_date.ToString());
 
                 DateTime current_date = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
 
+               
 
+                    
+                    var payrollemployee_tax_phic_rece_tbl = db_pay.payrollemployee_tax_phic_rece_tbl.Where(a => a.empl_id == par_empl_id).OrderByDescending(a => a.effective_date).FirstOrDefault();
 
-
-                if (par_action == "ADD")
-                {
-                   
-                    payrollemployee_tax_hdr_tbl tbl = new payrollemployee_tax_hdr_tbl();
-
-                    tbl.empl_id = data.empl_id;
-                    tbl.effective_date = isCheckDate(data.effective_date.ToString());
-                    tbl.bir_class = data.bir_class;
-                    tbl.with_sworn = isCheckBool(data.with_sworn.ToString());
-                    tbl.fixed_rate = isCheckBool(data.fixed_rate.ToString());
-                    tbl.total_gross_pay = data.total_gross_pay;
-                    tbl.dedct_status = isCheckBool(data.dedct_status.ToString());
-                    tbl.rcrd_status = data.rcrd_status;
-                    tbl.user_id_created_by = Session["user_id"].ToString();
-                    tbl.created_dttm = DateTime.Now;
-                    tbl.user_id_updated_by = "";
-                    tbl.w_tax_perc = data.w_tax_perc;
-                    tbl.bus_tax_perc = data.bus_tax_perc;
-                    tbl.vat_perc = data.vat_perc;
-                    tbl.exmpt_amt = data.exmpt_amt;
-                    tbl.updated_dttm = Convert.ToDateTime("1900-01-01");
-                    db_pacco.payrollemployee_tax_hdr_tbl.Add(tbl);
-
-
-                }
-
-                else if (par_action == "EDIT")
-                {
-
-                    var payrollemployee_tax_hdr_tbl = db_pacco.payrollemployee_tax_hdr_tbl.Where(a => a.effective_date == effective_date && a.empl_id == par_empl_id).FirstOrDefault();
-                    var payrollemployee_tax_tbl = db_pay.payrollemployee_tax_tbl.Where(a => a.effective_date == effective_date && a.empl_id == par_empl_id).FirstOrDefault();
-
-                    if (payrollemployee_tax_hdr_tbl != null)
+                    if (payrollemployee_tax_phic_rece_tbl != null)
                     {
-                        if (payrollemployee_tax_tbl == null)
+                        if (payrollemployee_tax_phic_rece_tbl.effective_date > effective_date)
                         {
-                            payrollemployee_tax_hdr_tbl.bir_class = data.bir_class;
-                            payrollemployee_tax_hdr_tbl.with_sworn = data.with_sworn;
-                            payrollemployee_tax_hdr_tbl.fixed_rate = data.fixed_rate;
-                            payrollemployee_tax_hdr_tbl.total_gross_pay = data.total_gross_pay;
-                            payrollemployee_tax_hdr_tbl.dedct_status = data.dedct_status;
-                            payrollemployee_tax_hdr_tbl.rcrd_status = "N";
-                            payrollemployee_tax_hdr_tbl.user_id_updated_by = Session["user_id"].ToString(); ;
-                            payrollemployee_tax_hdr_tbl.updated_dttm = DateTime.Now;
-                            payrollemployee_tax_hdr_tbl.w_tax_perc = data.w_tax_perc;
-                            payrollemployee_tax_hdr_tbl.bus_tax_perc = data.bus_tax_perc;
-                            payrollemployee_tax_hdr_tbl.vat_perc = data.vat_perc;
-                            payrollemployee_tax_hdr_tbl.exmpt_amt = data.exmpt_amt;
+
+                            throw new Exception("You already have a tax rate configured within the range of your selected effective date!");
+
                         }
+                    }
+
+
+                    if (payrollemployee_tax_phic_rece_tbl != null)
+                    {
+                        
+                            payrollemployee_tax_phic_rece_tbl.bir_class = data.bir_class;
+                            payrollemployee_tax_phic_rece_tbl.with_sworn = data.with_sworn;
+                            payrollemployee_tax_phic_rece_tbl.fixed_rate = data.fixed_rate;
+                            payrollemployee_tax_phic_rece_tbl.total_gross_pay = data.total_gross_pay;
+                            payrollemployee_tax_phic_rece_tbl.dedct_status = data.dedct_status;
+                            payrollemployee_tax_phic_rece_tbl.rcrd_status = "N";
+                            payrollemployee_tax_phic_rece_tbl.user_id_updated_by = Session["user_id"].ToString(); ;
+                            payrollemployee_tax_phic_rece_tbl.updated_dttm = DateTime.Now;
+                            payrollemployee_tax_phic_rece_tbl.w_tax_perc = data.w_tax_perc;
+                            payrollemployee_tax_phic_rece_tbl.bus_tax_perc = data.bus_tax_perc;
+                            payrollemployee_tax_phic_rece_tbl.vat_perc = data.vat_perc;
+                            payrollemployee_tax_phic_rece_tbl.exmpt_amt = data.exmpt_amt;
+                        
                     }
                     else
                     {
-                        if (payrollemployee_tax_tbl == null)
-                        {
-                            payrollemployee_tax_hdr_tbl tbl = new payrollemployee_tax_hdr_tbl();
+                        
+                            payrollemployee_tax_phic_rece_tbl tbl = new payrollemployee_tax_phic_rece_tbl();
 
                             tbl.empl_id = data.empl_id;
                             tbl.effective_date = effective_date;
@@ -402,28 +530,22 @@ namespace HRIS_ePAccount.Controllers
                             tbl.vat_perc = data.vat_perc;
                             tbl.exmpt_amt = data.exmpt_amt;
                             tbl.updated_dttm = Convert.ToDateTime("1900-01-01");
-                            db_pacco.payrollemployee_tax_hdr_tbl.Add(tbl);
-                        }
+                            db_pay.payrollemployee_tax_phic_rece_tbl.Add(tbl);
+                        
 
                     }
 
-                    //var payrollemployee_tax_tbl = db_pay.payrollemployee_tax_tbl.Where(a => a.effective_date == effective_date && a.empl_id == par_empl_id).FirstOrDefault();
+                    
+              
+                     message = "success";
+                     db_pay.SaveChanges();
 
-                    //if(payrollemployee_tax_tbl != null)
-                    //{
-                    //    payrollemployee_tax_tbl.rcrd_status = "N";
-                    //}
 
-                }
-                message = "success";
-                db_pacco.SaveChanges();
+                var vw_phic_share_rece_tbl_ACT = db_pacco.vw_phic_share_rece_tbl_ACT.Where(a => a.department_code == department_code && a.employment_type == employment_type).ToList();
 
-             
-                var vw_phic_share_empl_tbl_ACT = db_pacco.vw_phic_share_empl_tbl_ACT.Where(a => a.department_code == department_code && a.employment_type == "JO").ToList();
-                
-                HttpContext.Session["vw_phic_share_empl_tbl_ACT"] = vw_phic_share_empl_tbl_ACT;
+                HttpContext.Session["vw_phic_share_rece_tbl_ACT"] = vw_phic_share_rece_tbl_ACT;
 
-                return Json(new { message, vw_phic_share_empl_tbl_ACT }, JsonRequestBehavior.AllowGet);
+                return Json(new { message, vw_phic_share_rece_tbl_ACT }, JsonRequestBehavior.AllowGet);
             }
             catch (DbEntityValidationException e)
             {
@@ -580,22 +702,43 @@ namespace HRIS_ePAccount.Controllers
         // Created By : JRV - Created Date : 09/19/2019
         // Description: Populate Employment Type
         //*********************************************************************//
-        public ActionResult RetrieveDataListGrid(string pay_payroll_year, string par_department_code, string par_history)
+        public ActionResult RetrieveDataListGrid(string par_payroll_year, string par_department_code)
         {
             try
             {
 
                 var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_empl_tbl_ACT.Where(a => a.department_code == par_department_code).ToList();
                 HttpContext.Session["vw_phic_share_empl_tbl_ACT"] = sp_payrollemployee_tax_hdr_tbl_list;
+               
 
-                return Json(new { sp_payrollemployee_tax_hdr_tbl_list }, JsonRequestBehavior.AllowGet);
+                return Json(new { sp_payrollemployee_tax_hdr_tbl_list,icon="success",message="success" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                return Json(new { ex.Message }, JsonRequestBehavior.AllowGet);
+                return Json(new { ex.Message,icon="error" }, JsonRequestBehavior.AllowGet);
             }
 
         }
+
+        public ActionResult RetrieveDataListGrid2(string par_payroll_year, string par_employment_type, string par_department_code)
+        {
+            try
+            {
+
+              
+                var vw_phic_share_rece_tbl_ACT = db_pacco.vw_phic_share_rece_tbl_ACT.Where(a => a.department_code == par_department_code && a.employment_type == par_employment_type).ToList();
+                
+                HttpContext.Session["vw_phic_share_rece_tbl_ACT"] = vw_phic_share_rece_tbl_ACT;
+
+                return Json(new {vw_phic_share_rece_tbl_ACT, icon = "success", message = "success" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { ex.Message, icon = "error" }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
 
 
         //*********************************************************************//
