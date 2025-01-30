@@ -347,8 +347,12 @@ namespace HRIS_ePAccount.Controllers
 
                 
                 var payrollemployee_tax_tbl = db_pay.payrollemployee_tax_tbl.Where(a => a.empl_id == par_empl_id).OrderByDescending(a => a.effective_date).FirstOrDefault();
-
-                if (payrollemployee_tax_tbl.effective_date >= current_date)
+                if (payrollemployee_tax_tbl == null)
+                {
+                    insertType = "new";
+                    newEffectiveDate = current_date;
+                }
+                else if (payrollemployee_tax_tbl.effective_date >= current_date)
                 {
                     insertType = "update";
                     newEffectiveDate = payrollemployee_tax_tbl.effective_date;
@@ -441,6 +445,68 @@ namespace HRIS_ePAccount.Controllers
                     }
 
 
+                }
+                else
+                {
+                    payrollemployee_tax_tbl PETX = new payrollemployee_tax_tbl();
+                    PETX.empl_id = data.empl_id;
+                    PETX.effective_date = newEffectiveDate;
+                    PETX.bir_class = data.bir_class;
+                    PETX.with_sworn = isCheckBool(data.with_sworn.ToString());
+                    PETX.fixed_rate = isCheckBool(data.fixed_rate.ToString());
+                    PETX.total_gross_pay = data.total_gross_pay;
+                    PETX.dedct_status = isCheckBool(data.dedct_status.ToString());
+                    PETX.rcrd_status = "N";
+                    PETX.user_id_created_by = Session["user_id"].ToString();
+                    PETX.created_dttm = DateTime.Now;
+                    PETX.user_id_updated_by = "";
+                    PETX.w_tax_perc = data.w_tax_perc;
+                    PETX.bus_tax_perc = data.bus_tax_perc;
+                    PETX.vat_perc = data.vat_perc;
+                    PETX.exmpt_amt = data.exmpt_amt;
+                    PETX.updated_dttm = Convert.ToDateTime("1900-01-01");
+                    db_pay.payrollemployee_tax_tbl.Add(PETX);
+
+                    var payrollemployee_tax_hdr_tbl = db_pacco.payrollemployee_tax_hdr_tbl.Where(a => a.empl_id == par_empl_id && a.effective_date == newEffectiveDate).FirstOrDefault();
+
+                    if (payrollemployee_tax_hdr_tbl != null)
+                    {
+
+                        payrollemployee_tax_hdr_tbl.bir_class = data.bir_class;
+                        payrollemployee_tax_hdr_tbl.with_sworn = data.with_sworn;
+                        payrollemployee_tax_hdr_tbl.fixed_rate = data.fixed_rate;
+                        payrollemployee_tax_hdr_tbl.total_gross_pay = data.total_gross_pay;
+                        payrollemployee_tax_hdr_tbl.dedct_status = data.dedct_status;
+                        payrollemployee_tax_hdr_tbl.rcrd_status = "N";
+                        payrollemployee_tax_hdr_tbl.user_id_updated_by = Session["user_id"].ToString(); ;
+                        payrollemployee_tax_hdr_tbl.updated_dttm = DateTime.Now;
+                        payrollemployee_tax_hdr_tbl.w_tax_perc = data.w_tax_perc;
+                        payrollemployee_tax_hdr_tbl.bus_tax_perc = data.bus_tax_perc;
+                        payrollemployee_tax_hdr_tbl.vat_perc = data.vat_perc;
+                        payrollemployee_tax_hdr_tbl.exmpt_amt = data.exmpt_amt;
+                    }
+                    else
+                    {
+                        payrollemployee_tax_hdr_tbl tbl = new payrollemployee_tax_hdr_tbl();
+
+                        tbl.empl_id = data.empl_id;
+                        tbl.effective_date = newEffectiveDate;
+                        tbl.bir_class = data.bir_class;
+                        tbl.with_sworn = isCheckBool(data.with_sworn.ToString());
+                        tbl.fixed_rate = isCheckBool(data.fixed_rate.ToString());
+                        tbl.total_gross_pay = data.total_gross_pay;
+                        tbl.dedct_status = isCheckBool(data.dedct_status.ToString());
+                        tbl.rcrd_status = "N";
+                        tbl.user_id_created_by = Session["user_id"].ToString();
+                        tbl.created_dttm = DateTime.Now;
+                        tbl.user_id_updated_by = "";
+                        tbl.w_tax_perc = data.w_tax_perc;
+                        tbl.bus_tax_perc = data.bus_tax_perc;
+                        tbl.vat_perc = data.vat_perc;
+                        tbl.exmpt_amt = data.exmpt_amt;
+                        tbl.updated_dttm = Convert.ToDateTime("1900-01-01");
+                        db_pacco.payrollemployee_tax_hdr_tbl.Add(tbl);
+                    }
                 }
 
 
