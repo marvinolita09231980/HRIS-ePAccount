@@ -276,11 +276,6 @@ ng_HRD_App.controller("cPHICShareTaxRate_ctrlr", function (commonScript,$scope, 
             s.employeeddl = d.data.empType
             s.ddl_employment_type = d.data.ddl_emp_type
 
-            console.log(d.data.ddl_year)
-            console.log(d.data.employment_type)
-            console.log(d.data.empl_id)
-            console.log(d.data.tabindex)
-
             s.ddl_year = d.data.ddl_year == "" || d.data.ddl_year == null ? s.ddl_year = new Date().getFullYear().toString() : d.data.ddl_year
             s.ddl_department = d.data.department_code == "" || d.data.department_code == null ? s.ddl_department = "" : d.data.department_code
 
@@ -741,7 +736,7 @@ ng_HRD_App.controller("cPHICShareTaxRate_ctrlr", function (commonScript,$scope, 
         index_update = id_ss
 
         var year = "";
-        
+        var employment_type = $("#ddl_employment_type").val()
 
         if (cs.getFormDataByFieldName("header_form", "year")) {
             year = cs.getFormDataByFieldName("header_form", "year").year;
@@ -770,16 +765,18 @@ ng_HRD_App.controller("cPHICShareTaxRate_ctrlr", function (commonScript,$scope, 
                     }
                     $("#loading_data").modal("show")
                     h.post("../cPHICShareTaxRate/GenerateByEmployee_rece_phic", {
-                        par_empl_id: s.datalistgrid_rc[id_ss].empl_id
+                         par_empl_id: s.datalistgrid_rc[id_ss].empl_id
                         , par_payroll_year: year
                         , par_department_code: $("#ddl_department").val()
                         , par_rcrd_status: s.datalistgrid_rc[id_ss].rcrd_status
                         , par_history: history
+                        , employment_type: employment_type
                     }).then(function (d) {
 
                         if (d.data.message == "success") {
 
-                            s.datalistgrid = d.data.sp_payrollemployee_tax_hdr_tbl_list.refreshTable("datalist_grid", s.datalistgrid_rc[id_ss].empl_id);
+                           
+                            s.datalistgrid = d.data.sp_payrollemployee_tax_hdr_tbl_list.refreshTable("datalist_grid_rc", s.datalistgrid_rc[id_ss].empl_id);
 
                             //if (s.datalistgrid.length > 0) {
                             //    s.oTable1.fnClearTable();
@@ -790,7 +787,7 @@ ng_HRD_App.controller("cPHICShareTaxRate_ctrlr", function (commonScript,$scope, 
                             //    s.oTable1.fnClearTable();
                             //}
 
-                            s.oTable2.fnSort([[sort_value, sort_order]]);
+                            //s.oTable2.fnSort([[sort_value, sort_order]]);
 
                             swal("Successfully Updated!", "Existing record successfully Updated!", "success")
                         }
