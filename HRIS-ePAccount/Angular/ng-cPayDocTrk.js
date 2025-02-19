@@ -4315,7 +4315,7 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
     s.btn_print_card = function (row) {
 
         var info = s.ViewLegdger_Data[row]
-        console.log(info)
+       
         var payroll_period_from = ""
         var payroll_period_to = ""
         var controller = "Reports"
@@ -4323,7 +4323,7 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
         var ReportName = "CrystalReport"
         var SaveName = "Crystal_Report"
         var ReportType = "inline"
-        var ReportPath = "~/Reports/cryPayTrkEmployeeCard/cryEmployeeCard.rpt"
+        var ReportPath = "~/Reports/cryEmployeeCard/cryEmployeeCard.rpt"
         var sp = "sp_employeecard_re_ce_nocard_rep"
         var parameters = "par_payroll_registry_nbr," + info.payroll_registry_nbr +" ,par_payroll_year," + info.payroll_year + ",par_empl_id," + info.empl_id + ",par_period_from," + payroll_period_from + ",par_period_to," + payroll_period_to
 

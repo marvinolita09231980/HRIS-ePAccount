@@ -12,17 +12,20 @@
 
 ng_HRD_App.run(function () {
 
-    String.prototype.get_page = function (table) {
+
+    function get_page(id, table) {
+
         var nakit_an = false;
         var rowx = 0;
         $('#' + table + ' tr').each(function () {
             $.each(this.cells, function (cells) {
                 if (cells == 0) {
-                    if ($(this).text() == this) {
+                    if ($(this).text() == id) {
                         nakit_an = true;
                         return false;
                     }
                 }
+
             });
             if (nakit_an) {
                 $(this).addClass("selected");
@@ -32,8 +35,6 @@ ng_HRD_App.run(function () {
         });
         return nakit_an;
     }
-
-
     //************************************// 
     //***populate the specified the specified dataTable
     // the parameter table is the scope name of the dataTable and the 
@@ -43,20 +44,25 @@ ng_HRD_App.run(function () {
     //**********************************//
 
     Array.prototype.refreshTable = function (table, id) {
-        console.log(table)
-
+       
         if (this.length == 0) {
             $("#" + table).dataTable().fnClearTable();
         }
-
         else {
+          
             $("#" + table).dataTable().fnClearTable();
             $("#" + table).dataTable().fnAddData(this);
         }
 
+       
+        
+
         if (id != "") {
+           
+
             for (var x = 1; x <= $("#" + table).DataTable().page.info().pages; x++) {
-                if (id.get_page(table) == false) {
+
+                if (get_page(id, table) == false) {
                     $("#" + table).dataTable().fnPageChange(x);
                 }
                 else {
@@ -116,6 +122,8 @@ ng_HRD_App.run(function () {
         return data;
     }
 
+    
+
     Array.prototype.delete = function (code) {
         return this.filter(function (d, k) {
             return k != code
@@ -137,6 +145,34 @@ ng_HRD_App.run(function () {
             return d[prop] == compare
         })
         return data
+    }
+    Array.prototype.populateForm = function (form_name) {
+        const data = this[0]
+        const form = document.getElementById(form_name)
+        for (let i = 0; i < form.elements.length; i++) {
+            let element = form.elements[i];
+            Object.keys(data).forEach(key => {
+                if (element.name == key) {
+                    console.log(element.name)
+                    console.log(data[key])
+                    
+                    element.value = data[key].toString()
+                    console.log(element.value)
+                }
+            });
+        }
+    }
+
+    String.prototype.populateFormField = function (form_name, fieldname) {
+        const data = this.toString();
+        console.log(data)
+        const form = document.getElementById(form_name)
+        for (let i = 0; i < form.elements.length; i++) {
+            let element = form.elements[i];
+            if (element.name == fieldname) {
+                element.value = data.toString();
+            }
+        }
     }
 })
 ng_HRD_App.service("commonScript", ["$compile", "$filter", function (c, f) {
@@ -337,6 +373,105 @@ ng_HRD_App.service("commonScript", ["$compile", "$filter", function (c, f) {
             }
         },
 
+        getFormData: function(form_name) {
+            var witherror = false;
+            const data = {}
+            const form = document.getElementById(form_name)
+            for (let i = 0; i < form.elements.length; i++) {
+                let element = form.elements[i];
+                data[element.name] = element.value;
+                if (element.hasAttribute("required")) {
+
+
+                    var el = this.D_cE("span")
+                    el.className += element.name;
+                    el[iH] = "Required field!";
+                    el[st][c] = "red";
+                    el[st][csF] = "right";
+
+                    if (element.value == "" || element.value == undefined) {
+                        element.style.borderColor = "red";
+                        element.style.borderWidth = "1px";
+                        element.style.borderStyle = "solid";
+
+                        if (!element.nextElementSibling || element.nextElementSibling !== el) {
+                            element.insertAdjacentElement("afterend", el);
+                        }
+                        witherror = true
+                    }
+                    else {
+                        element.style.borderColor = "";
+                        element.style.borderWidth = "";
+                        element.style.borderStyle = "";
+
+                        this.removeAllSpans(form);
+                    }
+                }
+            }
+            if (witherror) {
+                console.log("false")
+                return false
+            }
+            else {
+                console.log(data)
+                return data
+            }
+        },
+
+        getFormDataByFieldName: function (form_name, fieldName) {
+
+            var witherror = false;
+            const data = {}
+            const form = document.getElementById(form_name)
+            this.removeAllSpans(form);
+            for (let i = 0; i < form.elements.length; i++) {
+                let element = form.elements[i];
+                if (element.name == fieldName) {
+                    data[element.name] = element.value;
+                    if (element.hasAttribute("required")) {
+                        var el = this.D_cE("span")
+                        el.className += element.name;
+                        el.className += " fieldNotif";
+                        el[iH] = "Required field!";
+                        el[st][c] = "red";
+                        el[st][csF] = "right";
+
+                        if (element.value == "" || element.value == undefined) {
+                            element.style.borderColor = "red";
+                            element.style.borderWidth = "1px";
+                            element.style.borderStyle = "solid";
+
+                            if (!element.nextElementSibling || element.nextElementSibling !== el) {
+                                element.insertAdjacentElement("afterend", el);
+                            }
+                            witherror = true
+                        }
+                        else {
+                            element.style.borderColor = "";
+                            element.style.borderWidth = "";
+                            element.style.borderStyle = "";
+
+                            this.removeAllSpans(form);
+                        }
+                    }
+                }
+            }
+            if (witherror) {
+                return false
+            }
+            else {
+                return data
+            }
+        },
+        
+        removeAllSpans : function (parentElement) {
+
+            const spans = parentElement.querySelectorAll('span.fieldNotif');
+           
+            spans.forEach(span => {
+                span.remove();
+            });
+        },
 
         //************************************//
         // Validate Field of the form if Empty then border set to red and required warning will show below

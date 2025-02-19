@@ -97,6 +97,8 @@ namespace HRIS_ePAccount.Models
         public string other_loan3 { get; set; }
         public string other_loan4 { get; set; }
         public string other_loan5 { get; set; }
+        public string gfaleducnl_ln { get; set; }
+        public string mpl_lite_ln { get; set; }
         public string ra_amount { get; set; }
         public string ta_amount { get; set; }
         public string qa_amount { get; set; }

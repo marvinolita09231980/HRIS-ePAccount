@@ -13,9 +13,10 @@
 
 
 
-ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $http, $filter) {
+ng_HRD_App.controller("cPHICShareTaxRate_ctrlr", function (commonScript,$scope, $compile, $http, $filter) {
     var s = $scope
     var h = $http
+    var cs = commonScript
     s.year = []
     var index_update = "";
 
@@ -39,6 +40,7 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
     s.isShowEffectiveDate_hid = false
     s.isShowEffectiveDate = false
     s.isShowBirSelect = true
+    s.currentOptionValue = ""
 
     s.currentBIRClass = ""
     s.isDisabledBIRClass = false
@@ -175,6 +177,18 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
                             return "<div class='btn-block text-left'>" + data + "</div>";
                         }
                     },
+                    {
+                        "mData": "employment_type", "mRender": function (data, type, full, row) {
+                            var employment_type_descr = "";
+                            if (data == "RE") {
+                                employment_type_descr = "Regular"
+                            }
+                            else {
+                                employment_type_descr = "Casual"
+                            }
+                            return "<div class='btn-block text-left text-center'>" + employment_type_descr + "</div>";
+                        }
+                    },
 
                     {
                         "mData": "w_tax_perc", "mRender": function (data, type, full, row) {
@@ -214,17 +228,17 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
 
                             return '<center>'
                                 + '<div class="btn-group tooltip-demo" ng-hide="' + NotAddedInSelectedYear(full["tax_year"]) + '">'
-                                + '<button type="button" class="btn btn-warning btn-sm action" style="background-color:blueviolet;color:white;border:1px solid blueviolet;" data-toggle="tooltip" data-placement="left" title="Generate Tax" ng-show="' + s.allow_edit + '" ng-click="btn_generate_action(' + row["row"] + ')" > '
+                                + '<button type="button" class="btn btn-warning btn-sm action" style="background-color:blueviolet;color:white;border:1px solid blueviolet;" data-toggle="tooltip" data-placement="left" title="Generate Tax" ng-show="' + s.allow_edit + '" ng-click="btn_generate_action_2(' + row["row"] + ')" > '
                                 + '<i class="fa fa-clipboard"></i>' + '</button>'
-                                + '<button type="button" class="btn btn-success btn-sm action" data-toggle="tooltip" data-placement="left" title="Delete" ng-click="btn_show_action(' + row["row"] + ')" > '
+                                + '<button type="button" class="btn btn-success btn-sm action" data-toggle="tooltip" data-placement="left" title="Delete" ng-click="btn_show_action_2(' + row["row"] + ')" > '
                                 + '<i class="fa fa-plus"></i>' + '</button>'
-                                + '<button type="button" class="btn btn-info btn-sm action" data-toggle="tooltip" data-placement="left" title="Edit" ng-show="' + s.allow_edit + '" ng-click="btn_edit_action(' + row["row"] + ')" > '
+                                + '<button type="button" class="btn btn-info btn-sm action" data-toggle="tooltip" data-placement="left" title="Edit" ng-show="' + s.allow_edit + '" ng-click="btn_edit_action_2(' + full["empl_id"] + ')" > '
                                 + '<i class="fa fa-edit"></i>' + '</button>'
 
                                 + '</div>'
 
                                 + '<div ng-show="' + NotAddedInSelectedYear(full["tax_year"]) + '">'
-                                + '<button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="left" title="Show Details" ng-show="' + s.allow_view + '" ng-click="btn_add_action(' + row["row"] + ')" > '
+                                + '<button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="left" title="Show Details" ng-show="' + s.allow_view + '" ng-click="btn_add_action_2(' + full["empl_id"] + ')" > '
                                 + '<i class="fa fa-plus"></i> Add Tax Details'
                                 + '</button>'
                                 + '</div>'
@@ -257,12 +271,20 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
 
         $("#loading_data").modal("show")
         RetrieveYear()
-        h.post("../cNonEmployeeTaxRate/InitializeData", { par_payroll_year: new Date().getFullYear().toString() }).then(function (d) {
+        h.post("../cPHICShareTaxRate/InitializeData", { par_payroll_year: new Date().getFullYear().toString() }).then(function (d) {
 
             s.employeeddl = d.data.empType
             s.ddl_employment_type = d.data.ddl_emp_type
+
+            console.log(d.data.ddl_year)
+            console.log(d.data.employment_type)
+            console.log(d.data.empl_id)
+            console.log(d.data.tabindex)
+
             s.ddl_year = d.data.ddl_year == "" || d.data.ddl_year == null ? s.ddl_year = new Date().getFullYear().toString() : d.data.ddl_year
             s.ddl_department = d.data.department_code == "" || d.data.department_code == null ? s.ddl_department = "" : d.data.department_code
+
+           
 
             $("#ddl_status").val("N")
 
@@ -287,6 +309,7 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
             }
 
             s.w_held_data = d.data.taxrate_percentage_tbl_list
+            s.w_held_data_2 = d.data.taxrate_percentage_tbl_list
 
             s.ddl_w_held = ""
             $("#ddl_w_held").val("")
@@ -321,17 +344,25 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
 
             $("#datalist_grid").DataTable().search("").draw();
             
+            
+            if (d.data.tabindex == "1") {
 
-            if (d.data.sp_payrollemployee_tax_hdr_tbl_list.length > 0) {
+                s.datalistgrid = d.data.sp_payrollemployee_tax_hdr_tbl_list.refreshTable("datalist_grid", d.data.empl_id);
+                $('.nav-tabs a[href="#tab-1"]').tab('show');
 
-                s.datalistgrid = d.data.sp_payrollemployee_tax_hdr_tbl_list;
-                s.oTable1.fnClearTable();
-                s.oTable1.fnAddData(s.datalistgrid)
             }
-            else {
-                s.oTable1.fnClearTable();
+            else if (d.data.tabindex == "2"){
+               
+                s.datalistgrid_rc = d.data.sp_payrollemployee_tax_hdr_tbl_list.refreshTable("datalist_grid_rc", d.data.empl_id);
+                s.employeenames_2 = d.data.sp_payrollemployee_tax_hdr_tbl_list;
+
+                $('.nav-tabs a[href="#tab-2"]').tab('show');
             }
 
+            if (d.data.ddl_year != undefined) {
+                d.data.ddl_year.populateFormField("header_form", "year")
+            }
+            $("#ddl_employment_type").val(d.data.employment_type)
 
 
 
@@ -359,22 +390,46 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
     }
     init()
 
-    
-    var RetrieveDataPhicReCe = function () {
-        h.post("../cNonEmployeeTaxRate/RetrieveDataPhicReCe",
+    function RetrieveDataPhicJO() {
+        h.post("../cPHICShareTaxRate/RetrieveDataListGrid",
             {
-                pay_payroll_year: $("#ddl_year").val(),
+                par_department_code: $("#ddl_department").val(),
+            }).then(function (d) {
+                if (d.data.sp_payrollemployee_tax_hdr_tbl_list.length > 0) {
+
+                    s.datalistgrid = d.data.sp_payrollemployee_tax_hdr_tbl_list;
+                    s.oTable1.fnClearTable();
+                    s.oTable1.fnAddData(s.datalistgrid)
+                    s.employeenames = d.data.sp_payrollemployee_tax_hdr_tbl_list
+                }
+                else {
+                    s.oTable1.fnClearTable();
+                }
+                $("#loading_data").modal("hide")
+            })
+    }
+
+    var RetrieveDataPhicReCe = function () {
+        var employment_type = $("#ddl_employment_type").val() 
+        h.post("../cPHICShareTaxRate/RetrieveDataPhicReCe",
+            {
+                par_employment_type: employment_type,
                 par_department_code: $("#ddl_department").val(),
                 par_history: "0"
 
             }).then(function (d) {
 
                 if (d.data.icon = "success") {
-
-                    s.datalistgrid_rc = d.data.vw_phic_share_rece_tbl_ACT;
-                    s.oTable2.fnClearTable();
-                    s.oTable2.fnAddData(s.datalistgrid_rc)
-                    s.employeenames_2 = d.data.vw_phic_share_rece_tbl_ACT
+                    if (d.data.vw_phic_share_rece_tbl_ACT.length > 0) {
+                        s.datalistgrid_rc = d.data.vw_phic_share_rece_tbl_ACT;
+                        s.oTable2.fnClearTable();
+                        s.oTable2.fnAddData(s.datalistgrid_rc)
+                        s.employeenames_2 = d.data.vw_phic_share_rece_tbl_ACT
+                    }
+                    else {
+                        s.oTable1.fnClearTable();
+                    }
+                    
                 }
                 else {
                     s.oTable1.fnClearTable();
@@ -388,13 +443,16 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
     s.opentab = function(tab) {
         
         if (tab == 2) {
-            RetrieveDataPhicReCe();
+            
             s.tablereference = "datalist_grid_rc"
+            RetrieveDataPhicReCe();
         }
         else {
+           
             s.tablereference = "datalist_grid"
             $("#search_box2").addClass("hidden");
             $("#search_box").removeClass("hidden");
+            RetrieveDataPhicJO()
         }
     }
 
@@ -443,11 +501,11 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
     //************************************//
     //***Select-Payroll-Year-DropDown****//
     //************************************// 
-    s.SelectPayrollYear = function (par_year) {
+    s.SelectEmployment_type = function () {
+        s.tablereference
+        var employment_type = $("#ddl_employment_type").val()
 
-        s.selected_payroll_year = $("#ddl_year").val()
-
-        if (par_year.toString() != "" && s.ddl_department.toString() != "") {
+        if (employment_type.toString() != "" && s.ddl_department.toString() != "") {
             s.btnAddShow = true;
         }
 
@@ -472,32 +530,13 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
         }
 
 
-        if ($("#ddl_year").val() != "" && $("#ddl_department").val() != "") {
-            h.post("../cNonEmployeeTaxRate/RetrieveDataListGrid",
-                {
-                    pay_payroll_year: $("#ddl_year").val(),
-                    par_department_code: $("#ddl_department").val(),
-                    par_history: history
+        if (employment_type != "" && $("#ddl_department").val() != "") {
 
-                }).then(function (d) {
-
-                    if (d.data.sp_payrollemployee_tax_hdr_tbl_list.length > 0) {
-
-                        s.datalistgrid = d.data.sp_payrollemployee_tax_hdr_tbl_list;
-                        s.oTable1.fnClearTable();
-                        s.oTable1.fnAddData(s.datalistgrid)
-                    }
-                    else {
-                        s.oTable1.fnClearTable();
-                    }
-
-                    $("#loading_data").modal("hide")
-
-                })
+            RetrieveDataPhicReCe();
         }
 
         else {
-            s.oTable1.fnClearTable();
+            s.oTable2.fnClearTable();
             $("#loading_data").modal("hide")
         }
 
@@ -508,7 +547,7 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
     //************************************// 
     s.SelectLetter = function (par_empType, par_year, par_letter) {
         $("#loading_data").modal("show")
-        h.post("../cNonEmployeeTaxRate/SelectLetter",
+        h.post("../cPHICShareTaxRate/SelectLetter",
             {
                 par_empType: par_empType,
                 par_year: par_year,
@@ -539,12 +578,12 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
 
 
     s.SelectedDepartment_Change = function (ddl_department) {
-
+        console.log(cs.getFormDataByFieldName("header_form", "employment_type"))
+        var formdata = cs.getFormDataByFieldName("header_form","employment_type")
         $("#loading_data").modal("show")
-        if ($("#ddl_year").val() != "" && ddl_department.toString() != "") {
+        if (ddl_department.toString() != "") {
             s.btnAddShow = true;
         }
-
         else {
             s.btnAddShow = false;
         }
@@ -566,27 +605,13 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
         }
 
 
-        if ($("#ddl_year").val() != "" && $("#ddl_department").val() != "") {
-            h.post("../cNonEmployeeTaxRate/RetrieveDataListGrid",
-                {
-                    pay_payroll_year: $("#ddl_year").val(),
-                    par_department_code: $("#ddl_department").val(),
-                    par_history: history
-
-                }).then(function (d) {
-                    if (d.data.sp_payrollemployee_tax_hdr_tbl_list.length > 0) {
-                        
-                        s.datalistgrid = d.data.sp_payrollemployee_tax_hdr_tbl_list;
-                        s.oTable1.fnClearTable();
-                        s.oTable1.fnAddData(s.datalistgrid)
-                        s.employeenames = d.data.sp_payrollemployee_tax_hdr_tbl_list
-                    }
-                    else {
-                        s.oTable1.fnClearTable();
-                    }
-                    $("#loading_data").modal("hide")
-                })
-            RetrieveDataPhicReCe()
+        if ($("#ddl_department").val() != "") {
+            if (s.tablereference == "datalist_grid") {
+                RetrieveDataPhicJO()
+            }
+            else {
+                RetrieveDataPhicReCe()
+            }
         }
 
         else {
@@ -595,6 +620,8 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
         }
 
     }
+
+    
 
 
 
@@ -650,7 +677,13 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
     s.btn_generate_action = function (id_ss) {
         index_update = ""
         index_update = id_ss
-
+        var year = "";
+        if (cs.getFormDataByFieldName("header_form", "year")) {
+            year = cs.getFormDataByFieldName("header_form", "year").year;
+        }
+        else {
+            return;
+        }
         swal({
             title: "Are you sure to Update this record?",
             text: "Once generated, data will be updated automatically!",
@@ -670,25 +703,25 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
                     var history = "N"
                 }
                 $("#loading_data").modal("show")
-                h.post("../cNonEmployeeTaxRate/GenerateByEmployee", {
-                     par_empl_id: s.datalistgrid[id_ss].empl_id
-                    , par_payroll_year: $("#ddl_year").val()
+                h.post("../cPHICShareTaxRate/GenerateByEmployee_ne", {
+                    par_empl_id: s.datalistgrid[id_ss].empl_id
+                    , par_payroll_year: year
                     , par_department_code: $("#ddl_department").val()
                     , par_history: history
                 }).then(function (d) {
 
                     if (d.data.message == "success") {
 
-                        s.datalistgrid = d.data.sp_payrollemployee_tax_hdr_tbl_list
+                        s.datalistgrid = d.data.sp_payrollemployee_tax_hdr_tbl_list.refreshTable("datalist_grid", s.datalistgrid[id_ss].empl_id);
 
-                        if (s.datalistgrid.length > 0) {
-                            s.oTable1.fnClearTable();
-                            s.oTable1.fnAddData(s.datalistgrid);
-                        }
+                        //if (s.datalistgrid.length > 0) {
+                        //    s.oTable1.fnClearTable();
+                        //    s.oTable1.fnAddData(s.datalistgrid);
+                        //}
 
-                        else {
-                            s.oTable1.fnClearTable();
-                        }
+                        //else {
+                        //    s.oTable1.fnClearTable();
+                        //}
 
                         s.oTable1.fnSort([[sort_value, sort_order]]);
 
@@ -700,29 +733,110 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
 
             }
         })
+
     }
 
+    s.btn_generate_action_2 = function (id_ss) {
+        index_update = ""
+        index_update = id_ss
+
+        var year = "";
+        
+
+        if (cs.getFormDataByFieldName("header_form", "year")) {
+            year = cs.getFormDataByFieldName("header_form", "year").year;
+        }
+        else {
+            return;
+        }
+        if (s.datalistgrid_rc[id_ss].rcrd_status == "A") {
+            swal({
+                title: "Are you sure to Update this record?",
+                text: "Once generated, data will be updated automatically!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then(function (willDelete) {
+                if (willDelete) {
+
+                    var history = "N"
+
+                    if (s.chckbx_history == true) {
+                        var history = "Y"
+                    }
+
+                    else {
+                        var history = "N"
+                    }
+                    $("#loading_data").modal("show")
+                    h.post("../cPHICShareTaxRate/GenerateByEmployee_rece_phic", {
+                        par_empl_id: s.datalistgrid_rc[id_ss].empl_id
+                        , par_payroll_year: year
+                        , par_department_code: $("#ddl_department").val()
+                        , par_rcrd_status: s.datalistgrid_rc[id_ss].rcrd_status
+                        , par_history: history
+                    }).then(function (d) {
+
+                        if (d.data.message == "success") {
+
+                            s.datalistgrid = d.data.sp_payrollemployee_tax_hdr_tbl_list.refreshTable("datalist_grid", s.datalistgrid_rc[id_ss].empl_id);
+
+                            //if (s.datalistgrid.length > 0) {
+                            //    s.oTable1.fnClearTable();
+                            //    s.oTable1.fnAddData(s.datalistgrid);
+                            //}
+
+                            //else {
+                            //    s.oTable1.fnClearTable();
+                            //}
+
+                            s.oTable2.fnSort([[sort_value, sort_order]]);
+
+                            swal("Successfully Updated!", "Existing record successfully Updated!", "success")
+                        }
+                       
+                        $("#loading_data").modal("hide")
+
+                    })
+
+                }
+            })
+        }
+        else {
+            swal({ title: "Tax Generation Restricted", text: "Tax not approved", icon: "error" })
+        }
+    }
 
 
     s.btn_show_action = function (id_ss) {
         var table = $('#datalist_grid').DataTable();
         var info = table.page.info();
         var url = "";
-
+        var year = "";
         var history = "N"
-        if (s.chckbx_history == true) {
+
+        if (s.chckbx_history == true)
+        {
             var history = "Y"
         }
-
-        else {
+        else
+        {
             var history = "N"
+        }
+       
+        if (cs.getFormDataByFieldName("header_form", "year"))
+        {
+            year = cs.getFormDataByFieldName("header_form", "year").year;
+        }
+        else
+        {
+            return;
         }
 
         
-        h.post("../cNonEmployeeTaxRate/PreviousValuesonPage_cJOTaxRate",
+            h.post("../cPHICShareTaxRate/PreviousValuesonPage_cJOTaxRate",
             {
-
-                par_year: $("#ddl_year option:selected").val()
+                  par_year: year
                 , par_empl_id: s.datalistgrid[id_ss].empl_id
                 , par_empl_name: s.datalistgrid[id_ss].employee_name
                 , par_department: $("#ddl_department option:selected").html()
@@ -734,7 +848,10 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
                 , par_position: s.datalistgrid[id_ss].position_title1
                 , par_effective_date: s.datalistgrid[id_ss].effective_date
                 , par_department_code: $("#ddl_department").val()
+                , par_employment_type: $("#ddl_employment_type").val()
+                , par_tabindex: 1
                 , par_history: history
+               
             }).then(function (d) {
                 
                 if (d.data.icon == "success") {
@@ -743,6 +860,66 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
                 }
                 else {
                     swal(d.data.message, {icon:d.data.icon})
+                }
+            })
+
+    }
+
+
+
+    s.btn_show_action_2 = function (id_ss) {
+        var table = $('#datalist_grid_rc').DataTable();
+        var info = table.page.info();
+        var year = "";
+        var url = "";
+
+        var history = "N"
+        if (s.chckbx_history == true) {
+            var history = "Y"
+        }
+
+        else {
+            var history = "N"
+        }
+
+
+        
+        if (cs.getFormDataByFieldName("header_form", "year")) {
+            year = cs.getFormDataByFieldName("header_form", "year").year;
+        }
+        else {
+            return;
+        }
+
+        
+
+        h.post("../cPHICShareTaxRate/PreviousValuesonPage_cJOTaxRate",
+            {
+
+                  par_year: year
+                , par_empl_id: s.datalistgrid_rc[id_ss].empl_id
+                , par_empl_name: s.datalistgrid_rc[id_ss].employee_name
+                , par_department: $("#ddl_department option:selected").html()
+                , par_show_entries: $("#ddl_show_entries option:selected").val()
+                , par_page_nbr: info.page
+                , par_search: s.search_box
+                , par_sort_value: sort_value
+                , par_sort_order: sort_order
+                , par_position: s.datalistgrid_rc[id_ss].position_long_title
+                , par_effective_date: s.datalistgrid_rc[id_ss].tax_year_effective_date
+                , par_department_code: $("#ddl_department").val()
+                , par_employment_type: $("#ddl_employment_type").val()
+                , par_tabindex: 2
+                , par_history: history
+                
+            }).then(function (d) {
+
+                if (d.data.icon == "success") {
+                    url = "/cJOTaxRateDetails";
+                    window.location.replace(url);
+                }
+                else {
+                    swal(d.data.message, { icon: d.data.icon })
                 }
             })
 
@@ -801,7 +978,7 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
             if (s.txtb_empl_id != "" || s.txtb_empl_id == null) {
 
 
-                h.post("../cNonEmployeeTaxRate/GetTaxRate",
+                h.post("../cPHICShareTaxRate/GetTaxRate",
                     {
 
                         par_payroll_year: $("#ddl_year option:selected").val()
@@ -941,7 +1118,7 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
             if (s.txtb_empl_id_2 != "" || s.txtb_empl_id_2 == null) {
 
 
-                h.post("../cNonEmployeeTaxRate/GetTaxRate",
+                h.post("../cPHICShareTaxRate/GetTaxRate",
                     {
                          par_payroll_year: $("#ddl_year option:selected").val()
                         ,par_empl_id: s.txtb_empl_id
@@ -1145,6 +1322,79 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
 
                 $("#ddl_with_sworn").removeClass("required");
                 $("#lbl_ddl_with_sworn_req").text("");
+            }
+        }
+
+
+    }
+
+    s.SelectWithSworn_2 = function (value) {
+        try {
+
+            var selected = s.bir_class_data.select($("#ddl_bir_class_2").val(), "bir_class")
+
+
+            if (value.toString() != "") {
+                if (selected != null || selected != undefined) {
+                    if (value.toString().toUpperCase() == "TRUE") {
+                        //s.txtb_business_tax    = selected.wi_sworn_perc.toString();
+                        //s.txtb_wheld_tax       = selected.tax_perc.toString();
+                        $("#ddl_w_held_2").val(selected.wi_sworn_perc.toString())
+                        s.ddl_w_held_2 = selected.wi_sworn_perc.toString()
+                        $("#ddl_b_tax_2").val(selected.tax_perc.toString())
+                        s.ddl_b_tax_2 = selected.tax_perc.toString()
+                        $("#ddl_vat_2").val(selected.vat_perc.toString())
+                        s.ddl_vat_2 = selected.vat_perc.toString()
+                    }
+
+                    else {
+                        //s.txtb_business_tax     = selected.wo_sworn_perc.toString();
+                        //s.txtb_wheld_tax        = selected.tax_perc.toString();
+                        $("#ddl_w_held_2").val(selected.wo_sworn_perc.toString())
+                        s.ddl_w_held_2 = selected.wo_sworn_perc.toString()
+                        $("#ddl_b_tax_2").val(selected.tax_perc.toString())
+                        s.ddl_b_tax_2 = selected.tax_perc.toString()
+                        $("#ddl_vat_2").val(selected.vat_perc.toString())
+                        s.ddl_vat_2 = selected.vat_perc.toString()
+                    }
+
+                }
+
+                else {
+                    //s.txtb_business_tax = "0";
+                    //s.txtb_wheld_tax    = "0";
+                    $("#ddl_w_held_2").val("0")
+                    s.ddl_w_held_2 = "0"
+                    $("#ddl_b_tax_2").val("0")
+                    s.ddl_b_tax_2 = "0"
+                    $("#ddl_vat_2").val("0")
+                    s.ddl_vat_2 = "0"
+                }
+            }
+
+            else {
+                //s.txtb_business_tax = "0";
+                //s.txtb_wheld_tax    = "0";
+                $("#ddl_w_held_2").val("0")
+                s.ddl_w_held_2 = "0"
+                $("#ddl_b_tax_2").val("0")
+                s.ddl_b_tax_2 = "0"
+                $("#ddl_vat").val("0")
+                s.ddl_vat_2 = "0"
+            }
+
+            if (value != "") {
+
+                $("#ddl_with_sworn_2").removeClass("required");
+                $("#lbl_ddl_with_sworn_req_2").text("");
+            }
+        }
+
+        catch (e) {
+            if (value != "") {
+
+                $("#ddl_with_sworn_2").removeClass("required");
+                $("#lbl_ddl_with_sworn_req_2").text("");
             }
         }
 
@@ -1389,7 +1639,7 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
             //    , department_code: department_code
             //})
            
-            h.post("../cNonEmployeeTaxRate/SaveEDITInDatabase",
+            h.post("../cPHICShareTaxRate/SaveEDITInDatabase",
             {
                   data: dt
                 , par_effective_date: effective_date
@@ -1436,24 +1686,79 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
                                     }
                                 }
                     else {
+
                         swal("Saving Error!", "Data not save.", "error");
                         $("#main_modal").modal("hide")
                         $("#btn_save").removeClass("fa fa-spinner fa-spin");
                         $("#btn_save").addClass("fa fa-save");
+
                     }
-
-
-
              })
 
-                   
-
-               
-
         }
+    }
 
 
+    s.btn_save_2 = function () {
+        console.log(s.datalistgrid_rc_rowlist[0])
+        var old_effective_date = s.datalistgrid_rc_rowlist[0].tax_year_effective_date; 
+        var dt = cs.getFormData("tax_form_rece")
+        if (dt) {
+            var department_code = $("#ddl_department").val()
+            var empl_id = dt.empl_id
 
+            $("#btn_save_2").removeClass("fa fa-save");
+            $("#btn_save_2").addClass("fa fa-spinner fa-spin");
+
+            var history = "N"
+            var effective_date = $("#txtb_effective_date").val()
+                
+
+                if (old_effective_date == dt.effective_date) {
+                    s.isAction_2 = "EDIT"
+                }
+                else {
+                    s.isAction_2 = "ADD"
+                }
+
+                h.post("../cPHICShareTaxRate/SaveEDITInDatabaseRECEPhic",
+                {
+                      data: dt
+                    , par_action: s.isAction_2
+                    , department_code: department_code
+                }).then(function (d) {
+                    if (d.data.message == "success") {
+                           s.datalistgrid_rc = d.data.vw_phic_share_empl_tbl_ACT.refreshTable("datalist_grid_rc", empl_id);
+                         
+                            var history = "N"
+                            if (s.chckbx_history == true) {
+                                var history = "Y"
+                            }
+                            else {
+                                var history = "N"
+                            }
+
+                        $("#btn_save_2").removeClass("fa fa-spinner fa-spin");
+                        $("#btn_save_2").addClass("fa fa-save");
+                       
+                        if (s.isAction_2 == "ADD") {
+                            swal("Successfully Added!", "Employee tax successufully added!", "success")
+                        }
+
+                        else if (s.isAction_2 == "EDIT") {
+                            swal("Successfully Updated!", "Existing record successfully Updated!", "success")
+                        }
+
+                        $("#main_modal_2").modal("hide")
+                    }
+                    else {
+                        swal("Data Not Save",d.data.message , "error");
+                        $("#main_modal_2").modal("hide")
+                        $("#btn_save_2").removeClass("fa fa-spinner fa-spin");
+                        $("#btn_save_2").addClass("fa fa-save");
+                    }
+                })
+        }
     }
 
 
@@ -1530,15 +1835,19 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
     }
 
 
-    s.btn_edit_action_2 = function (id_ss) {
-
+    s.btn_edit_action_2 = function (empl_id) {
+        
+        s.datalistgrid_rc_rowlist = s.datalistgrid_rc.filter(function (k) {
+            return k.empl_id == empl_id
+        })
+        
         s.isShowNameSelect = false;
         s.isShowNameInput = true;
         s.isShowEffectiveDate_hid = true
         s.isShowEffectiveDate = false
         $("#ddl_status").val("N")
         s.ishowsave = true;
-        index_update = id_ss
+        
         clearentry()
         s.isAction = "EDIT"
         s.ModalTitle = "Edit This Record"
@@ -1553,52 +1862,20 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
             var history = "N"
         }
 
-        console.log(s.datalistgrid[id_ss])
+        setInterval(s.datalistgrid_rc_rowlist.populateForm("tax_form_rece"), 1000)
+       
 
-        $("#main_modal").modal("show")
-        s.txtb_employment_type_val = s.datalistgrid[id_ss].employment_type
-        s.txtb_empl_name = s.datalistgrid[id_ss].employee_name
-        s.txtb_empl_id = s.datalistgrid[id_ss].empl_id
-        s.txtb_position = s.datalistgrid[id_ss].position_long_title
-        $("#txtb_effective_date").val(s.datalistgrid[id_ss].tax_year_effective_date)
-        $("#txtb_effective_date_hid").val(s.datalistgrid[id_ss].tax_year_effective_date)
-        $("#ddl_fixed_rate").val(s.datalistgrid[id_ss].fixed_rate.toString())
-        $("#ddl_with_sworn").val(s.datalistgrid[id_ss].with_sworn.toString())
-        $("#ddl_deduction_status").val(s.datalistgrid[id_ss].dedct_status.toString())
-        $("#ddl_status").val(s.datalistgrid[id_ss].rcrd_status.toString())
+        $("#txtb_effective_date_2").val(s.datalistgrid_rc_rowlist[0].tax_year_effective_date)
+        $("#txtb_position_2").val(s.datalistgrid_rc_rowlist[0].position_long_title)
+        s.txtb_expt_amt = currency(toDecimalFormat(s.datalistgrid_rc_rowlist[0].exmpt_amt.toString()))
 
-
-
-        setTimeout(function () {
-            $("#ddl_bir_class").val(s.datalistgrid[id_ss].bir_class)
-            $("#ddl_w_held").val(s.datalistgrid[id_ss].w_tax_perc.toString())
-            $("#ddl_b_tax").val(s.datalistgrid[id_ss].bus_tax_perc.toString())
-            $("#ddl_vat").val(s.datalistgrid[id_ss].vat_perc.toString())
-        }, 500)
-
-
-        s.txtb_expt_amt = currency(toDecimalFormat(s.datalistgrid[id_ss].exmpt_amt.toString()))
-
-        s.currentBIRClass = s.datalistgrid[id_ss].bir_class
+        s.currentBIRClass = s.datalistgrid_rc_rowlist[0].bir_class
 
         s.isDisabledBIRClass = false;
+      
+        s.txtb_gross_pay = currency(s.datalistgrid_rc_rowlist[0].total_gross_pay)
 
-
-
-        //if ($("#ddl_fixed_rate").val().toUpperCase() == "TRUE" || $("#ddl_fixed_rate").val().toUpperCase() == "1") {
-        //    s.isDisabledBIRClass = false;
-        //}
-
-        //else {
-        //    s.isDisabledBIRClass = true;
-        //}
-
-        //console.log(s.isDisabledBIRClass )
-
-
-        s.txtb_gross_pay = currency(s.datalistgrid[id_ss].total_gross_pay)
-
-
+        $("#main_modal_2").modal("show")
 
     }
 
@@ -1618,33 +1895,7 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
         }
     }
 
-
-    Array.prototype.refreshTable = function (table, id) {
-
-        if (this.length == 0) {
-            s.oTable1.fnClearTable();
-
-        }
-        else {
-            s.oTable1.fnClearTable();
-            s.oTable1.fnAddData(this);
-        }
-
-        var el_id = s[table][0].id
-
-        if (id != "") {
-            for (var x = 1; x <= $("#" + el_id).DataTable().page.info().pages; x++) {
-                if (id.get_page(table) == false) {
-                    s.oTable1.fnPageChange(x);
-                }
-                else {
-                    break;
-                }
-            }
-        }
-
-
-    }
+    
 
     String.prototype.get_page = function (table) {
         id = this;
@@ -1693,7 +1944,7 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
         }).then(function (willDelete) {
             if (willDelete) {
 
-                h.post("../cNonEmployeeTaxRate/DeleteFromDatabase", {
+                h.post("../cPHICShareTaxRate/DeleteFromDatabase", {
                     par_empl_id: s.datalistgrid[id_ss].empl_id
                     , effective_date: s.datalistgrid[id_ss].effective_date
                 }).then(function (d) {
@@ -1761,7 +2012,7 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
 
 
         if ($("#ddl_year").val() != "" && $("#ddl_department").val() != "") {
-            h.post("../cNonEmployeeTaxRate/RetrieveDataListGrid",
+            h.post("../cPHICShareTaxRate/RetrieveDataListGrid",
                 {
                     pay_payroll_year: $("#ddl_year").val(),
                     par_department_code: $("#ddl_department").val(),
@@ -1790,6 +2041,53 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
     }
 
     s.btn_add_action = function (row) {
+        s.isShowNameSelect = true;
+        s.isShowNameInput = false;
+        s.ishowsave = true;
+        $("#ddl_status").val("N")
+        s.isShowEffectiveDate_hid = false
+        s.isShowEffectiveDate = true
+
+        s.ModalTitle_2 = "Add New Record"
+        //$("#loading_data").modal("show")
+        $("#btn_add_2").removeClass("fa fa-plus-circle");
+        $("#btn_add_2").addClass("fa fa-spinner fa-spin");
+
+        s.isAction = "ADD"
+
+        var dt = s.datalistgrid[row]
+
+        $("#ddl_employee_name").val(dt.empl_id)
+        $("#txtb_empl_id").val(dt.empl_id)
+        $("#txtb_position").val(dt.position_long_title)
+
+        s.txtb_employment_type_val = dt.employment_type
+        s.txtb_empl_name = dt.employee_name
+        s.txtb_empl_id = dt.empl_id
+        s.txtb_position = dt.position_long_title
+
+
+
+
+
+        //$("#loading_data").modal("hide")
+        $("#main_modal").modal("show")
+        $("#btn_add").removeClass("fa fa-spinner fa-spin");
+        $("#btn_add").addClass("fa fa-plus-circle");
+
+        clear_main_modal()
+       
+        
+        //DIRI ANG LAST WALA KA ADD SA DATEPICKER SA MODAL
+
+
+    }
+
+    s.btn_add_action_2 = function (empl_id) {
+        clear_main_modal_2()
+        s.datalistgrid_rc_rowlist = s.datalistgrid_rc.filter(function (k) {
+            return k.empl_id == empl_id
+        })
         s.isShowNameSelect_2 = true;
         s.isShowNameInput_2 = false;
         s.ishowsave_2 = true;
@@ -1804,29 +2102,19 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
 
         s.isAction_2 = "ADD"
 
-        var dt = s.datalistgrid_rc[row]
-
-        $("#ddl_employee_name_2").val(dt.empl_id)
-        $("#txtb_empl_id_2").val(dt.empl_id)
-        $("#txtb_position_2").val(dt.position_long_title)
-
-        s.txtb_employment_type_val_2 = dt.employment_type
-        s.txtb_empl_name_2 = dt.employee_name
-        s.txtb_empl_id_2 = dt.empl_id
-        s.txtb_position_2 = dt.position_long_title
-
-
-
-
-
-        //$("#loading_data").modal("hide")
+        s.datalistgrid_rc_rowlist.populateForm("tax_form_rece")
+        $("#txtb_position_2").val(s.datalistgrid_rc_rowlist[0].position_long_title)
+        $("#txtb_effective_date_2").val(s.datalistgrid_rc_rowlist[0].tax_year_effective_date)
+       
+        
+       
         $("#main_modal_2").modal("show")
         $("#btn_add_2").removeClass("fa fa-spinner fa-spin");
         $("#btn_add_2").addClass("fa fa-plus-circle");
 
-        clear_main_modal_2()
-       
         
+
+
         //DIRI ANG LAST WALA KA ADD SA DATEPICKER SA MODAL
 
 
@@ -2037,7 +2325,7 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
         var sp = "sp_annualtax_hdr_tbl_rep"
         var parameters = "p_payroll_year," + $("#ddl_year option:selected").val() + ",p_empl_id," + s.datalistgrid[id_ss].empl_id
 
-        h.post("../cNonEmployeeTaxRate/PreviousValuesonPage_cBIRAnnualizedTax",
+        h.post("../cPHICShareTaxRate/PreviousValuesonPage_cBIRAnnualizedTax",
             {
                 par_year: $("#ddl_year option:selected").val()
                 , par_tax_due: s.datalistgrid[id_ss].monthly_tax_due
@@ -2054,7 +2342,7 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
                 , par_position: s.datalistgrid[id_ss].position_title1
             }).then(function (d) {
 
-                h.post("../cNonEmployeeTaxRate/ReportCount",
+                h.post("../cPHICShareTaxRate/ReportCount",
                     {
                         par_payroll_year: $("#ddl_year option:selected").val(),
                         par_empl_id: s.datalistgrid[id_ss].empl_id
@@ -2115,20 +2403,25 @@ ng_HRD_App.controller("cNonEmployeeTaxRate_ctrlr", function ($scope, $compile, $
     }
 
     //***************************Functions end*********************************************************//
+    
 
+    s.Select_Effective_date = function(value) {
+        
+        $("#txtb_effective_date_2").removeClass("required");
+        $("#lbl_txtb_effective_date_req_2").text("");
+
+    }
+
+    s.getCurrentOptionValue = function(value) {
+        s.currentOptionValue = value
+    }
 })
 
 function RemoveEffective() {
-
+    
     $("#txtb_effective_date").removeClass("required");
     $("#lbl_txtb_effective_date_req").text("");
 
 }
 
-function RemoveEffective_2() {
-
-    $("#txtb_effective_date_2").removeClass("required");
-    $("#lbl_txtb_effective_date_req_2").text("");
-
-}
 

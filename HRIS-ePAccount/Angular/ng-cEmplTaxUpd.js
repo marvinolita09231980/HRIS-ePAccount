@@ -120,7 +120,7 @@ ng_HRD_App.controller("cEmplTaxUpd_ctrlr", function (commonScript,$scope, $compi
                         swal({ title: "Generation Message", text: d.data.sp_generate_annualtax_tax_rece.result_flag_message, icon: d.data.icon });
                         cs.loading("hide")
                     }
-                    else if (s.ddl_employment_type == "JO" || s.ddl_employment_type == "NE") {
+                    else if (s.ddl_employment_type == "JO" || s.ddl_employment_type == "NE" || s.ddl_employment_type == "RX") {
                         
                         swal({ title: "Generation Message", text: d.data.sp_generate_payrollemployee_tax_hdr_dtl.result_msg, icon: d.data.icon });
                         cs.loading("hide")

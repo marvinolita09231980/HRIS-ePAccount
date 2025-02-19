@@ -33,6 +33,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     var sort_order = "asc"
     s.adddetails = null;
     s.isAction = "";
+    var employee_generate_action = true;
     s.alphabet_list = [
         { id: 'a', alpha_name: 'A' }, { id: 'b', alpha_name: 'B' }, { id: 'c', alpha_name: 'C' }, { id: 'd', alpha_name: 'D' }, { id: 'e', alpha_name: 'E' }, { id: 'f', alpha_name: 'F' },
         { id: 'g', alpha_name: 'G' }, { id: 'h', alpha_name: 'H' }, { id: 'i', alpha_name: 'I' }, { id: 'j', alpha_name: 'J' }, { id: 'k', alpha_name: 'K' }, { id: 'l', alpha_name: 'L' },
@@ -50,7 +51,8 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
        $("#loading_data").modal({ keyboard: false, backdrop: "static" })
         RetrieveYear()
         h.post("../cBIRAnnualizedTax/InitializeData", { par_empType: s.employeeddl }).then(function (d) {
-            s.excelExportServer = d.data.excelExportServer
+
+            s.excelExportServer     = d.data.excelExportServer
             s.employeeddl           = d.data.empType
             s.ddl_employment_type   = d.data.ddl_emp_type
             s.ddl_letter            = d.data.ddl_letter
@@ -60,21 +62,22 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
             init_table_data([]);
             init_table_data2([]);
 
-            s.allow_edit         = d.data.um.allow_edit
-            s.allow_print        = d.data.um.allow_print
-            s.allow_delete       = d.data.um.allow_delete
-            s.allow_print        = d.data.um.allow_print
-            s.allow_edit_history = d.data.um.allow_edit_history
-            s.allow_view         = 1
+            s.allow_edit            = d.data.um.allow_edit
+            s.allow_print           = d.data.um.allow_print
+            s.allow_delete          = d.data.um.allow_delete
+            s.allow_print           = d.data.um.allow_print
+            s.allow_edit_history    = d.data.um.allow_edit_history
+            s.allow_view            = 1
             
 
             $("#datalist_grid").DataTable().search("").draw();
 
+
             if (d.data.sp_annualtax_hdr_tbl_list.length > 0) {
 
-                s.datalistgrid = d.data.sp_annualtax_hdr_tbl_list;
-                s.oTable.fnClearTable();
-                s.oTable.fnAddData(s.datalistgrid)
+                s.datalistgrid = d.data.sp_annualtax_hdr_tbl_list.refreshTable("datalist_grid",d.data.empl_id);
+                //s.oTable.fnClearTable();
+                //s.oTable.fnAddData(s.datalistgrid)
             }
             else
             {
@@ -385,7 +388,8 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                     s.gTable.fnAddData(s.datalistgrid2)
                 }
                 else {
-                    gTable                }
+                    //s.gTable   
+                }
                 $("#loading_data").modal("hide")
             })
 
@@ -456,6 +460,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
     s.btn_generate_action = function (id_ss)
     {
+        if (employee_generate_action == false) { return };
         index_update = ""
         index_update = id_ss
 
@@ -469,22 +474,21 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
             if (willDelete) {
 
                 
-                $("#generate_icon_dtl" + id_ss).removeClass("fa fa-edit");
+                $("#generate_icon_dtl" + id_ss).removeClass("fa fa-clipboard");
                 $("#generate_icon_dtl" + id_ss).addClass("fa fa-spinner fa-spin");
 
+                employee_generate_action = false
                 h.post("../cBIRAnnualizedTax/GenerateByEmployee", {
-                     par_empl_id     : s.datalistgrid[id_ss].empl_id
-                    ,par_payroll_year: s.datalistgrid[id_ss].payroll_year
-                    , par_letter: $("#ddl_letter option:selected").val()
-                    , par_employment: $("#ddl_employment_type").val()
+                     par_empl_id        : s.datalistgrid[id_ss].empl_id
+                    ,par_payroll_year   : s.datalistgrid[id_ss].payroll_year
+                    ,par_letter         : $("#ddl_letter option:selected").val()
+                    ,par_employment     : $("#ddl_employment_type").val()
                 }).then(function (d) {
+                    employee_generate_action = true
+                    if (d.data.message == "success") {
+                       
 
-                    if (d.data.message == "success")
-                    {
-                        $("#generate_icon_dtl" + id_ss).removeClass("fa fa-spinner fa-spin");
-                        $("#generate_icon_dtl" + id_ss).addClass("fa fa-edit");
 
-                        
 
                         if (d.data.sp_annualtax_hdr_tbl_list.length > 0) {
                             s.txtb_monthly_tax_due = currency(d.data.sp_annualtax_hdr_tbl_list2.monthly_tax_due)
@@ -544,16 +548,26 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                             calculatetotaladjst()
                             calculatetaxdiff()
 
-                            s.datalistgrid = d.data.sp_annualtax_hdr_tbl_list;
-                            s.oTable.fnClearTable();
-                            s.oTable.fnAddData(s.datalistgrid)
+                            s.datalistgrid = d.data.sp_annualtax_hdr_tbl_list.refreshTable("datalist_grid", s.datalistgrid[id_ss].empl_id);
+                            //s.oTable.fnClearTable();
+                            //s.oTable.fnAddData(s.datalistgrid)
                         }
                         else {
                             s.oTable.fnClearTable();
                         }
 
                         swal("Successfully Updated!", "Existing record successfully Updated!", "success")
+
+                        $("#generate_icon_dtl" + id_ss).removeClass("fa fa-spinner fa-spin");
+                        $("#generate_icon_dtl" + id_ss).addClass("fa fa-clipboard");
                         
+
+                    }
+                    else {
+                        swal(d.data.message, { icon: "error" })
+                        $("#generate_icon_dtl" + id_ss).removeClass("fa fa-spinner fa-spin");
+                        $("#generate_icon_dtl" + id_ss).addClass("fa fa-clipboard");
+                       
                     }
 
                  })
@@ -1195,72 +1209,72 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         
     }
 
-    //this fucntion is called after refreshTable to return to the current dataTable page
-    function changePage(tname, page, id) {
-        var npage = page
-        var pageLen = $("#" + id).DataTable().page.info().length
-        if (page < 2 && pageLen == 0) {
-            npage = page + 1
-        }
-        else if (page > 1 && pageLen == 0) {
-            npage = page - 1
-        }
+    ////this fucntion is called after refreshTable to return to the current dataTable page
+    //function changePage(tname, page, id) {
+    //    var npage = page
+    //    var pageLen = $("#" + id).DataTable().page.info().length
+    //    if (page < 2 && pageLen == 0) {
+    //        npage = page + 1
+    //    }
+    //    else if (page > 1 && pageLen == 0) {
+    //        npage = page - 1
+    //    }
 
-        if (npage != 0) {
-            s[tname].fnPageChange(npage)
-        }
-    }
+    //    if (npage != 0) {
+    //        s[tname].fnPageChange(npage)
+    //    }
+    //}
 
 
-    Array.prototype.refreshTable = function (table, id) {
+    //Array.prototype.refreshTable = function (table, id) {
        
-        if (this.length == 0) {
-            s.oTable.fnClearTable();
+    //    if (this.length == 0) {
+    //        s.oTable.fnClearTable();
 
-        }
-        else {
-            s.oTable.fnClearTable();
-            s.oTable.fnAddData(this);
-        }
+    //    }
+    //    else {
+    //        s.oTable.fnClearTable();
+    //        s.oTable.fnAddData(this);
+    //    }
 
-        var el_id = s[table][0].id
+    //    var el_id = s[table][0].id
         
-        if (id != "") {
-            for (var x = 1; x <= $("#" + el_id).DataTable().page.info().pages; x++) {
-                if (id.get_page(table) == false) {
-                    s.oTable.fnPageChange(x);
-                }
-                else {
-                    break;
-                }
-            }
-        }
+    //    if (id != "") {
+    //        for (var x = 1; x <= $("#" + el_id).DataTable().page.info().pages; x++) {
+    //            if (id.get_page(table) == false) {
+    //                s.oTable.fnPageChange(x);
+    //            }
+    //            else {
+    //                break;
+    //            }
+    //        }
+    //    }
 
 
-    }
+    //}
 
-    String.prototype.get_page = function (table) {
-        id = this;
-        var nakit_an = false;
-        var rowx = 0;
-        var el_id = s[table][0].id
-        $("#" + el_id + " tr").each(function () {
-            $.each(this.cells, function (cells) {
-                if (cells == 0) {
-                    if ($(this).text() == id) {
-                        nakit_an = true;
-                        return false;
-                    }
-                }
-            });
-            if (nakit_an) {
-                $(this).addClass("selected");
-                return false;
-            }
-            rowx++;
-        });
-        return nakit_an;
-    }
+    //String.prototype.get_page = function (table) {
+    //    id = this;
+    //    var nakit_an = false;
+    //    var rowx = 0;
+    //    var el_id = s[table][0].id
+    //    $("#" + el_id + " tr").each(function () {
+    //        $.each(this.cells, function (cells) {
+    //            if (cells == 0) {
+    //                if ($(this).text() == id) {
+    //                    nakit_an = true;
+    //                    return false;
+    //                }
+    //            }
+    //        });
+    //        if (nakit_an) {
+    //            $(this).addClass("selected");
+    //            return false;
+    //        }
+    //        rowx++;
+    //    });
+    //    return nakit_an;
+    //}
 
     //This function is called to extract the DataTable rows data
     function DataTable_data(tname) {

@@ -92,6 +92,8 @@ namespace HRIS_ePAccount.Models
         public Nullable<decimal> other_loan3 { get; set; }
         public Nullable<decimal> other_loan4 { get; set; }
         public Nullable<decimal> other_loan5 { get; set; }
+        public Nullable<decimal> gfaleducnl_ln { get; set; }
+        public Nullable<decimal> mpl_lite_ln { get; set; }
         public Nullable<decimal> uniform_amt { get; set; }
         public Nullable<decimal> bir_tax { get; set; }
         public string payroll_source { get; set; }
@@ -108,8 +110,8 @@ namespace HRIS_ePAccount.Models
         public Nullable<decimal> lates_amount { get; set; }
         public string remarks { get; set; }
         public Nullable<decimal> leave_earned { get; set; }
-        public decimal lates_amount_pera { get; set; }
-        public decimal lwpay_day_spl { get; set; }
+        public Nullable<decimal> lates_amount_pera { get; set; }
+        public Nullable<decimal> lwpay_day_spl { get; set; }
         public Nullable<decimal> qa_amount { get; set; }
         public Nullable<decimal> ra_amount { get; set; }
         public Nullable<decimal> ta_amount { get; set; }
@@ -117,9 +119,7 @@ namespace HRIS_ePAccount.Models
         public Nullable<decimal> hazard_pay { get; set; }
         public Nullable<decimal> subsistence_pay { get; set; }
         public Nullable<decimal> laundry_pay { get; set; }
-        public decimal wages_amt { get; set; }
+        public Nullable<decimal> wages_amt { get; set; }
         public string seq_no { get; set; }
-        public Nullable<decimal> gfaleducnl_ln { get; set; }
-        public Nullable<decimal> mpl_lite_ln { get; set; }
     }
 }

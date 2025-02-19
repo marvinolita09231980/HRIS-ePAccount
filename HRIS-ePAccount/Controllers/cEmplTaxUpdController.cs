@@ -91,8 +91,8 @@ namespace HRIS_ePAccount.Controllers
         public ActionResult GenerateTax(string par_year, string par_empType)
         {
             string icon = "";
-            
 
+            var user_id = Session["user_id"].ToString();
             GetAllowAccess();
             db_pacco.Database.CommandTimeout = int.MaxValue;
             var sp_generate_annualtax_tax_rece = new object();
@@ -102,18 +102,23 @@ namespace HRIS_ePAccount.Controllers
                 if (par_empType == "RC")
                 {
 
-                    sp_generate_annualtax_tax_rece = db_pacco.sp_generate_annualtax_tax_rece(par_year, Session["user_id"].ToString()).FirstOrDefault();
+                    sp_generate_annualtax_tax_rece = db_pacco.sp_generate_annualtax_tax_rece(par_year, user_id).FirstOrDefault();
                     icon = "success";
                 }
 
                 else if (par_empType == "JO")
                 {
-                    sp_generate_payrollemployee_tax_hdr_dtl = db_pacco.sp_generate_payrollemployee_tax_hdr_dtl(par_year, "", Session["user_id"].ToString()).FirstOrDefault();
+                    sp_generate_payrollemployee_tax_hdr_dtl = db_pacco.sp_generate_payrollemployee_tax_hdr_dtl(par_year, "", user_id).FirstOrDefault();
                     icon = "success";
                 }
                 else if (par_empType == "NE")
                 {
-                    sp_generate_payrollemployee_tax_hdr_dtl = db_pacco.sp_generate_payrollemployee_tax_dtl_ne_phic(par_year, "", Session["user_id"].ToString()).FirstOrDefault();
+                    sp_generate_payrollemployee_tax_hdr_dtl = db_pacco.sp_generate_payrollemployee_tax_hdr_dtl_ne(par_year, "", user_id).FirstOrDefault();
+                    icon = "success";
+                }
+                else if (par_empType == "RX")
+                {
+                    sp_generate_payrollemployee_tax_hdr_dtl = db_pacco.sp_generate_payrollemployee_tax_hdr_dtl_rc_phic(par_year, "", user_id).FirstOrDefault() ;
                     icon = "success";
                 }
                 else

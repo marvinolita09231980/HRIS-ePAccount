@@ -23,6 +23,7 @@ ng_HRD_App.controller("SharedLayoutCtrlr", function ($scope, $http, $filter) {
     s.rctax = 0;
     s.jotax = 0;
     s.netax = 0;
+    s.rece_phic_tax = 0;
     s.imgprofile = "";
 
     s.AllowUserTaxApprove = false
@@ -97,6 +98,7 @@ ng_HRD_App.controller("SharedLayoutCtrlr", function ($scope, $http, $filter) {
                 s.rctax = d.data.rctax
                 s.jotax = d.data.jotax
                 s.netax = d.data.netax
+                s.rece_phic_tax = d.data.rece_phic_tax
 
 
 
@@ -126,6 +128,13 @@ ng_HRD_App.controller("SharedLayoutCtrlr", function ($scope, $http, $filter) {
                 }
                 else {
                     $("#netax_span").addClass("hidden")
+                }
+
+                if (s.rece_phic_tax > 0) {
+                    $("#rece_phic_tax_span").removeClass("hidden")
+                }
+                else {
+                    $("#rece_phic_tax_span").addClass("hidden")
                 }
             });
            

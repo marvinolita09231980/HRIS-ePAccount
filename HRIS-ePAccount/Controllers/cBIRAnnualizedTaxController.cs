@@ -29,6 +29,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using System.Drawing;
 using System.Reflection;
 using HRIS_ePAccount.Filter;
+using System.Data.SqlClient;
 
 namespace HRIS_ePAccount.Controllers
 {
@@ -37,6 +38,7 @@ namespace HRIS_ePAccount.Controllers
     {
       
         HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
+        string constring = System.Configuration.ConfigurationManager.AppSettings["connetionString_act"];
         User_Menu um = new User_Menu();
         //*********************************************************************//
         // Created By : JRV - Created Date : 09/19/2019
@@ -128,6 +130,7 @@ namespace HRIS_ePAccount.Controllers
 
             //HttpContext.Session["sp_annualtax_hdr_tbl_list"] = sp_annualtax_hdr_tbl_list;
             List<sp_annualtax_hdr_tbl_list_Result> sp_annualtax_hdr_tbl_list = new List<sp_annualtax_hdr_tbl_list_Result>();
+            
 
             if (Session["PreviousValuesonPage_cBIRAnnualizedTax"] == null)
             {
@@ -139,9 +142,10 @@ namespace HRIS_ePAccount.Controllers
                 string ddl_emp_type = "";
                
                 string ddl_letter = "";
-               
-               
-                return JSON(new { empType, ddl_letter, ddl_emp_type, sp_annualtax_hdr_tbl_list, sort_value, page_value, sort_order, show_entries, um, excelExportServer}, JsonRequestBehavior.AllowGet);
+
+                string empl_id = "";
+
+                return JSON(new { empType, ddl_letter, empl_id, ddl_emp_type, sp_annualtax_hdr_tbl_list, sort_value, page_value, sort_order, show_entries, um, excelExportServer}, JsonRequestBehavior.AllowGet);
 
             }
 
@@ -159,15 +163,10 @@ namespace HRIS_ePAccount.Controllers
                 int sort_value      = Convert.ToInt32(PreviousValuesonPage_cPayRegistry[10].ToString().Trim());
                 string sort_order   = PreviousValuesonPage_cPayRegistry[11].ToString().Trim();
 
-               if(HttpContext.Session["sp_annualtax_hdr_tbl_list"] == null)
-                {
-                     sp_annualtax_hdr_tbl_list = db_pacco.sp_annualtax_hdr_tbl_list(ddl_year, ddl_emp_type, ddl_letter).ToList();
-                }
-                else
-                {
-                    sp_annualtax_hdr_tbl_list = (List<sp_annualtax_hdr_tbl_list_Result>)HttpContext.Session["sp_annualtax_hdr_tbl_list"];
-                }
-               
+                sp_annualtax_hdr_tbl_list = db_pacco.sp_annualtax_hdr_tbl_list(ddl_year, ddl_emp_type, ddl_letter).ToList();
+
+
+
 
                 return JSON(new { empType, sp_annualtax_hdr_tbl_list, ddl_year, empl_id, ddl_emp_type, ddl_letter, show_entries, page_value, search_value, sort_value, sort_order, um, excelExportServer}, JsonRequestBehavior.AllowGet);
 
@@ -203,21 +202,21 @@ namespace HRIS_ePAccount.Controllers
         // Created By : JRV - Created Date : 09/19/2019
         // Description: Populate Employment Type
         //*********************************************************************//
-        //public ActionResult RetrieveEmployeeList(string par_empType, string par_payroll_year) --COMMENT BY MARVIN 2024-08-22
-        //{
-        //    try
-        //    {
-        //        db_pacco.Database.CommandTimeout = int.MaxValue;
-        //        var sp_personnelnames_annualtax_hdr_combolist = db_pacco.sp_personnelnames_annualtax_hdr_combolist(par_empType, par_payroll_year).ToList();
+        public ActionResult RetrieveEmployeeList(string par_empType, string par_payroll_year) //--COMMENT BY MARVIN 2024-08-22
+        {
+            try
+            {
+                db_pacco.Database.CommandTimeout = int.MaxValue;
+                var sp_personnelnames_annualtax_hdr_combolist = db_pacco.sp_personnelnames_combolist_tax_rc(par_payroll_year, par_empType).ToList();
 
-        //        return JSON(new { message = "success", sp_personnelnames_annualtax_hdr_combolist }, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return JSON(new { ex.Message }, JsonRequestBehavior.AllowGet);
-        //    }
+                return JSON(new { message = "success", sp_personnelnames_annualtax_hdr_combolist}, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return JSON(new { ex.Message }, JsonRequestBehavior.AllowGet);
+            }
 
-        //}
+        }
 
         //*********************************************************************//
         // Created By : JRV - Created Date : 09/19/2019
@@ -333,11 +332,60 @@ namespace HRIS_ePAccount.Controllers
             {
                 db_pacco.Database.CommandTimeout = int.MaxValue;
                 string message = "";
-                var sp_generate_annualized_tax = db_pacco.sp_generate_annualized_tax(par_payroll_year, par_empl_id).ToList();
-                db_pacco.SaveChanges();
+               //var sp_generate_annualized_tax = db_pacco.sp_generate_annualized_tax(par_payroll_year, par_empl_id).ToList();
+
+                List<sp_generate_annualized_tax_Result> sp_generate_annualized_tax = new List<sp_generate_annualized_tax_Result>();
+
+                using (SqlConnection connection = new SqlConnection(constring))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(@"
+                        SET TEXTSIZE 2147483647;
+                        SET LANGUAGE us_english;
+                        SET DATEFORMAT mdy;
+                        SET DATEFIRST 7;
+                        SET LOCK_TIMEOUT -1;
+                        SET QUOTED_IDENTIFIER ON;
+                        SET ARITHABORT ON;
+                        SET ANSI_NULL_DFLT_ON ON;
+                        SET ANSI_WARNINGS ON;
+                        SET ANSI_PADDING ON;
+                        SET ANSI_NULLS ON;
+                        SET CONCAT_NULL_YIELDS_NULL ON;
+                        SET TRANSACTION ISOLATION LEVEL READ COMMITTED;", connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+
+                    using (SqlCommand command = new SqlCommand("sp_generate_annualized_tax", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@p_payroll_year", par_payroll_year);
+                        command.Parameters.AddWithValue("@p_empl_id", par_empl_id);
+                        command.CommandTimeout = int.MaxValue;
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                // Map each record to your model
+                                var item = new sp_generate_annualized_tax_Result
+                                {
+                                    result_value = reader.GetString(0),
+                                    result_msg   = reader.GetString(1),
+                                };
+                                sp_generate_annualized_tax.Add(item);
+                            }
+                        }
+                    }
+
+                    connection.Close();
+                }
+                //db_pacco.SaveChanges();
 
                 var sp_annualtax_hdr_tbl_list  = db_pacco.sp_annualtax_hdr_tbl_list(par_payroll_year, par_employment, par_letter).ToList();
-                var sp_annualtax_hdr_tbl_list2 = db_pacco.sp_annualtax_hdr_tbl_list(par_payroll_year, par_employment, par_letter).Where(a => a.empl_id == par_empl_id).FirstOrDefault();
+                var sp_annualtax_hdr_tbl_list2 = sp_annualtax_hdr_tbl_list.Where(a => a.empl_id == par_empl_id).FirstOrDefault();
                 message = "success";
                 return JSON(new { message, sp_annualtax_hdr_tbl_list, sp_annualtax_hdr_tbl_list2  }, JsonRequestBehavior.AllowGet);
             }
@@ -435,7 +483,105 @@ namespace HRIS_ePAccount.Controllers
                 db_pacco.Database.CommandTimeout = int.MaxValue;
                 if (par_letter == null)
                 { par_letter = ""; }
-                var sp_annualtax_hdr_tbl_list = db_pacco.sp_annualtax_hdr_tbl_list(par_year, par_empType, par_letter).ToList();
+                //var sp_annualtax_hdr_tbl_list = db_pacco.sp_annualtax_hdr_tbl_list(par_year, par_empType, par_letter).ToList();
+                List<sp_annualtax_hdr_tbl_list_Result> sp_annualtax_hdr_tbl_list = new List<sp_annualtax_hdr_tbl_list_Result>();
+                using (SqlConnection connection = new SqlConnection(constring))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(@"
+                        SET TEXTSIZE 2147483647;
+                        SET LANGUAGE us_english;
+                        SET DATEFORMAT mdy;
+                        SET DATEFIRST 7;
+                        SET LOCK_TIMEOUT -1;
+                        SET QUOTED_IDENTIFIER ON;
+                        SET ARITHABORT ON;
+                        SET ANSI_NULL_DFLT_ON ON;
+                        SET ANSI_WARNINGS ON;
+                        SET ANSI_PADDING ON;
+                        SET ANSI_NULLS ON;
+                        SET CONCAT_NULL_YIELDS_NULL ON;
+                        SET TRANSACTION ISOLATION LEVEL READ COMMITTED;", connection))
+                        {
+                            command.ExecuteNonQuery();
+                        }
+                            
+                    using (SqlCommand command = new SqlCommand("sp_annualtax_hdr_tbl_list", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@p_payroll_year", par_year);
+                        command.Parameters.AddWithValue("@p_employment_type", par_empType);
+                        command.Parameters.AddWithValue("@p_letter", par_letter);
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                // Map each record to your model
+                                var item = new sp_annualtax_hdr_tbl_list_Result
+                                {
+
+                                    payroll_year                     = reader.GetString(0),
+                                    empl_id                          = reader.GetString(1),
+                                    employee_name                    = reader.GetString(2),
+                                    employment_type                  = reader.GetString(3),
+                                    account_id_nbr_ref               = reader.GetString(4),
+                                    employmenttype_description       = reader.GetString(5),
+                                    position_title1                  = reader.GetString(6),
+                                    addl_txbl_comp_prsnt             = reader.GetDecimal(7),
+                                    annual_tax_due                   = reader.GetDecimal(8),
+                                    wtax_prsnt_emplyr                = reader.GetDecimal(9),
+                                    wtax_prev_emplyr                 = reader.GetDecimal(10),
+                                    ntx_basic_salary                 = reader.GetDecimal(11),
+                                    ntx_hol_pay_mwe                  = reader.GetDecimal(12),
+                                    ntx_ot_pay_mwe                   = reader.GetDecimal(13),
+                                    ntx_night_diff_mwe               = reader.GetDecimal(14),
+                                    ntx_hzrd_pay_mwe                 = reader.GetDecimal(15),
+                                    ntx_13th_14th                    = reader.GetDecimal(16),
+                                    ntx_de_minimis                   = reader.GetDecimal(17),
+                                    ntx_gsis_phic_hdmf               = reader.GetDecimal(18),
+                                    ntx_salaries_oth                 = reader.GetDecimal(19),
+                                    txbl_basic_salary                = reader.GetDecimal(20),
+                                    txbl_representation              = reader.GetDecimal(21),
+                                    txbl_transportation              = reader.GetDecimal(22),
+                                    txbl_cola                        = reader.GetDecimal(23),
+                                    txbl_fh_allowance                = reader.GetDecimal(24),
+                                    txbl_otherA                      = reader.GetDecimal(25),
+                                    txbl_otherB                      = reader.GetDecimal(26),
+                                    sup_commission                   = reader.GetDecimal(27),
+                                    sup_prof_sharing                 = reader.GetDecimal(28),
+                                    sup_fi_drctr_fees                = reader.GetDecimal(29),
+                                    sup_13th_14th                    = reader.GetDecimal(30),
+                                    sup_hzrd_pay                     = reader.GetDecimal(31),
+                                    sup_ot_pay                       = reader.GetDecimal(32),
+                                    sup_otherA                       = reader.GetDecimal(33),
+                                    sup_otherB                       = reader.GetDecimal(34),
+                                    annual_txbl_income               = reader.GetDecimal(35),
+                                    annual_tax_wheld                 = reader.GetDecimal(36),
+                                    monthly_tax_due                  = reader.GetDecimal(37),
+                                    tax_rate                         = reader.GetDecimal(38),
+                                    employer_type                     = reader.GetString(39),
+                                    foreign_address                   = reader.GetString(40),
+                                    stat_daily_rate                  = reader.GetDecimal(41),
+                                    stat_monthly_rate                = reader.GetDecimal(42),
+                                    min_wage_earner                     = reader.GetBoolean(43),
+                                    tin_employer_prev                 = reader.GetString(44),
+                                    employer_name_prev                = reader.GetString(45),
+                                    employer_add_prev                 = reader.GetString(46),
+                                    employer_zip_prev                 = reader.GetString(47),
+                                    remarks                           = reader.GetString(48),
+                                    substituted                       = reader.GetString(49),
+
+                                };                            
+                                sp_annualtax_hdr_tbl_list.Add(item);
+                            }
+                        }
+                    }
+
+                    connection.Close();
+                }
+
                 HttpContext.Session["sp_annualtax_hdr_tbl_list"] = sp_annualtax_hdr_tbl_list;
 
                 var sp_prcmonitor_tbl = db_pacco.sp_prcmonitor_tbl(par_year,"" , par_empType).ToList();

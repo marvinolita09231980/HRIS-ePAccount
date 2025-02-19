@@ -13,7 +13,7 @@ using System.Web.Mvc;
 namespace HRIS_ePAccount.Controllers
 {
     [SessionExpire]
-    public class cNonEmployeeTaxRateController : Controller
+    public class cPHICShareTaxRateController : Controller
     {
 
         int menu_id = 5508;
@@ -152,7 +152,7 @@ namespace HRIS_ePAccount.Controllers
                 bir_class_list = (List<sp_jo_tax_tbl_list_Result>)HttpContext.Session["bir_class_list"];
             }
 
-            List<vw_phic_share_empl_tbl_ACT> sp_payrollemployee_tax_hdr_tbl_list = new List<vw_phic_share_empl_tbl_ACT>();
+           
 
             if (Session["PreviousValuesonPage_cJOTaxRate"] == null)
             {
@@ -165,7 +165,7 @@ namespace HRIS_ePAccount.Controllers
                 string ddl_emp_type = "";
                 string department_code = "";
 
-                sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_empl_tbl_ACT.Where(a => a.department_code == department_code).ToList();
+                var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_empl_tbl_ACT.Where(a => a.department_code == department_code).ToList();
 
                 //if (HttpContext.Session["vw_phic_share_empl_tbl_ACT"] == null)
                 //{
@@ -193,20 +193,56 @@ namespace HRIS_ePAccount.Controllers
                 string search_value = PreviousValuesonPage_cJOTaxRate[5].ToString().Trim();
                 int sort_value = Convert.ToInt32(PreviousValuesonPage_cJOTaxRate[6].ToString().Trim());
                 string sort_order = PreviousValuesonPage_cJOTaxRate[7].ToString().Trim();
-               if(HttpContext.Session["vw_phic_share_empl_tbl_ACT"] == null)
+                string employment_type  = PreviousValuesonPage_cJOTaxRate[11].ToString().Trim();
+                string tabindex            = PreviousValuesonPage_cJOTaxRate[12].ToString().Trim();
+                string empl_id          = PreviousValuesonPage_cJOTaxRate[1].ToString().Trim();
+
+
+                if(tabindex == "1")
                 {
-                    sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_empl_tbl_ACT.Where(a => a.department_code == department_code).ToList();
-                    HttpContext.Session["vw_phic_share_empl_tbl_ACT"] = sp_payrollemployee_tax_hdr_tbl_list;
+                    var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_empl_tbl_ACT.Where(a => a.department_code == department_code).ToList();
+                    return JSON(new {
+                              department_list
+                            , department_code
+                            , sp_payrollemployee_tax_hdr_tbl_list
+                            , ddl_year
+                            , show_entries
+                            , page_value
+                            , search_value
+                            , sort_value
+                            , sort_order
+                            , um
+                            , bir_class_list
+                            , history
+                            , taxrate_percentage_tbl_list
+                            ,employment_type
+                            ,tabindex
+                            ,empl_id
+                     }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
-                    sp_payrollemployee_tax_hdr_tbl_list = (List<vw_phic_share_empl_tbl_ACT>)HttpContext.Session["vw_phic_share_empl_tbl_ACT"];
+                    var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_rece_tbl_ACT.Where(a => a.department_code == department_code).ToList();
+                    return JSON(new {
+                              department_list
+                            , department_code
+                            , sp_payrollemployee_tax_hdr_tbl_list
+                            , ddl_year
+                            , show_entries
+                            , page_value
+                            , search_value
+                            , sort_value
+                            , sort_order
+                            , um
+                            , bir_class_list
+                            , history
+                            , taxrate_percentage_tbl_list
+                            ,employment_type
+                            ,tabindex
+                            ,empl_id
+                     }, JsonRequestBehavior.AllowGet);
                 }
-                
-
-                return JSON(new { department_list, department_code, sp_payrollemployee_tax_hdr_tbl_list, ddl_year, show_entries, page_value, search_value, sort_value, sort_order, um, bir_class_list, history, taxrate_percentage_tbl_list }, JsonRequestBehavior.AllowGet);
-
-
+            
             }
 
         }
@@ -532,6 +568,138 @@ namespace HRIS_ePAccount.Controllers
 
         }
 
+        //////*********************************************************************//
+        ////// Created By : JRV - Created Date : 09/19/2019
+        ////// Description: Select EmployeeName
+        //////*********************************************************************////
+        ///// business logic IF par_action == ADD 
+        ///                     check if the effective_date is greater than the existing max effective date of the current record 
+        ///                     then insert record to data base
+        ///                     else return error notif that the data.effective_date is not latest effective date
+        ///                  IF par_action == EDIT
+        ///                     fetch the data from database then update
+        public ActionResult SaveEDITInDatabaseRECEPhic(payrollemployee_tax_phic_rece_tbl data, string par_action, string department_code,string employment_type)
+        {
+            try
+            {
+                
+                string message = "";
+
+
+
+                db_pacco.Database.CommandTimeout = int.MaxValue;
+
+
+
+                if (par_action == "ADD")
+                {
+                    var payrollemployee_tax_phic_rece_tbl = db_pay.payrollemployee_tax_phic_rece_tbl.Where(a => a.empl_id == data.empl_id).OrderByDescending(a => a.effective_date).FirstOrDefault();
+                    if(payrollemployee_tax_phic_rece_tbl != null)
+                    {
+                        var max_effective_date = payrollemployee_tax_phic_rece_tbl.effective_date;
+                        if (data.effective_date > max_effective_date)
+                        {
+                            payrollemployee_tax_phic_rece_tbl phic_rece = new payrollemployee_tax_phic_rece_tbl();
+                            phic_rece.empl_id = data.empl_id;
+                            phic_rece.effective_date = data.effective_date;
+                            phic_rece.bir_class = data.bir_class;
+                            phic_rece.with_sworn = isCheckBool(data.with_sworn.ToString());
+                            phic_rece.fixed_rate = isCheckBool(data.fixed_rate.ToString());
+                            phic_rece.total_gross_pay = data.total_gross_pay;
+                            phic_rece.dedct_status = isCheckBool(data.dedct_status.ToString());
+                            phic_rece.rcrd_status = "N";
+                            phic_rece.user_id_created_by = Session["user_id"].ToString();
+                            phic_rece.created_dttm = DateTime.Now;
+                            phic_rece.user_id_updated_by = "";
+                            phic_rece.w_tax_perc = data.w_tax_perc;
+                            phic_rece.bus_tax_perc = data.bus_tax_perc;
+                            phic_rece.vat_perc = data.vat_perc;
+                            phic_rece.exmpt_amt = data.exmpt_amt;
+                            phic_rece.updated_dttm = Convert.ToDateTime("1900-01-01");
+                            db_pay.payrollemployee_tax_phic_rece_tbl.Add(phic_rece);
+                            db_pay.SaveChanges();
+                        }
+                        else
+                        {
+                            throw new Exception("Please select an effective date later than the previous one.");
+                        }
+                    }
+                    else
+                    {
+                        payrollemployee_tax_phic_rece_tbl phic_rece = new payrollemployee_tax_phic_rece_tbl();
+                        phic_rece.empl_id = data.empl_id;
+                        phic_rece.effective_date = data.effective_date;
+                        phic_rece.bir_class = data.bir_class;
+                        phic_rece.with_sworn = isCheckBool(data.with_sworn.ToString());
+                        phic_rece.fixed_rate = isCheckBool(data.fixed_rate.ToString());
+                        phic_rece.total_gross_pay = data.total_gross_pay;
+                        phic_rece.dedct_status = isCheckBool(data.dedct_status.ToString());
+                        phic_rece.rcrd_status = "N";
+                        phic_rece.user_id_created_by = Session["user_id"].ToString();
+                        phic_rece.created_dttm = DateTime.Now;
+                        phic_rece.user_id_updated_by = "";
+                        phic_rece.w_tax_perc = data.w_tax_perc;
+                        phic_rece.bus_tax_perc = data.bus_tax_perc;
+                        phic_rece.vat_perc = data.vat_perc;
+                        phic_rece.exmpt_amt = data.exmpt_amt;
+                        phic_rece.updated_dttm = Convert.ToDateTime("1900-01-01");
+                        db_pay.payrollemployee_tax_phic_rece_tbl.Add(phic_rece);
+                        db_pay.SaveChanges();
+                    }
+                   
+
+                    
+                   
+                }
+                else if (par_action == "EDIT")
+                {
+
+                    var RECEPhic = db_pay.payrollemployee_tax_phic_rece_tbl.Where(a => a.empl_id == data.empl_id && a.effective_date == data.effective_date).FirstOrDefault();
+                    if(RECEPhic != null)
+                    {
+                        if (RECEPhic.rcrd_status == "N")
+                        {
+                            RECEPhic.bir_class = data.bir_class;
+                            RECEPhic.with_sworn = data.with_sworn;
+                            RECEPhic.fixed_rate = data.fixed_rate;
+                            RECEPhic.total_gross_pay = data.total_gross_pay;
+                            RECEPhic.dedct_status = data.dedct_status;
+                            RECEPhic.rcrd_status = "N";
+                            RECEPhic.user_id_updated_by = Session["user_id"].ToString(); ;
+                            RECEPhic.updated_dttm = DateTime.Now;
+                            RECEPhic.w_tax_perc = data.w_tax_perc;
+                            RECEPhic.bus_tax_perc = data.bus_tax_perc;
+                            RECEPhic.vat_perc = data.vat_perc;
+                            RECEPhic.exmpt_amt = data.exmpt_amt;
+                            db_pay.SaveChanges();
+                        }
+                        else
+                        {
+                            throw new Exception("The record cannot be updated, the record is already approved, please use a new effective date!");
+                        }
+                    }
+                }
+                
+
+
+
+                message = "success";
+               
+               
+
+
+                var vw_phic_share_empl_tbl_ACT = db_pacco.vw_phic_share_rece_tbl_ACT.Where(a => a.department_code == department_code && (a.employment_type == "RE" || a.employment_type == "CE")).ToList();
+
+                return Json(new { message, vw_phic_share_empl_tbl_ACT }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                var msg = e.Message;
+                return Json(new { message = msg, icon = "error" }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
         public ActionResult SaveEDITInDatabase_2(payrollemployee_tax_phic_rece_tbl data, string par_effective_date, string par_empl_id, string par_action, string department_code,string employment_type)
         {
             try
@@ -625,18 +793,21 @@ namespace HRIS_ePAccount.Controllers
         ////// Created By : JRV - Created Date : 09/19/2019
         ////// Description: to Generate per Employee
         //////*********************************************************************//
+        ///
 
-        public ActionResult GenerateByEmployee(string par_empl_id, string par_payroll_year, string par_department_code, string par_history)
+
+        public ActionResult GenerateByEmployee_ne(string par_empl_id, string par_payroll_year, string par_department_code, string par_history)
         {
 
             try
             {
                 db_pacco.Database.CommandTimeout = int.MaxValue;
                 string message = "";
-                var sp_generate_payrollemployee_tax_hdr_dtl = db_pacco.sp_generate_payrollemployee_tax_dtl_ne_phic(par_payroll_year, par_empl_id, Session["user_id"].ToString()).ToList();
+                
+                var sp_generate_payrollemployee_tax_hdr_dtl = db_pacco.sp_generate_payrollemployee_tax_hdr_dtl_ne(par_payroll_year, par_empl_id, Session["user_id"].ToString()).ToList();
                 db_pacco.SaveChanges();
+
                 var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_empl_tbl_ACT.Where(a => a.department_code == par_department_code).ToList();
-                HttpContext.Session["vw_phic_share_empl_tbl_ACT"] = sp_payrollemployee_tax_hdr_tbl_list;
 
                 message = "success";
                 return Json(new { message, sp_payrollemployee_tax_hdr_tbl_list }, JsonRequestBehavior.AllowGet);
@@ -647,6 +818,59 @@ namespace HRIS_ePAccount.Controllers
                 return Json(new { ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+
+
+        public ActionResult GenerateByEmployee_rece_phic(string par_empl_id, string par_payroll_year, string par_department_code, string par_rcrd_status, string par_history)
+        {
+
+            try
+            {
+                if (par_rcrd_status == "A")
+                {
+                    db_pacco.Database.CommandTimeout = int.MaxValue;
+                    string message = "";
+
+                    var sp_generate_payrollemployee_tax_hdr_dtl = db_pacco.sp_generate_payrollemployee_tax_hdr_dtl_rc_phic(par_payroll_year, par_empl_id, Session["user_id"].ToString()).ToList();
+                    db_pacco.SaveChanges();
+
+                    var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_rece_tbl_ACT.Where(a => a.department_code == par_department_code).ToList();
+
+                    message = "success";
+                    return Json(new { message, sp_payrollemployee_tax_hdr_tbl_list }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    throw new Exception("This employee tax setup is not approved!");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                return Json(new { ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        //public ActionResult GenerateByEmployee(string par_empl_id, string par_payroll_year, string par_department_code, string par_history)
+        //{
+
+        //    try
+        //    {
+        //        db_pacco.Database.CommandTimeout = int.MaxValue;
+        //        string message = "";
+        //        var sp_generate_payrollemployee_tax_hdr_dtl = db_pacco.sp_generate_payrollemployee_tax_dtl_ne_phic(par_payroll_year, par_empl_id, Session["user_id"].ToString()).ToList();
+        //        db_pacco.SaveChanges();
+        //        var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_empl_tbl_ACT.Where(a => a.department_code == par_department_code).ToList();
+        //        HttpContext.Session["vw_phic_share_empl_tbl_ACT"] = sp_payrollemployee_tax_hdr_tbl_list;
+
+        //        message = "success";
+        //        return Json(new { message, sp_payrollemployee_tax_hdr_tbl_list }, JsonRequestBehavior.AllowGet);
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { ex.Message }, JsonRequestBehavior.AllowGet);
+        //    }
+        //}
 
 
         ////*********************************************************************//
@@ -692,7 +916,7 @@ namespace HRIS_ePAccount.Controllers
         // Description : User Access On Page 
         //*********************************************************************//
         public ActionResult PreviousValuesonPage_cJOTaxRate
-            (string par_year
+              (string par_year
              , string par_empl_id
              , string par_empl_name
              , string par_department
@@ -704,12 +928,15 @@ namespace HRIS_ePAccount.Controllers
              , string par_position
              , string par_effective_date
              , string par_department_code
+             , string par_employment_type
+             , int par_tabindex
              , string par_history
+            
             )
         {
 
             Session["history_page"] = Request.UrlReferrer.ToString();
-            Session["PreviousValuesonPage_cJOTaxRate"] = par_year
+            Session["PreviousValuesonPage_cJOTaxRate"] =  par_year
                                                           + "," + par_empl_id
                                                           + "," + par_department
                                                           + "," + par_show_entries
@@ -720,6 +947,8 @@ namespace HRIS_ePAccount.Controllers
                                                           + "," + par_position
                                                           + "," + par_effective_date
                                                           + "," + par_department_code
+                                                          + "," + par_employment_type
+                                                          + "," + par_tabindex
                                                           + "," + par_history;
 
             Session["PreviousValuesonPage_cJOTaxRate_empl_name"] = par_empl_name;
@@ -727,11 +956,15 @@ namespace HRIS_ePAccount.Controllers
 
             try
             {
-               var dt = db_pacco.sp_payrollemployee_tax_dtl_tbl_list(par_year, par_empl_id).FirstOrDefault();
-                if (dt == null)
-                {
-                    throw new Exception("No data found!");
-                }
+                
+                    var dt = db_pacco.sp_payrollemployee_tax_dtl_tbl_list(par_year, par_empl_id).FirstOrDefault();
+                    if (dt == null)
+                    {
+                        throw new Exception("No data found!");
+                    }
+                
+               
+              
                 return Json(new {icon = "success" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -768,15 +1001,13 @@ namespace HRIS_ePAccount.Controllers
         // Created By : JRV - Created Date : 09/19/2019
         // Description: Populate Employment Type
         //*********************************************************************//
-        public ActionResult RetrieveDataListGrid(string par_payroll_year, string par_department_code)
+        public ActionResult RetrieveDataListGrid(string par_department_code)
         {
             try
             {
 
                 var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_empl_tbl_ACT.Where(a => a.department_code == par_department_code).ToList();
-                HttpContext.Session["vw_phic_share_empl_tbl_ACT"] = sp_payrollemployee_tax_hdr_tbl_list;
-               
-
+                
                 return Json(new { sp_payrollemployee_tax_hdr_tbl_list,icon="success",message="success" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -859,11 +1090,11 @@ namespace HRIS_ePAccount.Controllers
             return Json(new { reportcount }, JsonRequestBehavior.AllowGet);
         }
         
-        public ActionResult RetrieveDataPhicReCe(string pay_payroll_year, string par_department_code, string par_history)
+        public ActionResult RetrieveDataPhicReCe(string par_employment_type, string par_department_code, string par_history)
         {
             try
             {
-                var vw_phic_share_rece_tbl_ACT = db_pacco.vw_phic_share_rece_tbl_ACT.Where(a => a.tax_year == pay_payroll_year && a.department_code == par_department_code).ToList();
+                var vw_phic_share_rece_tbl_ACT = db_pacco.vw_phic_share_rece_tbl_ACT.Where(a => a.department_code == par_department_code && a.employment_type == par_employment_type).ToList();
                 HttpContext.Session["vw_phic_share_rece_tbl_ACT"] = vw_phic_share_rece_tbl_ACT;
 
                 return Json(new { vw_phic_share_rece_tbl_ACT,icon="success" }, JsonRequestBehavior.AllowGet);

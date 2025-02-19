@@ -206,8 +206,8 @@ ng_HRD_App.controller("cEmployeeCardRep_ctrlr", function ($scope, $compile, $htt
                 par_employment_type : $("#ddl_employment_type").val()
                 }).then(function (d) 
             {
-
-                if (d.data.reportcount.length > 0)
+                    
+                if (d.data.reportcount > 0)
                 {
                    // s.embed_link = "../" + controller + "/" + action + "?ReportName=" + ReportName
                    //+ "&SaveName=" + SaveName

@@ -222,7 +222,7 @@
     <Compile Include="Controllers\cJOTaxRateController.cs" />
     <Compile Include="Controllers\cJOTaxRateDetailsController.cs" />
     <Compile Include="Controllers\cMainPageController.cs" />
-    <Compile Include="Controllers\cNonEmployeeTaxRateController.cs" />
+    <Compile Include="Controllers\cPHICShareTaxRateController.cs" />
     <Compile Include="Controllers\cPASystemSetupController.cs" />
     <Compile Include="Controllers\cPayAuditPostingController.cs" />
     <Compile Include="Controllers\cPayDocTrkController.cs" />
@@ -279,6 +279,12 @@
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\act_generator.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AnnualizedEmployeeTax.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AnnualTaxResult.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\annualtax_dtl_tbl.cs">
@@ -450,6 +456,9 @@
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\remittance_dtl_gsis_tbl.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\remittance_dtl_gsis_tbl_temp.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\remittance_dtl_hdmf_flt_tbl.cs">
@@ -692,6 +701,12 @@
     <Compile Include="Models\sp_generate_payrollemployee_tax_dtl_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_generate_payrollemployee_tax_hdr_dtl_ne_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_generate_payrollemployee_tax_hdr_dtl_rc_phic_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_generate_payrollemployee_tax_hdr_dtl_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
@@ -779,6 +794,9 @@
     <Compile Include="Models\sp_monthly_remittance_tax_rep_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_monthly_remittance_tax_rep_wdept_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_new_remittance_PHIC_rep_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
@@ -797,6 +815,9 @@
     <Compile Include="Models\sp_payrollemployee_tax_hdr_tbl_list_non_employee_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_payrollemployee_tax_hdr_tbl_list_rc_phic_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_payrollemployee_tax_hdr_tbl_list_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
@@ -804,6 +825,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_payrollemployee_tax_tbl_for_apprvl_Result.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_payrollemployee_tax_tbl_phic_rece_Result.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_payrollregistryaccounting_dtl_ce_tbl_list_Result.cs">
@@ -921,6 +945,9 @@
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_personnelnames_combolist_tax_non_employee_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_personnelnames_combolist_tax_rc_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_personnelnames_list1_Result.cs">
@@ -3095,7 +3122,7 @@
     <Content Include="Views\cEmployeeCardRemarksDetails\Index.cshtml" />
     <Content Include="Views\cEmployeeCardRemarks\Index.cshtml" />
     <Content Include="Views\cSepSet\Index.cshtml" />
-    <Content Include="Views\cNonEmployeeTaxRate\Index.cshtml" />
+    <Content Include="Views\cPHICShareTaxRate\Index.cshtml" />
     <Content Include="Views\cApplicationToken\Index.cshtml" />
     <Content Include="Views\cRECETaxUpd\Index.cshtml" />
   </ItemGroup>

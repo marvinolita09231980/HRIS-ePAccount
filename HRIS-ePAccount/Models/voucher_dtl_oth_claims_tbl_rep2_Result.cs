@@ -17,6 +17,7 @@ namespace HRIS_ePAccount.Models
         public string voucher_ctrl_nbr { get; set; }
         public string seq_no { get; set; }
         public string empl_id { get; set; }
+        public string employee_name { get; set; }
         public Nullable<System.DateTime> voucher_period_from { get; set; }
         public Nullable<System.DateTime> voucher_period_to { get; set; }
         public string voucher_period_descr { get; set; }

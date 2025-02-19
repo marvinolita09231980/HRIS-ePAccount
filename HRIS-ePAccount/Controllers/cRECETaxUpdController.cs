@@ -28,6 +28,10 @@ namespace HRIS_ePAccount.Controllers
             {
                 Session["nemployment_type"] = "NE";
             }
+            else if (type == 4)
+            {
+                Session["nemployment_type"] = "RC";
+            }
             else
             {
                 Session["nemployment_type"] = "";
@@ -43,7 +47,7 @@ namespace HRIS_ePAccount.Controllers
             List<sp_empltaxwithheld_tbl_for_apprvl_Result> rc_tax_list = new List<sp_empltaxwithheld_tbl_for_apprvl_Result>();
             List<sp_payrollemployee_tax_tbl_for_apprvl_Result> jo_tax_list = new List<sp_payrollemployee_tax_tbl_for_apprvl_Result>();
             List<sp_payrollemployee_tax_tbl_for_apprvl_NE_Result> ne_tax_list = new List<sp_payrollemployee_tax_tbl_for_apprvl_NE_Result>();
-            try
+            List<sp_payrollemployee_tax_tbl_phic_rece_Result> rc_phic_tax_list = new List<sp_payrollemployee_tax_tbl_phic_rece_Result>(); try
             {
                 var employment_type = Session["nemployment_type"].ToString();
                 if (employment_type == "RE")
@@ -61,6 +65,11 @@ namespace HRIS_ePAccount.Controllers
                 {
                     ne_tax_list = db_pay.sp_payrollemployee_tax_tbl_for_apprvl_NE(year, "N").ToList();
                     return JSON(new { icon = "success", message = "success", ne_tax_list, employment_type }, JsonRequestBehavior.AllowGet);
+                }
+                else if (employment_type == "RC")
+                {
+                    rc_phic_tax_list = db_pay.sp_payrollemployee_tax_tbl_phic_rece(year, "N").ToList();
+                    return JSON(new { icon = "success", message = "success", rc_phic_tax_list, employment_type }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
@@ -112,6 +121,21 @@ namespace HRIS_ePAccount.Controllers
                 var sp_payrollemployee_tax_tbl_for_apprvl_NE = db_pay.sp_payrollemployee_tax_tbl_for_apprvl_NE(year, status).ToList();
 
                 return JSON(new { message = "success", icon = "success", sp_payrollemployee_tax_tbl_for_apprvl_NE }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                var message = e.Message;
+                return JSON(new { message, icon = "error" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public ActionResult sp_payrollemployee_tax_tbl_for_apprvl_RC_PHIC(string year, string status)
+        {
+            try
+            {
+                var sp_payrollemployee_tax_tbl_phic_rece = db_pay.sp_payrollemployee_tax_tbl_phic_rece(year, status).ToList();
+
+                return JSON(new { message = "success", icon = "success", sp_payrollemployee_tax_tbl_phic_rece }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)
             {
@@ -251,6 +275,49 @@ namespace HRIS_ePAccount.Controllers
                 return JSON(new { message, icon = "error" }, JsonRequestBehavior.AllowGet);
             }
         }
+        public ActionResult approved_reject_tax_rc_phic(string empl_id, string effective_date, string payroll_year, string employment_type, string nstatus, string status)
+        {
+
+            try
+            {
+                var message = "";
+
+                var user_id = Session["user_id"].ToString();
+                var datenow = DateTime.Now;
+                var nEffective_date = Convert.ToDateTime(effective_date);
+
+                var rc_phic_tax = db_pay.payrollemployee_tax_phic_rece_tbl.Where(a => a.empl_id == empl_id && a.effective_date == nEffective_date).FirstOrDefault();
+
+                rc_phic_tax.rcrd_status = nstatus;
+                rc_phic_tax.user_id_updated_by = user_id;
+                rc_phic_tax.updated_dttm = datenow;
+                db_pay.SaveChanges();
+
+                if (nstatus == "A") // Approve Status
+                {
+                    message = "Approved";
+                }
+                else if (nstatus == "R") // Rejected Status
+                {
+                    message = "Rejected";
+                }
+                else if (nstatus == "N") // Rejected Status
+                {
+                    message = "New";
+                }
+
+               
+
+                var sp_payrollemployee_tax_tbl_phic_rece = db_pay.sp_payrollemployee_tax_tbl_phic_rece(payroll_year, status).ToList();
+
+                return JSON(new { message, icon = "success", sp_payrollemployee_tax_tbl_phic_rece}, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                var message = e.Message;
+                return JSON(new { message, icon = "error" }, JsonRequestBehavior.AllowGet);
+            }
+        }
 
         public ActionResult ApproveAllTaxUpdRC(List<sp_empltaxwithheld_tbl_for_apprvl_Result> data,string employment_type)
         {
@@ -346,6 +413,36 @@ namespace HRIS_ePAccount.Controllers
             }
         }
 
+        public ActionResult ApproveAllTaxUpdRCPHIC(List<sp_payrollemployee_tax_tbl_phic_rece_Result> data, string year, string status)
+        {
+            var datenow = DateTime.Now;
+            var userid = Session["user_id"].ToString();
+            try
+            {
+                for (int x = 0; x < data.Count(); x++)
+                {
+
+                    var empl_id = data[x].empl_id;
+                    var effective_date = Convert.ToDateTime(data[x].effective_date);
+                    var updRCPHICTax = db_pay.payrollemployee_tax_phic_rece_tbl.Where(a => a.empl_id == empl_id && a.effective_date == effective_date).FirstOrDefault();
+                    updRCPHICTax.rcrd_status = "A";
+                    updRCPHICTax.updated_dttm = datenow;
+                    updRCPHICTax.user_id_updated_by = userid;
+                    db_pay.SaveChanges();
+
+                }
+                var message = "Success";
+
+                var sp_payrollemployee_tax_tbl_phic_rece = db_pay.sp_payrollemployee_tax_tbl_phic_rece(year, status).ToList();
+
+                return JSON(new { message, icon = "success", sp_payrollemployee_tax_tbl_phic_rece }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                var message = e.Message;
+                return JSON(new { message, icon = "error" }, JsonRequestBehavior.AllowGet);
+            }
+        }
         protected ActionResult JSON(object data, JsonRequestBehavior behavior)
         {
             return new JsonResult()

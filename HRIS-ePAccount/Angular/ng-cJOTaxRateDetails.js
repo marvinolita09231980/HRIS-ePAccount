@@ -52,7 +52,7 @@ ng_HRD_App.controller("cJOTaxRateDetails_ctrlr", function ($scope, $compile, $ht
         $("#loading_data").modal("show")
 
         h.post("../cJOTaxRateDetails/InitializeData", { par_empType: s.employeeddl }).then(function (d) {
-           
+            if (d.data.icon == "success") {
                 s.txtb_ddl_year = d.data.year
                 s.txtb_empl_name_hdr = d.data.emp_name
 
@@ -115,6 +115,10 @@ ng_HRD_App.controller("cJOTaxRateDetails_ctrlr", function ($scope, $compile, $ht
                 else {
                     s.oTable.fnClearTable();
                 }
+            }
+            else {
+                location.href ="cNonEmployeeTaxRate"
+            }
             
             $("#loading_data").modal("hide")
         })
@@ -273,7 +277,7 @@ ng_HRD_App.controller("cJOTaxRateDetails_ctrlr", function ($scope, $compile, $ht
             window.location.replace(url);
         }
         else if (s.previouspage_employment_type == "NE") {
-            url = "/cNonEmployeeTaxRate"
+            url = "/cPHICShareTaxRate"
             window.location.replace(url);
         }
         

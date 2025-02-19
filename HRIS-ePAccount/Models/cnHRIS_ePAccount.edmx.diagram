@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="567029b08e6046b795a4e9e5aa584e40" Name="Diagram1">
+      <Diagram DiagramId="e979c078b5f8470cbbe4ef5c38939c46" Name="Diagram1">
         <EntityTypeShape EntityType="HRIS_ACTModel.account_tax_excepmt_tbl" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.accountingsystemsetup_tbl" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.act_counter_tbl" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
@@ -45,125 +45,128 @@
         <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_gsis_month_ovrd_tbl" Width="1.5" PointX="18.75" PointY="10.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_gsis_month_tbl" Width="1.5" PointX="12.75" PointY="18.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_gsis_tbl" Width="1.5" PointX="14.75" PointY="19.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_hdmf_flt_tbl" Width="1.5" PointX="20.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_hdmf_month_tbl" Width="1.5" PointX="0.75" PointY="20.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_hdmf_tbl" Width="1.5" PointX="20.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_lbp_month_ovrd_tbl" Width="1.5" PointX="20.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_lbp_month_tbl" Width="1.5" PointX="20.75" PointY="14.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_others_month_tbl" Width="1.5" PointX="20.75" PointY="18.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_others_tbl" Width="1.5" PointX="22.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_others_tbl_TEMP" Width="1.5" PointX="2.75" PointY="22.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_phic_month_tbl" Width="1.5" PointX="22.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_phic_tbl" Width="1.5" PointX="4.75" PointY="22.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_sss_month_tbl" Width="1.5" PointX="22.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_sss_tbl" Width="1.5" PointX="22.75" PointY="13.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_tax_month_tbl" Width="1.5" PointX="16.75" PointY="22.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_tax_tbl" Width="1.5" PointX="22.75" PointY="17.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_or_tbl" Width="1.5" PointX="18.75" PointY="22.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittancetype_tbl" Width="1.5" PointX="20.75" PointY="22.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.sysdiagram" Width="1.5" PointX="22.75" PointY="22.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.tax_tbl" Width="1.5" PointX="6.75" PointY="23.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.taxrate_percentage_tbl" Width="1.5" PointX="8.75" PointY="23.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_hdr_tbl" Width="1.5" PointX="24.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.idoc_trk_tbl_ret_chk" Width="1.5" PointX="25.75" PointY="5.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_accountclass_tbl" Width="1.5" PointX="25.75" PointY="8.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_annualtax_dtl_tbl" Width="1.5" PointX="25.75" PointY="11.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_annualtax_dtl_tbl_cna" Width="1.5" PointX="25.75" PointY="17.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_annualtax_dtl_tbl_pbb" Width="1.5" PointX="25.75" PointY="20.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_cashadv_for_transmmittal_list" Width="1.5" PointX="25.75" PointY="23.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_cashadv_fund_sub_tbl" Width="1.5" PointX="0.75" PointY="26.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_CE_employee_income_for_annual_tax" Width="1.5" PointX="7.75" PointY="26.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_departments_tbl_list" Width="1.5" PointX="9.75" PointY="26.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_departments_tbl_list2" Width="1.5" PointX="27.75" PointY="0.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_divisions_tbl_list" Width="1.5" PointX="2.75" PointY="27.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_doc_trk_act_tbl_2be_rcvd" Width="1.5" PointX="27.75" PointY="4.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_doc_trk_act_tbl_2be_rlsd" Width="1.5" PointX="4.75" PointY="27.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_document_tracking_nbrs_tbl_PACCO" Width="1.5" PointX="27.75" PointY="11.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_document_tracking_tbl_in_PACCO" Width="1.5" PointX="27.75" PointY="15.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_employee_exempted" Width="1.5" PointX="27.75" PointY="18.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_employee_income_for_annual" Width="1.5" PointX="19.75" PointY="27.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_employmenttypes_tbl" Width="1.5" PointX="27.75" PointY="21.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_employmenttypes_tbl_list" Width="1.5" PointX="21.75" PointY="27.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_idoc_cashadv_ada_list" Width="1.5" PointX="27.75" PointY="24.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_idoc_trk_tbl_2be_rcvd" Width="1.5" PointX="29.75" PointY="0.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_idoc_trk_tbl_2be_rlsd" Width="1.5" PointX="29.75" PointY="7.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_idoc_trk_tbl_curr_chk" Width="1.5" PointX="9.75" PointY="29.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_idoc_trk_tbl_current" Width="1.5" PointX="29.75" PointY="14.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_idoc_trk_tbl_return" Width="1.5" PointX="29.75" PointY="22.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_lbp_transmittal_list" Width="1.5" PointX="23.75" PointY="29.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_organizations_info_HRIS_ACT" Width="1.5" PointX="25.75" PointY="29.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_othrpaysetup_tbl_list2" Width="1.5" PointX="0.75" PointY="30.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payregistry_CA_info_list_ACT" Width="1.5" PointX="27.75" PointY="30.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollemployee_tax_tbl_ACT" Width="1.5" PointX="29.75" PointY="30.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollemployeegroupings_HRIS_ACT" Width="1.5" PointX="31.75" PointY="0.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollemployeemaster_info_HRIS_ACT" Width="1.5" PointX="31.75" PointY="5.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollemployeemaster_latest_asg_tbl" Width="1.5" PointX="31.75" PointY="9.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollemployeemaster_tbl_ref_list_all" Width="1.5" PointX="11.75" PointY="31.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info_HRIS_ACT" Width="1.5" PointX="13.75" PointY="31.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info_HRIS_ACT_18" Width="1.5" PointX="31.75" PointY="14.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info_HRIS_ACT_takehome" Width="1.5" PointX="15.75" PointY="31.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info17_HRIS_ACT" Width="1.5" PointX="6.75" PointY="32.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info2_HRIS_ACT" Width="1.5" PointX="21.75" PointY="32.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info3_HRIS_ACT" Width="1.5" PointX="33.75" PointY="0.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info4_HRIS_ACT" Width="1.5" PointX="8.75" PointY="33.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info5_HRIS_ACT" Width="1.5" PointX="17.75" PointY="33.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info6_HRIS_ACT" Width="1.5" PointX="33.75" PointY="22.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info7_01_HRIS_ACT" Width="1.5" PointX="33.75" PointY="28.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info7_02_06_HRIS_ACT" Width="1.5" PointX="2.75" PointY="34.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info7_07_HRIS_ACT" Width="1.5" PointX="10.75" PointY="34.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info7_08_HRIS_ACT" Width="1.5" PointX="35.75" PointY="0.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info7_16_HRIS_ACT" Width="1.5" PointX="35.75" PointY="22.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info7_CARDING" Width="1.5" PointX="29.75" PointY="35.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info7_HRIS_ACT" Width="1.5" PointX="23.75" PointY="36.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info7_HRIS_ACT_post_status" Width="1.5" PointX="25.75" PointY="36.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistryaccounting_template_combolist" Width="1.5" PointX="37.75" PointY="0.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrolltemplate_tbl_list" Width="1.5" PointX="37.75" PointY="3.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_personnel_tbl_image" Width="1.5" PointX="37.75" PointY="7.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_personneladdress_contact_id_tbl_HRIS_ACT" Width="1.5" PointX="37.75" PointY="10.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_personnelnames_tbl_HRIS_ACT" Width="1.5" PointX="37.75" PointY="13.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_personnelnames_tbl_HRIS_ACT2" Width="1.5" PointX="37.75" PointY="17.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_personnelnames_tbl2_HRIS_ACT" Width="1.5" PointX="37.75" PointY="22.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_phic_share_empl_tbl_ACT" Width="1.5" PointX="37.75" PointY="27.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_phic_share_empl_tbl_rc" Width="1.5" PointX="37.75" PointY="33.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_phic_share_rece_tbl_ACT" Width="1.5" PointX="19.75" PointY="38.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_positions_tbl" Width="1.5" PointX="37.75" PointY="38.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_rata_rate_sked_tbl_list2" Width="1.5" PointX="39.75" PointY="0.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_CNA" Width="1.5" PointX="39.75" PointY="3.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_dtl_all" Width="1.5" PointX="39.75" PointY="9.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_GSIS" Width="1.5" PointX="39.75" PointY="12.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_GSIS_v1" Width="1.5" PointX="39.75" PointY="21.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_HDMF" Width="1.5" PointX="39.75" PointY="29.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_HDMF02" Width="1.5" PointX="39.75" PointY="35.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_HDMF03" Width="1.5" PointX="41.75" PointY="0.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_HDMF04" Width="1.5" PointX="41.75" PointY="6.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_HDMF05" Width="1.5" PointX="41.75" PointY="12.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_HDMF06" Width="1.5" PointX="41.75" PointY="18.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_info_ALL" Width="1.5" PointX="41.75" PointY="24.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_info_ALL1" Width="1.5" PointX="41.75" PointY="27.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_info_CNA" Width="1.5" PointX="37.75" PointY="42.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_info_GSIS" Width="1.5" PointX="43.75" PointY="0.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_info_HDMF" Width="1.5" PointX="43.75" PointY="16.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_info_LBP" Width="1.5" PointX="43.75" PointY="25.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_info_OTHERS" Width="1.5" PointX="43.75" PointY="33.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_info_PHIC" Width="1.5" PointX="39.75" PointY="43.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_info_SSS" Width="1.5" PointX="43.75" PointY="41.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_info_TAX" Width="1.5" PointX="17.75" PointY="44.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_LBP" Width="1.5" PointX="19.75" PointY="44.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_OTHERS" Width="1.5" PointX="45.75" PointY="0.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_OTHERS09" Width="1.5" PointX="45.75" PointY="6.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_OTHERS10" Width="1.5" PointX="45.75" PointY="12.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_OTHERS11" Width="1.5" PointX="45.75" PointY="18.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_OTHERS12" Width="1.5" PointX="45.75" PointY="24.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_OTHERS13" Width="1.5" PointX="45.75" PointY="30.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_OTHERS14" Width="1.5" PointX="45.75" PointY="36.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_OTHERS17" Width="1.5" PointX="45.75" PointY="42.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_OTHERS18" Width="1.5" PointX="47.75" PointY="0.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_PHIC" Width="1.5" PointX="47.75" PointY="6.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_SSS" Width="1.5" PointX="47.75" PointY="12.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittancetype_tbl" Width="1.5" PointX="47.75" PointY="17.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittancetype_tbl2" Width="1.5" PointX="47.75" PointY="20.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_sections_tbl_list" Width="1.5" PointX="47.75" PointY="23.75" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.vw_subdepartments_tbl_list" Width="1.5" PointX="47.75" PointY="27.75" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_gsis_tbl_temp" Width="1.5" PointX="20.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_hdmf_flt_tbl" Width="1.5" PointX="0.75" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_hdmf_month_tbl" Width="1.5" PointX="20.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_hdmf_tbl" Width="1.5" PointX="20.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_lbp_month_ovrd_tbl" Width="1.5" PointX="22.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_lbp_month_tbl" Width="1.5" PointX="2.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_others_month_tbl" Width="1.5" PointX="4.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_others_tbl" Width="1.5" PointX="22.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_others_tbl_TEMP" Width="1.5" PointX="22.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_phic_month_tbl" Width="1.5" PointX="22.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_phic_tbl" Width="1.5" PointX="16.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_sss_month_tbl" Width="1.5" PointX="22.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_sss_tbl" Width="1.5" PointX="18.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_tax_month_tbl" Width="1.5" PointX="20.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_tax_tbl" Width="1.5" PointX="22.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_or_tbl" Width="1.5" PointX="6.75" PointY="23.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittancetype_tbl" Width="1.5" PointX="8.75" PointY="23.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.sysdiagram" Width="1.5" PointX="24.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.tax_tbl" Width="1.5" PointX="24.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.taxrate_percentage_tbl" Width="1.5" PointX="24.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.AnnualizedEmployeeTax" Width="1.5" PointX="24.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.AnnualTaxResult" Width="1.5" PointX="24.75" PointY="21.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_hdr_tbl" Width="1.5" PointX="26.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.idoc_trk_tbl_ret_chk" Width="1.5" PointX="0.75" PointY="26.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_accountclass_tbl" Width="1.5" PointX="2.75" PointY="26.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_annualtax_dtl_tbl" Width="1.5" PointX="4.75" PointY="26.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_annualtax_dtl_tbl_cna" Width="1.5" PointX="26.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_annualtax_dtl_tbl_pbb" Width="1.5" PointX="26.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_cashadv_for_transmmittal_list" Width="1.5" PointX="26.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_cashadv_fund_sub_tbl" Width="1.5" PointX="26.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_CE_employee_income_for_annual_tax" Width="1.5" PointX="26.75" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_departments_tbl_list" Width="1.5" PointX="26.75" PointY="26.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_departments_tbl_list2" Width="1.5" PointX="16.75" PointY="27.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_divisions_tbl_list" Width="1.5" PointX="28.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_doc_trk_act_tbl_2be_rcvd" Width="1.5" PointX="28.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_doc_trk_act_tbl_2be_rlsd" Width="1.5" PointX="6.75" PointY="28.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_document_tracking_nbrs_tbl_PACCO" Width="1.5" PointX="8.75" PointY="28.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_document_tracking_tbl_in_PACCO" Width="1.5" PointX="28.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_employee_exempted" Width="1.5" PointX="28.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_employee_income_for_annual" Width="1.5" PointX="28.75" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_employmenttypes_tbl" Width="1.5" PointX="18.75" PointY="28.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_employmenttypes_tbl_list" Width="1.5" PointX="20.75" PointY="28.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_idoc_cashadv_ada_list" Width="1.5" PointX="28.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_idoc_trk_tbl_2be_rcvd" Width="1.5" PointX="28.75" PointY="27.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_idoc_trk_tbl_2be_rlsd" Width="1.5" PointX="0.75" PointY="29.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_idoc_trk_tbl_curr_chk" Width="1.5" PointX="30.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_idoc_trk_tbl_current" Width="1.5" PointX="30.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_idoc_trk_tbl_return" Width="1.5" PointX="30.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_lbp_transmittal_list" Width="1.5" PointX="30.75" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_organizations_info_HRIS_ACT" Width="1.5" PointX="30.75" PointY="23.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_othrpaysetup_tbl_list2" Width="1.5" PointX="30.75" PointY="30.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payregistry_CA_info_list_ACT" Width="1.5" PointX="10.75" PointY="31.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollemployee_tax_tbl_ACT" Width="1.5" PointX="12.75" PointY="31.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollemployeegroupings_HRIS_ACT" Width="1.5" PointX="14.75" PointY="31.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollemployeemaster_info_HRIS_ACT" Width="1.5" PointX="16.75" PointY="31.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollemployeemaster_latest_asg_tbl" Width="1.5" PointX="18.75" PointY="31.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollemployeemaster_tbl_ref_list_all" Width="1.5" PointX="20.75" PointY="31.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info_HRIS_ACT" Width="1.5" PointX="32.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info_HRIS_ACT_18" Width="1.5" PointX="2.75" PointY="32.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info_HRIS_ACT_takehome" Width="1.5" PointX="32.75" PointY="25.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info17_HRIS_ACT" Width="1.5" PointX="22.75" PointY="33.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info2_HRIS_ACT" Width="1.5" PointX="24.75" PointY="33.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info3_HRIS_ACT" Width="1.5" PointX="34.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info4_HRIS_ACT" Width="1.5" PointX="34.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info5_HRIS_ACT" Width="1.5" PointX="26.75" PointY="34.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info6_HRIS_ACT" Width="1.5" PointX="34.75" PointY="28.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info7_01_HRIS_ACT" Width="1.5" PointX="34.75" PointY="34.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info7_02_06_HRIS_ACT" Width="1.5" PointX="4.75" PointY="35.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info7_07_HRIS_ACT" Width="1.5" PointX="6.75" PointY="35.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info7_08_HRIS_ACT" Width="1.5" PointX="36.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info7_16_HRIS_ACT" Width="1.5" PointX="12.75" PointY="36.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info7_CARDING" Width="1.5" PointX="14.75" PointY="36.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info7_HRIS_ACT" Width="1.5" PointX="16.75" PointY="36.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistry_info7_HRIS_ACT_post_status" Width="1.5" PointX="18.75" PointY="36.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrollregistryaccounting_template_combolist" Width="1.5" PointX="36.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_payrolltemplate_tbl_list" Width="1.5" PointX="36.75" PointY="25.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_personnel_tbl_image" Width="1.5" PointX="28.75" PointY="36.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_personneladdress_contact_id_tbl_HRIS_ACT" Width="1.5" PointX="36.75" PointY="29.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_personnelnames_tbl_HRIS_ACT" Width="1.5" PointX="36.75" PointY="32.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_personnelnames_tbl_HRIS_ACT2" Width="1.5" PointX="36.75" PointY="36.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_personnelnames_tbl2_HRIS_ACT" Width="1.5" PointX="8.75" PointY="37.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_phic_share_empl_tbl_ACT" Width="1.5" PointX="38.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_phic_share_empl_tbl_rc" Width="1.5" PointX="38.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_phic_share_rece_tbl_ACT" Width="1.5" PointX="38.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_positions_tbl" Width="1.5" PointX="38.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_rata_rate_sked_tbl_list2" Width="1.5" PointX="38.75" PointY="21.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_CNA" Width="1.5" PointX="38.75" PointY="24.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_dtl_all" Width="1.5" PointX="38.75" PointY="30.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_GSIS" Width="1.5" PointX="38.75" PointY="33.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_GSIS_v1" Width="1.5" PointX="28.75" PointY="39.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_HDMF" Width="1.5" PointX="40.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_HDMF02" Width="1.5" PointX="40.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_HDMF03" Width="1.5" PointX="40.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_HDMF04" Width="1.5" PointX="40.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_HDMF05" Width="1.5" PointX="40.75" PointY="24.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_HDMF06" Width="1.5" PointX="24.75" PointY="40.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_info_ALL" Width="1.5" PointX="40.75" PointY="30.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_info_ALL1" Width="1.5" PointX="40.75" PointY="33.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_info_CNA" Width="1.5" PointX="42.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_info_GSIS" Width="1.5" PointX="42.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_info_HDMF" Width="1.5" PointX="8.75" PointY="42.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_info_LBP" Width="1.5" PointX="42.75" PointY="24.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_info_OTHERS" Width="1.5" PointX="42.75" PointY="32.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_info_PHIC" Width="1.5" PointX="42.75" PointY="40.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_info_SSS" Width="1.5" PointX="36.75" PointY="43.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_info_TAX" Width="1.5" PointX="44.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_LBP" Width="1.5" PointX="44.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_OTHERS" Width="1.5" PointX="44.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_OTHERS09" Width="1.5" PointX="44.75" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_OTHERS10" Width="1.5" PointX="44.75" PointY="26.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_OTHERS11" Width="1.5" PointX="44.75" PointY="32.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_OTHERS12" Width="1.5" PointX="44.75" PointY="38.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_OTHERS13" Width="1.5" PointX="44.75" PointY="44.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_OTHERS14" Width="1.5" PointX="46.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_OTHERS17" Width="1.5" PointX="46.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_OTHERS18" Width="1.5" PointX="46.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_PHIC" Width="1.5" PointX="46.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittance_SSS" Width="1.5" PointX="46.75" PointY="24.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittancetype_tbl" Width="1.5" PointX="24.75" PointY="46.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittancetype_tbl2" Width="1.5" PointX="46.75" PointY="29.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_sections_tbl_list" Width="1.5" PointX="46.75" PointY="32.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.vw_subdepartments_tbl_list" Width="1.5" PointX="46.75" PointY="36.75" IsExpanded="true" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

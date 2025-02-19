@@ -156,6 +156,10 @@
           <Parameter Name="par_year" Type="varchar" Mode="In" />
           <Parameter Name="par_rcrd_status" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="sp_payrollemployee_tax_tbl_phic_rece" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="par_year" Type="varchar" Mode="In" />
+          <Parameter Name="par_rcrd_status" Type="varchar" Mode="In" />
+        </Function>
         <EntityContainer Name="HRIS_PAYModelStoreContainer">
           <EntitySet Name="application_token_tbl" EntityType="Self.application_token_tbl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="empl_taxwithheld_tbl" EntityType="Self.empl_taxwithheld_tbl" Schema="dbo" store:Type="Tables" />
@@ -214,6 +218,10 @@
             <Parameter Name="par_rcrd_status" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="payrollemployee_tax_phic_rece_tbl" EntityType="HRIS_PAYModel.payrollemployee_tax_phic_rece_tbl" />
+          <FunctionImport Name="sp_payrollemployee_tax_tbl_phic_rece" ReturnType="Collection(HRIS_PAYModel.sp_payrollemployee_tax_tbl_phic_rece_Result)">
+            <Parameter Name="par_year" Mode="In" Type="String" />
+            <Parameter Name="par_rcrd_status" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="personnel_tbl">
           <Key>
@@ -359,6 +367,17 @@
           <Property Name="vat_perc" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="exmpt_amt" Type="Decimal" Precision="19" Scale="4" />
         </EntityType>
+        <ComplexType Name="sp_payrollemployee_tax_tbl_phic_rece_Result">
+          <Property Type="String" Name="empl_id" Nullable="false" MaxLength="8" />
+          <Property Type="String" Name="employee_name" Nullable="true" MaxLength="211" />
+          <Property Type="Decimal" Name="basic_tax_rate" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="tax_perc" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="vat_perc" Nullable="true" Precision="19" />
+          <Property Type="String" Name="rcrd_status" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="rcrd_status_descr" Nullable="false" MaxLength="9" />
+          <Property Type="String" Name="effective_date" Nullable="true" MaxLength="22" />
+          <Property Type="String" Name="payroll_year" Nullable="true" MaxLength="4" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -546,6 +565,21 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_payrollemployee_tax_tbl_phic_rece" FunctionName="HRIS_PAYModel.Store.sp_payrollemployee_tax_tbl_phic_rece">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HRIS_PAYModel.sp_payrollemployee_tax_tbl_phic_rece_Result">
+                <ScalarProperty Name="empl_id" ColumnName="empl_id" />
+                <ScalarProperty Name="employee_name" ColumnName="employee_name" />
+                <ScalarProperty Name="basic_tax_rate" ColumnName="basic_tax_rate" />
+                <ScalarProperty Name="tax_perc" ColumnName="tax_perc" />
+                <ScalarProperty Name="vat_perc" ColumnName="vat_perc" />
+                <ScalarProperty Name="rcrd_status" ColumnName="rcrd_status" />
+                <ScalarProperty Name="rcrd_status_descr" ColumnName="rcrd_status_descr" />
+                <ScalarProperty Name="effective_date" ColumnName="effective_date" />
+                <ScalarProperty Name="payroll_year" ColumnName="payroll_year" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

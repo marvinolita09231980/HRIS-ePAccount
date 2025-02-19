@@ -150,9 +150,9 @@ ng_HRD_App.controller("cRemitAutoGen_ctrlr", function ($scope, $compile, $http, 
                 
                 
             }
-
-            else {
-            setTimeout(function () {
+            else
+            {
+                setTimeout(function () {
                 h.post("../cRemitAutoGen/GenerateRemittance",
                     {
                         par_year: s.ddl_remittance_year,

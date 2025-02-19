@@ -13,8 +13,10 @@
 using HRIS_ePAccount.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -24,7 +26,7 @@ namespace HRIS_ePAccount.Controllers
     public class cEmployeeCardRepController : Controller
     {
 
-      
+        string constring = System.Configuration.ConfigurationManager.AppSettings["connetionString_act"];
         HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
         // GET: cEmployeeCardRep
         public ActionResult Index()
@@ -147,7 +149,7 @@ namespace HRIS_ePAccount.Controllers
         ////*********************************************************************//
         public ActionResult ReportCount(string par_payroll_year, string par_empl_id, string par_period_from, string par_period_to, string par_department, string par_employment_type)
         {
-
+           
             string defaultdate = "1900-01-01";
             Session["history_page"] = Request.UrlReferrer.ToString();
            
@@ -156,19 +158,70 @@ namespace HRIS_ePAccount.Controllers
                 par_period_from = defaultdate;
                 par_period_to   = defaultdate;
             }
-            var reportcount = db_pacco.sp_employeecard_re_ce_rep(par_payroll_year, par_empl_id, Convert.ToDateTime(par_period_from), Convert.ToDateTime(par_period_to)).ToList();
-            if (reportcount != null)
+            var reportcount = 0;
+            using (SqlConnection connection = new SqlConnection(constring))
             {
-                if (reportcount.Count > 0)
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(@"
+                        SET TEXTSIZE 2147483647;
+                        SET LANGUAGE us_english;
+                        SET DATEFORMAT mdy;
+                        SET DATEFIRST 7;
+                        SET LOCK_TIMEOUT -1;
+                        SET QUOTED_IDENTIFIER ON;
+                        SET ARITHABORT ON;
+                        SET ANSI_NULL_DFLT_ON ON;
+                        SET ANSI_WARNINGS ON;
+                        SET ANSI_PADDING ON;
+                        SET ANSI_NULLS ON;
+                        SET CONCAT_NULL_YIELDS_NULL ON;
+                        SET TRANSACTION ISOLATION LEVEL READ COMMITTED;", connection))
                 {
-                    Session["cEmployeeCardRep_Previous"] = par_payroll_year + ","
-                                                      + par_empl_id + ","
-                                                      + par_period_from + ","
-                                                      + par_period_to + ","
-                                                      + par_department + ","
-                                                      + par_employment_type;
+                    command.ExecuteNonQuery();
                 }
+
+                // var reportcount = db_pacco.sp_employeecard_re_ce_rep(par_payroll_year, par_empl_id, Convert.ToDateTime(par_period_from), Convert.ToDateTime(par_period_to)).ToList();
+               
+                using (SqlCommand command = new SqlCommand("sp_employeecard_re_ce_rep", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@par_payroll_year", par_payroll_year);
+                    command.Parameters.AddWithValue("@par_empl_id", par_empl_id);
+                    command.Parameters.AddWithValue("@par_period_from", Convert.ToDateTime(par_period_from));
+                    command.Parameters.AddWithValue("@par_period_to", Convert.ToDateTime(par_period_to));
+                   
+                    command.CommandTimeout = int.MaxValue;
+
+                    // Use deferred execution with SqlDataReader
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            reportcount++;
+
+
+                        }
+                    }
+                }
+
+                connection.Close();
             }
+
+
+
+            
+          
+             if (reportcount > 0)
+             {
+                 Session["cEmployeeCardRep_Previous"] = par_payroll_year + ","
+                                                   + par_empl_id + ","
+                                                   + par_period_from + ","
+                                                   + par_period_to + ","
+                                                   + par_department + ","
+                                                   + par_employment_type;
+             }
+            
             
             return Json(new { reportcount }, JsonRequestBehavior.AllowGet);
         }
