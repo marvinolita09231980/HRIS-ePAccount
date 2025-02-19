@@ -200,7 +200,7 @@ namespace HRIS_ePAccount.Controllers
 
                 if(tabindex == "1")
                 {
-                    var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_empl_tbl_ACT.Where(a => a.department_code == department_code).ToList();
+                    var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_empl_tbl_ACT.Where(a => a.department_code == department_code && a.employment_type == employment_type).ToList();
                     return JSON(new {
                               department_list
                             , department_code
@@ -222,7 +222,7 @@ namespace HRIS_ePAccount.Controllers
                 }
                 else
                 {
-                    var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_rece_tbl_ACT.Where(a => a.department_code == department_code).ToList();
+                    var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_rece_tbl_ACT.Where(a => a.department_code == department_code && a.employment_type == employment_type).ToList();
                     return JSON(new {
                               department_list
                             , department_code
@@ -688,7 +688,7 @@ namespace HRIS_ePAccount.Controllers
                
 
 
-                var vw_phic_share_empl_tbl_ACT = db_pacco.vw_phic_share_rece_tbl_ACT.Where(a => a.department_code == department_code && (a.employment_type == "RE" || a.employment_type == "CE")).ToList();
+                var vw_phic_share_empl_tbl_ACT = db_pacco.vw_phic_share_rece_tbl_ACT.Where(a => a.department_code == department_code && a.employment_type == employment_type).ToList();
 
                 return Json(new { message, vw_phic_share_empl_tbl_ACT }, JsonRequestBehavior.AllowGet);
             }
@@ -820,7 +820,7 @@ namespace HRIS_ePAccount.Controllers
         }
 
 
-        public ActionResult GenerateByEmployee_rece_phic(string par_empl_id, string par_payroll_year, string par_department_code, string par_rcrd_status, string par_history)
+        public ActionResult GenerateByEmployee_rece_phic(string par_empl_id, string par_payroll_year, string par_department_code, string par_rcrd_status, string par_history, string employment_type)
         {
 
             try
@@ -833,7 +833,7 @@ namespace HRIS_ePAccount.Controllers
                     var sp_generate_payrollemployee_tax_hdr_dtl = db_pacco.sp_generate_payrollemployee_tax_hdr_dtl_rc_phic(par_payroll_year, par_empl_id, Session["user_id"].ToString()).ToList();
                     db_pacco.SaveChanges();
 
-                    var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_rece_tbl_ACT.Where(a => a.department_code == par_department_code).ToList();
+                    var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_rece_tbl_ACT.Where(a => a.department_code == par_department_code && a.employment_type == employment_type).ToList();
 
                     message = "success";
                     return Json(new { message, sp_payrollemployee_tax_hdr_tbl_list }, JsonRequestBehavior.AllowGet);
