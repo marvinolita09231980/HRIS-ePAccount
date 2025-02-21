@@ -1703,7 +1703,7 @@ ng_HRD_App.controller("cPHICShareTaxRate_ctrlr", function (commonScript,$scope, 
         if (dt) {
             var department_code = $("#ddl_department").val()
             var empl_id = dt.empl_id
-
+            var employment_type = $("#ddl_employment_type").val()
             $("#btn_save_2").removeClass("fa fa-save");
             $("#btn_save_2").addClass("fa fa-spinner fa-spin");
 
@@ -1723,6 +1723,7 @@ ng_HRD_App.controller("cPHICShareTaxRate_ctrlr", function (commonScript,$scope, 
                       data: dt
                     , par_action: s.isAction_2
                     , department_code: department_code
+                    , employment_type: employment_type
                 }).then(function (d) {
                     if (d.data.message == "success") {
                            s.datalistgrid_rc = d.data.vw_phic_share_empl_tbl_ACT.refreshTable("datalist_grid_rc", empl_id);
