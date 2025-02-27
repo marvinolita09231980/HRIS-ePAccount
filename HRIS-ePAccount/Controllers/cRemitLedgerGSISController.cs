@@ -226,6 +226,7 @@ namespace HRIS_ePAccount.Controllers
         }
 
         //check data if present in remittance_dtl_gsis_tbl
+       
         public ActionResult CheckData(sp_remittance_ledger_info_GSIS_Result data)
         {
             var rcn = data.remittance_ctrl_nbr;
@@ -233,34 +234,33 @@ namespace HRIS_ePAccount.Controllers
             var vn = data.voucher_nbr;
             var message = "";
             var message_overrides = "N";
+
             try
             {
-                var dt = db_pacco.remittance_dtl_gsis_tbl.Where(a =>
-                 a.remittance_ctrl_nbr == rcn &&
-                 a.empl_id == empl_id &&
-                 a.voucher_nbr == vn
-                     ).FirstOrDefault();
-
-                var dt1 = db_pacco.remittance_dtl_gsis_month_tbl.Where(a =>
-                a.remittance_ctrl_nbr == rcn &&
-                a.empl_id == empl_id &&
-                a.voucher_nbr == vn && 
-                a.payroll_month == data.payroll_month
-                    ).FirstOrDefault();
-
-                var dt2 = db_pacco.remittance_dtl_gsis_month_ovrd_tbl.Where(a =>
-                    //a.remittance_ctrl_nbr == rcn &&
+                // Check if any records exist in the three tables
+                var dtExists = db_pacco.remittance_dtl_gsis_tbl.Any(a =>
+                    a.remittance_ctrl_nbr == rcn &&
                     a.empl_id == empl_id &&
-                    a.voucher_nbr == vn &&
-                    a.payroll_month == data.payroll_month
-                  ).FirstOrDefault();
+                    a.voucher_nbr == vn);
 
-                if (dt2 != null)
+                var dt1Exists = db_pacco.remittance_dtl_gsis_month_tbl.Any(a =>
+                    a.remittance_ctrl_nbr == rcn &&
+                    a.empl_id == empl_id &&
+                    a.voucher_nbr == vn);
+
+                var dt2Exists = db_pacco.remittance_dtl_gsis_month_ovrd_tbl.Any(a =>
+                    a.remittance_ctrl_nbr == rcn &&
+                    a.empl_id == empl_id &&
+                    a.voucher_nbr == vn);
+
+                // Set message_overrides if dt2Exists is true
+                if (dt2Exists)
                 {
                     message_overrides = "Y";
                 }
 
-                if (dt == null && dt1 == null)
+                // Set message based on the existence of dt and dt1
+                if (!dtExists && !dt1Exists)
                 {
                     message = "not_found";
                 }
@@ -268,17 +268,16 @@ namespace HRIS_ePAccount.Controllers
                 {
                     message = "found";
                 }
-                return JSON(new { message, message_overrides }, JsonRequestBehavior.AllowGet);
+
+                return Json(new { message, message_overrides }, JsonRequestBehavior.AllowGet);
             }
             catch (DbEntityValidationException e)
             {
                 message = DbEntityValidationExceptionError(e);
-
-                return JSON(new { message }, JsonRequestBehavior.AllowGet);
+                return Json(new { message }, JsonRequestBehavior.AllowGet);
             }
-           
-            
         }
+
 
         //save employee remittance in remittance_dtl_gsis_tbl
         public ActionResult Save_Details(remittance_dtl_gsis_tbl data)
