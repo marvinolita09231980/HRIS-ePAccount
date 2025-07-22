@@ -115,9 +115,9 @@ namespace HRIS_ePAccount.Controllers
             string department_name                  = PreviousValuesonPage_cJOTaxRate[2].ToString().Trim();
             string position                         = PreviousValuesonPage_cJOTaxRate[8].ToString().Trim();
             string department_code                  = PreviousValuesonPage_cJOTaxRate[10].ToString().Trim();
-            string history                          = PreviousValuesonPage_cJOTaxRate[13].ToString().Trim();
+            string history                          = PreviousValuesonPage_cJOTaxRate[11].ToString().Trim();
             string effective_date                   = PreviousValuesonPage_cJOTaxRate[9].ToString().Trim();
-            string tabindex                         = PreviousValuesonPage_cJOTaxRate[12].ToString().Trim();
+            string tabindex                         = PreviousValuesonPage_cJOTaxRate[4].ToString().Trim();
             string previouspage_employment_type     = Session["PreviousValuesonPage_cJOTaxRate_employment_type"].ToString().Trim();
 
             

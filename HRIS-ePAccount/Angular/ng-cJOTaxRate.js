@@ -1032,6 +1032,7 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
        
         $("#btn_save").removeClass("fa fa-save");
         $("#btn_save").addClass("fa fa-spinner fa-spin");
+
         if (isdataValidated())
         {
             
@@ -1058,6 +1059,7 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
             {
                 effective_date = $("#txtb_effective_date_hid").val()
             }
+
             h.post("../cJOTaxRate/CheckData",
                 {
                  par_payroll_year        : $("#ddl_year option:selected").val()
@@ -1589,6 +1591,20 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
 
             })
         
+
+    }
+
+
+
+    s.selectEmployee = function (id) {
+        empl = s.employeenames.filter(function (d) {
+            return d.empl_id == id
+        })
+
+        $("#txtb_empl_id").val(empl[0].empl_id)
+        s.txtb_empl_id = empl[0].empl_id
+        $("#txtb_position").val(empl[0].position_title1)
+        s.txtb_position = empl[0].position_title1
 
     }
 

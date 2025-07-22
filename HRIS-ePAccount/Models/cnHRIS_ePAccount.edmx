@@ -122,12 +122,14 @@ warning 6002: The table/view 'HRIS_ACT.dbo.AnnualizedEmployeeTax' does not have 
             <PropertyRef Name="voucher_nbr" />
             <PropertyRef Name="empl_id" />
             <PropertyRef Name="payroll_year" />
+            <PropertyRef Name="payroll_month" />
+            <PropertyRef Name="payrolltemplate_code" />
           </Key>
           <Property Name="voucher_nbr" Type="varchar" MaxLength="15" Nullable="false" />
           <Property Name="empl_id" Type="varchar" MaxLength="8" Nullable="false" />
           <Property Name="payroll_year" Type="varchar" MaxLength="4" Nullable="false" />
-          <Property Name="payroll_month" Type="varchar" MaxLength="2" />
-          <Property Name="payrolltemplate_code" Type="varchar" MaxLength="3" />
+          <Property Name="payroll_month" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="payrolltemplate_code" Type="varchar" MaxLength="3" Nullable="false" />
           <Property Name="pera_ca_amt" Type="money" />
           <Property Name="gsis_ps" Type="money" />
           <Property Name="phic_ps" Type="money" />
@@ -1750,6 +1752,8 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_employee_income_for_annual' does n
           <Property Name="laundry_allw" Type="money" Nullable="false" />
           <Property Name="hazard_p" Type="money" Nullable="false" />
           <Property Name="loyalty_bonus" Type="numeric" Precision="2" Scale="2" Nullable="false" />
+          <Property Name="period_from" Type="date" />
+          <Property Name="period_to" Type="date" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'HRIS_ACT.dbo.vw_employmenttypes_tbl' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -3020,10 +3024,20 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_payrollregistry_info7_01_HRIS_ACT'
           <Key>
             <PropertyRef Name="payroll_month" />
             <PropertyRef Name="payroll_registry_nbr" />
-            <PropertyRef Name="payrolltemplate_code" />
             <PropertyRef Name="middle_name" />
             <PropertyRef Name="suffix_name" />
             <PropertyRef Name="payroll_source" />
+            <PropertyRef Name="other_ded_loan1" />
+            <PropertyRef Name="other_ded_loan2" />
+            <PropertyRef Name="other_ded_loan3" />
+            <PropertyRef Name="other_ded_loan4" />
+            <PropertyRef Name="other_ded_loan5" />
+            <PropertyRef Name="other_ded_loan6" />
+            <PropertyRef Name="other_ded_loan7" />
+            <PropertyRef Name="other_ded_loan8" />
+            <PropertyRef Name="other_ded_loan9" />
+            <PropertyRef Name="other_ded_loan10" />
+            <PropertyRef Name="payrolltemplate_code" />
           </Key>
           <Property Name="payroll_year" Type="int" />
           <Property Name="payroll_month" Type="nvarchar" MaxLength="4000" Nullable="false" />
@@ -3130,6 +3144,16 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_payrollregistry_info7_01_HRIS_ACT'
           <Property Name="subsistence_pay" Type="numeric" Precision="38" Scale="2" />
           <Property Name="laundry_pay" Type="numeric" Precision="38" Scale="2" />
           <Property Name="wages_amt" Type="numeric" Precision="38" Scale="2" />
+          <Property Name="other_ded_loan1" Type="numeric" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="other_ded_loan2" Type="numeric" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="other_ded_loan3" Type="numeric" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="other_ded_loan4" Type="numeric" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="other_ded_loan5" Type="numeric" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="other_ded_loan6" Type="numeric" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="other_ded_loan7" Type="numeric" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="other_ded_loan8" Type="numeric" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="other_ded_loan9" Type="numeric" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="other_ded_loan10" Type="numeric" Precision="19" Scale="4" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'HRIS_ACT.dbo.vw_payrollregistry_info7_02_06_HRIS_ACT' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -3769,13 +3793,13 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_payrollregistry_info7_HRIS_ACT' do
           <Key>
             <PropertyRef Name="payroll_month" />
             <PropertyRef Name="payroll_registry_nbr" />
-            <PropertyRef Name="payrolltemplate_code" />
             <PropertyRef Name="middle_name" />
             <PropertyRef Name="suffix_name" />
             <PropertyRef Name="payroll_source" />
             <PropertyRef Name="lates_amount_pera" />
             <PropertyRef Name="lwpay_day_spl" />
             <PropertyRef Name="wages_amt" />
+            <PropertyRef Name="payrolltemplate_code" />
           </Key>
           <Property Name="payroll_year" Type="int" />
           <Property Name="payroll_month" Type="nvarchar" MaxLength="4000" Nullable="false" />
@@ -4231,7 +4255,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_phic_share_rece_tbl_ACT' does not 
           <Property Name="department_code" Type="varchar" MaxLength="2" Nullable="false" />
           <Property Name="group_code" Type="varchar" MaxLength="2" Nullable="false" />
           <Property Name="empl_no_share" Type="money" Nullable="false" />
-          <Property Name="position_long_title" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="position_long_title" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="rate_amount" Type="money" Nullable="false" />
           <Property Name="empl_type" Type="varchar" MaxLength="2" Nullable="false" />
           <Property Name="bir_class" Type="varchar" MaxLength="1" Nullable="false" />
@@ -6684,6 +6708,11 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Parameter Name="p_remittance_year" Type="varchar" Mode="In" />
           <Parameter Name="p_remittance_month" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="sp_remittance_GSIS_rep_voucher_only" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="p_remittance_ctrl_nbr" Type="varchar" Mode="In" />
+          <Parameter Name="p_remittance_year" Type="varchar" Mode="In" />
+          <Parameter Name="p_remittance_month" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="sp_remittance_GSIS_smry_rep" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="p_remittance_ctrl_nbr" Type="varchar" Mode="In" />
         </Function>
@@ -6723,6 +6752,14 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Parameter Name="p_voucher_nbr" Type="varchar" Mode="In" />
         </Function>
         <Function Name="sp_remittance_ledger_info_HDMF" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="p_remittance_ctrl_nbr" Type="varchar" Mode="In" />
+          <Parameter Name="p_department_code" Type="varchar" Mode="In" />
+          <Parameter Name="p_letter" Type="varchar" Mode="In" />
+          <Parameter Name="p_view_option" Type="varchar" Mode="In" />
+          <Parameter Name="p_empl_id" Type="varchar" Mode="In" />
+          <Parameter Name="p_voucher_nbr" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_remittance_ledger_info_HDMF_V2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="p_remittance_ctrl_nbr" Type="varchar" Mode="In" />
           <Parameter Name="p_department_code" Type="varchar" Mode="In" />
           <Parameter Name="p_letter" Type="varchar" Mode="In" />
@@ -6799,6 +6836,13 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Parameter Name="p_voucher_nbr" Type="varchar" Mode="In" />
         </Function>
         <Function Name="sp_remittance_ledger_info_TAX_extract_dept" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="p_remittance_ctrl_nbr" Type="varchar" Mode="In" />
+          <Parameter Name="p_department_code" Type="varchar" Mode="In" />
+          <Parameter Name="p_letter" Type="varchar" Mode="In" />
+          <Parameter Name="p_empl_id" Type="varchar" Mode="In" />
+          <Parameter Name="p_voucher_nbr" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_remittance_ledger_info_TAX_V2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="p_remittance_ctrl_nbr" Type="varchar" Mode="In" />
           <Parameter Name="p_department_code" Type="varchar" Mode="In" />
           <Parameter Name="p_letter" Type="varchar" Mode="In" />
@@ -7476,7 +7520,9 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
     [vw_employee_income_for_annual].[subsistence_allw] AS [subsistence_allw], 
     [vw_employee_income_for_annual].[laundry_allw] AS [laundry_allw], 
     [vw_employee_income_for_annual].[hazard_p] AS [hazard_p], 
-    [vw_employee_income_for_annual].[loyalty_bonus] AS [loyalty_bonus]
+    [vw_employee_income_for_annual].[loyalty_bonus] AS [loyalty_bonus], 
+    [vw_employee_income_for_annual].[period_from] AS [period_from], 
+    [vw_employee_income_for_annual].[period_to] AS [period_to]
     FROM [dbo].[vw_employee_income_for_annual] AS [vw_employee_income_for_annual]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vw_employmenttypes_tbl" EntityType="Self.vw_employmenttypes_tbl" store:Type="Views" store:Schema="dbo">
@@ -8545,7 +8591,17 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
     [vw_payrollregistry_info7_01_HRIS_ACT].[hazard_pay] AS [hazard_pay], 
     [vw_payrollregistry_info7_01_HRIS_ACT].[subsistence_pay] AS [subsistence_pay], 
     [vw_payrollregistry_info7_01_HRIS_ACT].[laundry_pay] AS [laundry_pay], 
-    [vw_payrollregistry_info7_01_HRIS_ACT].[wages_amt] AS [wages_amt]
+    [vw_payrollregistry_info7_01_HRIS_ACT].[wages_amt] AS [wages_amt], 
+    [vw_payrollregistry_info7_01_HRIS_ACT].[other_ded_loan1] AS [other_ded_loan1], 
+    [vw_payrollregistry_info7_01_HRIS_ACT].[other_ded_loan2] AS [other_ded_loan2], 
+    [vw_payrollregistry_info7_01_HRIS_ACT].[other_ded_loan3] AS [other_ded_loan3], 
+    [vw_payrollregistry_info7_01_HRIS_ACT].[other_ded_loan4] AS [other_ded_loan4], 
+    [vw_payrollregistry_info7_01_HRIS_ACT].[other_ded_loan5] AS [other_ded_loan5], 
+    [vw_payrollregistry_info7_01_HRIS_ACT].[other_ded_loan6] AS [other_ded_loan6], 
+    [vw_payrollregistry_info7_01_HRIS_ACT].[other_ded_loan7] AS [other_ded_loan7], 
+    [vw_payrollregistry_info7_01_HRIS_ACT].[other_ded_loan8] AS [other_ded_loan8], 
+    [vw_payrollregistry_info7_01_HRIS_ACT].[other_ded_loan9] AS [other_ded_loan9], 
+    [vw_payrollregistry_info7_01_HRIS_ACT].[other_ded_loan10] AS [other_ded_loan10]
     FROM [dbo].[vw_payrollregistry_info7_01_HRIS_ACT] AS [vw_payrollregistry_info7_01_HRIS_ACT]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vw_payrollregistry_info7_02_06_HRIS_ACT" EntityType="Self.vw_payrollregistry_info7_02_06_HRIS_ACT" store:Type="Views" store:Schema="dbo">
@@ -10597,12 +10653,14 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
             <PropertyRef Name="voucher_nbr" />
             <PropertyRef Name="empl_id" />
             <PropertyRef Name="payroll_year" />
+            <PropertyRef Name="payroll_month" />
+            <PropertyRef Name="payrolltemplate_code" />
           </Key>
           <Property Name="voucher_nbr" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="empl_id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="payroll_year" Type="String" MaxLength="4" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="payroll_month" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
-          <Property Name="payrolltemplate_code" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="payroll_month" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="payrolltemplate_code" Type="String" MaxLength="3" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="pera_ca_amt" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="gsis_ps" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="phic_ps" Type="Decimal" Precision="19" Scale="4" />
@@ -12244,6 +12302,8 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Name="laundry_allw" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
           <Property Name="hazard_p" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
           <Property Name="loyalty_bonus" Type="Decimal" Precision="2" Scale="2" Nullable="false" />
+          <Property Name="period_from" Type="DateTime" Precision="0" />
+          <Property Name="period_to" Type="DateTime" Precision="0" />
         </EntityType>
         <EntityType Name="vw_employmenttypes_tbl">
           <Key>
@@ -13464,6 +13524,16 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
             <PropertyRef Name="middle_name" />
             <PropertyRef Name="suffix_name" />
             <PropertyRef Name="payroll_source" />
+            <PropertyRef Name="other_ded_loan1" />
+            <PropertyRef Name="other_ded_loan2" />
+            <PropertyRef Name="other_ded_loan3" />
+            <PropertyRef Name="other_ded_loan4" />
+            <PropertyRef Name="other_ded_loan5" />
+            <PropertyRef Name="other_ded_loan6" />
+            <PropertyRef Name="other_ded_loan7" />
+            <PropertyRef Name="other_ded_loan8" />
+            <PropertyRef Name="other_ded_loan9" />
+            <PropertyRef Name="other_ded_loan10" />
           </Key>
           <Property Name="payroll_year" Type="Int32" />
           <Property Name="payroll_month" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" Nullable="false" />
@@ -13570,6 +13640,16 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Name="subsistence_pay" Type="Decimal" Precision="38" Scale="2" />
           <Property Name="laundry_pay" Type="Decimal" Precision="38" Scale="2" />
           <Property Name="wages_amt" Type="Decimal" Precision="38" Scale="2" />
+          <Property Name="other_ded_loan1" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="other_ded_loan2" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="other_ded_loan3" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="other_ded_loan4" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="other_ded_loan5" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="other_ded_loan6" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="other_ded_loan7" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="other_ded_loan8" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="other_ded_loan9" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="other_ded_loan10" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
         </EntityType>
         <EntityType Name="vw_payrollregistry_info7_02_06_HRIS_ACT">
           <Key>
@@ -14637,7 +14717,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Name="department_code" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="group_code" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="empl_no_share" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
-          <Property Name="position_long_title" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="position_long_title" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="rate_amount" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
           <Property Name="empl_type" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="bir_class" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
@@ -17409,6 +17489,26 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <FunctionImport Name="sp_personnelnames_combolist_tax_rc" ReturnType="Collection(HRIS_ACTModel.sp_personnelnames_combolist_tax_rc_Result)">
             <Parameter Name="par_payroll_year" Mode="In" Type="String" />
             <Parameter Name="par_employment_type" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_remittance_GSIS_rep_voucher_only" ReturnType="Collection(HRIS_ACTModel.sp_remittance_GSIS_rep_voucher_only_Result)">
+            <Parameter Name="p_remittance_ctrl_nbr" Mode="In" Type="String" />
+            <Parameter Name="p_remittance_year" Mode="In" Type="String" />
+            <Parameter Name="p_remittance_month" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_remittance_ledger_info_TAX_V2" ReturnType="Collection(HRIS_ACTModel.sp_remittance_ledger_info_TAX_V2_Result)">
+            <Parameter Name="p_remittance_ctrl_nbr" Mode="In" Type="String" />
+            <Parameter Name="p_department_code" Mode="In" Type="String" />
+            <Parameter Name="p_letter" Mode="In" Type="String" />
+            <Parameter Name="p_empl_id" Mode="In" Type="String" />
+            <Parameter Name="p_voucher_nbr" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_remittance_ledger_info_HDMF_V2" ReturnType="Collection(HRIS_ACTModel.sp_remittance_ledger_info_HDMF_V2_Result)">
+            <Parameter Name="p_remittance_ctrl_nbr" Mode="In" Type="String" />
+            <Parameter Name="p_department_code" Mode="In" Type="String" />
+            <Parameter Name="p_letter" Mode="In" Type="String" />
+            <Parameter Name="p_view_option" Mode="In" Type="String" />
+            <Parameter Name="p_empl_id" Mode="In" Type="String" />
+            <Parameter Name="p_voucher_nbr" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="sp_accountingsystemsetup_tbl_list_Result">
@@ -24120,6 +24220,154 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Type="Decimal" Name="total_gross_pay" Nullable="false" Precision="38" Scale="4" />
           <Property Type="String" Name="bir_class" Nullable="false" MaxLength="1" />
         </ComplexType>
+        <ComplexType Name="sp_remittance_GSIS_rep_voucher_only_Result">
+          <Property Type="String" Name="gsis_bpno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="last_name" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="first_name" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="middle_name" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="suffix_name" Nullable="false" MaxLength="5" />
+          <Property Type="String" Name="courtisy_title" Nullable="false" MaxLength="5" />
+          <Property Type="String" Name="birth_date" Nullable="false" MaxLength="1" />
+          <Property Type="String" Name="gsis_crn" Nullable="false" MaxLength="50" />
+          <Property Type="Decimal" Name="basic_monthly_salary" Nullable="true" Precision="19" />
+          <Property Type="String" Name="effective_date" Nullable="true" MaxLength="30" />
+          <Property Type="Decimal" Name="p_gsis_ps" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="p_gsis_gs" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="p_sif_gs" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="p_gsis_conso_ln" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="p_gsis_ecard_ln" Nullable="true" Precision="19" />
+          <Property Type="Int32" Name="salary_loan" Nullable="false" />
+          <Property Type="Int32" Name="cash_adv" Nullable="false" />
+          <Property Type="Decimal" Name="p_gsis_emergency_ln" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="p_gsis_educ_asst_ln" Nullable="true" Precision="19" />
+          <Property Type="Int32" Name="ela" Nullable="false" />
+          <Property Type="Decimal" Name="p_gsis_sos_ln" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="p_gsis_policy_reg_ln" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="p_gsis_policy_opt_ln" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="p_gsis_real_state_ln" Nullable="true" Precision="19" />
+          <Property Type="Int32" Name="lch_dcs" Nullable="false" />
+          <Property Type="Int32" Name="stock_purchase" Nullable="false" />
+          <Property Type="Decimal" Name="p_gsis_uoli" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="p_gsis_ceap" Nullable="true" Precision="19" />
+          <Property Type="Int32" Name="edu_child" Nullable="false" />
+          <Property Type="Int32" Name="genesis" Nullable="false" />
+          <Property Type="Int32" Name="genplus" Nullable="false" />
+          <Property Type="Int32" Name="genflex" Nullable="false" />
+          <Property Type="Int32" Name="genspcl" Nullable="false" />
+          <Property Type="Decimal" Name="p_gsis_help" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="p_other_loan2" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="p_other_loan1" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="p_other_loan3" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="gfaleducnl_ln" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="mpl_lite_ln" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="String" Name="empl_id" Nullable="false" MaxLength="8" />
+          <Property Type="String" Name="voucher_nbr" Nullable="true" MaxLength="24" />
+          <Property Type="Decimal" Name="p_gsis_ehp" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="p_gsis_hip" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="p_gsis_addl_ins" Nullable="true" Precision="19" />
+          <Property Type="String" Name="remittance_status_order" Nullable="false" MaxLength="1" />
+          <Property Type="String" Name="due_month" Nullable="true" MaxLength="33" />
+          <Property Type="String" Name="organization_name" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="organization_address1" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="organization_address2" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="organization_address3" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="organization_address4" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="remittance_sig1_name" Nullable="true" MaxLength="80" />
+          <Property Type="String" Name="remittance_sig1_desg" Nullable="true" MaxLength="80" />
+          <Property Type="String" Name="remittance_sig2_name" Nullable="true" MaxLength="80" />
+          <Property Type="String" Name="remittance_sig2_desg" Nullable="true" MaxLength="80" />
+          <Property Type="String" Name="remittance_sig3_name" Nullable="true" MaxLength="80" />
+          <Property Type="String" Name="remittance_sig3_desg" Nullable="true" MaxLength="80" />
+          <Property Type="String" Name="remittance_sig_acct_name" Nullable="true" MaxLength="80" />
+          <Property Type="String" Name="remittance_sig_acct_desg" Nullable="true" MaxLength="80" />
+          <Property Type="String" Name="remittance_id1" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="remittance_id2" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="employment_type" Nullable="true" MaxLength="2" />
+        </ComplexType>
+        <ComplexType Name="sp_remittance_ledger_info_TAX_V2_Result">
+          <Property Type="String" Name="payroll_registry_nbr" Nullable="true" MaxLength="18" />
+          <Property Type="String" Name="payroll_registry_descr" Nullable="true" />
+          <Property Type="String" Name="remittance_ctrl_nbr" Nullable="false" MaxLength="8" />
+          <Property Type="String" Name="remittance_year" Nullable="true" MaxLength="4" />
+          <Property Type="String" Name="remittance_month" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="employment_type" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="remittancetype_code" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="remittance_descr" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="remittance_status" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="remittance_status_descr" Nullable="true" MaxLength="18" />
+          <Property Type="DateTime" Name="remittance_dttm_created" Nullable="true" Precision="23" />
+          <Property Type="String" Name="user_id_created_by" Nullable="true" MaxLength="30" />
+          <Property Type="DateTime" Name="remittance_dttm_updated" Nullable="true" Precision="23" />
+          <Property Type="String" Name="user_id_updated_by" Nullable="true" MaxLength="30" />
+          <Property Type="DateTime" Name="remittance_dttm_released" Nullable="true" Precision="23" />
+          <Property Type="String" Name="user_id_released_by" Nullable="true" MaxLength="30" />
+          <Property Type="DateTime" Name="remittance_dttm_remitted" Nullable="true" Precision="23" />
+          <Property Type="String" Name="user_id_remitted_by" Nullable="true" MaxLength="30" />
+          <Property Type="Decimal" Name="wtax" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="wtax_ovtm" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="wtax_2perc" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="wtax_3perc" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="wtax_5perc" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="wtax_8perc" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="wtax_10perc" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="wtax_15perc" Nullable="true" Precision="19" />
+          <Property Type="String" Name="department_code" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="empl_id" Nullable="false" MaxLength="8" />
+          <Property Type="String" Name="voucher_nbr" Nullable="false" MaxLength="15" />
+          <Property Type="String" Name="employee_name" Nullable="true" MaxLength="211" />
+          <Property Type="String" Name="last_name" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="first_name" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="middle_name" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="suffix_name" Nullable="false" MaxLength="5" />
+          <Property Type="String" Name="payroll_year" Nullable="true" MaxLength="4" />
+          <Property Type="String" Name="payroll_month" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="sss_nbr" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="remittance_status_dtl" Nullable="true" MaxLength="1" />
+        </ComplexType>
+        <ComplexType Name="sp_remittance_ledger_info_HDMF_V2_Result">
+          <Property Type="String" Name="payroll_registry_nbr" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="payroll_registry_descr" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="remittance_ctrl_nbr" Nullable="false" MaxLength="8" />
+          <Property Type="String" Name="remittance_year" Nullable="true" MaxLength="4" />
+          <Property Type="String" Name="remittance_month" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="employment_type" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="remittancetype_code" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="remittance_descr" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="remittance_status" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="remittance_status_descr" Nullable="true" MaxLength="18" />
+          <Property Type="DateTime" Name="remittance_dttm_created" Nullable="true" Precision="23" />
+          <Property Type="String" Name="user_id_created_by" Nullable="true" MaxLength="30" />
+          <Property Type="DateTime" Name="remittance_dttm_updated" Nullable="true" Precision="23" />
+          <Property Type="String" Name="user_id_updated_by" Nullable="true" MaxLength="30" />
+          <Property Type="DateTime" Name="remittance_dttm_released" Nullable="true" Precision="23" />
+          <Property Type="String" Name="user_id_released_by" Nullable="true" MaxLength="30" />
+          <Property Type="DateTime" Name="remittance_dttm_remitted" Nullable="true" Precision="23" />
+          <Property Type="String" Name="user_id_remitted_by" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="department_code" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="empl_id" Nullable="false" MaxLength="8" />
+          <Property Type="String" Name="voucher_nbr" Nullable="false" MaxLength="15" />
+          <Property Type="Decimal" Name="payroll_amount_ps" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="payroll_amount_gs" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="uploaded_amount_ps" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="uploaded_amount_gs" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="override_amount_ps" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="override_amount_gs" Nullable="true" Precision="19" />
+          <Property Type="String" Name="remittance_status_dtl" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="membership_program" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="detailed_remarks" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="employee_name" Nullable="true" MaxLength="211" />
+          <Property Type="String" Name="last_name" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="first_name" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="middle_name" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="suffix_name" Nullable="false" MaxLength="5" />
+          <Property Type="Decimal" Name="grid_amount_ps" Nullable="true" Precision="19" />
+          <Property Type="Decimal" Name="grid_amount_gs" Nullable="true" Precision="19" />
+          <Property Type="String" Name="hdmf_mid_nbr" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="hdmf_mp2_nbr" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="hdmf_hln_nbr" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="payroll_year" Nullable="true" MaxLength="4" />
+          <Property Type="String" Name="payroll_month" Nullable="true" MaxLength="2" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -25717,6 +25965,8 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <EntitySetMapping Name="vw_employee_income_for_annual">
             <EntityTypeMapping TypeName="HRIS_ACTModel.vw_employee_income_for_annual">
               <MappingFragment StoreEntitySet="vw_employee_income_for_annual">
+                <ScalarProperty Name="period_to" ColumnName="period_to" />
+                <ScalarProperty Name="period_from" ColumnName="period_from" />
                 <ScalarProperty Name="empl_id" ColumnName="empl_id" />
                 <ScalarProperty Name="employment_type" ColumnName="employment_type" />
                 <ScalarProperty Name="effective_year" ColumnName="effective_year" />
@@ -26753,6 +27003,16 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <EntitySetMapping Name="vw_payrollregistry_info7_01_HRIS_ACT">
             <EntityTypeMapping TypeName="HRIS_ACTModel.vw_payrollregistry_info7_01_HRIS_ACT">
               <MappingFragment StoreEntitySet="vw_payrollregistry_info7_01_HRIS_ACT">
+                <ScalarProperty Name="other_ded_loan10" ColumnName="other_ded_loan10" />
+                <ScalarProperty Name="other_ded_loan9" ColumnName="other_ded_loan9" />
+                <ScalarProperty Name="other_ded_loan8" ColumnName="other_ded_loan8" />
+                <ScalarProperty Name="other_ded_loan7" ColumnName="other_ded_loan7" />
+                <ScalarProperty Name="other_ded_loan6" ColumnName="other_ded_loan6" />
+                <ScalarProperty Name="other_ded_loan5" ColumnName="other_ded_loan5" />
+                <ScalarProperty Name="other_ded_loan4" ColumnName="other_ded_loan4" />
+                <ScalarProperty Name="other_ded_loan3" ColumnName="other_ded_loan3" />
+                <ScalarProperty Name="other_ded_loan2" ColumnName="other_ded_loan2" />
+                <ScalarProperty Name="other_ded_loan1" ColumnName="other_ded_loan1" />
                 <ScalarProperty Name="payroll_year" ColumnName="payroll_year" />
                 <ScalarProperty Name="payroll_month" ColumnName="payroll_month" />
                 <ScalarProperty Name="payroll_registry_nbr" ColumnName="payroll_registry_nbr" />
@@ -36576,6 +36836,166 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
                 <ScalarProperty Name="department_code" ColumnName="department_code" />
                 <ScalarProperty Name="total_gross_pay" ColumnName="total_gross_pay" />
                 <ScalarProperty Name="bir_class" ColumnName="bir_class" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_remittance_GSIS_rep_voucher_only" FunctionName="HRIS_ACTModel.Store.sp_remittance_GSIS_rep_voucher_only">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HRIS_ACTModel.sp_remittance_GSIS_rep_voucher_only_Result">
+                <ScalarProperty Name="gsis_bpno" ColumnName="gsis_bpno" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="middle_name" ColumnName="middle_name" />
+                <ScalarProperty Name="suffix_name" ColumnName="suffix_name" />
+                <ScalarProperty Name="courtisy_title" ColumnName="courtisy_title" />
+                <ScalarProperty Name="birth_date" ColumnName="birth_date" />
+                <ScalarProperty Name="gsis_crn" ColumnName="gsis_crn" />
+                <ScalarProperty Name="basic_monthly_salary" ColumnName="basic_monthly_salary" />
+                <ScalarProperty Name="effective_date" ColumnName="effective_date" />
+                <ScalarProperty Name="p_gsis_ps" ColumnName="p_gsis_ps" />
+                <ScalarProperty Name="p_gsis_gs" ColumnName="p_gsis_gs" />
+                <ScalarProperty Name="p_sif_gs" ColumnName="p_sif_gs" />
+                <ScalarProperty Name="p_gsis_conso_ln" ColumnName="p_gsis_conso_ln" />
+                <ScalarProperty Name="p_gsis_ecard_ln" ColumnName="p_gsis_ecard_ln" />
+                <ScalarProperty Name="salary_loan" ColumnName="salary_loan" />
+                <ScalarProperty Name="cash_adv" ColumnName="cash_adv" />
+                <ScalarProperty Name="p_gsis_emergency_ln" ColumnName="p_gsis_emergency_ln" />
+                <ScalarProperty Name="p_gsis_educ_asst_ln" ColumnName="p_gsis_educ_asst_ln" />
+                <ScalarProperty Name="ela" ColumnName="ela" />
+                <ScalarProperty Name="p_gsis_sos_ln" ColumnName="p_gsis_sos_ln" />
+                <ScalarProperty Name="p_gsis_policy_reg_ln" ColumnName="p_gsis_policy_reg_ln" />
+                <ScalarProperty Name="p_gsis_policy_opt_ln" ColumnName="p_gsis_policy_opt_ln" />
+                <ScalarProperty Name="p_gsis_real_state_ln" ColumnName="p_gsis_real_state_ln" />
+                <ScalarProperty Name="lch_dcs" ColumnName="lch_dcs" />
+                <ScalarProperty Name="stock_purchase" ColumnName="stock_purchase" />
+                <ScalarProperty Name="p_gsis_uoli" ColumnName="p_gsis_uoli" />
+                <ScalarProperty Name="p_gsis_ceap" ColumnName="p_gsis_ceap" />
+                <ScalarProperty Name="edu_child" ColumnName="edu_child" />
+                <ScalarProperty Name="genesis" ColumnName="genesis" />
+                <ScalarProperty Name="genplus" ColumnName="genplus" />
+                <ScalarProperty Name="genflex" ColumnName="genflex" />
+                <ScalarProperty Name="genspcl" ColumnName="genspcl" />
+                <ScalarProperty Name="p_gsis_help" ColumnName="p_gsis_help" />
+                <ScalarProperty Name="p_other_loan2" ColumnName="p_other_loan2" />
+                <ScalarProperty Name="p_other_loan1" ColumnName="p_other_loan1" />
+                <ScalarProperty Name="p_other_loan3" ColumnName="p_other_loan3" />
+                <ScalarProperty Name="gfaleducnl_ln" ColumnName="gfaleducnl_ln" />
+                <ScalarProperty Name="mpl_lite_ln" ColumnName="mpl_lite_ln" />
+                <ScalarProperty Name="empl_id" ColumnName="empl_id" />
+                <ScalarProperty Name="voucher_nbr" ColumnName="voucher_nbr" />
+                <ScalarProperty Name="p_gsis_ehp" ColumnName="p_gsis_ehp" />
+                <ScalarProperty Name="p_gsis_hip" ColumnName="p_gsis_hip" />
+                <ScalarProperty Name="p_gsis_addl_ins" ColumnName="p_gsis_addl_ins" />
+                <ScalarProperty Name="remittance_status_order" ColumnName="remittance_status_order" />
+                <ScalarProperty Name="due_month" ColumnName="due_month" />
+                <ScalarProperty Name="organization_name" ColumnName="organization_name" />
+                <ScalarProperty Name="organization_address1" ColumnName="organization_address1" />
+                <ScalarProperty Name="organization_address2" ColumnName="organization_address2" />
+                <ScalarProperty Name="organization_address3" ColumnName="organization_address3" />
+                <ScalarProperty Name="organization_address4" ColumnName="organization_address4" />
+                <ScalarProperty Name="remittance_sig1_name" ColumnName="remittance_sig1_name" />
+                <ScalarProperty Name="remittance_sig1_desg" ColumnName="remittance_sig1_desg" />
+                <ScalarProperty Name="remittance_sig2_name" ColumnName="remittance_sig2_name" />
+                <ScalarProperty Name="remittance_sig2_desg" ColumnName="remittance_sig2_desg" />
+                <ScalarProperty Name="remittance_sig3_name" ColumnName="remittance_sig3_name" />
+                <ScalarProperty Name="remittance_sig3_desg" ColumnName="remittance_sig3_desg" />
+                <ScalarProperty Name="remittance_sig_acct_name" ColumnName="remittance_sig_acct_name" />
+                <ScalarProperty Name="remittance_sig_acct_desg" ColumnName="remittance_sig_acct_desg" />
+                <ScalarProperty Name="remittance_id1" ColumnName="remittance_id1" />
+                <ScalarProperty Name="remittance_id2" ColumnName="remittance_id2" />
+                <ScalarProperty Name="employment_type" ColumnName="employment_type" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_remittance_ledger_info_TAX_V2" FunctionName="HRIS_ACTModel.Store.sp_remittance_ledger_info_TAX_V2">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HRIS_ACTModel.sp_remittance_ledger_info_TAX_V2_Result">
+                <ScalarProperty Name="payroll_registry_nbr" ColumnName="payroll_registry_nbr" />
+                <ScalarProperty Name="payroll_registry_descr" ColumnName="payroll_registry_descr" />
+                <ScalarProperty Name="remittance_ctrl_nbr" ColumnName="remittance_ctrl_nbr" />
+                <ScalarProperty Name="remittance_year" ColumnName="remittance_year" />
+                <ScalarProperty Name="remittance_month" ColumnName="remittance_month" />
+                <ScalarProperty Name="employment_type" ColumnName="employment_type" />
+                <ScalarProperty Name="remittancetype_code" ColumnName="remittancetype_code" />
+                <ScalarProperty Name="remittance_descr" ColumnName="remittance_descr" />
+                <ScalarProperty Name="remittance_status" ColumnName="remittance_status" />
+                <ScalarProperty Name="remittance_status_descr" ColumnName="remittance_status_descr" />
+                <ScalarProperty Name="remittance_dttm_created" ColumnName="remittance_dttm_created" />
+                <ScalarProperty Name="user_id_created_by" ColumnName="user_id_created_by" />
+                <ScalarProperty Name="remittance_dttm_updated" ColumnName="remittance_dttm_updated" />
+                <ScalarProperty Name="user_id_updated_by" ColumnName="user_id_updated_by" />
+                <ScalarProperty Name="remittance_dttm_released" ColumnName="remittance_dttm_released" />
+                <ScalarProperty Name="user_id_released_by" ColumnName="user_id_released_by" />
+                <ScalarProperty Name="remittance_dttm_remitted" ColumnName="remittance_dttm_remitted" />
+                <ScalarProperty Name="user_id_remitted_by" ColumnName="user_id_remitted_by" />
+                <ScalarProperty Name="wtax" ColumnName="wtax" />
+                <ScalarProperty Name="wtax_ovtm" ColumnName="wtax_ovtm" />
+                <ScalarProperty Name="wtax_2perc" ColumnName="wtax_2perc" />
+                <ScalarProperty Name="wtax_3perc" ColumnName="wtax_3perc" />
+                <ScalarProperty Name="wtax_5perc" ColumnName="wtax_5perc" />
+                <ScalarProperty Name="wtax_8perc" ColumnName="wtax_8perc" />
+                <ScalarProperty Name="wtax_10perc" ColumnName="wtax_10perc" />
+                <ScalarProperty Name="wtax_15perc" ColumnName="wtax_15perc" />
+                <ScalarProperty Name="department_code" ColumnName="department_code" />
+                <ScalarProperty Name="empl_id" ColumnName="empl_id" />
+                <ScalarProperty Name="voucher_nbr" ColumnName="voucher_nbr" />
+                <ScalarProperty Name="employee_name" ColumnName="employee_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="middle_name" ColumnName="middle_name" />
+                <ScalarProperty Name="suffix_name" ColumnName="suffix_name" />
+                <ScalarProperty Name="payroll_year" ColumnName="payroll_year" />
+                <ScalarProperty Name="payroll_month" ColumnName="payroll_month" />
+                <ScalarProperty Name="sss_nbr" ColumnName="sss_nbr" />
+                <ScalarProperty Name="remittance_status_dtl" ColumnName="remittance_status_dtl" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_remittance_ledger_info_HDMF_V2" FunctionName="HRIS_ACTModel.Store.sp_remittance_ledger_info_HDMF_V2">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HRIS_ACTModel.sp_remittance_ledger_info_HDMF_V2_Result">
+                <ScalarProperty Name="payroll_registry_nbr" ColumnName="payroll_registry_nbr" />
+                <ScalarProperty Name="payroll_registry_descr" ColumnName="payroll_registry_descr" />
+                <ScalarProperty Name="remittance_ctrl_nbr" ColumnName="remittance_ctrl_nbr" />
+                <ScalarProperty Name="remittance_year" ColumnName="remittance_year" />
+                <ScalarProperty Name="remittance_month" ColumnName="remittance_month" />
+                <ScalarProperty Name="employment_type" ColumnName="employment_type" />
+                <ScalarProperty Name="remittancetype_code" ColumnName="remittancetype_code" />
+                <ScalarProperty Name="remittance_descr" ColumnName="remittance_descr" />
+                <ScalarProperty Name="remittance_status" ColumnName="remittance_status" />
+                <ScalarProperty Name="remittance_status_descr" ColumnName="remittance_status_descr" />
+                <ScalarProperty Name="remittance_dttm_created" ColumnName="remittance_dttm_created" />
+                <ScalarProperty Name="user_id_created_by" ColumnName="user_id_created_by" />
+                <ScalarProperty Name="remittance_dttm_updated" ColumnName="remittance_dttm_updated" />
+                <ScalarProperty Name="user_id_updated_by" ColumnName="user_id_updated_by" />
+                <ScalarProperty Name="remittance_dttm_released" ColumnName="remittance_dttm_released" />
+                <ScalarProperty Name="user_id_released_by" ColumnName="user_id_released_by" />
+                <ScalarProperty Name="remittance_dttm_remitted" ColumnName="remittance_dttm_remitted" />
+                <ScalarProperty Name="user_id_remitted_by" ColumnName="user_id_remitted_by" />
+                <ScalarProperty Name="department_code" ColumnName="department_code" />
+                <ScalarProperty Name="empl_id" ColumnName="empl_id" />
+                <ScalarProperty Name="voucher_nbr" ColumnName="voucher_nbr" />
+                <ScalarProperty Name="payroll_amount_ps" ColumnName="payroll_amount_ps" />
+                <ScalarProperty Name="payroll_amount_gs" ColumnName="payroll_amount_gs" />
+                <ScalarProperty Name="uploaded_amount_ps" ColumnName="uploaded_amount_ps" />
+                <ScalarProperty Name="uploaded_amount_gs" ColumnName="uploaded_amount_gs" />
+                <ScalarProperty Name="override_amount_ps" ColumnName="override_amount_ps" />
+                <ScalarProperty Name="override_amount_gs" ColumnName="override_amount_gs" />
+                <ScalarProperty Name="remittance_status_dtl" ColumnName="remittance_status_dtl" />
+                <ScalarProperty Name="membership_program" ColumnName="membership_program" />
+                <ScalarProperty Name="detailed_remarks" ColumnName="detailed_remarks" />
+                <ScalarProperty Name="employee_name" ColumnName="employee_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="middle_name" ColumnName="middle_name" />
+                <ScalarProperty Name="suffix_name" ColumnName="suffix_name" />
+                <ScalarProperty Name="grid_amount_ps" ColumnName="grid_amount_ps" />
+                <ScalarProperty Name="grid_amount_gs" ColumnName="grid_amount_gs" />
+                <ScalarProperty Name="hdmf_mid_nbr" ColumnName="hdmf_mid_nbr" />
+                <ScalarProperty Name="hdmf_mp2_nbr" ColumnName="hdmf_mp2_nbr" />
+                <ScalarProperty Name="hdmf_hln_nbr" ColumnName="hdmf_hln_nbr" />
+                <ScalarProperty Name="payroll_year" ColumnName="payroll_year" />
+                <ScalarProperty Name="payroll_month" ColumnName="payroll_month" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

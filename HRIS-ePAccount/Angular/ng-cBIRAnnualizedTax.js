@@ -501,6 +501,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                             s.txtb_wheld_prst_emplyr = currency(d.data.sp_annualtax_hdr_tbl_list2.wtax_prsnt_emplyr)
                             s.txtb_wheld_prev_emplyr = currency(d.data.sp_annualtax_hdr_tbl_list2.wtax_prev_emplyr)
 
+                            ///s.txtb_non_tax_exmpt
                             s.txtb_ntx_basic_sal_mwe = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_basic_salary)
                             s.txtb_ntx_hol_pay_mwe = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_hol_pay_mwe)
                             s.txtb_ntx_ot_pay_mwe = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_ot_pay_mwe)
@@ -510,7 +511,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                             s.txtb_ntx_deminimis = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_de_minimis)
                             s.txtb_ntx_premiums = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_gsis_phic_hdmf)
                             s.txtb_ntx_salaries_oth = currency(d.data.sp_annualtax_hdr_tbl_list2.ntx_salaries_oth)
-
+                            ///s.txtb_non_tax_exmpt
 
 
                             s.txtb_txbl_basic_sal = currency(d.data.sp_annualtax_hdr_tbl_list2.txbl_basic_salary)

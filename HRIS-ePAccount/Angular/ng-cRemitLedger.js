@@ -169,7 +169,8 @@
                                 full["remittancetype_code"] == "06" ||
                                 full["remittancetype_code"] == "01" ||
                                 full["remittancetype_code"] == "07" ||
-                                full["remittancetype_code"] == "18" 
+                                full["remittancetype_code"] == "18" ||
+                                full["remittancetype_code"] == "19"
                             )
                             {
                                 printable = false;
@@ -855,6 +856,16 @@
                 , { report_name: "cryRemittance_Smry.rpt", report_descr: "Job Order Uniform Remittance Summary By Office" }
                 ];
         }
+        else if (s.datalistgrid[lst].remittancetype_code == "19") {
+            $('#lbl_dynamic_month').html("<b>Remittance Month:</b>");
+            $('#txtb_rpt_quarter').val($('#ddl_month option:selected').html());
+            s.reports =
+                [
+                { report_name: "cryRemittance_MEDICAL_ALLOWANCE.rpt", report_descr: "Medical Allowance Remittance" }
+                , { report_name: "cryRemittance_MEDICAL_ALLOWANCE.rpt", report_descr: "Medical Allowance Remittance (Reconciliation)" }
+                , { report_name: "cryRemittance_Smry.rpt", report_descr: "Medical Allowance Remittance  Summary By Office" }
+                ];
+        }
 
 
         $('#modalLabelSmall').html(s.datalistgrid[lst].remittancetype_descr + " REPORT OPTIONS");
@@ -935,7 +946,8 @@
                     data.remittancetype_code == "12" ||
                     data.remittancetype_code == "13" ||
                     data.remittancetype_code == "16" ||
-                    data.remittancetype_code == "17"
+                    data.remittancetype_code == "17" ||
+                    data.remittancetype_code == "19"
 
                 ) {
 
@@ -1010,12 +1022,13 @@
                 else if (data.remittancetype_code == "14") {
 
                     if (s.ddl_reports == "cryRemittance_SmryTax.rpt") {
-                        sp = "sp_remittance_TAX_smry_rep,p_remittance_ctrl_nbr," + data.remittance_ctrl_nbr;
+
+                         sp = "sp_remittance_TAX_smry_rep,p_remittance_ctrl_nbr," + data.remittance_ctrl_nbr;
 
                     }
                     else {
                         var parameters = "p_remittancetype_code," + "14" + ",p_employment_type," + data.employment_type + ",p_remit_year," + data.remittance_year + ",p_remit_month," + data.remittance_month + ",p_remittance_ctrl_nbr," + data.remittance_ctrl_nbr
-                        sp = "sp_monthly_remittance_tax_rep," + parameters;
+                         sp = "sp_monthly_remittance_tax_rep," + parameters;
 
                     }
                     ReportPath = "~/Reports/cryRemittanceOTHERS1/" + s.ddl_reports + "";
@@ -1318,6 +1331,13 @@
                     case "18":
                         url = "/cRemitLedgerOthers?id=18&title=" + s.datalistgrid[lst].remittancetype_descr;
                         break;
+                    case "19":
+                        url = "/cRemitLedgerOthers?id=18&title=" + s.datalistgrid[lst].remittancetype_descr;
+                        break;
+                    case "20":
+                        url = "/cRemitLedgerOthers?id=18&title=" + s.datalistgrid[lst].remittancetype_descr;
+                        break;
+
 
                 }
                 if (url != "") {
@@ -1482,6 +1502,7 @@
                     s.txtb_override_amount_ps   = "0.00";
                     s.txtb_payroll_amount       = "0.00";
                     s.txtb_uploaded_amount      = "0.00";
+                    s.txtb_mpl_lite_ln          = "0.00";
 
                     // **********************************************************
                     // **********************************************************
@@ -1547,7 +1568,8 @@
                     s.txtb_override_amount_gs   = d.data.data.override_amount_gs   
                     s.txtb_override_amount_ps   = d.data.data.override_amount_ps   
                     s.txtb_payroll_amount       = d.data.data.payroll_amount       
-                    s.txtb_uploaded_amount      = d.data.data.uploaded_amount      
+                    s.txtb_uploaded_amount      = d.data.data.uploaded_amount  
+                    s.txtb_mpl_lite_ln          = d.data.data.mpl_lite_ln  
 
 
 
@@ -1583,6 +1605,7 @@
                         + toDecimalFormat(d.data.data.p_other_loan1)  
                         + toDecimalFormat(d.data.data.p_other_loan2)  
                         + toDecimalFormat(d.data.data.p_other_loan3)  
+                        + toDecimalFormat(d.data.data.mpl_lite_ln)
 
                     total_uploaded = 
 
@@ -1605,7 +1628,8 @@
                             + toDecimalFormat(d.data.data.u_gsis_help)       
                             + toDecimalFormat(d.data.data.u_other_loan3)      
                             + toDecimalFormat(d.data.data.u_other_loan1)
-                            + toDecimalFormat(d.data.data.u_other_loan2)    
+                            + toDecimalFormat(d.data.data.u_other_loan2) 
+                            
 
                     total_override = 
                         toDecimalFormat(d.data.data.o_gsis_gs)

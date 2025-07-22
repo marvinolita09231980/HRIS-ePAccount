@@ -81,7 +81,7 @@
                         <div style="width:85.5%;float:right;">
                             <select class="form-control" id="ddl_employment_type" ng-model="ddl_employment_type" ng-change="SelectedEmploymentType_Change(ddl_employment_type)">
                                 <option value="">--Select Here--</option>
-                                <option ng-repeat="empl_type in employment_type_data" value="{{empl_type.employment_type}}">{{empl_type.employmenttype_description}}</option>
+                                <option ng-repeat="empl_type in employment_type_data" ng-if="empl_type.employment_type != 'PS'" value="{{empl_type.employment_type}}">{{empl_type.employmenttype_description}}</option>
                                 <option value="PR">PHIC Share Regular</option>
                                 <option value="PC">PHIC Share Casual</option>
                             </select>
@@ -95,7 +95,7 @@
                         <div style="width:70%;float:right;">
                             <select class="form-control" id="ddl_remittance_type" ng-model="ddl_remittance_type" ng-change="SelectedRemittanceType_Change(ddl_remittance_type)">
                                 <option value="">--Select Here--</option>
-                                <option ng-repeat="rm_type in remittance_type_data" value="{{rm_type.remittancetype_code}}">{{rm_type.remittancetype_descr}}</option>
+                                <option ng-repeat="rm_type in remittance_type_data"  value="{{rm_type.remittancetype_code}}">{{rm_type.remittancetype_descr}}</option>
                             </select>
                             <label id="lbl_ddl_remittance_type_req" class="lbl_required"></label>
                         </div>

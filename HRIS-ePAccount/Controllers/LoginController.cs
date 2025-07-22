@@ -4,6 +4,7 @@ using HRIS_ePAccount.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -61,8 +62,43 @@ namespace HRIS_ePAccount.Controllers
                 return Json(new { user = "", isLogin = 0 }, JsonRequestBehavior.AllowGet);
             }
         }
+
+        string GetMacAddress(string ipAddress)
+        {
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "arp",
+                    Arguments = "-a " + ipAddress,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+            process.Start();
+
+            string output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+
+            string[] lines = output.Split('\n');
+            foreach (var line in lines)
+            {
+                if (line.Contains(ipAddress))
+                {
+                    var parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length >= 2)
+                    {
+                        return parts[1]; // MAC address
+                    }
+                }
+            }
+            return "MAC Address Not Found";
+        }
+
         public ActionResult Login_Validation(string username, string password)
         {
+           
 
             var message = "";
             var success = 0;

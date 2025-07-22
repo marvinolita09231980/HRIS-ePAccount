@@ -190,10 +190,7 @@ namespace HRIS_ePAccount.Controllers
                 var dt1 = db_pacco.remittance_dtl_gsis_month_tbl.Where(a =>
                  a.remittance_ctrl_nbr == rcn &&
                  a.empl_id == empl_id &&
-                 a.voucher_nbr == vn
-                  &&
-                 a.payroll_month == payroll_month
-                 ).FirstOrDefault();
+                 a.voucher_nbr == vn).FirstOrDefault();
 
                 if (dt == null && dt1 == null)
                 {
@@ -748,7 +745,28 @@ namespace HRIS_ePAccount.Controllers
             {
                 db_pacco.Database.CommandTimeout = int.MaxValue;
                 List<sp_remittance_GSIS_rep_2_Result> collection = new List<sp_remittance_GSIS_rep_2_Result>();
-                var sp_remittance_GSIS_rep_2 = db_pacco.sp_remittance_GSIS_rep_2(um.remittance_ctrl_nbr, um.remittance_year, um.remittance_month).GroupBy(b => b.due_month).OrderBy(grouping => grouping.Max(m => m.due_month)).ToList();
+                var sp_remittance_GSIS_rep_2 = db_pacco.sp_remittance_GSIS_rep_2(um.remittance_ctrl_nbr, um.remittance_year, um.remittance_month).GroupBy(b => b.due_month).ToList();
+
+                return JSON(new { message = message, sp_remittance_GSIS_rep_2 }, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (DbEntityValidationException e)
+            {
+                message = DbEntityValidationExceptionError(e);
+
+                return JSON(new { message = message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public ActionResult ExtractToPhpExcel_voucheronly()
+        {
+            assignToModel();
+            var message = "";
+            try
+            {
+                db_pacco.Database.CommandTimeout = int.MaxValue;
+                List<sp_remittance_GSIS_rep_2_Result> collection = new List<sp_remittance_GSIS_rep_2_Result>();
+                var sp_remittance_GSIS_rep_2 = db_pacco.sp_remittance_GSIS_rep_voucher_only(um.remittance_ctrl_nbr, um.remittance_year, um.remittance_month).GroupBy(b => b.due_month).OrderBy(grouping => grouping.Max(m => m.due_month)).ToList();
 
                 return JSON(new { message = message, sp_remittance_GSIS_rep_2 }, JsonRequestBehavior.AllowGet);
 

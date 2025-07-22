@@ -147,7 +147,7 @@ namespace HRIS_ePAccount.Controllers
             string[] prevValues = Session["PreviousValuesonPage_cRemitLedger"].ToString().Split(new char[] { ',' });
             db_pacco.Database.CommandTimeout = int.MaxValue;
             var department_list = db_pacco.vw_departments_tbl_list.OrderBy(a => a.department_code).ToList();
-            var details = db_pacco.sp_remittance_ledger_info_HDMF(um.remittance_ctrl_nbr, "", ltr, v_opt, "", "").ToList();
+            var details = db_pacco.sp_remittance_ledger_info_HDMF_V2(um.remittance_ctrl_nbr, "", ltr, v_opt, "", "").ToList();
             var rs = db_pacco.remittance_hdr_tbl.Where(a => a.remittance_ctrl_nbr == um.remittance_ctrl_nbr).FirstOrDefault();
             return JSON(new { prevValues, department_list, details, remittance_status = rs.remittance_status, excelExportServer}, JsonRequestBehavior.AllowGet);
 

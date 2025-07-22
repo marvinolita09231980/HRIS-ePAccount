@@ -14,7 +14,6 @@ ng_HRD_App.run(function () {
 
 
     function get_page(id, table) {
-
         var nakit_an = false;
         var rowx = 0;
         $('#' + table + ' tr').each(function () {

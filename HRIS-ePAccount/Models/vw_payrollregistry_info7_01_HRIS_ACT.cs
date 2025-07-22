@@ -119,5 +119,15 @@ namespace HRIS_ePAccount.Models
         public Nullable<decimal> subsistence_pay { get; set; }
         public Nullable<decimal> laundry_pay { get; set; }
         public Nullable<decimal> wages_amt { get; set; }
+        public decimal other_ded_loan1 { get; set; }
+        public decimal other_ded_loan2 { get; set; }
+        public decimal other_ded_loan3 { get; set; }
+        public decimal other_ded_loan4 { get; set; }
+        public decimal other_ded_loan5 { get; set; }
+        public decimal other_ded_loan6 { get; set; }
+        public decimal other_ded_loan7 { get; set; }
+        public decimal other_ded_loan8 { get; set; }
+        public decimal other_ded_loan9 { get; set; }
+        public decimal other_ded_loan10 { get; set; }
     }
 }

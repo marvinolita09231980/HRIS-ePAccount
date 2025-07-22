@@ -95,7 +95,7 @@
                         </div>
                         <div class="col-lg-6">
                             <input id="txtb_empl_name" ng-show="isShowNameInput" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_empl_name" class="form-control" disabled />
-                            <select class="form-control field-select-sm" ng-show="isShowNameSelect" id="ddl_employee_name">
+                            <select class="form-control field-select-sm" ng-change="selectEmployee(ddl_employee_name)"  ng-show="isShowNameSelect" ng-model="ddl_employee_name" id="ddl_employee_name" >
                                 <option value="" selected>--Select Here--</option>
                                 <option ng-click="SelectEmployeeName(lst)" ng-repeat="lst in employeenames" value="{{lst.empl_id}}">{{lst.employee_name}}</option>
                             </select>
@@ -192,10 +192,15 @@
                         </div>
 
                         <div class="col-lg-2">
-
+                            
                             <select class="form-control text-center" id="ddl_w_held" ng-disabled="isDisabledWHeld" ng-model="ddl_w_held">
                                 <option value="0">0</option>
-                                <option ng-repeat="lst in w_held_data" value="{{lst.taxrate_percentage}}">{{lst.taxrate_percentage}}</option>
+                                <option value="3"> 3 Percent</option>
+                                <option value="5"> 5 Percent</option>
+                                <option value="10">10 Percent</option>
+                                <option value="15">15 Percent</option>
+                                <option value="1"> 1 Percent</option>
+                                @*<option ng-repeat="lst in w_held_data" value="{{lst.taxrate_percentage}}">{{lst.taxrate_percentage}}</option>*@
                             </select>
 
                         </div>
@@ -234,8 +239,12 @@
 
                             <select class="form-control text-center" id="ddl_b_tax" ng-disabled="isDisabledBTax" ng-model="ddl_b_tax">
                                 <option value="0">0</option>
-                                @*<option value="3">3</option>*@
-                                <option ng-repeat="lst in w_held_data" value="{{lst.taxrate_percentage}}">{{lst.taxrate_percentage}}</option>
+                                <option value="3"> 3 Percent</option>
+                                <option value="5"> 5 Percent</option>
+                                <option value="10">10 Percent</option>
+                                <option value="15">15 Percent</option>
+                                <option value="1"> 1 Percent</option>
+                                @*<option ng-repeat="lst in w_held_data" value="{{lst.taxrate_percentage}}">{{lst.taxrate_percentage}}</option>*@
                             </select>
 
                         </div>
@@ -272,7 +281,13 @@
 
                             <select class="form-control text-center" id="ddl_vat" ng-disabled="isDisabledVat" ng-model="ddl_vat">
                                 <option value="0">0</option>
-                                <option ng-repeat="lst in w_held_data" value="{{lst.taxrate_percentage}}">{{lst.taxrate_percentage}}</option>
+                                <option value="3"> 3 Percent</option>
+                                <option value="5"> 5 Percent</option>
+                                <option value="8"> 8 Percent</option>
+                                <option value="10">10 Percent</option>
+                                <option value="15">15 Percent</option>
+                                <option value="1"> 1 Percent</option>
+                                @*<option ng-repeat="lst in w_held_data" value="{{lst.taxrate_percentage}}">{{lst.taxrate_percentage}}</option>*@
                             </select>
 
                         </div>

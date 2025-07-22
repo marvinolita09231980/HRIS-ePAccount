@@ -641,7 +641,7 @@
                                     <div class="col-lg-12">
                                         <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle pull-right"> Other Actions <span class="caret"></span></button>
                                         <ul class="dropdown-menu pull-right">
-                                            @if (ViewBag.prevValues[3] == "JO" || ViewBag.prevValues[3]=="NE")
+                                            @if (ViewBag.prevValues[3] == "JO" || ViewBag.prevValues[3]=="NE" || ViewBag.prevValues[3] == "PS")
                                             {
                                                 <li><a ng-click="ExctractToExcel(@ViewBag.prevValues[0],@ViewBag.prevValues[1])">Extract Tax Report</a></li>
                                                 <li><a ng-click="ExctractToExcelDepartment(@ViewBag.prevValues[0],@ViewBag.prevValues[1])">Extract Data by Department</a></li>

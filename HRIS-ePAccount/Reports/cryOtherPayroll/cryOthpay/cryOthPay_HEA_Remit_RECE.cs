@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace HRIS_ePAccount.Reports.cryOtherPayroll.cryOthpay {
+namespace HRIS_ePayroll.Reports.cryOtherPayroll.cryOthpay {
     using System;
     using System.ComponentModel;
     using CrystalDecisions.Shared;
@@ -41,7 +41,7 @@ namespace HRIS_ePAccount.Reports.cryOtherPayroll.cryOthpay {
         
         public override string FullResourceName {
             get {
-                return "HRIS_ePAccount.Reports.cryOtherPayroll.cryOthpay.cryOthPay_HEA_Remit_RECE.rpt";
+                return "HRIS_ePayroll.Reports.cryOtherPayroll.cryOthpay.cryOthPay_HEA_Remit_RECE.rpt";
             }
             set {
                 // Do nothing

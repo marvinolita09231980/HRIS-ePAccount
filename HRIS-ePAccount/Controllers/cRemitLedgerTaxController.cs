@@ -81,7 +81,7 @@ namespace HRIS_ePAccount.Controllers
             employment_type = prevValues[3].ToString().Trim();
             remittance_type = prevValues[5].ToString().Trim();
             var department_list = db_pacco.vw_departments_tbl_list.ToList().OrderBy(a => a.department_code);
-            var listgrid = db_pacco.sp_remittance_ledger_info_TAX(remittance_ctrl_nbr, p_department_code, p_starts_letter, "", "").ToList();
+            var listgrid = db_pacco.sp_remittance_ledger_info_TAX_V2(remittance_ctrl_nbr, p_department_code, p_starts_letter, "", "").ToList();
             return JSON(new { prevValues, listgrid, department_list, excelExportServer}, JsonRequestBehavior.AllowGet);
         }
 

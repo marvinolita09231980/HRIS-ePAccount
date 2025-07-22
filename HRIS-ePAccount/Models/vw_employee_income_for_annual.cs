@@ -32,5 +32,7 @@ namespace HRIS_ePAccount.Models
         public decimal laundry_allw { get; set; }
         public decimal hazard_p { get; set; }
         public decimal loyalty_bonus { get; set; }
+        public Nullable<System.DateTime> period_from { get; set; }
+        public Nullable<System.DateTime> period_to { get; set; }
     }
 }

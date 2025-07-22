@@ -1449,8 +1449,17 @@
             s.ddl_reports = "cryRemittanceTAGUMCOOP.rpt"
         }
         if (s.remittance_type == "18") {
-            alert("jdasdsad")
+           
             s.ddl_reports = "cryRemittanceJO_UNIFORM.rpt"
+        }
+        if (s.remittance_type == "19") {
+
+            s.ddl_reports = "cryRemittance_MEDICAL_ALLOWANCE.rpt"
+        }
+
+        if (s.remittance_type == "20") {
+
+            s.ddl_reports = "cryRemittanceMortuary.rpt"
         }
 
        
@@ -1553,7 +1562,15 @@
         if (s.remittance_type == "18") {
             s.ddl_reports = "cryRemittanceJOUniform.rpt"
         }
-        
+
+        if (s.remittance_type == "19") {
+            s.ddl_reports = "cryRemittance_MEDICAL_ALLOWANCE.rpt"
+        }
+
+        if (s.remittance_type == "20") {
+            s.ddl_reports = "cryRemittanceMortuary.rpt"
+        }
+
         
         
 

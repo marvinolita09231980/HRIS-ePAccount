@@ -840,6 +840,19 @@ ng_HRD_App.controller("cRemitLedgerTax_ctrlr", function ($scope, $compile, $http
     //    })
 
     //}
+    s.getMedicalTypeCode = function (inputString) {
+        if (!inputString) return "";
+
+        const lower = inputString.toLowerCase();
+
+        if (lower.includes("medical regular")) {
+            return "MR";
+        } else if (lower.includes("medical casual")) {
+            return "MC";
+        } else {
+            return "";
+        }
+    };
 
     s.ExctractToExcel = function (year, month) {
         $('#loading_msg').html("Extracting data");
@@ -860,7 +873,7 @@ ng_HRD_App.controller("cRemitLedgerTax_ctrlr", function ($scope, $compile, $http
                             var remittance_month = d.data.listgrid[0].remittance_month
                             var remittance_empl_type = d.data.listgrid[0].employment_type
                             var listgrid = d.data.listgrid
-                       
+                            var remittance_descr = d.data.listgrid[0].remittance_descr
                             if (remittance_empl_type == "NE") {
                                 h.post(excelExportServer + "/api/export/bir-monthly-remittance-ne-extract", {
                                     data: listgrid
@@ -869,6 +882,8 @@ ng_HRD_App.controller("cRemitLedgerTax_ctrlr", function ($scope, $compile, $http
 
                                     // Check the response data
                                     if (response2.data) {
+                                        
+                                       
                                         // Create a Blob from the response data
                                         const csvBlob = new Blob([response2.data], { type: 'text/csv;charset=utf-8;' });
                                         // Generate a URL for the Blob
@@ -901,6 +916,12 @@ ng_HRD_App.controller("cRemitLedgerTax_ctrlr", function ($scope, $compile, $http
                                 });
                             }
                             else {
+                                console.log(remittance_descr)
+                                console.log(s.getMedicalTypeCode(remittance_descr))
+                                remittance_empl_type = s.getMedicalTypeCode(remittance_descr) == "" ? remittance_empl_type : s.getMedicalTypeCode(remittance_descr);
+                                console.log(remittance_empl_type)
+
+
                                 h.post(excelExportServer + "/api/export/bir-monthly-remittance-extract", {
                                     data: listgrid
                                 }, { responseType: 'arraybuffer' }
@@ -908,6 +929,8 @@ ng_HRD_App.controller("cRemitLedgerTax_ctrlr", function ($scope, $compile, $http
 
                                     // Check the response data
                                     if (response2.data) {
+
+                                        
                                         // Create a Blob from the response data
                                         const csvBlob = new Blob([response2.data], { type: 'text/csv;charset=utf-8;' });
                                         // Generate a URL for the Blob
