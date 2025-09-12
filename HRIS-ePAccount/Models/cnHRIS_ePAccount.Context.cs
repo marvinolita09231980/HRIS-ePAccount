@@ -4704,5 +4704,35 @@ namespace HRIS_ePAccount.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_remittance_ledger_info_HDMF_V2_Result>("sp_remittance_ledger_info_HDMF_V2", p_remittance_ctrl_nbrParameter, p_department_codeParameter, p_letterParameter, p_view_optionParameter, p_empl_idParameter, p_voucher_nbrParameter);
         }
+    
+        public virtual ObjectResult<sp_check_annualized_tax_dtl_Result> sp_check_annualized_tax_dtl(string p_payroll_year, string p_empl_id)
+        {
+            var p_payroll_yearParameter = p_payroll_year != null ?
+                new ObjectParameter("p_payroll_year", p_payroll_year) :
+                new ObjectParameter("p_payroll_year", typeof(string));
+    
+            var p_empl_idParameter = p_empl_id != null ?
+                new ObjectParameter("p_empl_id", p_empl_id) :
+                new ObjectParameter("p_empl_id", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_check_annualized_tax_dtl_Result>("sp_check_annualized_tax_dtl", p_payroll_yearParameter, p_empl_idParameter);
+        }
+    
+        public virtual ObjectResult<sp_annualtax_hdr_tbl_list_wtaxpmos_Result> sp_annualtax_hdr_tbl_list_wtaxpmos(string p_payroll_year, string p_employment_type, string p_letter)
+        {
+            var p_payroll_yearParameter = p_payroll_year != null ?
+                new ObjectParameter("p_payroll_year", p_payroll_year) :
+                new ObjectParameter("p_payroll_year", typeof(string));
+    
+            var p_employment_typeParameter = p_employment_type != null ?
+                new ObjectParameter("p_employment_type", p_employment_type) :
+                new ObjectParameter("p_employment_type", typeof(string));
+    
+            var p_letterParameter = p_letter != null ?
+                new ObjectParameter("p_letter", p_letter) :
+                new ObjectParameter("p_letter", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_annualtax_hdr_tbl_list_wtaxpmos_Result>("sp_annualtax_hdr_tbl_list_wtaxpmos", p_payroll_yearParameter, p_employment_typeParameter, p_letterParameter);
+        }
     }
 }

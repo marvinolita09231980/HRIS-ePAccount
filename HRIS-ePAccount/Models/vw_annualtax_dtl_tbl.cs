@@ -34,5 +34,6 @@ namespace HRIS_ePAccount.Models
         public Nullable<decimal> subsistence_allowance { get; set; }
         public Nullable<decimal> laundry_allowance { get; set; }
         public Nullable<decimal> wtax_amt { get; set; }
+        public Nullable<decimal> medical_allowance { get; set; }
     }
 }

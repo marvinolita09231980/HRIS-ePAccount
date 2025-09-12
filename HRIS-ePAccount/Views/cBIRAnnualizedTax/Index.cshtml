@@ -29,6 +29,35 @@
         padding-top: 0;
         height: 30px !important;
     }
+
+    #datalist_grid_checktaxes {
+        font-size: 11px; /* smaller font for the whole table */
+    }
+
+    #datalist_grid_checktaxes th {
+        font-size: 10px; /* header */
+    }
+    
+    #datalist_grid_checktaxes td {
+        font-size: 10px; /* body cells */
+    }
+    .payroll-summary table {
+        font-size: 11px;
+    }
+
+    .payroll-summary table > thead > tr > th,
+    .payroll-summary table > tbody > tr > td {
+        padding: 4px 6px;
+        vertical-align: middle;
+    }
+
+    .payroll-summary .table-summary td {
+        font-weight: bold;
+    }
+
+    .payroll-summary .highlight {
+        background-color: #f2dede; /* light red for emphasis */
+    }
 </style>
 <script src="~/Angular/ng-cBIRAnnualizedTax.js?v=3"></script>
 <!-- The Modal - Generating Report -->
@@ -849,15 +878,20 @@
 
                         <div class="row" style="margin-top:5px;">
                             <div class="col-sm-3">
-                                <div style="width:60%; float:left;">
-                                    <span class="pull-left font-bold" style="margin-top:9px;font-weight:bold;">Last Name Starts W/ :</span>
-                                </div>
+                                
 
-                                <div style="width:40%; float:right;">
-                                    <select class="form-control" id="ddl_letter" ng-model="ddl_letter" ng-change="SelectLetter(ddl_employment_type,ddl_year,ddl_letter)">
+                                <div>
+                                    <label class="checkbox-inline" style="margin-left:10px;">
+                                        <input type="checkbox" id="chk_show_descrep" style="width:25px; height:25px;" ng-click="FilterPageGridShowAction()">
+                                        <span class="pull-left font-bold" style="margin-top:3px;font-weight:bold;">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;Check for Descrepancy:&nbsp;&nbsp;
+                                            <span id="descrepancy_count" class="badge badge-danger badge-counter ng-binding" style="font-size:10px;margin-left:-3px"></span>
+                                        </span>
+                                    </label>
+                                    @*<select class="form-control" id="ddl_letter" ng-model="ddl_letter" ng-change="SelectLetter(ddl_employment_type,ddl_year,ddl_letter)">
                                         <option value="">--</option>
                                         <option ng-repeat="lst in alphabet_list track by $index" value="{{lst.id}}">{{lst.alpha_name}}</option>
-                                    </select>
+                                    </select>*@
                                 </div>
 
                             </div>
@@ -903,57 +937,320 @@
                                 }
 
                             </div>
-
-
-
-
                         </div>
-
-
-
-
                     </div>
 
                     <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#tab-11"><i class="fa fa-user"></i> Employee List</a></li>
-                        <li class=""><a data-toggle="tab" href="#tab-12"><i class="fa fa-briefcase"></i>Generation List</a></li>
+                        <li class="active"><a data-toggle="tab" href="#tab-11"><i class="fa fa-user"></i> Employee List
+                            </a>
+                        </li>
+                        <li class="" style="display:none;"><a data-toggle="tab" href="#tab-12"><i class="fa fa-user"></i>CHECK DETAILS</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-13"><i class="fa fa-briefcase"></i>Generation List</a></li>
                     </ul>
                     <div class="tab-content">
                         <div id="tab-11" class="tab-pane active">
                             <div class="full-height-scroll">
-                               
-                                    <table id="datalist_grid" class="table table-striped table-bordered table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th width="10%">ID NBR</th>
-                                                <th width="30%">EMPLOYEE NAME</th>
-                                                <th width="15%">TIN NBR</th>
-                                                <th width="15%">TAXABLE AMT.</th>
-                                                <th width="15%">TAX RATE</th>
-                                                <th width="15%">ACTIONS</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                               
+
+                                <table id="datalist_grid" class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        @*<tr>
+                                            <th width="10%">ID NBR</th>
+                                            <th width="30%">EMPLOYEE NAME</th>
+                                            <th width="15%">TIN NBR</th>
+                                            <th width="15%">TAXABLE AMT.</th>
+                                            <th width="15%">TAX RATE</th>
+                                            <th width="15%">ACTIONS</th>
+                                        </tr>*@
+
+                                        <tr>
+                                            <th>check_for_descrepancy</th>
+                                            <th>ID NBR</th>
+                                            <th width="150px">EMPLOYEE NAME</th>
+                                            <th>TXBL AMT.</th>
+                                            <th>JAN/FEB</th>
+                                            <th>MAR/APR</th>
+                                            <th>MAY/JUN</th>
+                                            <th>JUL/AUG</th>
+                                            <th>SEP/OCT</th>
+                                            <th>NOV/DEC</th>
+                                            <th width="10%">ACTIONS</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+
                             </div>
                         </div>
                         <div id="tab-12" class="tab-pane">
+
+                            <div class="container-fluid payroll-summary">
+                                <div class="table-responsive">
+                                        <table class="table table-bordered table-condensed">
+                                            <thead>
+                                                <tr class="success">
+                                                    <th colspan="3">{{tax_empl_id}}</th>
+                                                    <th colspan="4">{{tax_employee_name}}</th>
+                                                    <th colspan="4">{{tax_tin}}</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                                <tr class="success">
+                                                    <th>Voucher</th>
+                                                    <th>Period</th>
+                                                    <th>Code</th>
+                                                    <th>Description</th>
+                                                    <th>BASIC SAL</th>
+                                                    <th>PHIC SHARE</th>
+                                                    <th>HAZ</th>
+                                                    <th>SUBS</th>
+                                                    <th>OT</th>
+                                                    <th>OTH</th>
+                                                    <th>TAXABLE 13TH</th>
+                                                    <th>NONTAXABLE 13TH</th>
+                                                    <th>DE MINIMIS</th>
+                                                    <th>SAL & OTH</th>
+                                                    <th>NONTAXABLE OTH</th>
+                                                    <th>GSIS</th>
+                                                    <th>HDMF</th>
+                                                    <th>PHIC</th>
+                                                    <th>WTAX</th>
+                                                </tr>
+                                            </thead>
+
+
+                                            <tbody>
+
+                                                <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks !== 'TOTAL'">
+                                                    <td>{{l.voucher_nbr}}</td>
+                                                    <td>{{l.payroll_month}}</td>
+                                                    <td>{{l.payrolltemplate_code}}</td>
+                                                    <td>{{l.remarks}}</td>
+                                                    <td>{{fn_currency(l.basic_sal)}}</td>
+                                                    <td>{{fn_currency(l.phic_share)}}</td>
+                                                    <td>{{fn_currency(l.hazard_pay)}}</td>
+                                                    <td>{{fn_currency(l.subsistence_allowance)}}</td>
+                                                    <td>{{fn_currency(l.overtime)}}</td>
+                                                    <td>{{fn_currency(l.oth)}}</td>
+                                                    <td>{{fn_currency(l.taxable13th)}}</td>
+                                                    <td>{{fn_currency(l.nontaxable13th)}}</td>
+                                                    <td>{{fn_currency(l.deminimis)}}</td>
+                                                    <td>{{fn_currency(l.sal_oth)}}</td>
+                                                    <td>{{fn_currency(l.nontaxable_oth)}}</td>
+                                                    <td>{{fn_currency(l.gsis_ps)}}</td>
+                                                    <td>{{fn_currency(l.hdmf_ps)}}</td>
+                                                    <td>{{fn_currency(l.phic_ps)}}</td>
+                                                    <td>{{fn_currency(l.wtax_amt)}}</td>
+                                                </tr>
+                                                <tr class="success" ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'" style="font-weight: bold;">
+                                                    <td>{{l.voucher_nbr}}</td>
+                                                    <td>{{l.payroll_month}}</td>
+                                                    <td></td>
+                                                    <td>{{l.remarks}}</td>
+                                                    <td class="strong-border">{{fn_currency(l.basic_sal)}}</td>
+                                                    <td class="strong-border">{{fn_currency(l.phic_share)}}</td>
+                                                    <td class="strong-border">{{fn_currency(l.hazard_pay)}}</td>
+                                                    <td class="strong-border">{{fn_currency(l.subsistence_allowance)}}</td>
+                                                    <td class="strong-border">{{fn_currency(l.overtime)}}</td>
+                                                    <td class="strong-border">{{fn_currency(l.oth)}}</td>
+                                                    <td class="strong-border">{{fn_currency(l.taxable13th)}}</td>
+                                                    <td class="strong-border">{{fn_currency(l.nontaxable13th)}}</td>
+                                                    <td class="strong-border">{{fn_currency(l.deminimis)}}</td>
+                                                    <td class="strong-border">{{fn_currency(l.sal_oth)}}</td>
+                                                    <td class="strong-border">{{fn_currency(l.nontaxable_oth)}}</td>
+                                                    <td class="strong-border">{{fn_currency(l.gsis_ps)}}</td>
+                                                    <td class="strong-border">{{fn_currency(l.hdmf_ps)}}</td>
+                                                    <td class="strong-border">{{fn_currency(l.phic_ps)}}</td>
+                                                    <td>{{fn_currency(l.wtax_amt)}}</td>
+                                                </tr>
+
+
+                                            </tbody>
+                                        </table>
+                                </div>
+
+                                <!-- Summary Section -->
+                                <table class="table table-bordered table-summary">
+                                    <tbody>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>GROSS INCOME</td>
+                                            <td>{{fn_currency(l.gross_income)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>Basic Sal</td>
+                                            <td>{{fn_currency(l.basic_salary)}}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>NONTAXABLE INCOME</td>
+                                            <td>{{fn_currency(l.nontaxable_income)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>PHIC Share</td>
+                                            <td>{{fn_currency(l.phic_share)}}</td>
+                                            <td>-</td>
+                                        </tr>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>TAXABLE INCOME</td>
+                                            <td>{{fn_currency(l.taxable_income)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>Hazard</td>
+                                            <td>{{fn_currency(l.hazard_pay)}}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>TAX DUE</td>
+                                            <td>{{fn_currency(l.tax_due)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>Subs</td>
+                                            <td>{{fn_currency(l.subsistence_allowance)}}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>TAX WITHHELD</td>
+                                            <td>{{fn_currency(l.tax_withheld)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>Oth</td>
+                                            <td>{{fn_currency(l.oth)}}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>TAX PAYABLE TOTAL</td>
+                                            <td>{{fn_currency(l.tax_payable)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>OT</td>
+                                            <td>{{fn_currency(l.overtime)}}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td># OF INSTALLMENT</td>
+                                            <td>{{fn_currency(l.no_of_installment)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td style="border-top: 2px solid black;">TOTAL</td>
+                                            <td style="border-top: 2px solid black;" colspan="2">{{fn_currency(l.basic_salary + l.phic_share + l.hazard_pay + l.subsistence_allowance + l.oth + l.overtime)}}</td>
+                                        </tr>
+                                        <tr class="highlight" ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>TAX PAYABLE</td>
+                                            <td>{{fn_currency(l.tax_payable/l.no_of_installment)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td colspan="3"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <!-- Bottom Section -->
+                                <table class="table table-bordered table-summary">
+                                    <tbody>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>13th Month & Other</td>
+                                            <td>{{fn_currency(l.month13th_other)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>TAXABLE 13TH</td>
+                                            <td>{{fn_currency(l.taxable13th)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>De Minimis</td>
+                                            <td>{{fn_currency(l.DE_minimis)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td colspan="3"></td>
+                                        </tr>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>GSIS,HDMF,PHIC</td>
+                                            <td>{{fn_currency(l.gsis_hdmf_phic)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td colspan="3"></td>
+                                        </tr>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>Salaries & Oth</td>
+                                            <td>{{fn_currency(l.salaries_oth)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td colspan="3"></td>
+                                        </tr>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td style="border-top: 2px solid black;">TOTAL</td>
+                                            <td style="border-top: 2px solid black;">{{fn_currency(l.month13th_other + l.DE_minimis + l.gsis_hdmf_phic + l.salaries_oth)}}</td>
+                                            <td colspan="5"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Custom CSS for smaller rows/font -->
+                            <style>
+                                .payroll-summary table {
+                                    font-size: 11px;
+                                }
+
+                                    .payroll-summary table > thead > tr > th,
+                                    .payroll-summary table > tbody > tr > td {
+                                        padding: 4px 6px;
+                                        vertical-align: middle;
+                                    }
+
+                                .payroll-summary .table-summary td {
+                                    font-weight: bold;
+                                }
+
+                                .payroll-summary .highlight {
+                                    background-color: #f2dede; /* light red for emphasis */
+                                }
+                                .strong-border {
+                                    border-left: 2px solid #000 !important;
+                                    border-right: 2px solid #000 !important;
+                                }
+                            </style>
+
+
+                        </div>
+                        <div id="tab-13" class="tab-pane">
                             <div class="full-height-scroll">
-                                    <table id="datalist_grid_2" class="table table-striped table-bordered table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>DATE</th>
-                                                <th>START</th>
-                                                <th>END</th>
-                                                <th>STATUS</th>
-                                                <th>DESCRIPTION</th>
-                                                <th>RUN BY</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                               
+                                <table id="datalist_grid_2" class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>DATE</th>
+                                            <th>START</th>
+                                            <th>END</th>
+                                            <th>STATUS</th>
+                                            <th>DESCRIPTION</th>
+                                            <th>RUN BY</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+
                             </div>
                         </div>
                     </div>

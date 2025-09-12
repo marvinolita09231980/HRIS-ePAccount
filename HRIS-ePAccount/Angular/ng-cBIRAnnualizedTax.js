@@ -25,9 +25,13 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     s.allow_view         = false
     s.allow_edit_history = false
     s.excelExportServer = "";
-    
+    s.tax_empl_id = ""
+    s.tax_employee_name = ""
+    s.tax_tin = ""
     s.oTable = null;
     s.datalistgrid = null
+    s.datalistgrid_raw = []
+    s.sp_check_annualized_tax_dtl = []
     s.rowLen = "5"
     var sort_value = 1
     var sort_order = "asc"
@@ -42,11 +46,324 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         { id: 'y', alpha_name: 'Y' }, { id: 'z', alpha_name: 'Z' }
 
     ]
+
+
+
+    var init_table_data = function (par_data) {
+        s.datalistgrid = par_data;
+
+        s.oTable = $('#datalist_grid').dataTable(
+            {
+
+                data: s.datalistgrid,
+                stateSave: false,
+                sDom: 'rt<"bottom"p>',
+                pageLength: 5,
+                deferRender: true,
+                columns: [
+                    {
+                        data: "check_for_descrepancy",
+                        visible: false,   // not displayed
+                        searchable: true  // still searchable
+                    },
+                    {
+                        "mData": "empl_id", "mRender": function (data, type, full, row) {
+                            var taxable_warning = ""
+                            var hr_tax_rate_warning = ""
+                            if (full["taxable"] == true) {
+                                taxable_warning = "text-warning"
+                            } 
+
+                            if (full["tax_rate"] == full["hr_tax_rate"]) {
+                                hr_tax_rate_warning = "text-warning"
+                            } 
+                            return "<span class='btn-block text-left'>ID&nbsp;&nbsp;: " + data + "</span>" +
+                                "<span class='d-block text-left small " + taxable_warning + "'>AC TAX RATE :" + full["tax_rate"] + "%</span> <br>" +
+                                "<span class='d-block text-left small " + hr_tax_rate_warning + "'>HR TAX RATE :" + full["hr_tax_rate"] + "%</span>";
+                        }
+                    },
+                    {
+                        "mData": "employee_name",
+                        "mRender": function (data, type, full, row) {
+                            return "<span class='d-block text-left font-weight-bold'>" + data + "</span><br>" +
+                                "<span class='d-block text-left text-muted small'>TIN: " + full["account_id_nbr_ref"] + "</span>";
+                        }
+                    },
+                    {
+                        "mData": "annual_txbl_income", "mRender": function (data, type, full, row) {
+                            var retdata = currency(data)
+                            var retdata2 = currency(full["monthly_tax_due"])
+                            var retdata3 = currency(full["hr_tax_due"])
+                            var taxable_warning = ""
+                            var txblamt_warning = ""
+                            var hr_tax_due_warning = ""
+                            if (full["taxable"] == true) {
+                                taxable_warning = "text-warning"
+                                txblamt_warning = "text-warning"
+                            } 
+
+                            if (full["taxable"] == true) {
+                                if (full["cur_mo"] == 1) {
+                                    if (parseFloat(full["jan"]) > parseFloat(full["monthly_tax_due"])) {
+                                        taxable_warning = "text-danger"
+                                    }
+                                }
+                                else if (full["cur_mo"] == 2) {
+                                    if (parseFloat(full["feb"]) > parseFloat(full["monthly_tax_due"])) {
+                                        taxable_warning = "text-danger"
+                                    }
+                                }
+                                else if (full["cur_mo"] == 3) {
+                                    if (parseFloat(full["mar"]) > parseFloat(full["monthly_tax_due"])) {
+                                        taxable_warning = "text-danger"
+                                    }
+                                }
+                                else if (full["cur_mo"] == 4) {
+                                    if (parseFloat(full["apr"]) > parseFloat(full["monthly_tax_due"])) {
+                                        taxable_warning = "text-danger"
+                                    }
+                                }
+                                else if (full["cur_mo"] == 5) {
+                                    if (parseFloat(full["may"]) > parseFloat(full["monthly_tax_due"])) {
+                                        taxable_warning = "text-danger"
+                                    }
+                                }
+                                else if (full["cur_mo"] == 6) {
+                                    if (parseFloat(full["jun"]) > parseFloat(full["monthly_tax_due"])) {
+                                        taxable_warning = "text-danger"
+                                    }
+                                }
+                                else if (full["cur_mo"] == 7) {
+                                    if (parseFloat(full["july"]) > parseFloat(full["monthly_tax_due"])) {
+                                        taxable_warning = "text-danger"
+                                    }
+                                }
+                                else if (full["cur_mo"] == 8) {
+                                    if (parseFloat(full["aug"]) > parseFloat(full["monthly_tax_due"])) {
+                                        taxable_warning = "text-danger"
+                                    }
+                                }
+                                else if (full["cur_mo"] == 9) {
+                                    if (parseFloat(full["sep"]) > parseFloat(full["monthly_tax_due"])) {
+                                        taxable_warning = "text-danger"
+                                    }
+                                }
+                                else if (full["cur_mo"] == 10) {
+                                    if (parseFloat(full["oct"]) > parseFloat(full["monthly_tax_due"])) {
+                                        taxable_warning = "text-danger"
+                                    }
+                                }
+                                else if (full["cur_mo"] == 11) {
+                                    if (parseFloat(full["nov"]) > parseFloat(full["monthly_tax_due"])) {
+                                        taxable_warning = "text-danger"
+                                    }
+                                }
+                                else if (full["cur_mo"] == 12) {
+                                    if (parseFloat(full["dec"]) > parseFloat(full["monthly_tax_due"])) {
+                                        taxable_warning = "text-danger"
+                                    }
+                                }
+                            } 
+
+                            console.log(full["hr_tax_due"])
+
+                            if (full["monthly_tax_due"] != full["hr_tax_due"]) {
+                                hr_tax_due_warning = "text-danger"
+                            }
+
+                            return "<span class='d-block text-left " + txblamt_warning +"'>TXBL AMT: " + retdata + "</span><br>" +
+                                "<span class='d-block text-left small " + taxable_warning + "'>AC TAX DUE&nbsp;&nbsp;: " + retdata2 + "</span><br>" +
+                                   "<span class='d-block text-left small " + hr_tax_due_warning + "'>HR TAX DUE&nbsp;&nbsp;: " + retdata3 + "</span>";
+                        }
+
+                    },
+                    {
+                        "mData": "jan", "mRender": function (data, type, full, row) {
+                            var retdata = currency(data)
+                            var retdata2 = currency(full["feb"])
+                            var warning_jan = ""
+                            var warning_feb = ""
+                          
+                            if (full["check_for_descrepancy"] == true && (full["prev_mo"] == 1 || full["cur_mo"] == 1)) {
+                                warning_jan = "text-danger"
+                            }
+                            if (full["check_for_descrepancy"] == true && (full["prev_mo"] == 2 || full["cur_mo"] == 2)) {
+                                warning_feb = "text-danger"
+                            }
+                            return "<span class='btn-block text-left " + warning_jan +"'>JAN: " + retdata + "</span>" +
+                                "<span class='btn-block text-left " + warning_feb +"'>FEB&nbsp;: " + retdata2 + "</span>";
+                        }
+                    },
+                    
+                    {
+                        "mData": "mar", "mRender": function (data, type, full, row) {
+                            var retdata = currency(data)
+                            var retdata2 = currency(full["apr"])
+
+                            var warning_mar = ""
+                            var warning_apr = ""
+
+                            if (full["check_for_descrepancy"] == true && (full["prev_mo"] == 3 || full["cur_mo"] == 3)) {
+                                warning_mar = "text-danger"
+                            }
+                            if (full["check_for_descrepancy"] == true && (full["prev_mo"] == 4 || full["cur_mo"] == 4)) {
+                                warning_apr = "text-danger"
+                            }
+
+                            return "<span class='btn-block text-left " + warning_mar +"'>MAR: " + retdata + "</span>" +
+                                "<span class='btn-block text-left " + warning_apr +"'>APR&nbsp;: " + retdata2 + "</span>";
+                        }
+                    },
+                    {
+                        "mData": "may", "mRender": function (data, type, full, row) {
+                            var retdata = currency(data)
+                            var retdata2 = currency(full["jun"])
+
+                            var warning_may = ""
+                            var warning_jun = ""
+
+                            if (full["check_for_descrepancy"] == true && (full["prev_mo"] == 5 || full["cur_mo"] == 5)) {
+                                warning_may = "text-danger"
+                            }
+                            if (full["check_for_descrepancy"] == true && (full["prev_mo"] == 6 || full["cur_mo"] == 6)) {
+                                warning_jun = "text-danger"
+                            }
+
+                            return "<span class='btn-block text-left " + warning_may +"'>MAY: " + retdata + "</span>" +
+                                "<span class='btn-block text-left " + warning_jun +"'>JUN&nbsp;: " + retdata2 + "</span>";
+                        }
+                    },
+                    {
+                        "mData": "july", "mRender": function (data, type, full, row) {
+                            var retdata = currency(data)
+                            var retdata2 = currency(full["aug"])
+
+                            var warning_july = ""
+                            var warning_aug = ""
+                          
+                           
+                            if (full["check_for_descrepancy"] == true && (full["prev_mo"] == 7 || full["cur_mo"] == 7)) {
+                                warning_july = "text-danger"
+                            }
+                            if (full["check_for_descrepancy"] == true && (full["prev_mo"] == 8 || full["cur_mo"] == 8)) {
+                                warning_aug = "text-danger"
+                            }
+
+
+                            return "<span class='btn-block text-left " + warning_july +"'>JUL&nbsp;&nbsp;: " + retdata + "</span>" +
+                                "<span class='btn-block text-left " + warning_aug +"'>AUG: " + retdata2 + "</span>";
+                        }
+                    },
+                    
+                    {
+                        "mData": "sep", "mRender": function (data, type, full, row) {
+                            var retdata = currency(data)
+                            var retdata2 = currency(full["oct"])
+
+                            var warning_sep = ""
+                            var warning_oct = ""
+
+                            if (full["check_for_descrepancy"] == true && (full["prev_mo"] == 9 || full["cur_mo"] == 9)) {
+                                warning_sep = "text-danger"
+                            }
+                            if (full["check_for_descrepancy"] == true && (full["prev_mo"] == 10 || full["cur_mo"] == 10)) {
+                                warning_oct = "text-danger"
+                            }
+
+                            return "<span class='btn-block text-left " + warning_sep +"'>SEP&nbsp;: " + retdata + "</span>" +
+                                "<span class='btn-block text-left " + warning_oct +"'>OCT: " + retdata2 + "</span>";
+                        }
+                    },
+                    {
+                        "mData": "nov", "mRender": function (data, type, full, row) {
+                            var retdata = currency(data)
+                            var retdata2 = currency(full["dec"])
+
+                            var warning_nov = ""
+                            var warning_dec = ""
+
+                            if (full["check_for_descrepancy"] == true && (full["prev_mo"] == 11 || full["cur_mo"] == 11)) {
+                                warning_nov = "text-danger"
+                            }
+                            if (full["check_for_descrepancy"] == true && (full["prev_mo"] == 12 || full["cur_mo"] == 12)) {
+                                warning_dec = "text-danger"
+                            }
+
+                            return "<span class='btn-block text-left " + warning_nov +"'>NOV: " + retdata + "</span>" +
+                                "<span class='btn-block text-left " + warning_dec +"'>DEC&nbsp;: " + retdata2 + "</span>";
+                        }
+                    },
+                    //////
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (data, type, full, row) {
+
+                            return '<center><div class="btn-group tooltip-demo">'
+                                + '<button type="button" class="btn btn-warning btn-sm action" data-toggle="tooltip" data-placement="left" title="Show Details" ng-show="' + s.allow_view + '" ng-click="btn_show_action(' + row["row"] + ')" > '
+                                + '<i class="fa fa-plus"></i>' + '</button>'
+                                + '<button type="button" class="btn btn-primary btn-sm action" style="background-color:blueviolet;color:white;border:1px solid blueviolet;" data-toggle="tooltip" data-placement="left" title="Generate Annualized Tax" ng-show="' + s.allow_edit + '" ng-click="btn_generate_action(' + row["row"] + ')" > '
+                                + '<i id="generate_icon_dtl' + row["row"] + '" class="fa fa-clipboard"></i>' + '</button>'
+                                + '<button type="button" class="btn btn-info btn-sm action" data-toggle="tooltip" data-placement="left" title="Edit" ng-show="' + s.allow_edit + '" ng-click="btn_edit_action(' + row["row"] + ')" > '
+                                + '<i id="edit_icon' + row["row"] + '" class="fa fa-edit"></i>' + '</button>' 
+                                + '<button type="button" class="btn btn-warning btn-sm action" data-toggle="tooltip" data-placement="left" title="Check" ng-show="' + s.allow_edit + '" ng-click="btn_check_action(' + row["row"] + ')" > '
+                                + '<i id="check_icon' + row["row"] + '" class="fa fa-check"></i>' + '</button>' 
+                                +'<button type="button" class="btn btn-danger btn-sm action" data-toggle="tooltip" data-placement="left" title="Delete" ng-show="' + s.allow_delete + '" ng-click="btn_delete_action(' + row["row"] + ')" > '
+                                + '<i id="delete_icon' + row["row"] + '" class="fa fa-trash"></i>' +
+                                '<button type="button" class="btn btn-primary btn-sm action" data-toggle="tooltip" data-placement="left" title="Print" ng-show="' + s.allow_print + '" ng-click="btn_print_action(' + row["row"] + ')" > '
+                                + '<i class="fa fa-print"></i>' + '</button>' +
+                                '</button></div ></center >'
+
+                        }
+                    }
+
+                ],
+
+
+                "createdRow": function (row, data, index) {
+                    $(row).attr('id', index);
+                    $compile(row)($scope);  //add this to compile the DOM
+                }
+            });
+
+        s.oTable.fnSort([[1, 'asc']]);
+
+        $("div.toolbar").html('<b>Custom tool bar! Text/images etc.</b>');
+    }
+
     
+    s.FilterPageGridShowAction = function () {
+        var show_action = $('#chk_show_descrep').prop("checked") == true ? "Y" : "N"
+        if (show_action == "Y") {
+            var data = s.datalistgrid_raw.filter(function (d) {
+                return d.check_for_descrepancy == true
+            })
+
+            s.datalistgrid = data.refreshTable("datalist_grid", "");
+        }
+        else {
+            s.datalistgrid = s.datalistgrid_raw.refreshTable("datalist_grid", "");
+        }
+
+    }
+
+    s.btn_check_action = function (row) {
+        var data = s.datalistgrid[row]
+        var payroll_year = data.payroll_year
+        var empl_id = data.empl_id
+        h.post("../cBIRAnnualizedTax/Check_Tax", { par_payroll_year: payroll_year, par_empl_id: empl_id }).then(function (d) {
+            s.sp_check_annualized_tax_dtl = d.data.sp_check_annualized_tax_dtl
+            s.tax_empl_id = s.datalistgrid[row].empl_id
+            s.tax_employee_name = s.datalistgrid[row].employee_name
+            s.tax_tin = s.datalistgrid[row].account_id_nbr_ref
+            $('a[href="#tab-12"]').tab('show');
+
+        })
+    }
 	
     function init() {
 		
-		
+     //   init_table_data_checktaxes([]);
 
        $("#loading_data").modal({ keyboard: false, backdrop: "static" })
         RetrieveYear()
@@ -72,9 +389,16 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
             $("#datalist_grid").DataTable().search("").draw();
 
+         
+            //if (d.data.sp_annualtax_hdr_tbl_list_wtaxpmos.length > 0) {
+
+            //    s.datalist_grid_checktaxes = d.data.sp_annualtax_hdr_tbl_list_wtaxpmos;
+            //    s.oTable_checktaxes.fnAddData(s.datalist_grid_checktaxes );
+            //}
+
 
             if (d.data.sp_annualtax_hdr_tbl_list.length > 0) {
-
+                s.datalistgrid_raw = d.data.sp_annualtax_hdr_tbl_list
                 s.datalistgrid = d.data.sp_annualtax_hdr_tbl_list.refreshTable("datalist_grid",d.data.empl_id);
                 //s.oTable.fnClearTable();
                 //s.oTable.fnAddData(s.datalistgrid)
@@ -120,81 +444,84 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     }
     init()
 
-    var init_table_data = function (par_data) {
-        s.datalistgrid = par_data;
+    //var init_table_data = function (par_data) {
+    //    s.datalistgrid = par_data;
 
-        s.oTable = $('#datalist_grid').dataTable(
-            {
+    //    s.oTable = $('#datalist_grid').dataTable(
+    //        {
 
-                data: s.datalistgrid,
-                stateSave: false,
-                sDom: 'rt<"bottom"p>',
-                pageLength: 5,
-				deferRender:true,
-                columns: [
-                    {
-                        "mData": "empl_id", "mRender": function (data, type, full, row) {
-                            return "<div class='btn-block text-center'>" + data + "</div>";
-                        }
-                    },
-                    {
-                        "mData": "employee_name", "mRender": function (data, type, full, row) {
-                            return "<div class='btn-block text-left'>" + data + "</div>";
-                        }
-                    },
+    //            data: s.datalistgrid,
+    //            stateSave: false,
+    //            sDom: 'rt<"bottom"p>',
+    //            pageLength: 5,
+				//deferRender:true,
+    //            columns: [
+    //                {
+    //                    "mData": "empl_id", "mRender": function (data, type, full, row) {
+    //                        return "<div class='btn-block text-center'>" + data + "</div>";
+    //                    }
+    //                },
+    //                {
+    //                    "mData": "employee_name", "mRender": function (data, type, full, row) {
+    //                        return "<div class='btn-block text-left'>" + data + "</div>";
+    //                    }
+    //                },
 
-                    {
-                        "mData": "account_id_nbr_ref", "mRender": function (data, type, full, row) {
-                            return "<div class='btn-block text-center'>" + data + "</div>";
-                        }
-                    },
-                    {
-                        "mData": "annual_txbl_income", "mRender": function (data, type, full, row) {
-                            var retdata = currency(data)
-                            return "<div class='btn-block text-right'>" + retdata + "</div>";
-                        }
+    //                {
+    //                    "mData": "account_id_nbr_ref", "mRender": function (data, type, full, row) {
+    //                        return "<div class='btn-block text-center'>" + data + "</div>";
+    //                    }
+    //                },
+    //                {
+    //                    "mData": "annual_txbl_income", "mRender": function (data, type, full, row) {
+    //                        var retdata = currency(data)
+    //                        return "<div class='btn-block text-right'>" + retdata + "</div>";
+    //                    }
                         
-                    },
-                    {
-                        "mData": "tax_rate", "mRender": function (data, type, full, row) {
-                            return "<div class='btn-block text-center'>" + data + "%</div>";
-                        }
-                    },
-                    {
-                        "mData": null,
-                        "bSortable": false,
-                        "mRender": function (data, type, full, row)
-                        {
+    //                },
+    //                {
+    //                    "mData": "tax_rate", "mRender": function (data, type, full, row) {
+    //                        return "<div class='btn-block text-center'>" + data + "%</div>";
+    //                    }
+    //                },
 
-                            return '<center><div class="btn-group tooltip-demo">'
-                                + '<button type="button" class="btn btn-warning btn-sm action" data-toggle="tooltip" data-placement="left" title="Show Details" ng-show="' + s.allow_view + '" ng-click="btn_show_action(' + row["row"] + ')" > '
-                                + '<i class="fa fa-plus"></i>' + '</button>'
-                                + '<button type="button" class="btn btn-primary btn-sm action" style="background-color:blueviolet;color:white;border:1px solid blueviolet;" data-toggle="tooltip" data-placement="left" title="Generate Annualized Tax" ng-show="' + s.allow_edit + '" ng-click="btn_generate_action(' + row["row"] + ')" > '
-                                + '<i id="generate_icon_dtl' + row["row"] + '" class="fa fa-clipboard"></i>' + '</button>' 
-                                + '<button type="button" class="btn btn-info btn-sm action" data-toggle="tooltip" data-placement="left" title="Edit" ng-show="' + s.allow_edit + '" ng-click="btn_edit_action(' + row["row"] + ')" > '
-                                + '<i id="edit_icon' + row["row"] + '" class="fa fa-edit"></i>' + '</button>' +
-                                 '<button type="button" class="btn btn-danger btn-sm action" data-toggle="tooltip" data-placement="left" title="Delete" ng-show="' + s.allow_delete + '" ng-click="btn_delete_action(' + row["row"] + ')" > '
-                                + '<i id="delete_icon' + row["row"] + '" class="fa fa-trash"></i>' +
-                                '<button type="button" class="btn btn-primary btn-sm action" data-toggle="tooltip" data-placement="left" title="Print" ng-show="' + s.allow_print + '" ng-click="btn_print_action(' + row["row"] + ')" > '
-                                + '<i class="fa fa-print"></i>' + '</button>' +
-                                '</button></div ></center >'
+                  
+    //                {
+    //                    "mData": null,
+    //                    "bSortable": false,
+    //                    "mRender": function (data, type, full, row)
+    //                    {
 
-                        }
-                    }
+    //                        return '<center><div class="btn-group tooltip-demo">'
+    //                            + '<button type="button" class="btn btn-warning btn-sm action" data-toggle="tooltip" data-placement="left" title="Show Details" ng-show="' + s.allow_view + '" ng-click="btn_show_action(' + row["row"] + ')" > '
+    //                            + '<i class="fa fa-plus"></i>' + '</button>'
+    //                            + '<button type="button" class="btn btn-primary btn-sm action" style="background-color:blueviolet;color:white;border:1px solid blueviolet;" data-toggle="tooltip" data-placement="left" title="Generate Annualized Tax" ng-show="' + s.allow_edit + '" ng-click="btn_generate_action(' + row["row"] + ')" > '
+    //                            + '<i id="generate_icon_dtl' + row["row"] + '" class="fa fa-clipboard"></i>' + '</button>' 
+    //                            + '<button type="button" class="btn btn-info btn-sm action" data-toggle="tooltip" data-placement="left" title="Edit" ng-show="' + s.allow_edit + '" ng-click="btn_edit_action(' + row["row"] + ')" > '
+    //                            + '<i id="edit_icon' + row["row"] + '" class="fa fa-edit"></i>' + '</button>' +
+    //                             '<button type="button" class="btn btn-danger btn-sm action" data-toggle="tooltip" data-placement="left" title="Delete" ng-show="' + s.allow_delete + '" ng-click="btn_delete_action(' + row["row"] + ')" > '
+    //                            + '<i id="delete_icon' + row["row"] + '" class="fa fa-trash"></i>' +
+    //                            '<button type="button" class="btn btn-primary btn-sm action" data-toggle="tooltip" data-placement="left" title="Print" ng-show="' + s.allow_print + '" ng-click="btn_print_action(' + row["row"] + ')" > '
+    //                            + '<i class="fa fa-print"></i>' + '</button>' +
+    //                            '</button></div ></center >'
 
-                ],
+    //                    }
+    //                }
+
+    //            ],
 
 
-                "createdRow": function (row, data, index) {
-                    $(row).attr('id', index);
-                    $compile(row)($scope);  //add this to compile the DOM
-                }
-            });
+    //            "createdRow": function (row, data, index) {
+    //                $(row).attr('id', index);
+    //                $compile(row)($scope);  //add this to compile the DOM
+    //            }
+    //        });
 
-        s.oTable.fnSort([[1, 'asc']]);
+    //    s.oTable.fnSort([[1, 'asc']]);
 
-        $("div.toolbar").html('<b>Custom tool bar! Text/images etc.</b>');
-    }
+    //    $("div.toolbar").html('<b>Custom tool bar! Text/images etc.</b>');
+    //}
+
 
     var init_table_data2 = function (par_data) {
         s.datalistgrid2 = par_data;
@@ -280,6 +607,18 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         }
     }
 
+    s.fn_currency = function(d) {
+
+        var retdata = ""
+        if (d == null || d == "" || d == undefined) {
+            return retdata = "0.00"
+        }
+        else {
+            retdata = d.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+            return retdata
+        }
+    }
+
     function text_color(d) {
         if (d == "E") {
             return "text-danger"
@@ -302,7 +641,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
             }).then(function (d) {
                 if (d.data.sp_annualtax_hdr_tbl_list.length > 0) {
-
+                    s.datalistgrid_raw = d.data.sp_annualtax_hdr_tbl_list
                     s.datalistgrid = d.data.sp_annualtax_hdr_tbl_list;
                     s.oTable.fnClearTable();
                     s.oTable.fnAddData(s.datalistgrid)
@@ -330,6 +669,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
             }).then(function (d) {
                 if (d.data.sp_annualtax_hdr_tbl_list.length > 0) {
 
+                    s.datalistgrid_raw = d.data.sp_annualtax_hdr_tbl_list;
                     s.datalistgrid = d.data.sp_annualtax_hdr_tbl_list;
                     s.oTable.fnClearTable();
                     s.oTable.fnAddData(s.datalistgrid)
@@ -343,6 +683,15 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
             })
 
+    }
+
+    function set_descrepancy_count() {
+        var ndata = s.datalistgrid_raw.filter(function (d) {
+            return d.check_for_descrepancy == true
+        })
+        var ln = ndata.length;
+        var descrepancy_count = document.getElementById("descrepancy_count");
+        descrepancy_count.innerHTML = ln.toString()
     }
 
 
@@ -369,10 +718,11 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                     $("#btn_add").show()
                 }
 
-                if (d.data.sp_annualtax_hdr_tbl_list.length > 0)
+                if (d.data.sp_annualtax_hdr_tbl_list_wtaxpmos.length > 0)
                 {
-
-                    s.datalistgrid = d.data.sp_annualtax_hdr_tbl_list;
+                   
+                    s.datalistgrid_raw = d.data.sp_annualtax_hdr_tbl_list_wtaxpmos;
+                    s.datalistgrid = d.data.sp_annualtax_hdr_tbl_list_wtaxpmos;
                     s.oTable.fnClearTable();
                     s.oTable.fnAddData(s.datalistgrid)
                 }
@@ -390,6 +740,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                 else {
                     //s.gTable   
                 }
+                set_descrepancy_count()
                 $("#loading_data").modal("hide")
             })
 
@@ -549,6 +900,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                             calculatetotaladjst()
                             calculatetaxdiff()
 
+                            s.datalistgrid_raw = d.data.sp_annualtax_hdr_tbl_list;
                             s.datalistgrid = d.data.sp_annualtax_hdr_tbl_list.refreshTable("datalist_grid", s.datalistgrid[id_ss].empl_id);
                             //s.oTable.fnClearTable();
                             //s.oTable.fnAddData(s.datalistgrid)
@@ -601,7 +953,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
                         s.ishowsave = true;
                         //updateListGrid()
-                        if (d.data.sp_annualtax_hdr_tbl_list.length > 0)
+                        if (d.data.sp_annualtax_hdr_tbl_list2.length > 0)
                         {
                             s.txtb_monthly_tax_due      = currency(d.data.sp_annualtax_hdr_tbl_list2.monthly_tax_due)
                             s.txtb_employment_type      = d.data.sp_annualtax_hdr_tbl_list2.employmenttype_description
@@ -660,7 +1012,9 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                             calculatetotaladjst()
                             calculatetaxdiff()
 
-                            s.datalistgrid = d.data.sp_annualtax_hdr_tbl_list;
+                            s.datalistgrid_raw = d.data.sp_annualtax_hdr_tbl_list2
+
+                            s.datalistgrid = d.data.sp_annualtax_hdr_tbl_list2;
                             s.oTable.fnClearTable();
                             s.oTable.fnAddData(s.datalistgrid)
                         }
@@ -702,7 +1056,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
                     if (d.data.message == "success")
                     {
-
+                        s.datalistgrid_raw = d.data.sp_annualtax_hdr_tbl_list
                         s.datalistgrid = d.data.sp_annualtax_hdr_tbl_list
                         s.oTable.fnClearTable();
                         s.oTable.fnAddData(s.datalistgrid);
@@ -740,6 +1094,34 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                 ,par_sort_value     : sort_value
                 ,par_sort_order     : sort_order
                 ,par_position       : s.datalistgrid[id_ss].position_title1
+            }).then(function (d) {
+
+                url = "/cBIRAnnualizedTaxDetails";
+                window.location.replace(url);
+            })
+
+    }
+
+    s.btn_show_action2 = function (id_ss) {
+        var table = $('#datalist_grid_checktaxes').DataTable();
+        var info = table.page.info();
+        var url = "";
+        h.post("../cBIRAnnualizedTax/PreviousValuesonPage_cBIRAnnualizedTax",
+            {
+
+                par_year: $("#ddl_year option:selected").val()
+                , par_tax_due: s.datalist_grid_checktaxes[id_ss].monthly_tax_due
+                , par_tax_rate: s.datalist_grid_checktaxes[id_ss].tax_rate
+                , par_empl_id: s.datalist_grid_checktaxes[id_ss].empl_id
+                , par_emp_type: $("#ddl_employment_type option:selected").val()
+                , par_emp_type_descr: s.datalist_grid_checktaxes[id_ss].employmenttype_description
+                , par_letter: $("#ddl_letter option:selected").val()
+                , par_show_entries: $("#ddl_show_entries option:selected").val()
+                , par_page_nbr: info.page
+                , par_search: s.search_box
+                , par_sort_value: sort_value
+                , par_sort_order: sort_order
+                , par_position: s.datalist_grid_checktaxes[id_ss].position_title1
             }).then(function (d) {
 
                 url = "/cBIRAnnualizedTaxDetails";
@@ -1104,6 +1486,8 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
             ,par_action     : s.isAction
         }).then(function (d) {
 
+            console.log(s.datalistgrid)
+
             if (d.data.message == "success")
             {
                 $("#main_modal").modal("show")
@@ -1190,6 +1574,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
 
                 if (d.data.sp_annualtax_hdr_tbl_list != null) {
+                    s.datalistgrid_raw = d.data.sp_annualtax_hdr_tbl_list
                     s.datalistgrid.push(d.data.sp_annualtax_hdr_tbl_list)
                     s.oTable.fnClearTable();
                     s.oTable.fnAddData(s.datalistgrid)
@@ -1208,6 +1593,139 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
             }
             })
         
+    }
+
+
+    s.btn_edit_action2 = function (id_ss) {
+
+        $("#btn_save").removeClass("fa fa-spinner fa-spin");
+        $("#btn_save").addClass("fa fa-save");
+
+        $("#edit_icon" + id_ss).removeClass("fa fa-edit");
+        $("#edit_icon" + id_ss).addClass("fa fa-spinner fa-spin");
+
+        $("#btn_generate").hide()
+        s.isShowNameSelect = false;
+        s.isShowNameInput = true;
+        s.ishowsave = true;
+        index_update = id_ss
+        clearentry()
+        s.isAction = "EDIT"
+        s.ModalTitle = "Edit This Record"
+        s.txtb_employment_type_val = s.datalist_grid_checktaxes[id_ss].employment_type
+        s.txtb_empl_name = s.datalist_grid_checktaxes[id_ss].employee_name
+        s.txtb_empl_id = s.datalist_grid_checktaxes[id_ss].empl_id
+        s.txtb_position = s.datalist_grid_checktaxes[id_ss].position_title1
+
+        h.post("../cBIRAnnualizedTax/CheckData", {
+              par_payroll_year: $("#ddl_year option:selected").val()
+            , par_empType: s.txtb_employment_type_val
+            , par_letter: $("#ddl_letter option:selected").val()
+            , par_empl_id: s.datalist_grid_checktaxes[id_ss].empl_id
+            , par_action: s.isAction
+        }).then(function (d) {
+
+            if (d.data.message == "success") {
+                $("#main_modal").modal("show")
+
+
+                $("#edit_icon" + id_ss).removeClass("fa fa-spinner fa-spin");
+                $("#edit_icon" + id_ss).addClass("fa fa-edit");
+                var actual_counter = parseInt(d.data.sp_get_actual_tax_counter[0].actual_counter)
+                if (actual_counter < 0) {
+                    actual_counter = 0
+                }
+
+                s.txtb_no_install = actual_counter
+                s.txtb_monthly_tax_due = currency(s.datalist_grid_checktaxes[id_ss].monthly_tax_due)
+                s.txtb_employment_type = s.datalist_grid_checktaxes[id_ss].employmenttype_description
+                s.txtb_monthly_tax_rate = currency(s.datalist_grid_checktaxes[id_ss].tax_rate)
+
+                s.txtb_add_txbl_inc_prst = currency(s.datalist_grid_checktaxes[id_ss].addl_txbl_comp_prsnt)
+
+                s.txtb_annual_tax_due = currency(s.datalist_grid_checktaxes[id_ss].annual_tax_due)
+                s.txtb_wheld_prst_emplyr = currency(s.datalist_grid_checktaxes[id_ss].wtax_prsnt_emplyr)
+                s.txtb_wheld_prev_emplyr = currency(s.datalist_grid_checktaxes[id_ss].wtax_prev_emplyr)
+
+                s.txtb_ntx_basic_sal_mwe = currency(s.datalist_grid_checktaxes[id_ss].ntx_basic_salary)
+                s.txtb_ntx_hol_pay_mwe = currency(s.datalist_grid_checktaxes[id_ss].ntx_hol_pay_mwe)
+                s.txtb_ntx_ot_pay_mwe = currency(s.datalist_grid_checktaxes[id_ss].ntx_ot_pay_mwe)
+                s.txtb_ntx_night_diff_mwe = currency(s.datalist_grid_checktaxes[id_ss].ntx_night_diff_mwe)
+                s.txtb_ntx_hzrd_pay_mwe = currency(s.datalist_grid_checktaxes[id_ss].ntx_hzrd_pay_mwe)
+                s.txtb_ntx_13th_month = currency(s.datalist_grid_checktaxes[id_ss].ntx_13th_14th)
+                s.txtb_ntx_deminimis = currency(s.datalist_grid_checktaxes[id_ss].ntx_de_minimis)
+                s.txtb_ntx_premiums = currency(s.datalist_grid_checktaxes[id_ss].ntx_gsis_phic_hdmf)
+                s.txtb_ntx_salaries_oth = currency(s.datalist_grid_checktaxes[id_ss].ntx_salaries_oth)
+
+
+
+                s.txtb_txbl_basic_sal = currency(s.datalist_grid_checktaxes[id_ss].txbl_basic_salary)
+                s.txtb_txbl_ra = currency(s.datalist_grid_checktaxes[id_ss].txbl_representation)
+                s.txtb_txbl_ta = currency(s.datalist_grid_checktaxes[id_ss].txbl_transportation)
+                s.txtb_txbl_cola = currency(s.datalist_grid_checktaxes[id_ss].txbl_cola)
+                s.txtb_txbl_fxd_hsng_allo = currency(s.datalist_grid_checktaxes[id_ss].txbl_fh_allowance)
+                s.txtb_txbl_othA = currency(s.datalist_grid_checktaxes[id_ss].txbl_otherA)
+                s.txtb_txbl_othB = currency(s.datalist_grid_checktaxes[id_ss].txbl_otherB)
+
+
+                s.txbl_sup_com = currency(s.datalist_grid_checktaxes[id_ss].sup_commission)
+                s.txtb_sup_proft_s = currency(s.datalist_grid_checktaxes[id_ss].sup_prof_sharing)
+                s.txtb_sup_dir_fee = currency(s.datalist_grid_checktaxes[id_ss].sup_fi_drctr_fees)
+                s.txtb_sup_13_oth = currency(s.datalist_grid_checktaxes[id_ss].sup_13th_14th)
+                s.txtb_sup_hzrd_pay = currency(s.datalist_grid_checktaxes[id_ss].sup_hzrd_pay)
+                s.txtb_sup_ot_pay = currency(s.datalist_grid_checktaxes[id_ss].sup_ot_pay)
+                s.txtb_sup_othA = currency(s.datalist_grid_checktaxes[id_ss].sup_otherA)
+                s.txtb_sup_othB = currency(s.datalist_grid_checktaxes[id_ss].sup_otherB)
+                $("#ddl_employer_type").val(s.datalist_grid_checktaxes[id_ss].employer_type)
+                $("#ddl_subs_type").val(s.datalist_grid_checktaxes[id_ss].substituted)
+                s.txtb_foreign_add = s.datalist_grid_checktaxes[id_ss].foreign_address
+                s.txtb_stat_daily = currency(s.datalist_grid_checktaxes[id_ss].stat_daily_rate)
+                s.txtb_stat_monthly = currency(s.datalist_grid_checktaxes[id_ss].stat_monthly_rate)
+                //s.chk_min_wage              = s.datalistgrid[id_ss].min_wage_earner
+                $("#ddl_wage_earner").val(s.datalist_grid_checktaxes[id_ss].min_wage_earner.toString().toUpperCase())
+                s.txtb_tin_prev = s.datalist_grid_checktaxes[id_ss].tin_employer_prev
+                s.txtb_empl_name_prev = s.datalist_grid_checktaxes[id_ss].employer_name_prev
+                s.txtb_address_prev = s.datalist_grid_checktaxes[id_ss].employer_add_prev
+                s.txtb_zip_prev = s.datalist_grid_checktaxes[id_ss].employer_zip_prev
+                calculatetaxable()
+                calculatenontaxable()
+                calculatetaxable_supplementary()
+                calculategrossincome()
+                calculatecompincomepresent()
+                calculategrosstxblincome()
+                calculatetotaladjst()
+                calculatetaxdiff()
+
+            }
+
+            else {
+                swal("Unable to Update, Data has been deleted by other user/s!", { icon: "warning", });
+                var tname = "oTable_checktaxes";
+
+                var id = s[tname][0].id;
+                ////var page = $("#" + id).DataTable().page.info().page
+
+                s[tname].fnDeleteRow(index_update, null, true);
+                s.datalist_grid_checktaxes = DataTable_data(tname)
+
+
+                if (d.data.sp_annualtax_hdr_tbl_list != null) {
+                    s.datalist_grid_checktaxes.push(d.data.sp_annualtax_hdr_tbl_list)
+                    s.oTable_checktaxes.fnClearTable();
+                    s.oTable_checktaxes.fnAddData(s.datalist_grid_checktaxes)
+                }
+
+                else {
+                    s.oTable_checktaxes.fnClearTable();
+                    s.oTable_checktaxes.fnAddData(s.datalist_grid_checktaxes)
+                }
+
+                $("#main_modal").modal("hide")
+
+
+            }
+        })
+
     }
 
     ////this fucntion is called after refreshTable to return to the current dataTable page
@@ -1436,7 +1954,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         var total_gross = 0;
 
         total_gross = 
-            parseFloat(s.txtb_ntx_total.replace(/,/g, ''))
+          parseFloat(s.txtb_ntx_total.replace(/,/g, ''))
         + parseFloat(s.txtb_txbl_total.replace(/,/g, ''))
         + parseFloat(s.txtb_sup_total.replace(/,/g, ''))
 

@@ -547,6 +547,9 @@
     <Compile Include="Models\sp_annualtax_hdr_tbl_list_wactcounter_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_annualtax_hdr_tbl_list_wtaxpmos_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_annualtax_hdr_tbl_rep_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
@@ -584,6 +587,9 @@
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_ca_vouchers_list_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_check_annualized_tax_dtl_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_check_voucher_nbr_Result.cs">

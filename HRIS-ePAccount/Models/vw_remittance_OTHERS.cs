@@ -35,5 +35,7 @@ namespace HRIS_ePAccount.Models
         public string payroll_registry_nbr { get; set; }
         public string payroll_year { get; set; }
         public string payroll_month { get; set; }
+        public Nullable<decimal> medical_allowance { get; set; }
+        public Nullable<decimal> mortuary { get; set; }
     }
 }

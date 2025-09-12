@@ -129,8 +129,12 @@ namespace HRIS_ePAccount.Controllers
             }
 
             //HttpContext.Session["sp_annualtax_hdr_tbl_list"] = sp_annualtax_hdr_tbl_list;
-            List<sp_annualtax_hdr_tbl_list_Result> sp_annualtax_hdr_tbl_list = new List<sp_annualtax_hdr_tbl_list_Result>();
-            
+           
+            List<sp_annualtax_hdr_tbl_list_wtaxpmos_Result> sp_annualtax_hdr_tbl_list = new List<sp_annualtax_hdr_tbl_list_wtaxpmos_Result>();
+
+           
+
+
 
             if (Session["PreviousValuesonPage_cBIRAnnualizedTax"] == null)
             {
@@ -163,13 +167,122 @@ namespace HRIS_ePAccount.Controllers
                 int sort_value      = Convert.ToInt32(PreviousValuesonPage_cPayRegistry[10].ToString().Trim());
                 string sort_order   = PreviousValuesonPage_cPayRegistry[11].ToString().Trim();
 
-                sp_annualtax_hdr_tbl_list = db_pacco.sp_annualtax_hdr_tbl_list(ddl_year, ddl_emp_type, ddl_letter).ToList();
 
+                using (SqlConnection connection = new SqlConnection(constring))
+                {
+                    connection.Open();
 
+                    using (SqlCommand command = new SqlCommand(@"
+                        SET TEXTSIZE 2147483647;
+                        SET LANGUAGE us_english;
+                        SET DATEFORMAT mdy;
+                        SET DATEFIRST 7;
+                        SET LOCK_TIMEOUT -1;
+                        SET QUOTED_IDENTIFIER ON;
+                        SET ARITHABORT ON;
+                        SET ANSI_NULL_DFLT_ON ON;
+                        SET ANSI_WARNINGS ON;
+                        SET ANSI_PADDING ON;
+                        SET ANSI_NULLS ON;
+                        SET CONCAT_NULL_YIELDS_NULL ON;
+                        SET TRANSACTION ISOLATION LEVEL READ COMMITTED;", connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
 
+                    using (var conn = new SqlConnection(constring))
+                    using (var cmd = new SqlCommand("sp_annualtax_hdr_tbl_list_wtaxpmos", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@p_payroll_year", SqlDbType.VarChar, 4) { Value = ddl_year });
+                        cmd.Parameters.Add(new SqlParameter("@p_employment_type", SqlDbType.VarChar, 2) { Value = ddl_emp_type });
+                        cmd.Parameters.Add(new SqlParameter("@p_letter", SqlDbType.VarChar, 1) { Value = "" });
 
-                return JSON(new { empType, sp_annualtax_hdr_tbl_list, ddl_year, empl_id, ddl_emp_type, ddl_letter, show_entries, page_value, search_value, sort_value, sort_order, um, excelExportServer}, JsonRequestBehavior.AllowGet);
+                        conn.Open();
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var r = new sp_annualtax_hdr_tbl_list_wtaxpmos_Result
+                                {
+                                    payroll_year = reader["payroll_year"] as string,
+                                    empl_id = reader["empl_id"] as string,
+                                    employee_name = reader["employee_name"] as string,
+                                    employment_type = reader["employment_type"] as string,
+                                    account_id_nbr_ref = reader["account_id_nbr_ref"] as string,
+                                    employmenttype_description = reader["employmenttype_description"] as string,
+                                    position_title1 = reader["position_title1"] as string,
+                                    addl_txbl_comp_prsnt = reader["addl_txbl_comp_prsnt"] as decimal?,
+                                    annual_tax_due = reader["annual_tax_due"] as decimal?,
+                                    wtax_prsnt_emplyr = reader["wtax_prsnt_emplyr"] as decimal?,
+                                    wtax_prev_emplyr = reader["wtax_prev_emplyr"] as decimal?,
+                                    ntx_basic_salary = reader["ntx_basic_salary"] as decimal?,
+                                    ntx_hol_pay_mwe = reader["ntx_hol_pay_mwe"] as decimal?,
+                                    ntx_ot_pay_mwe = reader["ntx_ot_pay_mwe"] as decimal?,
+                                    ntx_night_diff_mwe = reader["ntx_night_diff_mwe"] as decimal?,
+                                    ntx_hzrd_pay_mwe = reader["ntx_hzrd_pay_mwe"] as decimal?,
+                                    ntx_13th_14th = reader["ntx_13th_14th"] as decimal?,
+                                    ntx_de_minimis = reader["ntx_de_minimis"] as decimal?,
+                                    ntx_gsis_phic_hdmf = reader["ntx_gsis_phic_hdmf"] as decimal?,
+                                    ntx_salaries_oth = reader["ntx_salaries_oth"] as decimal?,
+                                    txbl_basic_salary = reader["txbl_basic_salary"] as decimal?,
+                                    txbl_representation = reader["txbl_representation"] as decimal?,
+                                    txbl_transportation = reader["txbl_transportation"] as decimal?,
+                                    txbl_cola = reader["txbl_cola"] as decimal?,
+                                    txbl_fh_allowance = reader["txbl_fh_allowance"] as decimal?,
+                                    txbl_otherA = reader["txbl_otherA"] as decimal?,
+                                    txbl_otherB = reader["txbl_otherB"] as decimal?,
+                                    sup_commission = reader["sup_commission"] as decimal?,
+                                    sup_prof_sharing = reader["sup_prof_sharing"] as decimal?,
+                                    sup_fi_drctr_fees = reader["sup_fi_drctr_fees"] as decimal?,
+                                    sup_13th_14th = reader["sup_13th_14th"] as decimal?,
+                                    sup_hzrd_pay = reader["sup_hzrd_pay"] as decimal?,
+                                    sup_ot_pay = reader["sup_ot_pay"] as decimal?,
+                                    sup_otherA = reader["sup_otherA"] as decimal?,
+                                    sup_otherB = reader["sup_otherB"] as decimal?,
+                                    annual_txbl_income = reader["annual_txbl_income"] as decimal?,
+                                    annual_tax_wheld = reader["annual_tax_wheld"] as decimal?,
+                                    monthly_tax_due = reader["monthly_tax_due"] as decimal?,
+                                    tax_rate = reader["tax_rate"] as decimal?,
+                                    employer_type = reader["employer_type"] as string,
+                                    foreign_address = reader["foreign_address"] as string,
+                                    stat_daily_rate = reader["stat_daily_rate"] as decimal?,
+                                    stat_monthly_rate = reader["stat_monthly_rate"] as decimal?,
+                                    min_wage_earner = reader["min_wage_earner"] as bool?,
+                                    tin_employer_prev = reader["tin_employer_prev"] as string,
+                                    employer_name_prev = reader["employer_name_prev"] as string,
+                                    employer_add_prev = reader["employer_add_prev"] as string,
+                                    employer_zip_prev = reader["employer_zip_prev"] as string,
+                                    remarks = reader["remarks"] as string,
+                                    substituted = reader["substituted"] as string,
+                                    jan = reader["jan"] as decimal?,
+                                    feb = reader["feb"] as decimal?,
+                                    mar = reader["mar"] as decimal?,
+                                    apr = reader["apr"] as decimal?,
+                                    may = reader["may"] as decimal?,
+                                    jun = reader["jun"] as decimal?,
+                                    july = reader["july"] as decimal?,
+                                    aug = reader["aug"] as decimal?,
+                                    sep = reader["sep"] as decimal?,
+                                    oct = reader["oct"] as decimal?,
+                                    nov = reader["nov"] as decimal?,
+                                    dec = reader["dec"] as decimal?,
+                                    check_for_descrepancy = reader["check_for_descrepancy"] as bool?,
+                                    cur_mo = reader["cur_mo"] as int?,
+                                    prev_mo = reader["prev_mo"] as int?,
+                                    taxable = reader["taxable"] as bool?
+                                };
 
+                                sp_annualtax_hdr_tbl_list.Add(r);
+
+                            }
+                        }
+                    }
+
+                    connection.Close();
+                }
+
+                return JSON(new { empType, ddl_year, empl_id, ddl_emp_type, ddl_letter, show_entries, page_value, search_value, sort_value, sort_order, um, excelExportServer, sp_annualtax_hdr_tbl_list }, JsonRequestBehavior.AllowGet);
 
             }
 
@@ -382,9 +495,121 @@ namespace HRIS_ePAccount.Controllers
 
                     connection.Close();
                 }
-                //db_pacco.SaveChanges();
 
-                var sp_annualtax_hdr_tbl_list  = db_pacco.sp_annualtax_hdr_tbl_list(par_payroll_year, par_employment, par_letter).ToList();
+                List<sp_annualtax_hdr_tbl_list_wtaxpmos_Result> sp_annualtax_hdr_tbl_list = new List<sp_annualtax_hdr_tbl_list_wtaxpmos_Result>();
+                using (SqlConnection connection = new SqlConnection(constring))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(@"
+                        SET TEXTSIZE 2147483647;
+                        SET LANGUAGE us_english;
+                        SET DATEFORMAT mdy;
+                        SET DATEFIRST 7;
+                        SET LOCK_TIMEOUT -1;
+                        SET QUOTED_IDENTIFIER ON;
+                        SET ARITHABORT ON;
+                        SET ANSI_NULL_DFLT_ON ON;
+                        SET ANSI_WARNINGS ON;
+                        SET ANSI_PADDING ON;
+                        SET ANSI_NULLS ON;
+                        SET CONCAT_NULL_YIELDS_NULL ON;
+                        SET TRANSACTION ISOLATION LEVEL READ COMMITTED;", connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+
+                    using (var conn = new SqlConnection(constring))
+                    using (var cmd = new SqlCommand("sp_annualtax_hdr_tbl_list_wtaxpmos", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@p_payroll_year", SqlDbType.VarChar, 4) { Value = par_payroll_year });
+                        cmd.Parameters.Add(new SqlParameter("@p_employment_type", SqlDbType.VarChar, 2) { Value = par_employment});
+                        cmd.Parameters.Add(new SqlParameter("@p_letter", SqlDbType.VarChar, 1) { Value = "" });
+
+                        conn.Open();
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var r = new sp_annualtax_hdr_tbl_list_wtaxpmos_Result
+                                {
+                                    payroll_year = reader["payroll_year"] as string,
+                                    empl_id = reader["empl_id"] as string,
+                                    employee_name = reader["employee_name"] as string,
+                                    employment_type = reader["employment_type"] as string,
+                                    account_id_nbr_ref = reader["account_id_nbr_ref"] as string,
+                                    employmenttype_description = reader["employmenttype_description"] as string,
+                                    position_title1 = reader["position_title1"] as string,
+                                    addl_txbl_comp_prsnt = reader["addl_txbl_comp_prsnt"] as decimal?,
+                                    annual_tax_due = reader["annual_tax_due"] as decimal?,
+                                    wtax_prsnt_emplyr = reader["wtax_prsnt_emplyr"] as decimal?,
+                                    wtax_prev_emplyr = reader["wtax_prev_emplyr"] as decimal?,
+                                    ntx_basic_salary = reader["ntx_basic_salary"] as decimal?,
+                                    ntx_hol_pay_mwe = reader["ntx_hol_pay_mwe"] as decimal?,
+                                    ntx_ot_pay_mwe = reader["ntx_ot_pay_mwe"] as decimal?,
+                                    ntx_night_diff_mwe = reader["ntx_night_diff_mwe"] as decimal?,
+                                    ntx_hzrd_pay_mwe = reader["ntx_hzrd_pay_mwe"] as decimal?,
+                                    ntx_13th_14th = reader["ntx_13th_14th"] as decimal?,
+                                    ntx_de_minimis = reader["ntx_de_minimis"] as decimal?,
+                                    ntx_gsis_phic_hdmf = reader["ntx_gsis_phic_hdmf"] as decimal?,
+                                    ntx_salaries_oth = reader["ntx_salaries_oth"] as decimal?,
+                                    txbl_basic_salary = reader["txbl_basic_salary"] as decimal?,
+                                    txbl_representation = reader["txbl_representation"] as decimal?,
+                                    txbl_transportation = reader["txbl_transportation"] as decimal?,
+                                    txbl_cola = reader["txbl_cola"] as decimal?,
+                                    txbl_fh_allowance = reader["txbl_fh_allowance"] as decimal?,
+                                    txbl_otherA = reader["txbl_otherA"] as decimal?,
+                                    txbl_otherB = reader["txbl_otherB"] as decimal?,
+                                    sup_commission = reader["sup_commission"] as decimal?,
+                                    sup_prof_sharing = reader["sup_prof_sharing"] as decimal?,
+                                    sup_fi_drctr_fees = reader["sup_fi_drctr_fees"] as decimal?,
+                                    sup_13th_14th = reader["sup_13th_14th"] as decimal?,
+                                    sup_hzrd_pay = reader["sup_hzrd_pay"] as decimal?,
+                                    sup_ot_pay = reader["sup_ot_pay"] as decimal?,
+                                    sup_otherA = reader["sup_otherA"] as decimal?,
+                                    sup_otherB = reader["sup_otherB"] as decimal?,
+                                    annual_txbl_income = reader["annual_txbl_income"] as decimal?,
+                                    annual_tax_wheld = reader["annual_tax_wheld"] as decimal?,
+                                    monthly_tax_due = reader["monthly_tax_due"] as decimal?,
+                                    tax_rate = reader["tax_rate"] as decimal?,
+                                    employer_type = reader["employer_type"] as string,
+                                    foreign_address = reader["foreign_address"] as string,
+                                    stat_daily_rate = reader["stat_daily_rate"] as decimal?,
+                                    stat_monthly_rate = reader["stat_monthly_rate"] as decimal?,
+                                    min_wage_earner = reader["min_wage_earner"] as bool?,
+                                    tin_employer_prev = reader["tin_employer_prev"] as string,
+                                    employer_name_prev = reader["employer_name_prev"] as string,
+                                    employer_add_prev = reader["employer_add_prev"] as string,
+                                    employer_zip_prev = reader["employer_zip_prev"] as string,
+                                    remarks = reader["remarks"] as string,
+                                    substituted = reader["substituted"] as string,
+                                    jan = reader["jan"] as decimal?,
+                                    feb = reader["feb"] as decimal?,
+                                    mar = reader["mar"] as decimal?,
+                                    apr = reader["apr"] as decimal?,
+                                    may = reader["may"] as decimal?,
+                                    jun = reader["jun"] as decimal?,
+                                    july = reader["july"] as decimal?,
+                                    aug = reader["aug"] as decimal?,
+                                    sep = reader["sep"] as decimal?,
+                                    oct = reader["oct"] as decimal?,
+                                    nov = reader["nov"] as decimal?,
+                                    dec = reader["dec"] as decimal?,
+                                    check_for_descrepancy = reader["check_for_descrepancy"] as bool?,
+                                    cur_mo = reader["cur_mo"] as int?,
+                                    prev_mo = reader["prev_mo"] as int?,
+                                    taxable = reader["taxable"] as bool?
+                                };
+
+                                sp_annualtax_hdr_tbl_list.Add(r);
+                            }
+                        }
+                    }
+
+                    connection.Close();
+                }
+               
                 var sp_annualtax_hdr_tbl_list2 = sp_annualtax_hdr_tbl_list.Where(a => a.empl_id == par_empl_id).FirstOrDefault();
                 message = "success";
                 return JSON(new { message, sp_annualtax_hdr_tbl_list, sp_annualtax_hdr_tbl_list2  }, JsonRequestBehavior.AllowGet);
@@ -484,7 +709,8 @@ namespace HRIS_ePAccount.Controllers
                 if (par_letter == null)
                 { par_letter = ""; }
                 //var sp_annualtax_hdr_tbl_list = db_pacco.sp_annualtax_hdr_tbl_list(par_year, par_empType, par_letter).ToList();
-                List<sp_annualtax_hdr_tbl_list_Result> sp_annualtax_hdr_tbl_list = new List<sp_annualtax_hdr_tbl_list_Result>();
+                //List<sp_annualtax_hdr_tbl_list_Result> sp_annualtax_hdr_tbl_list = new List<sp_annualtax_hdr_tbl_list_Result>();
+                List<sp_annualtax_hdr_tbl_list_wtaxpmos_Result> sp_annualtax_hdr_tbl_list_wtaxpmos = new List<sp_annualtax_hdr_tbl_list_wtaxpmos_Result>();
                 using (SqlConnection connection = new SqlConnection(constring))
                 {
                     connection.Open();
@@ -506,75 +732,93 @@ namespace HRIS_ePAccount.Controllers
                         {
                             command.ExecuteNonQuery();
                         }
-                            
-                    using (SqlCommand command = new SqlCommand("sp_annualtax_hdr_tbl_list", connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@p_payroll_year", par_year);
-                        command.Parameters.AddWithValue("@p_employment_type", par_empType);
-                        command.Parameters.AddWithValue("@p_letter", par_letter);
 
-                        using (SqlDataReader reader = command.ExecuteReader())
+                    using (var conn = new SqlConnection(constring))
+                    using (var cmd = new SqlCommand("sp_annualtax_hdr_tbl_list_wtaxpmos", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@p_payroll_year", SqlDbType.VarChar, 4) { Value = par_year });
+                        cmd.Parameters.Add(new SqlParameter("@p_employment_type", SqlDbType.VarChar, 2) { Value = par_empType });
+                        cmd.Parameters.Add(new SqlParameter("@p_letter", SqlDbType.VarChar, 1) { Value = "" });
+
+                        conn.Open();
+                        using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-                                // Map each record to your model
-                                var item = new sp_annualtax_hdr_tbl_list_Result
+                                var r = new sp_annualtax_hdr_tbl_list_wtaxpmos_Result
                                 {
+                                    payroll_year = reader["payroll_year"] as string,
+                                    empl_id = reader["empl_id"] as string,
+                                    employee_name = reader["employee_name"] as string,
+                                    employment_type = reader["employment_type"] as string,
+                                    account_id_nbr_ref = reader["account_id_nbr_ref"] as string,
+                                    employmenttype_description = reader["employmenttype_description"] as string,
+                                    position_title1 = reader["position_title1"] as string,
+                                    addl_txbl_comp_prsnt = reader["addl_txbl_comp_prsnt"] as decimal?,
+                                    annual_tax_due = reader["annual_tax_due"] as decimal?,
+                                    wtax_prsnt_emplyr = reader["wtax_prsnt_emplyr"] as decimal?,
+                                    wtax_prev_emplyr = reader["wtax_prev_emplyr"] as decimal?,
+                                    ntx_basic_salary = reader["ntx_basic_salary"] as decimal?,
+                                    ntx_hol_pay_mwe = reader["ntx_hol_pay_mwe"] as decimal?,
+                                    ntx_ot_pay_mwe = reader["ntx_ot_pay_mwe"] as decimal?,
+                                    ntx_night_diff_mwe = reader["ntx_night_diff_mwe"] as decimal?,
+                                    ntx_hzrd_pay_mwe = reader["ntx_hzrd_pay_mwe"] as decimal?,
+                                    ntx_13th_14th = reader["ntx_13th_14th"] as decimal?,
+                                    ntx_de_minimis = reader["ntx_de_minimis"] as decimal?,
+                                    ntx_gsis_phic_hdmf = reader["ntx_gsis_phic_hdmf"] as decimal?,
+                                    ntx_salaries_oth = reader["ntx_salaries_oth"] as decimal?,
+                                    txbl_basic_salary = reader["txbl_basic_salary"] as decimal?,
+                                    txbl_representation = reader["txbl_representation"] as decimal?,
+                                    txbl_transportation = reader["txbl_transportation"] as decimal?,
+                                    txbl_cola = reader["txbl_cola"] as decimal?,
+                                    txbl_fh_allowance = reader["txbl_fh_allowance"] as decimal?,
+                                    txbl_otherA = reader["txbl_otherA"] as decimal?,
+                                    txbl_otherB = reader["txbl_otherB"] as decimal?,
+                                    sup_commission = reader["sup_commission"] as decimal?,
+                                    sup_prof_sharing = reader["sup_prof_sharing"] as decimal?,
+                                    sup_fi_drctr_fees = reader["sup_fi_drctr_fees"] as decimal?,
+                                    sup_13th_14th = reader["sup_13th_14th"] as decimal?,
+                                    sup_hzrd_pay = reader["sup_hzrd_pay"] as decimal?,
+                                    sup_ot_pay = reader["sup_ot_pay"] as decimal?,
+                                    sup_otherA = reader["sup_otherA"] as decimal?,
+                                    sup_otherB = reader["sup_otherB"] as decimal?,
+                                    annual_txbl_income = reader["annual_txbl_income"] as decimal?,
+                                    annual_tax_wheld = reader["annual_tax_wheld"] as decimal?,
+                                    monthly_tax_due = reader["monthly_tax_due"] as decimal?,
+                                    tax_rate = reader["tax_rate"] as decimal?,
+                                    employer_type = reader["employer_type"] as string,
+                                    foreign_address = reader["foreign_address"] as string,
+                                    stat_daily_rate = reader["stat_daily_rate"] as decimal?,
+                                    stat_monthly_rate = reader["stat_monthly_rate"] as decimal?,
+                                    min_wage_earner = reader["min_wage_earner"] as bool?,
+                                    tin_employer_prev = reader["tin_employer_prev"] as string,
+                                    employer_name_prev = reader["employer_name_prev"] as string,
+                                    employer_add_prev = reader["employer_add_prev"] as string,
+                                    employer_zip_prev = reader["employer_zip_prev"] as string,
+                                    remarks = reader["remarks"] as string,
+                                    substituted = reader["substituted"] as string,
+                                    jan = reader["jan"] as decimal?,
+                                    feb = reader["feb"] as decimal?,
+                                    mar = reader["mar"] as decimal?,
+                                    apr = reader["apr"] as decimal?,
+                                    may = reader["may"] as decimal?,
+                                    jun = reader["jun"] as decimal?,
+                                    july = reader["july"] as decimal?,
+                                    aug = reader["aug"] as decimal?,
+                                    sep = reader["sep"] as decimal?,
+                                    oct = reader["oct"] as decimal?,
+                                    nov = reader["nov"] as decimal?,
+                                    dec = reader["dec"] as decimal?,
+                                    check_for_descrepancy = reader["check_for_descrepancy"] as bool?,
+                                    cur_mo = reader["cur_mo"] as int?,
+                                    prev_mo = reader["prev_mo"] as int?,
+                                    taxable = reader["taxable"] as bool?,
+                                    hr_tax_due = reader["hr_tax_due"] as decimal?,
+                                    hr_tax_rate = reader["hr_tax_rate"] as decimal?
+                                };
 
-                                    payroll_year                     = reader.GetString(0),
-                                    empl_id                          = reader.GetString(1),
-                                    employee_name                    = reader.GetString(2),
-                                    employment_type                  = reader.GetString(3),
-                                    account_id_nbr_ref               = reader.GetString(4),
-                                    employmenttype_description       = reader.GetString(5),
-                                    position_title1                  = reader.GetString(6),
-                                    addl_txbl_comp_prsnt             = reader.GetDecimal(7),
-                                    annual_tax_due                   = reader.GetDecimal(8),
-                                    wtax_prsnt_emplyr                = reader.GetDecimal(9),
-                                    wtax_prev_emplyr                 = reader.GetDecimal(10),
-                                    ntx_basic_salary                 = reader.GetDecimal(11),
-                                    ntx_hol_pay_mwe                  = reader.GetDecimal(12),
-                                    ntx_ot_pay_mwe                   = reader.GetDecimal(13),
-                                    ntx_night_diff_mwe               = reader.GetDecimal(14),
-                                    ntx_hzrd_pay_mwe                 = reader.GetDecimal(15),
-                                    ntx_13th_14th                    = reader.GetDecimal(16),
-                                    ntx_de_minimis                   = reader.GetDecimal(17),
-                                    ntx_gsis_phic_hdmf               = reader.GetDecimal(18),
-                                    ntx_salaries_oth                 = reader.GetDecimal(19),
-                                    txbl_basic_salary                = reader.GetDecimal(20),
-                                    txbl_representation              = reader.GetDecimal(21),
-                                    txbl_transportation              = reader.GetDecimal(22),
-                                    txbl_cola                        = reader.GetDecimal(23),
-                                    txbl_fh_allowance                = reader.GetDecimal(24),
-                                    txbl_otherA                      = reader.GetDecimal(25),
-                                    txbl_otherB                      = reader.GetDecimal(26),
-                                    sup_commission                   = reader.GetDecimal(27),
-                                    sup_prof_sharing                 = reader.GetDecimal(28),
-                                    sup_fi_drctr_fees                = reader.GetDecimal(29),
-                                    sup_13th_14th                    = reader.GetDecimal(30),
-                                    sup_hzrd_pay                     = reader.GetDecimal(31),
-                                    sup_ot_pay                       = reader.GetDecimal(32),
-                                    sup_otherA                       = reader.GetDecimal(33),
-                                    sup_otherB                       = reader.GetDecimal(34),
-                                    annual_txbl_income               = reader.GetDecimal(35),
-                                    annual_tax_wheld                 = reader.GetDecimal(36),
-                                    monthly_tax_due                  = reader.GetDecimal(37),
-                                    tax_rate                         = reader.GetDecimal(38),
-                                    employer_type                     = reader.GetString(39),
-                                    foreign_address                   = reader.GetString(40),
-                                    stat_daily_rate                  = reader.GetDecimal(41),
-                                    stat_monthly_rate                = reader.GetDecimal(42),
-                                    min_wage_earner                     = reader.GetBoolean(43),
-                                    tin_employer_prev                 = reader.GetString(44),
-                                    employer_name_prev                = reader.GetString(45),
-                                    employer_add_prev                 = reader.GetString(46),
-                                    employer_zip_prev                 = reader.GetString(47),
-                                    remarks                           = reader.GetString(48),
-                                    substituted                       = reader.GetString(49),
-
-                                };                            
-                                sp_annualtax_hdr_tbl_list.Add(item);
+                                sp_annualtax_hdr_tbl_list_wtaxpmos.Add(r);
                             }
                         }
                     }
@@ -582,11 +826,10 @@ namespace HRIS_ePAccount.Controllers
                     connection.Close();
                 }
 
-                HttpContext.Session["sp_annualtax_hdr_tbl_list"] = sp_annualtax_hdr_tbl_list;
 
                 var sp_prcmonitor_tbl = db_pacco.sp_prcmonitor_tbl(par_year,"" , par_empType).ToList();
 
-                return JSON(new { sp_annualtax_hdr_tbl_list, sp_prcmonitor_tbl }, JsonRequestBehavior.AllowGet);
+                return JSON(new { sp_annualtax_hdr_tbl_list_wtaxpmos, sp_prcmonitor_tbl }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -596,9 +839,107 @@ namespace HRIS_ePAccount.Controllers
         }
 
         //*********************************************************************//
-        // Created By : JRV - Created Date : 09/19/2019
-        // Description: Populate Employment Type
-        //*********************************************************************//
+        // Created By : Marvin Olita - Created Date : 08/28/2025
+        // Description: CHECK TAX VALUES
+        public ActionResult Check_Tax(string par_payroll_year, string par_empl_id)
+        {
+            try
+            {
+                List<sp_check_annualized_tax_dtl_Result> sp_check_annualized_tax_dtl = new List<sp_check_annualized_tax_dtl_Result>();
+                using (SqlConnection connection = new SqlConnection(constring))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(@"
+                        SET TEXTSIZE 2147483647;
+                        SET LANGUAGE us_english;
+                        SET DATEFORMAT mdy;
+                        SET DATEFIRST 7;
+                        SET LOCK_TIMEOUT -1;
+                        SET QUOTED_IDENTIFIER ON;
+                        SET ARITHABORT ON;
+                        SET ANSI_NULL_DFLT_ON ON;
+                        SET ANSI_WARNINGS ON;
+                        SET ANSI_PADDING ON;
+                        SET ANSI_NULLS ON;
+                        SET CONCAT_NULL_YIELDS_NULL ON;
+                        SET TRANSACTION ISOLATION LEVEL READ COMMITTED;", connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+
+                    using (var conn = new SqlConnection(constring))
+                    using (var cmd = new SqlCommand("sp_check_annualized_tax_dtl", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@p_payroll_year", SqlDbType.VarChar, 4) { Value = par_payroll_year });
+                        cmd.Parameters.Add(new SqlParameter("@p_empl_id", SqlDbType.VarChar, 10) { Value = par_empl_id });
+                      
+
+                        conn.Open();
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var r = new sp_check_annualized_tax_dtl_Result
+                                {
+                                           payrolltemplate_code         =       reader["payrolltemplate_code"] as string,
+                                           voucher_nbr                  =       reader["voucher_nbr"] as string,
+                                           payroll_month                =       reader["payroll_month"] as string,
+                                           remarks                      =       reader["remarks"] as string,
+                                           basic_sal                    =       reader["basic_sal"] as decimal?,
+                                           phic_share                   =       reader["phic_share"] as decimal?,
+                                           hazard_pay                   =       reader["hazard_pay"] as decimal?,
+                                           subsistence_allowance        =       reader["subsistence_allowance"] as decimal?,
+                                           overtime                     =       reader["overtime"] as decimal?,
+                                           oth                          =       reader["oth"] as decimal?,
+                                           taxable13th                  =       reader["taxable13th"] as decimal?,
+                                           nontaxable13th               =       reader["nontaxable13th"] as decimal?,
+                                           deminimis                    =       reader["deminimis"] as decimal?,
+                                           sal_oth                      =       reader["sal_oth"] as decimal?,
+                                           nontaxable_oth               =       reader["nontaxable_oth"] as decimal?,
+                                           gsis_ps                      =       reader["gsis_ps"] as decimal?,
+                                           hdmf_ps                      =       reader["hdmf_ps"] as decimal?,
+                                           phic_ps                      =       reader["phic_ps"] as decimal?,
+                                           wtax_amt                     =       reader["wtax_amt"] as decimal?,
+                                           gross_income                 =       reader["gross_income"] as decimal?,
+                                           nontaxable_income            =       reader["nontaxable_income"] as decimal?,
+                                           taxable_income               =       reader["taxable_income"] as decimal?,
+                                           tax_due                      =       reader["tax_due"] as decimal?,
+                                           tax_withheld                 =       reader["tax_withheld"] as decimal?,
+                                           tax_payable                  =       reader["tax_payable"] as decimal?,
+                                           no_of_installment            =       reader["no_of_installment"] as int?,
+                                           month13th_other              =       reader["month13th_other"] as decimal?,
+                                           DE_minimis                   =       reader["DE_minimis"] as decimal?,
+                                           gsis_hdmf_phic               =       reader["gsis_hdmf_phic"] as decimal?,
+                                           salaries_oth                 =       reader["salaries_oth"] as decimal?,
+                                           basic_salary                 =       reader["basic_salary"] as decimal?
+
+                                };
+
+                                sp_check_annualized_tax_dtl.Add(r);
+                            }
+                        }
+                    }
+
+                    connection.Close();
+                }
+
+
+                return JSON(new { sp_check_annualized_tax_dtl }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return JSON(new { ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+
+            //*********************************************************************//
+            // Created By : JRV - Created Date : 09/19/2019
+            // Description: Populate Employment Type
+            //*********************************************************************//
         public ActionResult SelectPayrollYear(string par_empType, string par_year, string par_letter)
         {
             try
