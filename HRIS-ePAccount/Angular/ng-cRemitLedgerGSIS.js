@@ -97,11 +97,13 @@
                     },
                     {
                         "mData": "employee_name",
+                        "visible": false,
                         "mRender": function (data, type, full, row) {
-                            return "<span class='text-left btn-block'>" + data + "</span>"
+                            var name = (data !== undefined && data !== null) ? data.toString() : "";
+                            var first = name.length ? name.substring(0, 1) : "";
+                            return "<span class='text-left btn-block' style='display: none; border:none;'>" + first + "</span>";
                         }
                     },
-
                     {
                         "mData": "p_sif_gs",
                         "mRender": function (data, type, full, row) {
@@ -166,8 +168,9 @@
 
                     {
                         "mData": "payroll_month",
-                        "mRender": function (data, type, full, row) {
-                            return "<span class='text-center btn-block'>" + month[parseInt(data) - 1] + "</span>"
+                        "mRender": function (data) {
+                            var m = parseInt(data, 10);
+                            return "<span class='text-center btn-block'>" + (isNaN(m) ? "" : month[m - 1]) + "</span>";
                         }
                     },
                     {
@@ -193,13 +196,7 @@
                                 '</div></center>';
                         }
                     },
-                    {
-                        "mData": "employee_name",
-                        "visible": false,
-                        "mRender": function (data, type, full, row) {
-                            return "<span class='text-left btn-block' style='display: none; border:none;'>" + data.substring(0, 1) + "</span>"
-                        }
-                    }
+                   
 
 
                 ],
@@ -435,7 +432,7 @@
         })
     }
     s.Save_Details = function (fd) {
-    
+       
         $("#save").removeClass("fa fa-save");
         $("#save").addClass("fa fa-spinner fa-spin");
         
@@ -470,9 +467,11 @@
         else {
             require_warning(false, "cls_status", "ta_status", "require-field")
         }
-        var dt = getFormValue(s.employee_details)
 
-      
+
+        var dt = getFormValue("fd")
+
+        
        
         h.post("../cRemitLedgerGSIS/Save_Details", {
             data: dt
@@ -652,7 +651,10 @@
 
         h.post("../cRemitLedgerGSIS/CheckData", { data: dt }).then(function (d) {
             if(d.data.message == "found")
-            {
+            { 
+                $("#detail_modal").modal("show")
+                s.modalTitle = "Edit Record"
+
                 s.edit_disable = true
                
                 s.isEdit = true
@@ -664,8 +666,8 @@
                 
                 }
                 
-                s.modalTitle = "Edit Record"
-                $("#detail_modal").modal("show")
+               
+               
             }
             else if (d.data.message == "not_found")
             {
@@ -2156,6 +2158,8 @@
         s.fd.txtb_gfal = ""
         s.fd.txtb_mpl = ""
         s.fd.txtb_gfaleducnl_ln = ""
+        $("#txtb_gfaleducnl_ln").val("0.00").trigger("input");
+        $("#txtb_mpl_lite_ln").val("0.00").trigger("input");
         require_warning(false, "cls_voucher", "ta_voucher", "require-field")
         require_warning(false, "cls_employee", "ta_employee", "require-field")
         require_warning(false, "cls_override_ps", "ta_override_ps", "require-field")
@@ -2238,63 +2242,123 @@
     }
 
 
-    function getFormValue(f) 
-    {
-        s.employee_name = f.employee_name
-        var data = 
-          {
-            remittance_ctrl_nbr: $("#remittance_ctrl_nbr").val()
-                   , empl_id                : f.empl_id
-                   , voucher_nbr            : f.voucher_nbr
-                   , p_gsis_gs              : f.p_gsis_gs
-                   , p_gsis_ps              : f.p_gsis_ps
-                   , p_sif_gs               : f.p_sif_gs
-                   , p_gsis_uoli            : f.p_gsis_uoli
-                   , p_gsis_uoli45          : f.p_gsis_uoli45
-                   , p_gsis_uoli50          : f.p_gsis_uoli50
-                   , p_gsis_uoli55          : f.p_gsis_uoli55
-                   , p_gsis_uoli60          : f.p_gsis_uoli60
-                   , p_gsis_uoli65          : f.p_gsis_uoli65
-                   , p_gsis_ehp             : f.p_gsis_ehp
-                   , p_gsis_hip             : f.p_gsis_hip
-                   , p_gsis_ceap            : f.p_gsis_ceap
-                   , p_gsis_addl_ins        : f.p_gsis_addl_ins
-                   , p_gsis_conso_ln        : f.p_gsis_conso_ln
-                   , p_gsis_policy_reg_ln   : f.p_gsis_policy_reg_ln
-                   , p_gsis_policy_opt_ln   : f.p_gsis_policy_opt_ln
-                   , p_gsis_uoli_ln         : f.p_gsis_uoli_ln
-                   , p_gsis_emergency_ln    : f.p_gsis_emergency_ln
-                   , p_gsis_ecard_ln        : f.p_gsis_ecard_ln
-                   , p_gsis_educ_asst_ln    : f.p_gsis_educ_asst_ln
-                   , p_gsis_real_state_ln   : f.p_gsis_real_state_ln
-                   , p_gsis_sos_ln          : f.p_gsis_sos_ln
-                   , p_gsis_help            : f.p_gsis_help
+    //function getFormValue(f) 
+    //{
+    //    s.employee_name = f.employee_name
+    //    var data = 
+    //      {
+    //                 remittance_ctrl_nbr: $("#remittance_ctrl_nbr").val()
+    //               , empl_id                : f.empl_id
+    //               , voucher_nbr            : f.voucher_nbr
+    //               , p_gsis_gs              : f.p_gsis_gs
+    //               , p_gsis_ps              : f.p_gsis_ps
+    //               , p_sif_gs               : f.p_sif_gs
+    //               , p_gsis_uoli            : f.p_gsis_uoli
+    //               , p_gsis_uoli45          : f.p_gsis_uoli45
+    //               , p_gsis_uoli50          : f.p_gsis_uoli50
+    //               , p_gsis_uoli55          : f.p_gsis_uoli55
+    //               , p_gsis_uoli60          : f.p_gsis_uoli60
+    //               , p_gsis_uoli65          : f.p_gsis_uoli65
+    //               , p_gsis_ehp             : f.p_gsis_ehp
+    //               , p_gsis_hip             : f.p_gsis_hip
+    //               , p_gsis_ceap            : f.p_gsis_ceap
+    //               , p_gsis_addl_ins        : f.p_gsis_addl_ins
+    //               , p_gsis_conso_ln        : f.p_gsis_conso_ln
+    //               , p_gsis_policy_reg_ln   : f.p_gsis_policy_reg_ln
+    //               , p_gsis_policy_opt_ln   : f.p_gsis_policy_opt_ln
+    //               , p_gsis_uoli_ln         : f.p_gsis_uoli_ln
+    //               , p_gsis_emergency_ln    : f.p_gsis_emergency_ln
+    //               , p_gsis_ecard_ln        : f.p_gsis_ecard_ln
+    //               , p_gsis_educ_asst_ln    : f.p_gsis_educ_asst_ln
+    //               , p_gsis_real_state_ln   : f.p_gsis_real_state_ln
+    //               , p_gsis_sos_ln          : f.p_gsis_sos_ln
+    //               , p_gsis_help            : f.p_gsis_help
 
-                    //,u_gsis_gs               : 0.00
-                    //,u_gsis_ps               : 0.00
-                    //,u_sif_gs                : 0.00
-                    //,u_gsis_uoli             : 0.00
-                    //,u_gsis_ehp              : 0.00
-                    //,u_gsis_hip              : 0.00
-                    //,u_gsis_ceap             : 0.00
-                    //,u_gsis_addl_ins         : 0.00
-                    //,u_gsis_conso_ln         : 0.00
-                    //,u_gsis_policy_reg_ln    : 0.00
-                    //,u_gsis_policy_opt_ln    : 0.00
-                    //,u_gsis_uoli_ln          : 0.00
-                    //,u_gsis_emergency_ln     : 0.00
-                    //,u_gsis_ecard_ln         : 0.00
-                    //,u_gsis_educ_asst_ln     : 0.00
-                    //,u_gsis_real_state_ln    : 0.00
-                    //,u_gsis_sos_ln           : 0.00
-                    //,u_gsis_help             : 0.00
+    //                ,u_gsis_gs               : 0.00
+    //                ,u_gsis_ps               : 0.00
+    //                ,u_sif_gs                : 0.00
+    //                ,u_gsis_uoli             : 0.00
+    //                ,u_gsis_ehp              : 0.00
+    //                ,u_gsis_hip              : 0.00
+    //                ,u_gsis_ceap             : 0.00
+    //                ,u_gsis_addl_ins         : 0.00
+    //                ,u_gsis_conso_ln         : 0.00
+    //                ,u_gsis_policy_reg_ln    : 0.00
+    //                ,u_gsis_policy_opt_ln    : 0.00
+    //                ,u_gsis_uoli_ln          : 0.00
+    //                ,u_gsis_emergency_ln     : 0.00
+    //                ,u_gsis_ecard_ln         : 0.00
+    //                ,u_gsis_educ_asst_ln     : 0.00
+    //                ,u_gsis_real_state_ln    : 0.00
+    //                ,u_gsis_sos_ln           : 0.00
+    //                ,u_gsis_help             : 0.00
 
-                   , o_gsis_gs              : toDecimalFormat(s.fd.txtb_GS_override)
-                   , o_gsis_ps              : toDecimalFormat(s.fd.txtb_PS_override)
-                   , remittance_status      : s.fd.remit_status
-        }
-        return data
+    //               , o_gsis_gs              : toDecimalFormat(s.fd.txtb_GS_override)
+    //               , o_gsis_ps              : toDecimalFormat(s.fd.txtb_PS_override)
+    //               , remittance_status      : s.fd.remit_status
+    //    }
+    //    return data
+    //}
+
+    function getFormValue(formId) {
+
+        var $form = $("#" + formId);
+
+        var data = {
+            remittance_ctrl_nbr: $form.find("#remittance_ctrl_nbr").val()
+            ,empl_id: $form.find("[ng-model='fd.txtb_empl_id']").val()
+            ,voucher_nbr: $form.find("[ng-model='fd.txtb_voucher_nbr']").val()
+            
+            ,p_gsis_gs: toDecimalFormat($form.find("#txtb_gs_amount").val())
+            ,p_gsis_ps: toDecimalFormat($form.find("#txtb_ps_amount").val())
+            ,p_sif_gs: toDecimalFormat($form.find("#txtb_sif_amt").val())
+            
+            ,p_gsis_uoli: toDecimalFormat($form.find("#txtb_ouli_amt").val())
+            ,p_gsis_ehp: toDecimalFormat($form.find("#txtb_ehp_amt").val())
+            ,p_gsis_hip: toDecimalFormat($form.find("#txtb_hip_amt").val())
+            ,p_gsis_ceap: toDecimalFormat($form.find("#txtb_ceap_amt").val())
+            ,p_gsis_addl_ins: toDecimalFormat($form.find("#txtb_addl_amt").val())
+            ,p_gsis_conso_ln: toDecimalFormat($form.find("#txtb_consol_amt").val())
+            ,p_gsis_policy_reg_ln: toDecimalFormat($form.find("#txtb_policy_amt").val())
+            ,p_gsis_policy_opt_ln: toDecimalFormat($form.find("#txtb_optional_amt").val())
+            
+            ,p_gsis_uoli_ln: toDecimalFormat($form.find("#txtb_ouli_loan").val())
+            ,p_gsis_emergency_ln: toDecimalFormat($form.find("#txtb_emergency_amt").val())
+            ,p_gsis_ecard_ln: toDecimalFormat($form.find("#txtb_ecard_amt").val())
+            ,p_gsis_educ_asst_ln: toDecimalFormat($form.find("#txtb_educ_amt").val())
+            ,p_gsis_real_state_ln: toDecimalFormat($form.find("#txtb_realstate_amt").val())
+            ,p_gsis_sos_ln: toDecimalFormat($form.find("#txtb_sos_amt").val())
+            ,p_gsis_help: toDecimalFormat($form.find("#txtb_help_amt").val())
+            
+            , u_gsis_gs: 0.00
+            , u_gsis_ps: 0.00
+            , u_sif_gs: 0.00
+            , u_gsis_uoli: 0.00
+            , u_gsis_ehp: 0.00
+            , u_gsis_hip: 0.00
+            , u_gsis_ceap: 0.00
+            , u_gsis_addl_ins: 0.00
+            , u_gsis_conso_ln: 0.00
+            , u_gsis_policy_reg_ln: 0.00
+            , u_gsis_policy_opt_ln: 0.00
+            , u_gsis_uoli_ln: 0.00
+            , u_gsis_emergency_ln: 0.00
+            , u_gsis_ecard_ln: 0.00
+            , u_gsis_educ_asst_ln: 0.00
+            , u_gsis_real_state_ln: 0.00
+            , u_gsis_sos_ln: 0.00
+            , u_gsis_help: 0.00
+            ,o_gsis_gs: toDecimalFormat($form.find("#gs_override").val())
+            ,o_gsis_ps: toDecimalFormat($form.find("#ps_override").val())
+            ,gfaleducnl_ln: toDecimalFormat($form.find("#txtb_gfaleducnl_ln").val())
+            ,mpl_lite_ln: toDecimalFormat($form.find("#txtb_mpl_lite_ln").val())
+            
+            ,remittance_status: $form.find("select[ng-model='fd.remit_status']").val()
+        };
+       
+        return data;
     }
+
 
     function toDecimalFormat(data)
     {

@@ -67,7 +67,6 @@
         <EntityTypeShape EntityType="HRIS_ACTModel.taxrate_percentage_tbl" Width="1.5" PointX="24.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.AnnualizedEmployeeTax" Width="1.5" PointX="24.75" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.AnnualTaxResult" Width="1.5" PointX="24.75" PointY="21.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_hdr_tbl" Width="1.5" PointX="26.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.idoc_trk_tbl_ret_chk" Width="1.5" PointX="0.75" PointY="26.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.vw_accountclass_tbl" Width="1.5" PointX="2.75" PointY="26.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.vw_annualtax_dtl_tbl" Width="1.5" PointX="4.75" PointY="26.75" IsExpanded="true" />
@@ -167,6 +166,9 @@
         <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittancetype_tbl2" Width="1.5" PointX="46.75" PointY="29.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.vw_sections_tbl_list" Width="1.5" PointX="46.75" PointY="32.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.vw_subdepartments_tbl_list" Width="1.5" PointX="46.75" PointY="36.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_hdr_tbl" Width="1.5" PointX="27.375" PointY="47.75" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.generate_tax_empl_dtl_success_tbl" Width="1.5" PointX="29.375" PointY="47.75" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.jo_tax_generation_queue_tbl" Width="1.5" PointX="31.375" PointY="47.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

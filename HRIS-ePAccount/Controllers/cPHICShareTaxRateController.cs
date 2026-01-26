@@ -578,7 +578,7 @@ namespace HRIS_ePAccount.Controllers
         ///                     else return error notif that the data.effective_date is not latest effective date
         ///                  IF par_action == EDIT
         ///                     fetch the data from database then update
-        public ActionResult SaveEDITInDatabaseRECEPhic(payrollemployee_tax_phic_rece_tbl data, string par_action, string department_code,string employment_type)
+        public ActionResult SaveEDITInDatabaseRECEPhic(payrollemployee_tax_phic_rece_tbl data, string par_action, string department_code,string employment_type, string payroll_year)
         {
             try
             {
@@ -688,7 +688,7 @@ namespace HRIS_ePAccount.Controllers
                
 
 
-                var vw_phic_share_empl_tbl_ACT = db_pacco.vw_phic_share_rece_tbl_ACT.Where(a => a.department_code == department_code && a.employment_type == employment_type).ToList();
+                var vw_phic_share_empl_tbl_ACT = db_pacco.sp_phic_share_rece_tbl_ACT(department_code,employment_type,payroll_year).ToList();
 
                 return Json(new { message, vw_phic_share_empl_tbl_ACT }, JsonRequestBehavior.AllowGet);
             }
@@ -1001,12 +1001,12 @@ namespace HRIS_ePAccount.Controllers
         // Created By : JRV - Created Date : 09/19/2019
         // Description: Populate Employment Type
         //*********************************************************************//
-        public ActionResult RetrieveDataListGrid(string par_department_code)
+        public ActionResult RetrieveDataListGrid(string par_department_code, string par_payroll_year)
         {
             try
             {
 
-                var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.vw_phic_share_empl_tbl_ACT.Where(a => a.department_code == par_department_code).ToList();
+                var sp_payrollemployee_tax_hdr_tbl_list = db_pacco.sp_phic_share_empl_tbl_ACT(par_department_code, par_payroll_year).ToList();
                 
                 return Json(new { sp_payrollemployee_tax_hdr_tbl_list,icon="success",message="success" }, JsonRequestBehavior.AllowGet);
             }
@@ -1090,11 +1090,11 @@ namespace HRIS_ePAccount.Controllers
             return Json(new { reportcount }, JsonRequestBehavior.AllowGet);
         }
         
-        public ActionResult RetrieveDataPhicReCe(string par_employment_type, string par_department_code, string par_history)
+        public ActionResult RetrieveDataPhicReCe(string par_employment_type, string par_department_code,string par_payroll_year, string par_history)
         {
             try
             {
-                var vw_phic_share_rece_tbl_ACT = db_pacco.vw_phic_share_rece_tbl_ACT.Where(a => a.department_code == par_department_code && a.employment_type == par_employment_type).ToList();
+                var vw_phic_share_rece_tbl_ACT = db_pacco.sp_phic_share_rece_tbl_ACT(par_department_code, par_employment_type, par_payroll_year).ToList();
                 HttpContext.Session["vw_phic_share_rece_tbl_ACT"] = vw_phic_share_rece_tbl_ACT;
 
                 return Json(new { vw_phic_share_rece_tbl_ACT,icon="success" }, JsonRequestBehavior.AllowGet);

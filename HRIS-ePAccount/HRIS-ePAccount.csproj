@@ -104,6 +104,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -272,6 +273,7 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\RetrieveReadOnlyDataController.cs" />
     <Compile Include="cRemitLedgerPHIC_FileUpload.ashx.cs">
       <DependentUpon>cRemitLedgerPHIC_FileUpload.ashx</DependentUpon>
     </Compile>
@@ -380,6 +382,9 @@
     <Compile Include="Models\func_remittance_upd_PHIC_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\generate_tax_empl_dtl_success_tbl.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\idoc_rte_tbl.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
@@ -387,6 +392,9 @@
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\idoc_trk_tbl_ret_chk.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\jo_tax_generation_queue_tbl.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\jo_tax_tbl.cs">
@@ -435,6 +443,7 @@
     <Compile Include="Models\payrollregistry_dtl_unpost_tbl.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\personnelnameswithdepartment.cs" />
     <Compile Include="Models\personnel_tbl.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -444,6 +453,7 @@
     <Compile Include="Models\pyent_tbl.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\QueueCountsVm.cs" />
     <Compile Include="Models\RefData.cs" />
     <Compile Include="Models\remittancetype_tbl.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
@@ -763,6 +773,9 @@
     <Compile Include="Models\sp_get_actual_tax_counter_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_get_jo_grosspay_birclass_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_helpdiagramdefinition_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
@@ -958,6 +971,9 @@
     <Compile Include="Models\sp_personnelnames_carding_re_ce_combolist_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_personnelnames_combolist_tax_jo_nogrosspay_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_personnelnames_combolist_tax_jo_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
@@ -971,6 +987,12 @@
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_personnel_names_list1_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_phic_share_empl_tbl_ACT_Result.cs">
+      <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_phic_share_rece_tbl_ACT_Result.cs">
       <DependentUpon>cnHRIS_ePAccount.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_prcmonitor_tbl_Result.cs">
@@ -3042,6 +3064,7 @@
     <Content Include="Scripts\plugins\rickshaw\rickshaw.min.js" />
     <Content Include="Scripts\plugins\rickshaw\vendor\d3.v3.js" />
     <Content Include="Scripts\plugins\select2\select2.full.min.js" />
+    <Content Include="Scripts\plugins\select2\select2.min.js" />
     <Content Include="Scripts\plugins\slick\slick.min.js" />
     <Content Include="Scripts\plugins\slimscroll\jquery.slimscroll.min.js" />
     <Content Include="Scripts\plugins\sparkline\jquery.sparkline.min.js" />
@@ -3161,6 +3184,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Reports\cryOtherPayroll\cryAttachment\" />
+    <Folder Include="Views\RetrieveReadOnlyData\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

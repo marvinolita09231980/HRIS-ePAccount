@@ -23,7 +23,7 @@
         width: 27px;
     }
 </style>
-<script src="~/Angular/ng-cNonEmployeeTaxRate.js"></script>
+<script src="~/Angular/ng-cNonEmployeeTaxRate.js?v=@DateTime.Now.ToString("yyyyMMddHHmmss")"></script>
 <!-- The Modal - Generating Report -->
 <div class="modal fade" id="Loading_master" ng-model="Loading_master">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -703,7 +703,7 @@
                                         <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;font-weight:bold;">Year:</span>
                                     </div>
                                     <div style="width:60%; float:right;">
-                                        <select name="year" class="form-control field-select-sm" style="width:100%;" required>
+                                        <select name="ddl_year"  id="ddl_year" ng-model="ddl_year"  class="form-control field-select-sm" style="width:100%;" required>
                                             <option value="" active></option>
                                             <option ng-repeat="l in year" value="{{l.year}}">{{l.year}}</option>
                                         </select>

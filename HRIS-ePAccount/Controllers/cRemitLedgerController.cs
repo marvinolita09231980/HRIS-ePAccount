@@ -185,7 +185,7 @@ namespace HRIS_ePAccount.Controllers
                 db_pacco.SaveChanges();
                 return Json(new { success = 1 }, JsonRequestBehavior.AllowGet);
             }
-            catch (DbUpdateException)
+            catch (Exception ex)
             {
                 return Json(new { success = 0 } , JsonRequestBehavior.AllowGet);
             }

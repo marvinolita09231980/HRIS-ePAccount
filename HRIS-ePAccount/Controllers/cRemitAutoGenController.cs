@@ -65,6 +65,7 @@ namespace HRIS_ePAccount.Controllers
         {
             db_pacco.Database.CommandTimeout = int.MaxValue;
             var generation_result = db_pacco.sp_generate_remittance(par_year,par_month,par_empType,par_remittance_type,Session["user_id"].ToString(),par_batch_nbr).ToList();
+
             return Json(new { generation_result }, JsonRequestBehavior.AllowGet);
         }
 

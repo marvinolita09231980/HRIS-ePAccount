@@ -124,6 +124,8 @@ warning 6002: The table/view 'HRIS_ACT.dbo.AnnualizedEmployeeTax' does not have 
             <PropertyRef Name="payroll_year" />
             <PropertyRef Name="payroll_month" />
             <PropertyRef Name="payrolltemplate_code" />
+            <PropertyRef Name="period_from" />
+            <PropertyRef Name="period_to" />
           </Key>
           <Property Name="voucher_nbr" Type="varchar" MaxLength="15" Nullable="false" />
           <Property Name="empl_id" Type="varchar" MaxLength="8" Nullable="false" />
@@ -142,6 +144,8 @@ warning 6002: The table/view 'HRIS_ACT.dbo.AnnualizedEmployeeTax' does not have 
           <Property Name="remarks" Type="varchar(max)" />
           <Property Name="rcrd_status" Type="varchar" MaxLength="1" />
           <Property Name="acctclass_code" Type="varchar" MaxLength="2" />
+          <Property Name="period_from" Type="date" Nullable="false" />
+          <Property Name="period_to" Type="date" Nullable="false" />
         </EntityType>
         <EntityType Name="annualtax_hdr_tbl">
           <Key>
@@ -310,6 +314,8 @@ warning 6002: The table/view 'HRIS_ACT.dbo.AnnualTaxResult' does not have a prim
             <PropertyRef Name="payroll_year" />
             <PropertyRef Name="payroll_month" />
             <PropertyRef Name="payrolltemplate_code" />
+            <PropertyRef Name="period_from" />
+            <PropertyRef Name="period_to" />
           </Key>
           <Property Name="voucher_nbr" Type="varchar" MaxLength="15" Nullable="false" />
           <Property Name="empl_id" Type="varchar" MaxLength="8" Nullable="false" />
@@ -328,6 +334,8 @@ warning 6002: The table/view 'HRIS_ACT.dbo.AnnualTaxResult' does not have a prim
           <Property Name="remarks" Type="varchar(max)" />
           <Property Name="rcrd_status" Type="varchar" MaxLength="1" />
           <Property Name="acctclass_code" Type="varchar" MaxLength="2" />
+          <Property Name="period_from" Type="date" Nullable="false" />
+          <Property Name="period_to" Type="date" Nullable="false" />
         </EntityType>
         <EntityType Name="cashadv_dtl_tbl">
           <Key>
@@ -475,6 +483,20 @@ warning 6002: The table/view 'HRIS_ACT.dbo.AnnualTaxResult' does not have a prim
           <Property Name="user_id_created_by" Type="varchar" MaxLength="30" />
           <Property Name="created_dttm" Type="datetime" />
         </EntityType>
+        <EntityType Name="generate_tax_empl_dtl_success_tbl">
+          <Key>
+            <PropertyRef Name="empl_id" />
+            <PropertyRef Name="payroll_year" />
+            <PropertyRef Name="payroll_month" />
+            <PropertyRef Name="employment_type" />
+            <PropertyRef Name="episode" />
+          </Key>
+          <Property Name="empl_id" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="payroll_year" Type="varchar" MaxLength="4" Nullable="false" />
+          <Property Name="payroll_month" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="employment_type" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="episode" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="idoc_rte_tbl">
           <Key>
             <PropertyRef Name="rte_code" />
@@ -502,6 +524,21 @@ warning 6002: The table/view 'HRIS_ACT.dbo.AnnualTaxResult' does not have a prim
           <Property Name="doc_remarks" Type="varchar" MaxLength="255" />
           <Property Name="doc_status" Type="varchar" MaxLength="1" />
           <Property Name="doc_user_id" Type="varchar" MaxLength="30" />
+        </EntityType>
+        <EntityType Name="jo_tax_generation_queue_tbl">
+          <Key>
+            <PropertyRef Name="queue_id" />
+          </Key>
+          <Property Name="queue_id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="empl_id" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="payroll_year" Type="varchar" MaxLength="4" Nullable="false" />
+          <Property Name="requested_by" Type="varchar" MaxLength="20" />
+          <Property Name="status" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="requested_at" Type="datetime" Nullable="false" />
+          <Property Name="started_at" Type="datetime" />
+          <Property Name="finished_at" Type="datetime" />
+          <Property Name="error_message" Type="varchar" MaxLength="4000" />
+          <Property Name="department_code" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="jo_tax_tbl">
           <Key>
@@ -1306,8 +1343,6 @@ warning 6002: The table/view 'HRIS_ACT.dbo.AnnualTaxResult' does not have a prim
           <Property Name="or_nbr" Type="varchar" MaxLength="30" />
           <Property Name="or_date" Type="date" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'HRIS_ACT.dbo.remittance_hdr_tbl' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="remittance_hdr_tbl">
           <Key>
             <PropertyRef Name="remittance_ctrl_nbr" />
@@ -2217,7 +2252,6 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_payrollregistry_info_HRIS_ACT' doe
         <EntityType Name="vw_payrollregistry_info_HRIS_ACT">
           <Key>
             <PropertyRef Name="payroll_year" />
-            <PropertyRef Name="payroll_month" />
             <PropertyRef Name="payroll_registry_nbr" />
             <PropertyRef Name="payrolltemplate_code" />
             <PropertyRef Name="payroll_source" />
@@ -2265,6 +2299,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_payrollregistry_info_HRIS_ACT' doe
             <PropertyRef Name="section_code" />
             <PropertyRef Name="fund_code" />
             <PropertyRef Name="function_code" />
+            <PropertyRef Name="payroll_month" />
           </Key>
           <Property Name="payroll_year" Type="varchar" MaxLength="4" Nullable="false" />
           <Property Name="payroll_month" Type="varchar" MaxLength="2" Nullable="false" />
@@ -3030,6 +3065,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_payrollregistry_info7_01_HRIS_ACT'
             <PropertyRef Name="middle_name" />
             <PropertyRef Name="suffix_name" />
             <PropertyRef Name="payroll_source" />
+            <PropertyRef Name="payrolltemplate_code" />
             <PropertyRef Name="other_ded_loan1" />
             <PropertyRef Name="other_ded_loan2" />
             <PropertyRef Name="other_ded_loan3" />
@@ -3040,7 +3076,6 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_payrollregistry_info7_01_HRIS_ACT'
             <PropertyRef Name="other_ded_loan8" />
             <PropertyRef Name="other_ded_loan9" />
             <PropertyRef Name="other_ded_loan10" />
-            <PropertyRef Name="payrolltemplate_code" />
           </Key>
           <Property Name="payroll_year" Type="int" />
           <Property Name="payroll_month" Type="nvarchar" MaxLength="4000" Nullable="false" />
@@ -3761,7 +3796,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_payrollregistry_info7_CARDING' doe
           <Property Name="other_loan4" Type="numeric" Precision="19" Scale="4" />
           <Property Name="other_loan5" Type="numeric" Precision="19" Scale="4" />
           <Property Name="gfaleducnl_ln" Type="numeric" Precision="38" Scale="2" />
-          <Property Name="mpl_lite_ln" Type="numeric" Precision="38" Scale="2" />
+          <Property Name="mpl_lite_ln" Type="numeric" Precision="19" Scale="4" />
           <Property Name="uniform_amt" Type="numeric" Precision="38" Scale="2" />
           <Property Name="bir_tax" Type="numeric" Precision="38" Scale="2" />
           <Property Name="payroll_source" Type="varchar" MaxLength="2" Nullable="false" />
@@ -6071,6 +6106,12 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Parameter Name="p_payroll_year" Type="varchar" Mode="In" />
           <Parameter Name="p_empl_id" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="sp_generate_annualized_tax_forloop" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="p_payroll_year" Type="varchar" Mode="In" />
+          <Parameter Name="p_empl_id" Type="varchar" Mode="In" />
+          <Parameter Name="result_value" Type="char" Mode="InOut" />
+          <Parameter Name="result_msg" Type="varchar" Mode="InOut" />
+        </Function>
         <Function Name="sp_generate_annualized_tax_hdr" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="p_payroll_year" Type="varchar" Mode="In" />
           <Parameter Name="p_empl_id" Type="varchar" Mode="In" />
@@ -6200,6 +6241,10 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Parameter Name="p_empl_id" Type="varchar" Mode="In" />
         </Function>
         <Function Name="sp_get_batch_nbr" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_get_jo_grosspay_birclass" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="payroll_year" Type="varchar" Mode="In" />
+          <Parameter Name="empl_id" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="sp_get_next_remittance_ctrl_nbr" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="p_remittancetype_code" Type="varchar" Mode="In" />
         </Function>
@@ -6644,6 +6689,10 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Parameter Name="par_payroll_year" Type="varchar" Mode="In" />
           <Parameter Name="par_department_code" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="sp_personnelnames_combolist_tax_jo_nogrosspay" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="par_payroll_year" Type="varchar" Mode="In" />
+          <Parameter Name="par_department_code" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="sp_personnelnames_combolist_tax_non_employee" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="par_payroll_year" Type="varchar" Mode="In" />
           <Parameter Name="par_department_code" Type="varchar" Mode="In" />
@@ -6662,6 +6711,15 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Parameter Name="par_payroll_group_nbr" Type="varchar" Mode="In" />
           <Parameter Name="par_payroll_month" Type="varchar" Mode="In" />
           <Parameter Name="par_payrolltemplate_code" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_phic_share_empl_tbl_ACT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="p_department_code" Type="varchar" Mode="In" />
+          <Parameter Name="p_payrol_year" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_phic_share_rece_tbl_ACT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="p_department_code" Type="varchar" Mode="In" />
+          <Parameter Name="p_employment_type" Type="varchar" Mode="In" />
+          <Parameter Name="p_payroll_year" Type="varchar" Mode="In" />
         </Function>
         <Function Name="sp_prcmonitor_tbl" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="par_year" Type="varchar" Mode="In" />
@@ -6957,6 +7015,15 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Parameter Name="owner_id" Type="int" Mode="In" />
           <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="sp_run_tax_generation_loop" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="p_payroll_year" Type="varchar" Mode="In" />
+          <Parameter Name="p_employment_type" Type="varchar" Mode="In" />
+          <Parameter Name="payroll_month" Type="varchar" Mode="In" />
+          <Parameter Name="p_empl_id" Type="varchar" Mode="In" />
+          <Parameter Name="episode" Type="int" Mode="In" />
+          <Parameter Name="firstgenoftheyear" Type="bit" Mode="In" />
+          <Parameter Name="removeprojected" Type="bit" Mode="In" />
+        </Function>
         <Function Name="sp_save_upd_overrides_HDMF" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="p_remittance_year" Type="varchar" Mode="In" />
           <Parameter Name="p_remittance_month" Type="varchar" Mode="In" />
@@ -7123,8 +7190,10 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <EntitySet Name="doc_rte_users_tbl" EntityType="Self.doc_rte_users_tbl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="doc_trk_act_tbl" EntityType="Self.doc_trk_act_tbl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="employeecard_remarks_tbl" EntityType="Self.employeecard_remarks_tbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="generate_tax_empl_dtl_success_tbl" EntityType="Self.generate_tax_empl_dtl_success_tbl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="idoc_rte_tbl" EntityType="Self.idoc_rte_tbl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="idoc_trk_tbl" EntityType="Self.idoc_trk_tbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="jo_tax_generation_queue_tbl" EntityType="Self.jo_tax_generation_queue_tbl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="jo_tax_tbl" EntityType="Self.jo_tax_tbl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="obr_tracking_tbl" EntityType="Self.obr_tracking_tbl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="payrollemployee_tax_dtl_tbl" EntityType="Self.payrollemployee_tax_dtl_tbl" Schema="dbo" store:Type="Tables" />
@@ -7157,6 +7226,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <EntitySet Name="remittance_dtl_sss_tbl" EntityType="Self.remittance_dtl_sss_tbl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="remittance_dtl_tax_month_tbl" EntityType="Self.remittance_dtl_tax_month_tbl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="remittance_dtl_tax_tbl" EntityType="Self.remittance_dtl_tax_tbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="remittance_hdr_tbl" EntityType="Self.remittance_hdr_tbl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="remittance_or_tbl" EntityType="Self.remittance_or_tbl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="remittancetype_tbl" EntityType="Self.remittancetype_tbl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
@@ -7271,25 +7341,6 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
     [AnnualTaxResult].[tax_wheld_adjusted] AS [tax_wheld_adjusted], 
     [AnnualTaxResult].[tax_due_payable] AS [tax_due_payable]
     FROM [dbo].[AnnualTaxResult] AS [AnnualTaxResult]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="remittance_hdr_tbl" EntityType="Self.remittance_hdr_tbl" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [remittance_hdr_tbl].[remittance_ctrl_nbr] AS [remittance_ctrl_nbr], 
-    [remittance_hdr_tbl].[remittance_year] AS [remittance_year], 
-    [remittance_hdr_tbl].[remittance_month] AS [remittance_month], 
-    [remittance_hdr_tbl].[employment_type] AS [employment_type], 
-    [remittance_hdr_tbl].[remittancetype_code] AS [remittancetype_code], 
-    [remittance_hdr_tbl].[remittance_descr] AS [remittance_descr], 
-    [remittance_hdr_tbl].[remittance_status] AS [remittance_status], 
-    [remittance_hdr_tbl].[remittance_dttm_created] AS [remittance_dttm_created], 
-    [remittance_hdr_tbl].[user_id_created_by] AS [user_id_created_by], 
-    [remittance_hdr_tbl].[remittance_dttm_updated] AS [remittance_dttm_updated], 
-    [remittance_hdr_tbl].[user_id_updated_by] AS [user_id_updated_by], 
-    [remittance_hdr_tbl].[remittance_dttm_released] AS [remittance_dttm_released], 
-    [remittance_hdr_tbl].[user_id_released_by] AS [user_id_released_by], 
-    [remittance_hdr_tbl].[remittance_dttm_remitted] AS [remittance_dttm_remitted], 
-    [remittance_hdr_tbl].[user_id_remitted_by] AS [user_id_remitted_by]
-    FROM [dbo].[remittance_hdr_tbl] AS [remittance_hdr_tbl]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="idoc_trk_tbl_ret_chk" EntityType="Self.idoc_trk_tbl_ret_chk" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -10673,6 +10724,8 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
             <PropertyRef Name="payroll_year" />
             <PropertyRef Name="payroll_month" />
             <PropertyRef Name="payrolltemplate_code" />
+            <PropertyRef Name="period_from" />
+            <PropertyRef Name="period_to" />
           </Key>
           <Property Name="voucher_nbr" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="empl_id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
@@ -10691,6 +10744,8 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Name="remarks" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="rcrd_status" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="acctclass_code" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="period_from" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="period_to" Type="DateTime" Nullable="false" Precision="0" />
         </EntityType>
         <EntityType Name="annualtax_hdr_tbl">
           <Key>
@@ -10799,6 +10854,8 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
             <PropertyRef Name="payroll_year" />
             <PropertyRef Name="payroll_month" />
             <PropertyRef Name="payrolltemplate_code" />
+            <PropertyRef Name="period_from" />
+            <PropertyRef Name="period_to" />
           </Key>
           <Property Name="voucher_nbr" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="empl_id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
@@ -10817,6 +10874,8 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Name="remarks" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="rcrd_status" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="acctclass_code" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="period_from" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="period_to" Type="DateTime" Nullable="false" Precision="0" />
         </EntityType>
         <EntityType Name="cashadv_dtl_tbl">
           <Key>
@@ -11970,26 +12029,6 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Name="over_tax_refund" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="tax_wheld_adjusted" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="tax_due_payable" Type="Decimal" Precision="18" Scale="2" />
-        </EntityType>
-        <EntityType Name="remittance_hdr_tbl">
-          <Key>
-            <PropertyRef Name="remittance_ctrl_nbr" />
-          </Key>
-          <Property Name="remittance_ctrl_nbr" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="remittance_year" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
-          <Property Name="remittance_month" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
-          <Property Name="employment_type" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
-          <Property Name="remittancetype_code" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
-          <Property Name="remittance_descr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="remittance_status" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="remittance_dttm_created" Type="DateTime" Precision="3" />
-          <Property Name="user_id_created_by" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="remittance_dttm_updated" Type="DateTime" Precision="3" />
-          <Property Name="user_id_updated_by" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="remittance_dttm_released" Type="DateTime" Precision="3" />
-          <Property Name="user_id_released_by" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="remittance_dttm_remitted" Type="DateTime" Precision="3" />
-          <Property Name="user_id_remitted_by" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="idoc_trk_tbl_ret_chk">
           <Key>
@@ -14265,7 +14304,7 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Name="other_loan4" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="other_loan5" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="gfaleducnl_ln" Type="Decimal" Precision="38" Scale="2" />
-          <Property Name="mpl_lite_ln" Type="Decimal" Precision="38" Scale="2" />
+          <Property Name="mpl_lite_ln" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="uniform_amt" Type="Decimal" Precision="38" Scale="2" />
           <Property Name="bir_tax" Type="Decimal" Precision="38" Scale="2" />
           <Property Name="payroll_source" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
@@ -16119,7 +16158,6 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <EntitySet Name="taxrate_percentage_tbl" EntityType="Self.taxrate_percentage_tbl" />
           <EntitySet Name="AnnualizedEmployeeTaxes" EntityType="Self.AnnualizedEmployeeTax" />
           <EntitySet Name="AnnualTaxResults" EntityType="Self.AnnualTaxResult" />
-          <EntitySet Name="remittance_hdr_tbl" EntityType="Self.remittance_hdr_tbl" />
           <EntitySet Name="idoc_trk_tbl_ret_chk" EntityType="Self.idoc_trk_tbl_ret_chk" />
           <EntitySet Name="vw_accountclass_tbl" EntityType="Self.vw_accountclass_tbl" />
           <EntitySet Name="vw_annualtax_dtl_tbl" EntityType="Self.vw_annualtax_dtl_tbl" />
@@ -17542,6 +17580,41 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
             <Parameter Name="p_employment_type" Mode="In" Type="String" />
             <Parameter Name="p_letter" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="remittance_hdr_tbl" EntityType="HRIS_ACTModel.remittance_hdr_tbl" />
+          <EntitySet Name="generate_tax_empl_dtl_success_tbl" EntityType="HRIS_ACTModel.generate_tax_empl_dtl_success_tbl" />
+          <FunctionImport Name="sp_generate_annualized_tax_forloop">
+            <Parameter Name="p_payroll_year" Mode="In" Type="String" />
+            <Parameter Name="p_empl_id" Mode="In" Type="String" />
+            <Parameter Name="result_value" Mode="InOut" Type="String" />
+            <Parameter Name="result_msg" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_run_tax_generation_loop">
+            <Parameter Name="p_payroll_year" Mode="In" Type="String" />
+            <Parameter Name="p_employment_type" Mode="In" Type="String" />
+            <Parameter Name="payroll_month" Mode="In" Type="String" />
+            <Parameter Name="p_empl_id" Mode="In" Type="String" />
+            <Parameter Name="episode" Mode="In" Type="Int32" />
+            <Parameter Name="firstgenoftheyear" Mode="In" Type="Boolean" />
+            <Parameter Name="removeprojected" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="sp_phic_share_rece_tbl_ACT" ReturnType="Collection(HRIS_ACTModel.sp_phic_share_rece_tbl_ACT_Result)">
+            <Parameter Name="p_department_code" Mode="In" Type="String" />
+            <Parameter Name="p_employment_type" Mode="In" Type="String" />
+            <Parameter Name="p_payroll_year" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_phic_share_empl_tbl_ACT" ReturnType="Collection(HRIS_ACTModel.sp_phic_share_empl_tbl_ACT_Result)">
+            <Parameter Name="p_department_code" Mode="In" Type="String" />
+            <Parameter Name="p_payrol_year" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_personnelnames_combolist_tax_jo_nogrosspay" ReturnType="Collection(HRIS_ACTModel.sp_personnelnames_combolist_tax_jo_nogrosspay_Result)">
+            <Parameter Name="par_payroll_year" Mode="In" Type="String" />
+            <Parameter Name="par_department_code" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_get_jo_grosspay_birclass" ReturnType="Collection(HRIS_ACTModel.sp_get_jo_grosspay_birclass_Result)">
+            <Parameter Name="payroll_year" Mode="In" Type="String" />
+            <Parameter Name="empl_id" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="jo_tax_generation_queue_tbl" EntityType="HRIS_ACTModel.jo_tax_generation_queue_tbl" />
         </EntityContainer>
         <ComplexType Name="sp_accountingsystemsetup_tbl_list_Result">
           <Property Type="String" Name="syssetup_type_code" Nullable="false" MaxLength="2" />
@@ -24503,6 +24576,112 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Type="Decimal" Name="hr_tax_due" Nullable="true" Precision="18" Scale="2" />
           <Property Type="Decimal" Name="hr_tax_rate" Nullable="true" Precision="18" Scale="2" />
         </ComplexType>
+        <EntityType Name="remittance_hdr_tbl">
+          <Key>
+            <PropertyRef Name="remittance_ctrl_nbr" />
+          </Key>
+          <Property Name="remittance_ctrl_nbr" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="remittance_year" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="remittance_month" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="employment_type" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="remittancetype_code" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="remittance_descr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="remittance_status" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="remittance_dttm_created" Type="DateTime" Precision="3" />
+          <Property Name="user_id_created_by" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="remittance_dttm_updated" Type="DateTime" Precision="3" />
+          <Property Name="user_id_updated_by" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="remittance_dttm_released" Type="DateTime" Precision="3" />
+          <Property Name="user_id_released_by" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="remittance_dttm_remitted" Type="DateTime" Precision="3" />
+          <Property Name="user_id_remitted_by" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="generate_tax_empl_dtl_success_tbl">
+          <Key>
+            <PropertyRef Name="empl_id" />
+            <PropertyRef Name="payroll_year" />
+            <PropertyRef Name="payroll_month" />
+            <PropertyRef Name="employment_type" />
+            <PropertyRef Name="episode" />
+          </Key>
+          <Property Name="empl_id" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="payroll_year" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="payroll_month" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="employment_type" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="episode" Type="Int32" Nullable="false" />
+        </EntityType>
+        <ComplexType Name="sp_phic_share_rece_tbl_ACT_Result">
+          <Property Type="String" Name="empl_id" Nullable="false" MaxLength="8" />
+          <Property Type="String" Name="employee_name" Nullable="false" MaxLength="211" />
+          <Property Type="String" Name="department_code" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="group_code" Nullable="false" MaxLength="2" />
+          <Property Type="Decimal" Name="empl_no_share" Nullable="false" Precision="19" />
+          <Property Type="String" Name="position_long_title" Nullable="false" MaxLength="255" />
+          <Property Type="Decimal" Name="rate_amount" Nullable="false" Precision="19" />
+          <Property Type="String" Name="empl_type" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="bir_class" Nullable="false" MaxLength="1" />
+          <Property Type="Boolean" Name="with_sworn" Nullable="false" />
+          <Property Type="Boolean" Name="fixed_rate" Nullable="false" />
+          <Property Type="Decimal" Name="total_gross_pay" Nullable="false" Precision="19" />
+          <Property Type="Boolean" Name="dedct_status" Nullable="false" />
+          <Property Type="String" Name="rcrd_status" Nullable="false" MaxLength="1" />
+          <Property Type="Decimal" Name="w_tax_perc" Nullable="false" Precision="19" />
+          <Property Type="Decimal" Name="bus_tax_perc" Nullable="false" Precision="19" />
+          <Property Type="Decimal" Name="vat_perc" Nullable="false" Precision="19" />
+          <Property Type="Decimal" Name="exmpt_amt" Nullable="false" Precision="19" />
+          <Property Type="String" Name="tax_year_effective_date" Nullable="false" MaxLength="30" />
+          <Property Type="String" Name="tax_year" Nullable="false" MaxLength="30" />
+          <Property Type="String" Name="employment_type" Nullable="true" MaxLength="2" />
+        </ComplexType>
+        <ComplexType Name="sp_phic_share_empl_tbl_ACT_Result">
+          <Property Type="String" Name="empl_id" Nullable="false" MaxLength="8" />
+          <Property Type="String" Name="employee_name" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="department_code" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="group_code" Nullable="false" MaxLength="2" />
+          <Property Type="Decimal" Name="empl_no_share" Nullable="false" Precision="19" />
+          <Property Type="String" Name="position_long_title" Nullable="false" MaxLength="150" />
+          <Property Type="Decimal" Name="rate_amount" Nullable="false" Precision="19" />
+          <Property Type="String" Name="empl_type" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="bir_class" Nullable="false" MaxLength="1" />
+          <Property Type="Boolean" Name="with_sworn" Nullable="false" />
+          <Property Type="Boolean" Name="fixed_rate" Nullable="false" />
+          <Property Type="Decimal" Name="total_gross_pay" Nullable="false" Precision="19" />
+          <Property Type="Boolean" Name="dedct_status" Nullable="false" />
+          <Property Type="String" Name="rcrd_status" Nullable="false" MaxLength="1" />
+          <Property Type="Decimal" Name="w_tax_perc" Nullable="false" Precision="19" />
+          <Property Type="Decimal" Name="bus_tax_perc" Nullable="false" Precision="19" />
+          <Property Type="Decimal" Name="vat_perc" Nullable="false" Precision="19" />
+          <Property Type="Decimal" Name="exmpt_amt" Nullable="false" Precision="19" />
+          <Property Type="String" Name="tax_year_effective_date" Nullable="false" MaxLength="30" />
+          <Property Type="String" Name="tax_year" Nullable="false" MaxLength="30" />
+          <Property Type="String" Name="employment_type" Nullable="true" MaxLength="2" />
+        </ComplexType>
+        <ComplexType Name="sp_personnelnames_combolist_tax_jo_nogrosspay_Result">
+          <Property Type="String" Name="empl_id" Nullable="false" MaxLength="8" />
+          <Property Type="String" Name="employee_name" Nullable="true" MaxLength="233" />
+          <Property Type="String" Name="position_title1" Nullable="false" MaxLength="150" />
+          <Property Type="String" Name="department_code" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="bir_class" Nullable="false" MaxLength="20" />
+        </ComplexType>
+        <ComplexType Name="sp_get_jo_grosspay_birclass_Result">
+          <Property Type="Decimal" Name="total_gross_pay" Nullable="true" Precision="19" />
+          <Property Type="String" Name="bir_class" Nullable="false" MaxLength="1" />
+        </ComplexType>
+        <EntityType Name="jo_tax_generation_queue_tbl">
+          <Key>
+            <PropertyRef Name="queue_id" />
+          </Key>
+          <Property Name="queue_id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="empl_id" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="payroll_year" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="requested_by" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="status" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="requested_at" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="started_at" Type="DateTime" Precision="3" />
+          <Property Name="finished_at" Type="DateTime" Precision="3" />
+          <Property Name="error_message" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" />
+          <Property Name="department_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -24567,6 +24746,8 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <EntitySetMapping Name="annualtax_dtl_tbl">
             <EntityTypeMapping TypeName="HRIS_ACTModel.annualtax_dtl_tbl">
               <MappingFragment StoreEntitySet="annualtax_dtl_tbl">
+                <ScalarProperty Name="period_to" ColumnName="period_to" />
+                <ScalarProperty Name="period_from" ColumnName="period_from" />
                 <ScalarProperty Name="voucher_nbr" ColumnName="voucher_nbr" />
                 <ScalarProperty Name="empl_id" ColumnName="empl_id" />
                 <ScalarProperty Name="payroll_year" ColumnName="payroll_year" />
@@ -24687,6 +24868,8 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <EntitySetMapping Name="c_tax_prjctn2actual_tbl_temp">
             <EntityTypeMapping TypeName="HRIS_ACTModel.c_tax_prjctn2actual_tbl_temp">
               <MappingFragment StoreEntitySet="c_tax_prjctn2actual_tbl_temp">
+                <ScalarProperty Name="period_to" ColumnName="period_to" />
+                <ScalarProperty Name="period_from" ColumnName="period_from" />
                 <ScalarProperty Name="voucher_nbr" ColumnName="voucher_nbr" />
                 <ScalarProperty Name="empl_id" ColumnName="empl_id" />
                 <ScalarProperty Name="payroll_year" ColumnName="payroll_year" />
@@ -25817,27 +26000,6 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
                 <ScalarProperty Name="over_tax_refund" ColumnName="over_tax_refund" />
                 <ScalarProperty Name="tax_wheld_adjusted" ColumnName="tax_wheld_adjusted" />
                 <ScalarProperty Name="tax_due_payable" ColumnName="tax_due_payable" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="remittance_hdr_tbl">
-            <EntityTypeMapping TypeName="HRIS_ACTModel.remittance_hdr_tbl">
-              <MappingFragment StoreEntitySet="remittance_hdr_tbl">
-                <ScalarProperty Name="remittance_ctrl_nbr" ColumnName="remittance_ctrl_nbr" />
-                <ScalarProperty Name="remittance_year" ColumnName="remittance_year" />
-                <ScalarProperty Name="remittance_month" ColumnName="remittance_month" />
-                <ScalarProperty Name="employment_type" ColumnName="employment_type" />
-                <ScalarProperty Name="remittancetype_code" ColumnName="remittancetype_code" />
-                <ScalarProperty Name="remittance_descr" ColumnName="remittance_descr" />
-                <ScalarProperty Name="remittance_status" ColumnName="remittance_status" />
-                <ScalarProperty Name="remittance_dttm_created" ColumnName="remittance_dttm_created" />
-                <ScalarProperty Name="user_id_created_by" ColumnName="user_id_created_by" />
-                <ScalarProperty Name="remittance_dttm_updated" ColumnName="remittance_dttm_updated" />
-                <ScalarProperty Name="user_id_updated_by" ColumnName="user_id_updated_by" />
-                <ScalarProperty Name="remittance_dttm_released" ColumnName="remittance_dttm_released" />
-                <ScalarProperty Name="user_id_released_by" ColumnName="user_id_released_by" />
-                <ScalarProperty Name="remittance_dttm_remitted" ColumnName="remittance_dttm_remitted" />
-                <ScalarProperty Name="user_id_remitted_by" ColumnName="user_id_remitted_by" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -37249,6 +37411,129 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="remittance_hdr_tbl">
+            <EntityTypeMapping TypeName="HRIS_ACTModel.remittance_hdr_tbl">
+              <MappingFragment StoreEntitySet="remittance_hdr_tbl">
+                <ScalarProperty Name="user_id_remitted_by" ColumnName="user_id_remitted_by" />
+                <ScalarProperty Name="remittance_dttm_remitted" ColumnName="remittance_dttm_remitted" />
+                <ScalarProperty Name="user_id_released_by" ColumnName="user_id_released_by" />
+                <ScalarProperty Name="remittance_dttm_released" ColumnName="remittance_dttm_released" />
+                <ScalarProperty Name="user_id_updated_by" ColumnName="user_id_updated_by" />
+                <ScalarProperty Name="remittance_dttm_updated" ColumnName="remittance_dttm_updated" />
+                <ScalarProperty Name="user_id_created_by" ColumnName="user_id_created_by" />
+                <ScalarProperty Name="remittance_dttm_created" ColumnName="remittance_dttm_created" />
+                <ScalarProperty Name="remittance_status" ColumnName="remittance_status" />
+                <ScalarProperty Name="remittance_descr" ColumnName="remittance_descr" />
+                <ScalarProperty Name="remittancetype_code" ColumnName="remittancetype_code" />
+                <ScalarProperty Name="employment_type" ColumnName="employment_type" />
+                <ScalarProperty Name="remittance_month" ColumnName="remittance_month" />
+                <ScalarProperty Name="remittance_year" ColumnName="remittance_year" />
+                <ScalarProperty Name="remittance_ctrl_nbr" ColumnName="remittance_ctrl_nbr" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="generate_tax_empl_dtl_success_tbl">
+            <EntityTypeMapping TypeName="HRIS_ACTModel.generate_tax_empl_dtl_success_tbl">
+              <MappingFragment StoreEntitySet="generate_tax_empl_dtl_success_tbl">
+                <ScalarProperty Name="episode" ColumnName="episode" />
+                <ScalarProperty Name="employment_type" ColumnName="employment_type" />
+                <ScalarProperty Name="payroll_month" ColumnName="payroll_month" />
+                <ScalarProperty Name="payroll_year" ColumnName="payroll_year" />
+                <ScalarProperty Name="empl_id" ColumnName="empl_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_generate_annualized_tax_forloop" FunctionName="HRIS_ACTModel.Store.sp_generate_annualized_tax_forloop" />
+          <FunctionImportMapping FunctionImportName="sp_run_tax_generation_loop" FunctionName="HRIS_ACTModel.Store.sp_run_tax_generation_loop" />
+          <FunctionImportMapping FunctionImportName="sp_phic_share_rece_tbl_ACT" FunctionName="HRIS_ACTModel.Store.sp_phic_share_rece_tbl_ACT">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HRIS_ACTModel.sp_phic_share_rece_tbl_ACT_Result">
+                <ScalarProperty Name="empl_id" ColumnName="empl_id" />
+                <ScalarProperty Name="employee_name" ColumnName="employee_name" />
+                <ScalarProperty Name="department_code" ColumnName="department_code" />
+                <ScalarProperty Name="group_code" ColumnName="group_code" />
+                <ScalarProperty Name="empl_no_share" ColumnName="empl_no_share" />
+                <ScalarProperty Name="position_long_title" ColumnName="position_long_title" />
+                <ScalarProperty Name="rate_amount" ColumnName="rate_amount" />
+                <ScalarProperty Name="empl_type" ColumnName="empl_type" />
+                <ScalarProperty Name="bir_class" ColumnName="bir_class" />
+                <ScalarProperty Name="with_sworn" ColumnName="with_sworn" />
+                <ScalarProperty Name="fixed_rate" ColumnName="fixed_rate" />
+                <ScalarProperty Name="total_gross_pay" ColumnName="total_gross_pay" />
+                <ScalarProperty Name="dedct_status" ColumnName="dedct_status" />
+                <ScalarProperty Name="rcrd_status" ColumnName="rcrd_status" />
+                <ScalarProperty Name="w_tax_perc" ColumnName="w_tax_perc" />
+                <ScalarProperty Name="bus_tax_perc" ColumnName="bus_tax_perc" />
+                <ScalarProperty Name="vat_perc" ColumnName="vat_perc" />
+                <ScalarProperty Name="exmpt_amt" ColumnName="exmpt_amt" />
+                <ScalarProperty Name="tax_year_effective_date" ColumnName="tax_year_effective_date" />
+                <ScalarProperty Name="tax_year" ColumnName="tax_year" />
+                <ScalarProperty Name="employment_type" ColumnName="employment_type" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_phic_share_empl_tbl_ACT" FunctionName="HRIS_ACTModel.Store.sp_phic_share_empl_tbl_ACT">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HRIS_ACTModel.sp_phic_share_empl_tbl_ACT_Result">
+                <ScalarProperty Name="empl_id" ColumnName="empl_id" />
+                <ScalarProperty Name="employee_name" ColumnName="employee_name" />
+                <ScalarProperty Name="department_code" ColumnName="department_code" />
+                <ScalarProperty Name="group_code" ColumnName="group_code" />
+                <ScalarProperty Name="empl_no_share" ColumnName="empl_no_share" />
+                <ScalarProperty Name="position_long_title" ColumnName="position_long_title" />
+                <ScalarProperty Name="rate_amount" ColumnName="rate_amount" />
+                <ScalarProperty Name="empl_type" ColumnName="empl_type" />
+                <ScalarProperty Name="bir_class" ColumnName="bir_class" />
+                <ScalarProperty Name="with_sworn" ColumnName="with_sworn" />
+                <ScalarProperty Name="fixed_rate" ColumnName="fixed_rate" />
+                <ScalarProperty Name="total_gross_pay" ColumnName="total_gross_pay" />
+                <ScalarProperty Name="dedct_status" ColumnName="dedct_status" />
+                <ScalarProperty Name="rcrd_status" ColumnName="rcrd_status" />
+                <ScalarProperty Name="w_tax_perc" ColumnName="w_tax_perc" />
+                <ScalarProperty Name="bus_tax_perc" ColumnName="bus_tax_perc" />
+                <ScalarProperty Name="vat_perc" ColumnName="vat_perc" />
+                <ScalarProperty Name="exmpt_amt" ColumnName="exmpt_amt" />
+                <ScalarProperty Name="tax_year_effective_date" ColumnName="tax_year_effective_date" />
+                <ScalarProperty Name="tax_year" ColumnName="tax_year" />
+                <ScalarProperty Name="employment_type" ColumnName="employment_type" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_personnelnames_combolist_tax_jo_nogrosspay" FunctionName="HRIS_ACTModel.Store.sp_personnelnames_combolist_tax_jo_nogrosspay">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HRIS_ACTModel.sp_personnelnames_combolist_tax_jo_nogrosspay_Result">
+                <ScalarProperty Name="empl_id" ColumnName="empl_id" />
+                <ScalarProperty Name="employee_name" ColumnName="employee_name" />
+                <ScalarProperty Name="position_title1" ColumnName="position_title1" />
+                <ScalarProperty Name="department_code" ColumnName="department_code" />
+                <ScalarProperty Name="bir_class" ColumnName="bir_class" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_get_jo_grosspay_birclass" FunctionName="HRIS_ACTModel.Store.sp_get_jo_grosspay_birclass">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HRIS_ACTModel.sp_get_jo_grosspay_birclass_Result">
+                <ScalarProperty Name="total_gross_pay" ColumnName="total_gross_pay" />
+                <ScalarProperty Name="bir_class" ColumnName="bir_class" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="jo_tax_generation_queue_tbl">
+            <EntityTypeMapping TypeName="HRIS_ACTModel.jo_tax_generation_queue_tbl">
+              <MappingFragment StoreEntitySet="jo_tax_generation_queue_tbl">
+                <ScalarProperty Name="department_code" ColumnName="department_code" />
+                <ScalarProperty Name="error_message" ColumnName="error_message" />
+                <ScalarProperty Name="finished_at" ColumnName="finished_at" />
+                <ScalarProperty Name="started_at" ColumnName="started_at" />
+                <ScalarProperty Name="requested_at" ColumnName="requested_at" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="requested_by" ColumnName="requested_by" />
+                <ScalarProperty Name="payroll_year" ColumnName="payroll_year" />
+                <ScalarProperty Name="empl_id" ColumnName="empl_id" />
+                <ScalarProperty Name="queue_id" ColumnName="queue_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

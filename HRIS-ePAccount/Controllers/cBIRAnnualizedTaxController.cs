@@ -947,7 +947,7 @@ namespace HRIS_ePAccount.Controllers
                 db_pacco.Database.CommandTimeout = int.MaxValue;
                 if (par_letter == null)
                 { par_letter = ""; }
-                var sp_annualtax_hdr_tbl_list = db_pacco.sp_annualtax_hdr_tbl_list(par_year, par_empType, par_letter).ToList();
+                var sp_annualtax_hdr_tbl_list = db_pacco.sp_annualtax_hdr_tbl_list_wtaxpmos(par_year, par_empType, par_letter).ToList();
                 HttpContext.Session["sp_annualtax_hdr_tbl_list"] = sp_annualtax_hdr_tbl_list;
                 return JSON(new { sp_annualtax_hdr_tbl_list }, JsonRequestBehavior.AllowGet);
             }

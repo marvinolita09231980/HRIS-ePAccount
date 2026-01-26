@@ -62,6 +62,8 @@
                         <div style="width:85.5%;float:right;">
                             <select class="form-control" id="ddl_employment_type" ng-model="ddl_employment_type">
                                 <option value="">--Select Here--</option>
+                                <option value="RE">Regular</option>
+                                <option value="CE">Casual</option>
                                 <option ng-repeat="empl_type in employment_type_data" value="{{empl_type.employment_type}}">{{empl_type.employment_type_descr}}</option>
                                 <option value="RX">PHIC Share Regular/Casual</option>
                                 <option value="NE">Non-employees</option>

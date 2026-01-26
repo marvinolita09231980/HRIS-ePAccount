@@ -93,7 +93,7 @@
     }
 </style>
 
-<script src="~/Angular/ng-cRemitLedgerGSIS.js"></script>
+<script src="~/Angular/ng-cRemitLedgerGSIS.js?v=@DateTime.UtcNow.ToString("yyyyMMddHHmmss")"></script>
 
 <section ng-app="ng_HRD_App" ng-controller="cRemitLedgerGSIS_ctrlr">
     <!-- The modal -->
@@ -107,7 +107,7 @@
                     </button>
                     <h2 class="modal-title" id="modalLabelSmall"><b>GSIS {{modalTitle}}</b></h2>
                 </div>
-                <form ng-model="fd" novalidate>
+                <form ng-model="fd" id="fd" novalidate>
                     <div class="modal-footer detail">
 
                         <div class="row" style="">
@@ -681,7 +681,7 @@
                                 <div style="width:50%; float:right;">
                                     <div class="input-group no-padding">
                                         <span class="input-group-addon">P</span>
-                                        <input id="txtb_gfaleducnl_ln" class="form-control detail money" ng-model="fd.txtb_gfaleducnl_ln" placeholder="0.00" disabled />
+                                        <input id="txtb_gfaleducnl_ln" class="form-control detail money" ng-model="fd.txtb_gfaleducnl_ln" placeholder="0.00" />
                                     </div>
                                 </div>
                             </div>
@@ -692,7 +692,7 @@
                                 <div style="width:50%; float:right;">
                                     <div class="input-group no-padding">
                                         <span class="input-group-addon">P</span>
-                                        <input id="txtb_mpl_lite_ln" class="form-control detail money" ng-model="fd.txtb_mpl_lite_ln" placeholder="0.00" disabled />
+                                        <input id="txtb_mpl_lite_ln" class="form-control detail money" ng-model="fd.txtb_mpl_lite_ln" placeholder="0.00" />
                                     </div>
                                 </div>
                             </div>

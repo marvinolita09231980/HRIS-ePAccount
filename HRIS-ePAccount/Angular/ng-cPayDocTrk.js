@@ -646,7 +646,7 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
 
     var FETCH_DATA = function (nbr)
     {
-
+        
         try
         {
             var dtl = [];
@@ -670,7 +670,7 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
                 dtl = rel
                 s.corrent_row  = rel
             }
-
+            console.log(dtl[0])
             var t = dtl[0].doc_status.substring(0, 1)
 
             if ((dtl[0].rcvd_req_doc == 1 || dtl[0].rlsd_req_doc == 1)) {
@@ -715,7 +715,7 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
                 }
             }
            
-
+           
             if (t == "V")
             {
                 s.list_type     = "V"
@@ -822,6 +822,7 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
         }
         catch (e)
         {
+            console.log(e)
             FetchDataAgain();
         }
     }

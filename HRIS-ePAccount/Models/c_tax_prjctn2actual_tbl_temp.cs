@@ -31,5 +31,7 @@ namespace HRIS_ePAccount.Models
         public string remarks { get; set; }
         public string rcrd_status { get; set; }
         public string acctclass_code { get; set; }
+        public System.DateTime period_from { get; set; }
+        public System.DateTime period_to { get; set; }
     }
 }

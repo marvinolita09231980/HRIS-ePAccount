@@ -20,6 +20,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Text;
+using System.Data.SqlClient;
 
 namespace HRIS_ePAccount.Controllers
 {
@@ -91,15 +92,37 @@ namespace HRIS_ePAccount.Controllers
         public ActionResult GenerateTax(string par_year, string par_empType)
         {
             string icon = "";
-
+            int episode = 0; 
             var user_id = Session["user_id"].ToString();
             GetAllowAccess();
             db_pacco.Database.CommandTimeout = int.MaxValue;
             var sp_generate_annualtax_tax_rece = new object();
             var sp_generate_payrollemployee_tax_hdr_dtl = new object();
             try
-            {
-                if (par_empType == "RC")
+            {    
+                if(par_empType == "RE" || par_empType == "CE")
+                {
+                    string currentMonth = DateTime.Now.ToString("MM");
+                    var ep = db_pacco.generate_tax_empl_dtl_success_tbl
+                            .Where(a => a.payroll_year == par_year
+                                     && a.employment_type == par_empType
+                                     && a.payroll_month == currentMonth)
+                            .Max(a => a.episode);
+                    episode = ep + 1;
+
+                    var res = db_pacco.Database.SqlQuery<TaxGenResult>(
+                        "EXEC dbo.sp_run_tax_generation_loop @p_payroll_year,@p_employment_type,@payroll_month,@p_empl_id,@episode,@firstgenoftheyear,@removeprojected",
+                        new SqlParameter("@p_payroll_year", par_year),
+                        new SqlParameter("@p_employment_type", par_empType),
+                        new SqlParameter("@payroll_month", currentMonth),
+                        new SqlParameter("@p_empl_id", ""),
+                        new SqlParameter("@episode", episode),
+                        new SqlParameter("@firstgenoftheyear", false),
+                        new SqlParameter("@removeprojected", false)
+                    ).FirstOrDefault();
+
+                }           
+                else if (par_empType == "RC")
                 {
 
                     sp_generate_annualtax_tax_rece = db_pacco.sp_generate_annualtax_tax_rece(par_year, user_id).FirstOrDefault();
@@ -169,5 +192,12 @@ namespace HRIS_ePAccount.Controllers
             return JSON(new { um, message, sp_generate_annualtax_tax_rece, sp_generate_payrollemployee_tax_hdr_dtl }, JsonRequestBehavior.AllowGet);
 
         }
+    }
+
+    public class TaxGenResult
+    {
+        public bool success { get; set; }
+        public int processed_count { get; set; }
+        public string result_msg { get; set; }
     }
 }

@@ -43,12 +43,85 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
     s.isDisabledWHeld       = false
     s.isDisabledBTax        = false
     s.isDisabledVat         = false
-    s.isDisabledExmpt       = false
+    s.isDisabledExmpt = false
+    s.pending_gen_count = 0;
+    s.failed_gen_count = 0;
+
+    toastr.options = {
+        closeButton: true,
+        progressBar: true,
+        newestOnTop: true,
+        timeOut: 3000,
+        extendedTimeOut: 1000,
+        positionClass: "toast-top-right",
+        preventDuplicates: true
+    };
 
     var currentBIRClass = "";
+
+    var queuePoller = null;
+    s.pending_gen_count = 0;
+    s.failed_gen_count = 0;
+    s.running_gen_count = 0;
+
+    s.refreshQueueCounts = function () {
+        if (!$("#ddl_year").val() || !$("#ddl_department").val()) return;
+
+        h.post("../cJOTaxRate/GetQueueCounts", {
+            par_payroll_year: $("#ddl_year").val(),
+            par_department_code: $("#ddl_department").val()
+        }).then(function (d) {
+            if (d.data.message === "success") {
+                s.pending_gen_count = d.data.pending_count || 0;
+                s.failed_gen_count = d.data.failed_count || 0;
+                s.running_gen_count = d.data.running_count || 0;
+            }
+        });
+    };
+
+    // start polling every 5 seconds
+
+    s.startQueuePolling = function () {
+        if (queuePoller) clearInterval(queuePoller);
+        queuePoller = setInterval(function () {
+            s.refreshQueueCounts();
+            if (!s.$$phase) s.$apply();
+        }, 5000);
+    };
+
+    // stop polling on controller destroy (avoid leaks)
+    s.$on("$destroy", function () {
+        if (queuePoller) clearInterval(queuePoller);
+    });
+
+
+    $('#main_modal').on('shown.bs.modal', function () {
+        var $ddl = $('#ddl_employee_name');
+
+        if ($ddl.hasClass('select2-hidden-accessible')) {
+            $ddl.select2('destroy');
+        }
+
+        $ddl.select2({
+            width: '100%',
+            dropdownParent: $('#main_modal')
+        });
+
+        $ddl.off('change').on('change', function () {
+            if (s._syncingEmployeeSelect2) return; // ✅ prevent loop
+            s.selectEmployee();
+            if (!s.$$phase) s.$apply();
+        });
+
+        // IMPORTANT: call AFTER select2()
+        toggleEmployeeSelect2UI(!s.isShowNameInput);
+    });
+
     
     function init() {
-
+        //$("#ddl_employee_name").select2().on('change', function (e) {
+        //    s.selectEmployee();
+        //})
         $("#loading_data").modal("show")
         RetrieveYear()
         h.post("../cJOTaxRate/InitializeData", { par_payroll_year: new Date().getFullYear().toString() }).then(function (d) {
@@ -161,6 +234,9 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
         })
     }
     init()
+    
+    s.startQueuePolling();
+    s.refreshQueueCounts();
 
     var init_table_data = function (par_data) {
         s.datalistgrid = par_data;
@@ -416,17 +492,18 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
 
         if ($("#ddl_year").val() != "" && $("#ddl_department").val() != "")
         {
-            h.post("../cJOTaxRate/RetrieveDataListGrid",
+            h.post("../RetrieveReadOnlyData/RetrieveDataListGrid",
                 {
                     pay_payroll_year: $("#ddl_year").val(),
                     par_department_code: $("#ddl_department").val(),
                     par_history: history
 
                 }).then(function (d)
-                {
+                { 
+                    
                     if (d.data.sp_payrollemployee_tax_hdr_tbl_list.length > 0)
                     {
-                        console.log(d.data.sp_payrollemployee_tax_hdr_tbl_list)
+                        s.loadQueueCounts();
                         s.datalistgrid = d.data.sp_payrollemployee_tax_hdr_tbl_list;
                         s.oTable.fnClearTable();
                         s.oTable.fnAddData(s.datalistgrid)
@@ -463,11 +540,153 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
 
     
 
+    
+    s.loadPendingGenCount = function () {
+
+        var yr = s.ddl_year || $("#ddl_year").val();
+        if (!yr) return;
+
+        var department = s.ddl_department || $("#ddl_department").val();
+        if (!department) return;
+
+        h.post("../cJOTaxRate/GetPendingGenCount", {
+            par_payroll_year: yr,
+            par_department_code: department
+        }).then(function (d) {
+
+            if (d.data.message === "success") {
+                s.pending_gen_count = d.data.pending_count || 0;
+            } else {
+                s.pending_gen_count = 0;
+            }
+
+         
+
+        });
+    };
+
+    s.confirmRunPendingGeneration = function () {
+
+        if (s.pending_gen_count <= 0) return;
+
+        swal({
+            title: "Run Pending Tax Generation?",
+            text: "There are " + s.pending_gen_count +
+                " pending employee tax generation(s).\n\nDo you want to proceed?",
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "Cancel",
+                    visible: true,
+                    className: "btn-danger"
+                },
+                confirm: {
+                    text: "Yes, Generate Now",
+                    className: "btn-success"
+                }
+            },
+            dangerMode: false
+        }).then(function (willRun) {
+
+            if (willRun) {
+                s.runPendingGeneration();
+            }
+        });
+    };
+
+    s.runPendingGeneration = function () {
+
+        var yr = s.ddl_year || $("#ddl_year").val();
+        var dept = s.ddl_department || $("#ddl_department").val();
+
+        if (!yr || !dept) {
+            swal("Missing Filter",
+                "Payroll year and department are required.",
+                "warning");
+            return;
+        }
+
+        // Optional: show spinner
+        s.isPendingCountLoading = true;
+
+        h.post("../cJOTaxRate/RunPendingGeneration", {
+            par_payroll_year: yr,
+            par_department_code: dept
+        }).then(function (d) {
+
+            if (d.data.message === "success") {
+                swal("Generation Started",
+                    "Pending tax generation is now processing.",
+                    "success");
+
+                // refresh pending count
+                s.refreshQueueCounts();
+                s.loadQueueCounts();
+            }
+            else {
+                swal("Error",
+                    d.data.message || "Unable to start generation.",
+                    "error");
+            }
+
+            s.isPendingCountLoading = false;
+
+        }, function () {
+            s.isPendingCountLoading = false;
+            swal("Error",
+                "Server error while starting generation.",
+                "error");
+        });
+    };
+
+    s.confirmRetryFailedGeneration = function () {
+        swal({
+            title: "Retry failed generations?",
+            text: "This will re-queue failed items and run the background job.",
+            icon: "warning",
+            buttons: true
+        }).then(function (ok) {
+            if (!ok) return;
+
+            h.post("../cJOTaxRate/RetryFailed", {
+                par_payroll_year: $("#ddl_year").val(),
+                par_department_code: $("#ddl_department").val()
+            }).then(function (d) {
+                if (d.data.message === "success") {
+                    toastr.success("Failed items re-queued. Background job started.");
+                } else {
+                    toastr.error(d.data.message);
+                }
+            });
+        });
+    };
 
 
+    s.loadQueueCounts = function () {
+        h.post("../cJOTaxRate/GetQueueCounts", {
+            par_payroll_year: $("#ddl_year").val(),
+            par_department_code: $("#ddl_department").val()
+        }).then(function (d) {
+            if (d.data.message === "success") {
+                s.pending_gen_count = d.data.pending_count || 0;
+                s.failed_gen_count = d.data.failed_count || 0;
+            }
+        });
+    };
+
+    
 
     function clearentry()
     {
+
+        s.ddl_employee_name = "";
+        $("#ddl_employee_name").val("")
+        s.txtb_empl_id = ""
+        $("#txtb_empl_id").val("")
+        s.txtb_position = ""
+        $("#txtb_position").val("")
+        s.txtb_effective_date = ""
+        $("#txtb_effective_date").val("")
         $("#ddl_fixed_rate").val("")
         $("#ddl_with_sworn").val("")
         $("#ddl_bir_class").val("")
@@ -933,13 +1152,17 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
 
     function getFromValue() {
 
-
+        var employeename = $("#ddl_employee_name option:selected")
+            .text()
+            .split(" - ")
+            .slice(1)
+            .join(" - ");
 
         var data =
         {
 
             empl_id                                 : s.txtb_empl_id
-            ,employee_name                          : $("#ddl_employee_name option:selected").html()
+            ,employee_name                         : employeename
             ,employment_type                        : "JO"
             ,position_title1                        : s.txtb_position
             ,effective_date                         : s.isAction == "ADD" ? $("#txtb_effective_date").val() : $("#txtb_effective_date_hid").val()
@@ -1038,7 +1261,9 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
             
             var dt = getFromValue()
 
-           
+            var payroll_year = $("#ddl_year").val()
+            var department_code = $("#ddl_department").val()
+             
             var history = "N"
             var effective_date = ""
             if (s.chckbx_history == true) {
@@ -1074,19 +1299,21 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
                   
                     h.post("../cJOTaxRate/SaveEDITInDatabase",
                         {
-                            data: dt
+                             data: dt
                             ,par_effective_date: effective_date
                             ,par_empl_id: s.txtb_empl_id
-                            ,par_action: s.isAction
+                            , par_action: s.isAction
+                            , par_payroll_year: payroll_year
+                            , par_department_code: department_code
                         }).then(function (d) {
-                            if (d.data.message = "success") {
+                            if (d.data.message == "success") {
 
 
                                 if (s.isAction == "ADD")
                                 {
+                                    
 
-
-
+                                    dt.total_gross_pay = d.data.gp.total_gross_pay
                                     $("#main_modal").modal("hide")
                                     s.datalistgrid.push(dt)
                                     s.oTable.fnClearTable();
@@ -1112,29 +1339,28 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
                                     else {
                                         var history = "N"
                                     }
+                                    $("#btn_save").removeClass("fa fa-spinner fa-spin");
+                                    $("#btn_save").addClass("fa fa-save");
+                                    $("#btn_save").removeClass("fa fa-spinner fa-spin");
+                                    $("#btn_save").addClass("fa fa-save");
+                                    $("#main_modal").modal("hide")
+                                    
 
-                                    h.post("../cJOTaxRate/GenerateByEmployee", {
-                                        par_empl_id             : s.txtb_empl_id
-                                        ,par_payroll_year       : $("#ddl_year").val()
-                                        ,par_department_code    : $("#ddl_department").val()
-                                        ,par_history            : history
-                                    }).then(function (d) {
+                                    //h.post("../cJOTaxRate/GenerateByEmployee", {
+                                    //    par_empl_id             : s.txtb_empl_id
+                                    //    ,par_payroll_year       : $("#ddl_year").val()
+                                    //    ,par_department_code    : $("#ddl_department").val()
+                                    //    ,par_history            : history
+                                    //}).then(function (d) {
 
-                                        if (d.data.message == "success")
-                                        {
+                                    //    if (d.data.message == "success")
+                                    //    {
 
-                                            $("#btn_save").removeClass("fa fa-spinner fa-spin");
-                                            $("#btn_save").addClass("fa fa-save");
-
-                                            swal("Successfully Added!", "New record has been successfully added!", "success");
-                                            $("#btn_save").removeClass("fa fa-spinner fa-spin");
-                                            $("#btn_save").addClass("fa fa-save");
-                                            $("#main_modal").modal("hide")
-
+                                    //        toastr.success("New record has been successfully added!", "Successfully Added!");
                                            
-                                        }
+                                    //    }
 
-                                    })
+                                    //})
 
                                     
                                 }
@@ -1148,7 +1374,7 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
                                     $("#btn_save").removeClass("fa fa-spinner fa-spin");
                                     $("#btn_save").addClass("fa fa-save");
                                 }
-                               
+                                s.loadQueueCounts();
                             }
 
                             else
@@ -1166,8 +1392,10 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
                 }
 
                 else {
-                    swal("Unable to Add, Data has been Added by other user/s!", { icon: "warning", });
 
+                    swal(d.data.message, { icon: "warning", });
+                    $("#btn_save").removeClass("fa fa-spinner fa-spin");
+                    $("#btn_save").addClass("fa fa-save");
 
                     //if (d.data.sp_annualtax_hdr_tbl_list != null) {
                     //    s.datalistgrid.push(d.data.sp_annualtax_hdr_tbl_list)
@@ -1195,17 +1423,24 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
     }
 
     s.btn_edit_action = function (id_ss) {
+        
 
         s.isShowNameSelect = false;
         s.isShowNameInput = true;
+        setTimeout(function () {
+            toggleEmployeeSelect2UI(false);
+        }, 0);
         s.isShowEffectiveDate_hid = true
         s.isShowEffectiveDate = false
+        
         $("#ddl_status").val("N")
         s.ishowsave = true;
         index_update = id_ss
         clearentry()
         s.isAction = "EDIT"
         s.ModalTitle = "Edit This Record"
+
+
 
         var history = "N"
 
@@ -1235,36 +1470,7 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
                 s.txtb_empl_name           = s.datalistgrid[id_ss].employee_name
                 s.txtb_empl_id             = s.datalistgrid[id_ss].empl_id
                 s.txtb_position = s.datalistgrid[id_ss].position_title1
-                //if (s.datalistgrid[id_ss].rcrd_status == "A") {
-                //    $("#txtb_effective_date_hid").prop("disabled",true)
-                //    $("#ddl_bir_class").prop("disabled", true)
-                //    $("#ddl_fixed_rate").prop("disabled", true)
-                //    $("#ddl_with_sworn").prop("disabled", true)
-                //    $("#ddl_deduction_status").prop("disabled", true)
-                //    $("#ddl_status").prop("disabled", true)
-                //    $("#ddl_w_held").prop("disabled", true)
-                //    $("#ddl_b_tax").prop("disabled", true)
-                //    $("#ddl_vat").prop("disabled", true)
-                //    $("#btn_save_tx_edit").prop("disabled", true)
-                //    $("#alert_section").css('color', 'red');
-                //    $("#alert_section").text("Not allowed for edit, tax generation already approved. Please contact HR")
-                    
-                //}
-                //else{
-                //    $("#txtb_effective_date_hid").prop("disabled", false)
-                //    $("#ddl_bir_class").prop("disabled", false)
-                //    $("#ddl_fixed_rate").prop("disabled", false)
-                //    $("#ddl_with_sworn").prop("disabled", false)
-                //    $("#ddl_deduction_status").prop("disabled", false)
-                //    $("#ddl_status").prop("disabled", false)
-                //    $("#ddl_w_held").prop("disabled", false)
-                //    $("#ddl_b_tax").prop("disabled", false)
-                //    $("#ddl_vat").prop("disabled", false)
-                //    $("#btn_save_tx_edit").prop("disabled", false)
-
-                //    $("#alert_section").text("")
-                    
-                //}
+              
 
                 $("#txtb_effective_date_hid").val(s.datalistgrid[id_ss].effective_date)
                 $("#ddl_bir_class").val(s.datalistgrid[id_ss].bir_class)
@@ -1408,74 +1614,193 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
     }
 
     //delete row in dataTable
+    //s.btn_delete_action = function (id_ss) {
+    //    s.isAction = "DELETE"
+    //    var tname = "oTable"
+    //    swal({
+    //        title: "Are you sure to delete this record?",
+    //        text: "Once deleted, you will not be able to recover this record!",
+    //        icon: "warning",
+    //        buttons: true,
+    //        dangerMode: true,
+    //    }).then(function (willDelete) {
+    //        if (willDelete) {
+                
+    //                    h.post("../cJOTaxRate/DeleteFromDatabase", {
+    //                        par_empl_id     : s.datalistgrid[id_ss].empl_id
+    //                        ,effective_date : s.datalistgrid[id_ss].effective_date
+    //                    }).then(function (d) {
+
+    //                        if (d.data.icon = "success") {
+    //                            var id = s[tname][0].id;
+    //                            var page = $("#" + id).DataTable().page.info().page
+    //                            s[tname].fnDeleteRow(id_ss, null, true);
+    //                            s.datalistgrid = DataTable_data(tname)
+
+    //                            s.oTable.fnClearTable();
+    //                            s.oTable.fnAddData(s.datalistgrid)
+    //                            //s.oTable.refreshTable("oTable", "")
+    //                            changePage(tname, page, id)
+
+    //                            swal("Your record has been deleted successfully!", { icon: "success", });
+    //                        }
+
+    //                        else
+    //                        {
+    //                            swal("Unable to Delete, Data has been deleted by other user/s!", { icon: "warning", });
+
+
+    //                            var id = s[tname][0].id;
+    //                            ////var page = $("#" + id).DataTable().page.info().page
+
+    //                            s[tname].fnDeleteRow(id_ss, null, true);
+    //                            s.datalistgrid = DataTable_data(tname)
+
+
+    //                            if (d.data.sp_annualtax_hdr_tbl_list != null) {
+    //                                s.oTable.fnClearTable();
+    //                                s.oTable.fnAddData(s.datalistgrid)
+
+    //                            }
+
+    //                            else {
+    //                                s.oTable.fnClearTable();
+    //                                s.oTable.fnAddData(s.datalistgrid)
+    //                            }
+
+    //                            $("#main_modal").modal("hide")
+    //                        }
+
+
+    //                    })
+    //                }
+
+
+
+    //        })
+    //}
+
+
     s.btn_delete_action = function (id_ss) {
-        s.isAction = "DELETE"
-        var tname = "oTable"
+        s.isAction = "DELETE";
+        var tname = "oTable";
+
         swal({
-            title: "Are you sure to delete this record?",
+            title: "Delete this record?",
             text: "Once deleted, you will not be able to recover this record!",
             icon: "warning",
-            buttons: true,
-            dangerMode: true,
+            buttons: {
+                cancel: {
+                    text: "Cancel",
+                    visible: true,
+                    closeModal: true
+                },
+                confirm: {
+                    text: "Yes, delete",
+                    value: true,
+                    closeModal: false // keep swal open, we will show loading
+                }
+            },
+            dangerMode: true
         }).then(function (willDelete) {
-            if (willDelete) {
-                
-                        h.post("../cJOTaxRate/DeleteFromDatabase", {
-                            par_empl_id     : s.datalistgrid[id_ss].empl_id
-                            ,effective_date : s.datalistgrid[id_ss].effective_date
-                        }).then(function (d) {
+            if (!willDelete) return;
 
-                            if (d.data.icon = "success") {
-                                var id = s[tname][0].id;
-                                var page = $("#" + id).DataTable().page.info().page
-                                s[tname].fnDeleteRow(id_ss, null, true);
-                                s.datalistgrid = DataTable_data(tname)
+            // ✅ Loading state (pro)
+            swal({
+                title: "Deleting…",
+                text: "Please wait while we remove the record.",
+                buttons: false,
+                closeOnClickOutside: false,
+                closeOnEsc: false
+            });
 
-                                s.oTable.fnClearTable();
-                                s.oTable.fnAddData(s.datalistgrid)
-                                //s.oTable.refreshTable("oTable", "")
-                                changePage(tname, page, id)
+            var row = s.datalistgrid[id_ss];
+            if (!row) {
+                swal("Error", "Row not found. Please refresh the page.", "error");
+                return;
+            }
 
-                                swal("Your record has been deleted successfully!", { icon: "success", });
-                            }
+            h.post("../cJOTaxRate/DeleteFromDatabase", {
+                par_empl_id: row.empl_id,
+                effective_date: row.effective_date
+            }).then(function (d) {
 
-                            else
-                            {
-                                swal("Unable to Delete, Data has been deleted by other user/s!", { icon: "warning", });
+                // ✅ FIX: use comparison, not assignment
+                if (d.data && d.data.icon === "success") {
 
+                    // keep current page before rebind
+                    var id = s[tname][0].id;
+                    var page = $("#" + id).DataTable().page.info().page;
 
-                                var id = s[tname][0].id;
-                                ////var page = $("#" + id).DataTable().page.info().page
+                    // remove row and rebuild datalistgrid
+                    s[tname].fnDeleteRow(id_ss, null, true);
+                    s.datalistgrid = DataTable_data(tname);
 
-                                s[tname].fnDeleteRow(id_ss, null, true);
-                                s.datalistgrid = DataTable_data(tname)
+                    // rebind (your existing pattern)
+                    s.oTable.fnClearTable();
+                    s.oTable.fnAddData(s.datalistgrid);
 
+                    // restore page
+                    changePage(tname, page, id);
 
-                                if (d.data.sp_annualtax_hdr_tbl_list != null) {
-                                    s.oTable.fnClearTable();
-                                    s.oTable.fnAddData(s.datalistgrid)
+                    swal({
+                        title: "Deleted!",
+                        text: "Your record has been deleted successfully.",
+                        icon: "success",
+                        timer: 1500,
+                        buttons: false
+                    });
 
-                                }
-
-                                else {
-                                    s.oTable.fnClearTable();
-                                    s.oTable.fnAddData(s.datalistgrid)
-                                }
-
-                                $("#main_modal").modal("hide")
-                            }
-
-
-                        })
+                    // ✅ Optional: update badges immediately
+                    if (typeof s.refreshQueueCounts === "function") {
+                        s.refreshQueueCounts();
                     }
+                }
+                else {
 
+                    // server returned warning/error message
+                    var msg = (d.data && d.data.message) ? d.data.message
+                        : "Unable to delete. It may have already been deleted by another user.";
 
+                    // remove row locally if it’s already gone (your original behavior)
+                    var id = s[tname][0].id;
+                    var page = $("#" + id).DataTable().page.info().page;
 
-            })
-    }
+                    s[tname].fnDeleteRow(id_ss, null, true);
+                    s.datalistgrid = DataTable_data(tname);
 
+                    s.oTable.fnClearTable();
+                    s.oTable.fnAddData(s.datalistgrid);
 
-    
+                    changePage(tname, page, id);
+
+                    swal({
+                        title: "Delete not completed",
+                        text: msg,
+                        icon: "warning"
+                    });
+
+                    $("#main_modal").modal("hide");
+                }
+            }).catch(function (err) {
+
+                // ✅ always close loading and show a clean error
+                var msg = "Server error occurred while deleting. Please try again.";
+
+                // if your backend returns { message = "...", icon="error" }
+                if (err && err.data) {
+                    if (typeof err.data === "object" && err.data.message) msg = err.data.message;
+                }
+
+                swal({
+                    title: "Error",
+                    text: msg,
+                    icon: "error"
+                });
+            });
+        });
+    };
+
     
 
    
@@ -1530,8 +1855,12 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
     s.btn_add_action = function ()
     {
         clearentry()
+        
         s.isShowNameSelect = true;
         s.isShowNameInput = false;
+        setTimeout(function () {
+            toggleEmployeeSelect2UI(true);
+        }, 0);
         s.ishowsave = true;
         $("#ddl_status").val("N")
         s.isShowEffectiveDate_hid = false
@@ -1543,70 +1872,155 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
         $("#btn_add").addClass("fa fa-spinner fa-spin");
 
         s.isAction = "ADD"
-        //var history = "";
 
-        //if (s.chckbx_history == true)
-        //{
-        //    history = "Y"
-        //}
-
-        //else
-        //{
-        //    history = "N"
-        //}
-
-
-
-        h.post("../cJOTaxRate/RetrieveEmployeeList",
+        
+        h.post("../RetrieveReadOnlyData/RetrieveEmployeeList",
             {
                 par_payroll_year: $("#ddl_year option:selected").val(),
                 par_department_code: $("#ddl_department option:selected").val()
             }).then(function (d)
             {
-                if (d.data.message == "success")
-                {
-                    if (d.data.sp_personnelnames_combolist_tax_jo.length > 0)
-                    {
-                        
-                        s.employeenames = d.data.sp_personnelnames_combolist_tax_jo
+                if (d.data.message == "success") {
+                    if (d.data.sp_personnelnames_combolist_tax_jo.length > 0) {
 
-                        console.log(s.employeenames)
-
+                        s.employeenames = separateEffctiveDate(d.data.sp_personnelnames_combolist_tax_jo)
                     }
 
-                    else
-                    {
+                    else {
                         s.employeenames = null;
-                    } 
+                    }
                     //$("#loading_data").modal("hide")
                     $("#main_modal").modal("show")
                     $("#btn_add").removeClass("fa fa-spinner fa-spin");
                     $("#btn_add").addClass("fa fa-plus-circle");
 
-                   //DIRI ANG LAST WALA KA ADD SA DATEPICKER SA MODAL
-                   
+                    //DIRI ANG LAST WALA KA ADD SA DATEPICKER SA MODAL
 
                 }
+                else {
+                    $("#btn_add").removeClass("fa fa-spinner fa-spin");
+                    $("#btn_add").addClass("fa fa-plus-circle");
+                }
              
-
             })
         
-
     }
 
 
+    function separateEffctiveDate(data) {
+        const personnel = data;
+        const updatedData = personnel.map(item => {
+           
+            const [namePart, datePart] = item.employee_name.split(':');
 
-    s.selectEmployee = function (id) {
+            return {
+                ...item,
+                employee_name: namePart.trim(),           
+                effective_date: (datePart || '').trim()   
+            };
+        });
+       return updatedData;
+    }
+
+    function forceSingleSelect2ByNgxIndex(selectId, ngxIndex) {
+        var $sel = $("#" + selectId);
+
+        // find the target option by ngx-data
+        var $target = $sel.find("option[ngx-data='" + ngxIndex + "']");
+        if (!$target.length) return;
+
+        var val = $target.val();
+        var text = $target.text();
+
+        // Guard ON so our .trigger("change") won't re-run your handler
+        s._syncingEmployeeSelect2 = true;
+
+        // ✅ The important part: set value (Select2 listens to this)
+        $sel.val(val);
+
+        // (Optional) also clean selected attrs if you really want
+        $sel.find("option").prop("selected", false).removeAttr("selected");
+        $target.prop("selected", true).attr("selected", "selected");
+
+        // ✅ refresh Select2 UI
+        if ($sel.hasClass("select2-hidden-accessible")) {
+            $sel.trigger("change");          // this updates the rendered <span>
+        } else {
+            $sel.trigger("change");
+        }
+
+        // Guard OFF after Select2 finishes updating
+        setTimeout(function () {
+            s._syncingEmployeeSelect2 = false;
+
+            // Extra safety: if UI still shows old text, force it (rare)
+            var s2 = $sel.data("select2");
+            if (s2 && s2.$selection) {
+                s2.$selection.find(".select2-selection__rendered")
+                    .text(text)
+                    .attr("title", text);
+            }
+        }, 0);
+    }
+
+
+    s.selectEmployee = function () {
+        
+        var $sel = $("#ddl_employee_name");
+        var ngxIndex = $sel.find("option:selected").attr("ngx-data");
+        forceSingleSelect2ByNgxIndex("ddl_employee_name", ngxIndex);
+
+        var id = $sel.val();
+        if (!id) return;
         empl = s.employeenames.filter(function (d) {
             return d.empl_id == id
         })
 
+        if (!empl || empl.length === 0) return;
+        
         $("#txtb_empl_id").val(empl[0].empl_id)
         s.txtb_empl_id = empl[0].empl_id
         $("#txtb_position").val(empl[0].position_title1)
         s.txtb_position = empl[0].position_title1
 
+        var effDate = new Date(empl[0].effective_date);
+        var currentYear = $("#ddl_year").val();
+
+        if (effDate.getFullYear() < currentYear) {
+            effDate = new Date(currentYear, 0, 1); // Jan 1 of current year
+        }
+
+        // format as yyyy-mm-dd for input[type=date]
+        var yyyy = effDate.getFullYear();
+        var mm = String(effDate.getMonth() + 1).padStart(2, '0');
+        var dd = String(effDate.getDate()).padStart(2, '0');
+
+        var formattedDate = yyyy + '-' + mm + '-' + dd;
+
+        // set both jQuery and Angular model
+        $("#txtb_effective_date").val(formattedDate);
+        s.txtb_effective_date = formattedDate;
+
     }
+
+    function toggleEmployeeSelect2UI(show) {
+        var $sel = $("#ddl_employee_name");
+
+        // get the actual select2 container (reliable)
+        var s2 = $sel.data("select2");
+        var $container = s2 ? s2.$container : $sel.next(".select2-container");
+
+        if (show) {
+            $sel.prop("disabled", false);
+            $sel.removeClass("ng-hide");     // just in case
+            if ($container && $container.length) $container.show();
+        } else {
+            $sel.prop("disabled", true);
+            if ($container && $container.length) $container.hide();
+        }
+    }
+
+
 
     //**************************************//
     //***Get Page Number****//
@@ -1789,22 +2203,22 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
         var sp = "sp_annualtax_hdr_tbl_rep"
         var parameters = "p_payroll_year," + $("#ddl_year option:selected").val() + ",p_empl_id," + s.datalistgrid[id_ss].empl_id
 
-        h.post("../cJOTaxRate/PreviousValuesonPage_cBIRAnnualizedTax",
-            {
-                par_year: $("#ddl_year option:selected").val()
-                , par_tax_due: s.datalistgrid[id_ss].monthly_tax_due
-                , par_tax_rate: s.datalistgrid[id_ss].tax_rate
-                , par_empl_id: s.datalistgrid[id_ss].empl_id
-                , par_emp_type: $("#ddl_employment_type option:selected").val()
-                , par_emp_type_descr: s.datalistgrid[id_ss].employmenttype_description
-                , par_letter: $("#ddl_letter option:selected").val()
-                , par_show_entries: $("#ddl_show_entries option:selected").val()
-                , par_page_nbr: info.page
-                , par_search: s.search_box
-                , par_sort_value: sort_value
-                , par_sort_order: sort_order
-                , par_position: s.datalistgrid[id_ss].position_title1
-            }).then(function (d) {
+        //h.post("../cJOTaxRate/PreviousValuesonPage_cBIRAnnualizedTax",
+        //    {
+        //          par_year: $("#ddl_year option:selected").val()
+        //        , par_tax_due: s.datalistgrid[id_ss].monthly_tax_due
+        //        , par_tax_rate: s.datalistgrid[id_ss].tax_rate
+        //        , par_empl_id: s.datalistgrid[id_ss].empl_id
+        //        , par_emp_type: $("#ddl_employment_type option:selected").val()
+        //        , par_emp_type_descr: s.datalistgrid[id_ss].employmenttype_description
+        //        , par_letter: $("#ddl_letter option:selected").val()
+        //        , par_show_entries: $("#ddl_show_entries option:selected").val()
+        //        , par_page_nbr: info.page
+        //        , par_search: s.search_box
+        //        , par_sort_value: sort_value
+        //        , par_sort_order: sort_order
+        //        , par_position: s.datalistgrid[id_ss].position_title1
+        //    }).then(function (d) {
 
                 h.post("../cJOTaxRate/ReportCount",
                     {
@@ -1833,7 +2247,7 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
                     });
 
 
-            })
+           //});
 
 
 

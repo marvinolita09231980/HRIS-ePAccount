@@ -386,9 +386,17 @@ ng_HRD_App.controller("cPHICShareTaxRate_ctrlr", function (commonScript,$scope, 
     init()
 
     function RetrieveDataPhicJO() {
+        var formdata2 = cs.getFormDataByFieldName("header_form", "ddl_year")
+        if (formdata2 == false) {
+            $("#loading_data").modal("hide")
+            return
+        }
+       
+        var payrollyear = $("#ddl_year").val()
         h.post("../cPHICShareTaxRate/RetrieveDataListGrid",
             {
                 par_department_code: $("#ddl_department").val(),
+                par_payroll_year: payrollyear,
             }).then(function (d) {
                 if (d.data.sp_payrollemployee_tax_hdr_tbl_list.length > 0) {
 
@@ -406,10 +414,12 @@ ng_HRD_App.controller("cPHICShareTaxRate_ctrlr", function (commonScript,$scope, 
 
     var RetrieveDataPhicReCe = function () {
         var employment_type = $("#ddl_employment_type").val() 
+        var payroll_year = $("#ddl_year").val() 
         h.post("../cPHICShareTaxRate/RetrieveDataPhicReCe",
             {
                 par_employment_type: employment_type,
                 par_department_code: $("#ddl_department").val(),
+                par_payroll_year: payroll_year,
                 par_history: "0"
 
             }).then(function (d) {
@@ -573,8 +583,9 @@ ng_HRD_App.controller("cPHICShareTaxRate_ctrlr", function (commonScript,$scope, 
 
 
     s.SelectedDepartment_Change = function (ddl_department) {
-        console.log(cs.getFormDataByFieldName("header_form", "employment_type"))
-        var formdata = cs.getFormDataByFieldName("header_form","employment_type")
+
+        var formdata = cs.getFormDataByFieldName("header_form", "employment_type")
+        var formdata2 = cs.getFormDataByFieldName("header_form", "ddl_year")
         $("#loading_data").modal("show")
         if (ddl_department.toString() != "") {
             s.btnAddShow = true;
@@ -1704,6 +1715,7 @@ ng_HRD_App.controller("cPHICShareTaxRate_ctrlr", function (commonScript,$scope, 
             var department_code = $("#ddl_department").val()
             var empl_id = dt.empl_id
             var employment_type = $("#ddl_employment_type").val()
+            var payroll_year = $("#ddl_year").val()
             $("#btn_save_2").removeClass("fa fa-save");
             $("#btn_save_2").addClass("fa fa-spinner fa-spin");
 
@@ -1724,6 +1736,7 @@ ng_HRD_App.controller("cPHICShareTaxRate_ctrlr", function (commonScript,$scope, 
                     , par_action: s.isAction_2
                     , department_code: department_code
                     , employment_type: employment_type
+                    , payroll_year: payroll_year
                 }).then(function (d) {
                     if (d.data.message == "success") {
                            s.datalistgrid_rc = d.data.vw_phic_share_empl_tbl_ACT.refreshTable("datalist_grid_rc", empl_id);
