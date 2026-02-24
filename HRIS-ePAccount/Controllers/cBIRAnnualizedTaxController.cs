@@ -12,31 +12,37 @@
 //**********************************************************************************
 
 
+using HRIS_ePAccount.Filter;
 using HRIS_ePAccount.Models;
+using Microsoft.Office.Interop.Excel;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
-
-using System.Runtime.InteropServices;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using System.Text;
-using System.Globalization;
+using System.Web.Services.Description;
+using System.Web.UI.WebControls;
 using Excel = Microsoft.Office.Interop.Excel;
-using System.Drawing;
-using System.Reflection;
-using HRIS_ePAccount.Filter;
-using System.Data.SqlClient;
+
 
 namespace HRIS_ePAccount.Controllers
 {
+
     [SessionExpire]
     public class cBIRAnnualizedTaxController : Controller
     {
-      
+
         HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
         string constring = System.Configuration.ConfigurationManager.AppSettings["connetionString_act"];
         User_Menu um = new User_Menu();
@@ -129,10 +135,10 @@ namespace HRIS_ePAccount.Controllers
             }
 
             //HttpContext.Session["sp_annualtax_hdr_tbl_list"] = sp_annualtax_hdr_tbl_list;
-           
+
             List<sp_annualtax_hdr_tbl_list_wtaxpmos_Result> sp_annualtax_hdr_tbl_list = new List<sp_annualtax_hdr_tbl_list_wtaxpmos_Result>();
 
-           
+
 
 
 
@@ -144,12 +150,12 @@ namespace HRIS_ePAccount.Controllers
                 string sort_order = "asc";
                 string show_entries = "5";
                 string ddl_emp_type = "";
-               
+
                 string ddl_letter = "";
 
                 string empl_id = "";
 
-                return JSON(new { empType, ddl_letter, empl_id, ddl_emp_type, sp_annualtax_hdr_tbl_list, sort_value, page_value, sort_order, show_entries, um, excelExportServer}, JsonRequestBehavior.AllowGet);
+                return JSON(new { empType, ddl_letter, empl_id, ddl_emp_type, sp_annualtax_hdr_tbl_list, sort_value, page_value, sort_order, show_entries, um, excelExportServer }, JsonRequestBehavior.AllowGet);
 
             }
 
@@ -157,130 +163,130 @@ namespace HRIS_ePAccount.Controllers
             {
                 string[] PreviousValuesonPage_cPayRegistry = Session["PreviousValuesonPage_cBIRAnnualizedTax"].ToString().Split(new char[] { ',' });
 
-                string ddl_year     = PreviousValuesonPage_cPayRegistry[0].ToString().Trim();
-                string empl_id      = PreviousValuesonPage_cPayRegistry[3].ToString().Trim();
+                string ddl_year = PreviousValuesonPage_cPayRegistry[0].ToString().Trim();
+                string empl_id = PreviousValuesonPage_cPayRegistry[3].ToString().Trim();
                 string ddl_emp_type = PreviousValuesonPage_cPayRegistry[4].ToString().Trim();
-                string ddl_letter   = PreviousValuesonPage_cPayRegistry[6].ToString().Trim();
+                string ddl_letter = PreviousValuesonPage_cPayRegistry[6].ToString().Trim();
                 string show_entries = PreviousValuesonPage_cPayRegistry[7].ToString().Trim();
-                int page_value      = Convert.ToInt32(PreviousValuesonPage_cPayRegistry[8].ToString().Trim());
+                int page_value = Convert.ToInt32(PreviousValuesonPage_cPayRegistry[8].ToString().Trim());
                 string search_value = PreviousValuesonPage_cPayRegistry[9].ToString().Trim();
-                int sort_value      = Convert.ToInt32(PreviousValuesonPage_cPayRegistry[10].ToString().Trim());
-                string sort_order   = PreviousValuesonPage_cPayRegistry[11].ToString().Trim();
+                int sort_value = Convert.ToInt32(PreviousValuesonPage_cPayRegistry[10].ToString().Trim());
+                string sort_order = PreviousValuesonPage_cPayRegistry[11].ToString().Trim();
 
+                sp_annualtax_hdr_tbl_list = db_pacco.sp_annualtax_hdr_tbl_list_wtaxpmos(ddl_year, ddl_emp_type, "").ToList();
+                //using (SqlConnection connection = new SqlConnection(constring))
+                //{
+                //    connection.Open();
 
-                using (SqlConnection connection = new SqlConnection(constring))
-                {
-                    connection.Open();
+                //    using (SqlCommand command = new SqlCommand(@"
+                //        SET TEXTSIZE 2147483647;
+                //        SET LANGUAGE us_english;
+                //        SET DATEFORMAT mdy;
+                //        SET DATEFIRST 7;
+                //        SET LOCK_TIMEOUT -1;
+                //        SET QUOTED_IDENTIFIER ON;
+                //        SET ARITHABORT ON;
+                //        SET ANSI_NULL_DFLT_ON ON;
+                //        SET ANSI_WARNINGS ON;
+                //        SET ANSI_PADDING ON;
+                //        SET ANSI_NULLS ON;
+                //        SET CONCAT_NULL_YIELDS_NULL ON;
+                //        SET TRANSACTION ISOLATION LEVEL READ COMMITTED;", connection))
+                //    {
+                //        command.ExecuteNonQuery();
+                //    }
 
-                    using (SqlCommand command = new SqlCommand(@"
-                        SET TEXTSIZE 2147483647;
-                        SET LANGUAGE us_english;
-                        SET DATEFORMAT mdy;
-                        SET DATEFIRST 7;
-                        SET LOCK_TIMEOUT -1;
-                        SET QUOTED_IDENTIFIER ON;
-                        SET ARITHABORT ON;
-                        SET ANSI_NULL_DFLT_ON ON;
-                        SET ANSI_WARNINGS ON;
-                        SET ANSI_PADDING ON;
-                        SET ANSI_NULLS ON;
-                        SET CONCAT_NULL_YIELDS_NULL ON;
-                        SET TRANSACTION ISOLATION LEVEL READ COMMITTED;", connection))
-                    {
-                        command.ExecuteNonQuery();
-                    }
+                //    using (var conn = new SqlConnection(constring))
+                //    using (var cmd = new SqlCommand("sp_annualtax_hdr_tbl_list_wtaxpmos", conn))
+                //    {
+                //        cmd.CommandType = CommandType.StoredProcedure;
+                //        cmd.Parameters.Add(new SqlParameter("@p_payroll_year", SqlDbType.VarChar, 4) { Value = ddl_year });
+                //        cmd.Parameters.Add(new SqlParameter("@p_employment_type", SqlDbType.VarChar, 2) { Value = ddl_emp_type });
+                //        cmd.Parameters.Add(new SqlParameter("@p_letter", SqlDbType.VarChar, 1) { Value = "" });
 
-                    using (var conn = new SqlConnection(constring))
-                    using (var cmd = new SqlCommand("sp_annualtax_hdr_tbl_list_wtaxpmos", conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.Add(new SqlParameter("@p_payroll_year", SqlDbType.VarChar, 4) { Value = ddl_year });
-                        cmd.Parameters.Add(new SqlParameter("@p_employment_type", SqlDbType.VarChar, 2) { Value = ddl_emp_type });
-                        cmd.Parameters.Add(new SqlParameter("@p_letter", SqlDbType.VarChar, 1) { Value = "" });
+                //        conn.Open();
+                //        using (var reader = cmd.ExecuteReader())
+                //        {
+                //            while (reader.Read())
+                //            {
+                //                var r = new sp_annualtax_hdr_tbl_list_wtaxpmos_Result
+                //                {
+                //                    payroll_year = reader["payroll_year"] as string,
+                //                    empl_id = reader["empl_id"] as string,
+                //                    employee_name = reader["employee_name"] as string,
+                //                    employment_type = reader["employment_type"] as string,
+                //                    account_id_nbr_ref = reader["account_id_nbr_ref"] as string,
+                //                    employmenttype_description = reader["employmenttype_description"] as string,
+                //                    position_title1 = reader["position_title1"] as string,
+                //                    addl_txbl_comp_prsnt = reader["addl_txbl_comp_prsnt"] as decimal?,
+                //                    annual_tax_due = reader["annual_tax_due"] as decimal?,
+                //                    wtax_prsnt_emplyr = reader["wtax_prsnt_emplyr"] as decimal?,
+                //                    wtax_prev_emplyr = reader["wtax_prev_emplyr"] as decimal?,
+                //                    ntx_basic_salary = reader["ntx_basic_salary"] as decimal?,
+                //                    ntx_hol_pay_mwe = reader["ntx_hol_pay_mwe"] as decimal?,
+                //                    ntx_ot_pay_mwe = reader["ntx_ot_pay_mwe"] as decimal?,
+                //                    ntx_night_diff_mwe = reader["ntx_night_diff_mwe"] as decimal?,
+                //                    ntx_hzrd_pay_mwe = reader["ntx_hzrd_pay_mwe"] as decimal?,
+                //                    ntx_13th_14th = reader["ntx_13th_14th"] as decimal?,
+                //                    ntx_de_minimis = reader["ntx_de_minimis"] as decimal?,
+                //                    ntx_gsis_phic_hdmf = reader["ntx_gsis_phic_hdmf"] as decimal?,
+                //                    ntx_salaries_oth = reader["ntx_salaries_oth"] as decimal?,
+                //                    txbl_basic_salary = reader["txbl_basic_salary"] as decimal?,
+                //                    txbl_representation = reader["txbl_representation"] as decimal?,
+                //                    txbl_transportation = reader["txbl_transportation"] as decimal?,
+                //                    txbl_cola = reader["txbl_cola"] as decimal?,
+                //                    txbl_fh_allowance = reader["txbl_fh_allowance"] as decimal?,
+                //                    txbl_otherA = reader["txbl_otherA"] as decimal?,
+                //                    txbl_otherB = reader["txbl_otherB"] as decimal?,
+                //                    sup_commission = reader["sup_commission"] as decimal?,
+                //                    sup_prof_sharing = reader["sup_prof_sharing"] as decimal?,
+                //                    sup_fi_drctr_fees = reader["sup_fi_drctr_fees"] as decimal?,
+                //                    sup_13th_14th = reader["sup_13th_14th"] as decimal?,
+                //                    sup_hzrd_pay = reader["sup_hzrd_pay"] as decimal?,
+                //                    sup_ot_pay = reader["sup_ot_pay"] as decimal?,
+                //                    sup_otherA = reader["sup_otherA"] as decimal?,
+                //                    sup_otherB = reader["sup_otherB"] as decimal?,
+                //                    annual_txbl_income = reader["annual_txbl_income"] as decimal?,
+                //                    annual_tax_wheld = reader["annual_tax_wheld"] as decimal?,
+                //                    monthly_tax_due = reader["monthly_tax_due"] as decimal?,
+                //                    tax_rate = reader["tax_rate"] as decimal?,
+                //                    employer_type = reader["employer_type"] as string,
+                //                    foreign_address = reader["foreign_address"] as string,
+                //                    stat_daily_rate = reader["stat_daily_rate"] as decimal?,
+                //                    stat_monthly_rate = reader["stat_monthly_rate"] as decimal?,
+                //                    min_wage_earner = reader["min_wage_earner"] as bool?,
+                //                    tin_employer_prev = reader["tin_employer_prev"] as string,
+                //                    employer_name_prev = reader["employer_name_prev"] as string,
+                //                    employer_add_prev = reader["employer_add_prev"] as string,
+                //                    employer_zip_prev = reader["employer_zip_prev"] as string,
+                //                    remarks = reader["remarks"] as string,
+                //                    substituted = reader["substituted"] as string,
+                //                    jan = reader["jan"] as decimal?,
+                //                    feb = reader["feb"] as decimal?,
+                //                    mar = reader["mar"] as decimal?,
+                //                    apr = reader["apr"] as decimal?,
+                //                    may = reader["may"] as decimal?,
+                //                    jun = reader["jun"] as decimal?,
+                //                    july = reader["july"] as decimal?,
+                //                    aug = reader["aug"] as decimal?,
+                //                    sep = reader["sep"] as decimal?,
+                //                    oct = reader["oct"] as decimal?,
+                //                    nov = reader["nov"] as decimal?,
+                //                    dec = reader["dec"] as decimal?,
+                //                    check_for_descrepancy = reader["check_for_descrepancy"] as bool?,
+                //                    cur_mo = reader["cur_mo"] as int?,
+                //                    prev_mo = reader["prev_mo"] as int?,
+                //                    taxable = reader["taxable"] as bool?
+                //                };
 
-                        conn.Open();
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                var r = new sp_annualtax_hdr_tbl_list_wtaxpmos_Result
-                                {
-                                    payroll_year = reader["payroll_year"] as string,
-                                    empl_id = reader["empl_id"] as string,
-                                    employee_name = reader["employee_name"] as string,
-                                    employment_type = reader["employment_type"] as string,
-                                    account_id_nbr_ref = reader["account_id_nbr_ref"] as string,
-                                    employmenttype_description = reader["employmenttype_description"] as string,
-                                    position_title1 = reader["position_title1"] as string,
-                                    addl_txbl_comp_prsnt = reader["addl_txbl_comp_prsnt"] as decimal?,
-                                    annual_tax_due = reader["annual_tax_due"] as decimal?,
-                                    wtax_prsnt_emplyr = reader["wtax_prsnt_emplyr"] as decimal?,
-                                    wtax_prev_emplyr = reader["wtax_prev_emplyr"] as decimal?,
-                                    ntx_basic_salary = reader["ntx_basic_salary"] as decimal?,
-                                    ntx_hol_pay_mwe = reader["ntx_hol_pay_mwe"] as decimal?,
-                                    ntx_ot_pay_mwe = reader["ntx_ot_pay_mwe"] as decimal?,
-                                    ntx_night_diff_mwe = reader["ntx_night_diff_mwe"] as decimal?,
-                                    ntx_hzrd_pay_mwe = reader["ntx_hzrd_pay_mwe"] as decimal?,
-                                    ntx_13th_14th = reader["ntx_13th_14th"] as decimal?,
-                                    ntx_de_minimis = reader["ntx_de_minimis"] as decimal?,
-                                    ntx_gsis_phic_hdmf = reader["ntx_gsis_phic_hdmf"] as decimal?,
-                                    ntx_salaries_oth = reader["ntx_salaries_oth"] as decimal?,
-                                    txbl_basic_salary = reader["txbl_basic_salary"] as decimal?,
-                                    txbl_representation = reader["txbl_representation"] as decimal?,
-                                    txbl_transportation = reader["txbl_transportation"] as decimal?,
-                                    txbl_cola = reader["txbl_cola"] as decimal?,
-                                    txbl_fh_allowance = reader["txbl_fh_allowance"] as decimal?,
-                                    txbl_otherA = reader["txbl_otherA"] as decimal?,
-                                    txbl_otherB = reader["txbl_otherB"] as decimal?,
-                                    sup_commission = reader["sup_commission"] as decimal?,
-                                    sup_prof_sharing = reader["sup_prof_sharing"] as decimal?,
-                                    sup_fi_drctr_fees = reader["sup_fi_drctr_fees"] as decimal?,
-                                    sup_13th_14th = reader["sup_13th_14th"] as decimal?,
-                                    sup_hzrd_pay = reader["sup_hzrd_pay"] as decimal?,
-                                    sup_ot_pay = reader["sup_ot_pay"] as decimal?,
-                                    sup_otherA = reader["sup_otherA"] as decimal?,
-                                    sup_otherB = reader["sup_otherB"] as decimal?,
-                                    annual_txbl_income = reader["annual_txbl_income"] as decimal?,
-                                    annual_tax_wheld = reader["annual_tax_wheld"] as decimal?,
-                                    monthly_tax_due = reader["monthly_tax_due"] as decimal?,
-                                    tax_rate = reader["tax_rate"] as decimal?,
-                                    employer_type = reader["employer_type"] as string,
-                                    foreign_address = reader["foreign_address"] as string,
-                                    stat_daily_rate = reader["stat_daily_rate"] as decimal?,
-                                    stat_monthly_rate = reader["stat_monthly_rate"] as decimal?,
-                                    min_wage_earner = reader["min_wage_earner"] as bool?,
-                                    tin_employer_prev = reader["tin_employer_prev"] as string,
-                                    employer_name_prev = reader["employer_name_prev"] as string,
-                                    employer_add_prev = reader["employer_add_prev"] as string,
-                                    employer_zip_prev = reader["employer_zip_prev"] as string,
-                                    remarks = reader["remarks"] as string,
-                                    substituted = reader["substituted"] as string,
-                                    jan = reader["jan"] as decimal?,
-                                    feb = reader["feb"] as decimal?,
-                                    mar = reader["mar"] as decimal?,
-                                    apr = reader["apr"] as decimal?,
-                                    may = reader["may"] as decimal?,
-                                    jun = reader["jun"] as decimal?,
-                                    july = reader["july"] as decimal?,
-                                    aug = reader["aug"] as decimal?,
-                                    sep = reader["sep"] as decimal?,
-                                    oct = reader["oct"] as decimal?,
-                                    nov = reader["nov"] as decimal?,
-                                    dec = reader["dec"] as decimal?,
-                                    check_for_descrepancy = reader["check_for_descrepancy"] as bool?,
-                                    cur_mo = reader["cur_mo"] as int?,
-                                    prev_mo = reader["prev_mo"] as int?,
-                                    taxable = reader["taxable"] as bool?
-                                };
+                //                sp_annualtax_hdr_tbl_list.Add(r);
 
-                                sp_annualtax_hdr_tbl_list.Add(r);
+                //            }
+                //        }
+                //    }
 
-                            }
-                        }
-                    }
-
-                    connection.Close();
-                }
+                //    connection.Close();
+                //}
 
                 return JSON(new { empType, ddl_year, empl_id, ddl_emp_type, ddl_letter, show_entries, page_value, search_value, sort_value, sort_order, um, excelExportServer, sp_annualtax_hdr_tbl_list }, JsonRequestBehavior.AllowGet);
 
@@ -300,7 +306,7 @@ namespace HRIS_ePAccount.Controllers
                 var sp_generate_annualized_tax = db_pacco.sp_generate_annualized_tax(par_payroll_year, par_empl_id).ToList();
                 db_pacco.SaveChanges();
 
-                var sp_tax_prjtd_per_empl_id = db_pacco.sp_annualtax_hdr_tbl_list(par_payroll_year, par_empType,"").ToList().Where(a => a.empl_id == par_empl_id);
+                var sp_tax_prjtd_per_empl_id = db_pacco.sp_annualtax_hdr_tbl_list(par_payroll_year, par_empType, "").ToList().Where(a => a.empl_id == par_empl_id);
 
                 return JSON(new { message = "success", sp_tax_prjtd_per_empl_id }, JsonRequestBehavior.AllowGet);
             }
@@ -322,7 +328,7 @@ namespace HRIS_ePAccount.Controllers
                 db_pacco.Database.CommandTimeout = int.MaxValue;
                 var sp_personnelnames_annualtax_hdr_combolist = db_pacco.sp_personnelnames_combolist_tax_rc(par_payroll_year, par_empType).ToList();
 
-                return JSON(new { message = "success", sp_personnelnames_annualtax_hdr_combolist}, JsonRequestBehavior.AllowGet);
+                return JSON(new { message = "success", sp_personnelnames_annualtax_hdr_combolist }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -343,13 +349,15 @@ namespace HRIS_ePAccount.Controllers
                 string message = "";
                 var sp_get_actual_tax_counter = db_pacco.sp_get_actual_tax_counter(par_payroll_year, par_empl_id).ToList();
 
-                if (sp_get_actual_tax_counter.Count() > 0) {
+                if (sp_get_actual_tax_counter.Count() > 0)
+                {
                     message = "success";
                 }
-                else {
+                else
+                {
                     message = "fail";
                 }
-                
+
                 //if (sp_annualtax_hdr_tbl_list != null && par_action == "ADD")
                 //{
                 //    message = "fail";
@@ -397,34 +405,34 @@ namespace HRIS_ePAccount.Controllers
 
                 else
                 {
-                    annualtax_hdr_tbl.addl_txbl_comp_prsnt  = data.addl_txbl_comp_prsnt;
-                    annualtax_hdr_tbl.wtax_prev_emplyr      = data.wtax_prev_emplyr;
-                    annualtax_hdr_tbl.ntx_basic_salary      = data.ntx_basic_salary;
-                    annualtax_hdr_tbl.ntx_hol_pay_mwe       = data.ntx_hol_pay_mwe;
-                    annualtax_hdr_tbl.ntx_ot_pay_mwe        = data.ntx_ot_pay_mwe;
-                    annualtax_hdr_tbl.ntx_night_diff_mwe    = data.ntx_night_diff_mwe;
-                    annualtax_hdr_tbl.ntx_hzrd_pay_mwe      = data.ntx_hzrd_pay_mwe;
-                    annualtax_hdr_tbl.txbl_representation   = data.txbl_representation;
-                    annualtax_hdr_tbl.txbl_transportation   = data.txbl_transportation;
-                    annualtax_hdr_tbl.txbl_cola             = data.txbl_cola;
-                    annualtax_hdr_tbl.txbl_fh_allowance     = data.txbl_fh_allowance;
-                    annualtax_hdr_tbl.sup_commission        = data.sup_commission;
-                    annualtax_hdr_tbl.sup_prof_sharing      = data.sup_prof_sharing;
-                    annualtax_hdr_tbl.sup_fi_drctr_fees     = data.sup_fi_drctr_fees;
-                    annualtax_hdr_tbl.employer_type         = data.employer_type;
-                    annualtax_hdr_tbl.foreign_address       = data.foreign_address;
-                    annualtax_hdr_tbl.stat_daily_rate       = data.stat_daily_rate;
-                    annualtax_hdr_tbl.stat_monthly_rate     = data.stat_monthly_rate;
-                    annualtax_hdr_tbl.min_wage_earner       = data.min_wage_earner;
-                    annualtax_hdr_tbl.tin_employer_prev     = data.tin_employer_prev;
-                    annualtax_hdr_tbl.employer_name_prev    = data.employer_name_prev;
-                    annualtax_hdr_tbl.employer_add_prev     = data.employer_add_prev;
-                    annualtax_hdr_tbl.employer_zip_prev     = data.employer_zip_prev;
-                    annualtax_hdr_tbl.substituted           = data.substituted;
+                    annualtax_hdr_tbl.addl_txbl_comp_prsnt = data.addl_txbl_comp_prsnt;
+                    annualtax_hdr_tbl.wtax_prev_emplyr = data.wtax_prev_emplyr;
+                    annualtax_hdr_tbl.ntx_basic_salary = data.ntx_basic_salary;
+                    annualtax_hdr_tbl.ntx_hol_pay_mwe = data.ntx_hol_pay_mwe;
+                    annualtax_hdr_tbl.ntx_ot_pay_mwe = data.ntx_ot_pay_mwe;
+                    annualtax_hdr_tbl.ntx_night_diff_mwe = data.ntx_night_diff_mwe;
+                    annualtax_hdr_tbl.ntx_hzrd_pay_mwe = data.ntx_hzrd_pay_mwe;
+                    annualtax_hdr_tbl.txbl_representation = data.txbl_representation;
+                    annualtax_hdr_tbl.txbl_transportation = data.txbl_transportation;
+                    annualtax_hdr_tbl.txbl_cola = data.txbl_cola;
+                    annualtax_hdr_tbl.txbl_fh_allowance = data.txbl_fh_allowance;
+                    annualtax_hdr_tbl.sup_commission = data.sup_commission;
+                    annualtax_hdr_tbl.sup_prof_sharing = data.sup_prof_sharing;
+                    annualtax_hdr_tbl.sup_fi_drctr_fees = data.sup_fi_drctr_fees;
+                    annualtax_hdr_tbl.employer_type = data.employer_type;
+                    annualtax_hdr_tbl.foreign_address = data.foreign_address;
+                    annualtax_hdr_tbl.stat_daily_rate = data.stat_daily_rate;
+                    annualtax_hdr_tbl.stat_monthly_rate = data.stat_monthly_rate;
+                    annualtax_hdr_tbl.min_wage_earner = data.min_wage_earner;
+                    annualtax_hdr_tbl.tin_employer_prev = data.tin_employer_prev;
+                    annualtax_hdr_tbl.employer_name_prev = data.employer_name_prev;
+                    annualtax_hdr_tbl.employer_add_prev = data.employer_add_prev;
+                    annualtax_hdr_tbl.employer_zip_prev = data.employer_zip_prev;
+                    annualtax_hdr_tbl.substituted = data.substituted;
                     db_pacco.SaveChanges();
                     message = "success";
                 }
-                
+
                 return JSON(new { message }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -434,20 +442,22 @@ namespace HRIS_ePAccount.Controllers
 
         }
 
+
         //*********************************************************************//
         // Created By : JRV - Created Date : 09/19/2019
         // Description: to Generate per Employee
         //*********************************************************************//
 
-        public ActionResult GenerateByEmployee(string par_payroll_year, string par_empl_id, string par_letter, string par_employment) {
+       
+
+        public ActionResult GenerateByEmployee(string par_payroll_year, string par_empl_id, string par_letter, string par_employment)
+        {
 
             try
             {
                 db_pacco.Database.CommandTimeout = int.MaxValue;
+                string month = DateTime.Today.ToString("MM", CultureInfo.InvariantCulture);
                 string message = "";
-               //var sp_generate_annualized_tax = db_pacco.sp_generate_annualized_tax(par_payroll_year, par_empl_id).ToList();
-
-                List<sp_generate_annualized_tax_Result> sp_generate_annualized_tax = new List<sp_generate_annualized_tax_Result>();
 
                 using (SqlConnection connection = new SqlConnection(constring))
                 {
@@ -471,26 +481,17 @@ namespace HRIS_ePAccount.Controllers
                         command.ExecuteNonQuery();
                     }
 
-                    using (SqlCommand command = new SqlCommand("sp_generate_annualized_tax", connection))
+
+
+                    using (SqlCommand command = new SqlCommand("sp_generate_annual_tax_batch_empl_id", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@p_payroll_year", par_payroll_year);
+                        command.Parameters.AddWithValue("@p_employment_type", par_employment);
                         command.Parameters.AddWithValue("@p_empl_id", par_empl_id);
                         command.CommandTimeout = int.MaxValue;
 
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                // Map each record to your model
-                                var item = new sp_generate_annualized_tax_Result
-                                {
-                                    result_value = reader.GetString(0),
-                                    result_msg   = reader.GetString(1),
-                                };
-                                sp_generate_annualized_tax.Add(item);
-                            }
-                        }
+                        command.ExecuteNonQuery();
                     }
 
                     connection.Close();
@@ -524,222 +525,8 @@ namespace HRIS_ePAccount.Controllers
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.Add(new SqlParameter("@p_payroll_year", SqlDbType.VarChar, 4) { Value = par_payroll_year });
-                        cmd.Parameters.Add(new SqlParameter("@p_employment_type", SqlDbType.VarChar, 2) { Value = par_employment});
-                        cmd.Parameters.Add(new SqlParameter("@p_letter", SqlDbType.VarChar, 1) { Value = "" });
-
-                        conn.Open();
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                var r = new sp_annualtax_hdr_tbl_list_wtaxpmos_Result
-                                {
-                                    payroll_year = reader["payroll_year"] as string,
-                                    empl_id = reader["empl_id"] as string,
-                                    employee_name = reader["employee_name"] as string,
-                                    employment_type = reader["employment_type"] as string,
-                                    account_id_nbr_ref = reader["account_id_nbr_ref"] as string,
-                                    employmenttype_description = reader["employmenttype_description"] as string,
-                                    position_title1 = reader["position_title1"] as string,
-                                    addl_txbl_comp_prsnt = reader["addl_txbl_comp_prsnt"] as decimal?,
-                                    annual_tax_due = reader["annual_tax_due"] as decimal?,
-                                    wtax_prsnt_emplyr = reader["wtax_prsnt_emplyr"] as decimal?,
-                                    wtax_prev_emplyr = reader["wtax_prev_emplyr"] as decimal?,
-                                    ntx_basic_salary = reader["ntx_basic_salary"] as decimal?,
-                                    ntx_hol_pay_mwe = reader["ntx_hol_pay_mwe"] as decimal?,
-                                    ntx_ot_pay_mwe = reader["ntx_ot_pay_mwe"] as decimal?,
-                                    ntx_night_diff_mwe = reader["ntx_night_diff_mwe"] as decimal?,
-                                    ntx_hzrd_pay_mwe = reader["ntx_hzrd_pay_mwe"] as decimal?,
-                                    ntx_13th_14th = reader["ntx_13th_14th"] as decimal?,
-                                    ntx_de_minimis = reader["ntx_de_minimis"] as decimal?,
-                                    ntx_gsis_phic_hdmf = reader["ntx_gsis_phic_hdmf"] as decimal?,
-                                    ntx_salaries_oth = reader["ntx_salaries_oth"] as decimal?,
-                                    txbl_basic_salary = reader["txbl_basic_salary"] as decimal?,
-                                    txbl_representation = reader["txbl_representation"] as decimal?,
-                                    txbl_transportation = reader["txbl_transportation"] as decimal?,
-                                    txbl_cola = reader["txbl_cola"] as decimal?,
-                                    txbl_fh_allowance = reader["txbl_fh_allowance"] as decimal?,
-                                    txbl_otherA = reader["txbl_otherA"] as decimal?,
-                                    txbl_otherB = reader["txbl_otherB"] as decimal?,
-                                    sup_commission = reader["sup_commission"] as decimal?,
-                                    sup_prof_sharing = reader["sup_prof_sharing"] as decimal?,
-                                    sup_fi_drctr_fees = reader["sup_fi_drctr_fees"] as decimal?,
-                                    sup_13th_14th = reader["sup_13th_14th"] as decimal?,
-                                    sup_hzrd_pay = reader["sup_hzrd_pay"] as decimal?,
-                                    sup_ot_pay = reader["sup_ot_pay"] as decimal?,
-                                    sup_otherA = reader["sup_otherA"] as decimal?,
-                                    sup_otherB = reader["sup_otherB"] as decimal?,
-                                    annual_txbl_income = reader["annual_txbl_income"] as decimal?,
-                                    annual_tax_wheld = reader["annual_tax_wheld"] as decimal?,
-                                    monthly_tax_due = reader["monthly_tax_due"] as decimal?,
-                                    tax_rate = reader["tax_rate"] as decimal?,
-                                    employer_type = reader["employer_type"] as string,
-                                    foreign_address = reader["foreign_address"] as string,
-                                    stat_daily_rate = reader["stat_daily_rate"] as decimal?,
-                                    stat_monthly_rate = reader["stat_monthly_rate"] as decimal?,
-                                    min_wage_earner = reader["min_wage_earner"] as bool?,
-                                    tin_employer_prev = reader["tin_employer_prev"] as string,
-                                    employer_name_prev = reader["employer_name_prev"] as string,
-                                    employer_add_prev = reader["employer_add_prev"] as string,
-                                    employer_zip_prev = reader["employer_zip_prev"] as string,
-                                    remarks = reader["remarks"] as string,
-                                    substituted = reader["substituted"] as string,
-                                    jan = reader["jan"] as decimal?,
-                                    feb = reader["feb"] as decimal?,
-                                    mar = reader["mar"] as decimal?,
-                                    apr = reader["apr"] as decimal?,
-                                    may = reader["may"] as decimal?,
-                                    jun = reader["jun"] as decimal?,
-                                    july = reader["july"] as decimal?,
-                                    aug = reader["aug"] as decimal?,
-                                    sep = reader["sep"] as decimal?,
-                                    oct = reader["oct"] as decimal?,
-                                    nov = reader["nov"] as decimal?,
-                                    dec = reader["dec"] as decimal?,
-                                    check_for_descrepancy = reader["check_for_descrepancy"] as bool?,
-                                    cur_mo = reader["cur_mo"] as int?,
-                                    prev_mo = reader["prev_mo"] as int?,
-                                    taxable = reader["taxable"] as bool?
-                                };
-
-                                sp_annualtax_hdr_tbl_list.Add(r);
-                            }
-                        }
-                    }
-
-                    connection.Close();
-                }
-               
-                var sp_annualtax_hdr_tbl_list2 = sp_annualtax_hdr_tbl_list.Where(a => a.empl_id == par_empl_id).FirstOrDefault();
-                message = "success";
-                return JSON(new { message, sp_annualtax_hdr_tbl_list, sp_annualtax_hdr_tbl_list2  }, JsonRequestBehavior.AllowGet);
-            }
-
-            catch(Exception ex)
-            {
-                return JSON(new { ex.Message }, JsonRequestBehavior.AllowGet);
-            }
-        }
-
-
-        ////*********************************************************************//
-        //// Created By : JRV - Created Date : 09/19/2019
-        //// Description: Delete Action from Database
-        ////*********************************************************************//
-        public ActionResult DeleteFromDatabase(string par_empl_id, string par_payroll_year)
-        {
-            try
-            {
-                db_pacco.Database.CommandTimeout = int.MaxValue;
-                string message = "";
-                var dt = db_pacco.annualtax_hdr_tbl.Where(a =>
-                               a.payroll_year == par_payroll_year &&
-                               a.empl_id == par_empl_id).FirstOrDefault();
-
-                db_pacco.annualtax_hdr_tbl.Remove(dt);
-
-                if (dt == null)
-                {
-                    message = "fail";
-                }
-
-                else
-                {
-                    message = "success";
-                }
-                db_pacco.SaveChanges();
-                return JSON( message, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return JSON(new { ex.Message }, JsonRequestBehavior.AllowGet);
-            }
-
-        }
-        
-
-        //*********************************************************************//
-        // Created By : JRV - Created Date : 09/19/2019
-        // Description : User Access On Page 
-        //*********************************************************************//
-        public ActionResult PreviousValuesonPage_cBIRAnnualizedTax
-            (string  par_year          
-             ,string par_tax_due       
-             ,string par_tax_rate      
-             ,string par_empl_id        
-             ,string par_emp_type      
-             ,string par_emp_type_descr
-             ,string par_letter        
-             ,string par_show_entries  
-             ,string par_page_nbr      
-             ,string par_search        
-             ,string par_sort_value
-             ,string par_sort_order
-             ,string par_position
-            )   
-        {
-
-            Session["history_page"] = Request.UrlReferrer.ToString();
-            Session["PreviousValuesonPage_cBIRAnnualizedTax"] = par_year
-                                                          + "," + par_tax_due
-                                                          + "," + par_tax_rate
-                                                          + "," + par_empl_id
-                                                          + "," + par_emp_type
-                                                          + "," + par_emp_type_descr
-                                                          + "," + par_letter
-                                                          + "," + par_show_entries
-                                                          + "," + par_page_nbr
-                                                          + "," + par_search
-                                                          + "," + par_sort_value
-                                                          + "," + par_sort_order
-                                                          + "," + par_position;
-
-            return JSON("success", JsonRequestBehavior.AllowGet);
-        }
-
-        //*********************************************************************//
-        // Created By : JRV - Created Date : 09/19/2019
-        // Description: Populate Employment Type
-        //*********************************************************************//
-        public ActionResult SelectEmploymentType(string par_empType, string par_year, string par_letter)
-        {
-            try
-            {
-                db_pacco.Database.CommandTimeout = int.MaxValue;
-                if (par_letter == null)
-                { par_letter = ""; }
-                //var sp_annualtax_hdr_tbl_list = db_pacco.sp_annualtax_hdr_tbl_list(par_year, par_empType, par_letter).ToList();
-                //List<sp_annualtax_hdr_tbl_list_Result> sp_annualtax_hdr_tbl_list = new List<sp_annualtax_hdr_tbl_list_Result>();
-                List<sp_annualtax_hdr_tbl_list_wtaxpmos_Result> sp_annualtax_hdr_tbl_list_wtaxpmos = new List<sp_annualtax_hdr_tbl_list_wtaxpmos_Result>();
-                using (SqlConnection connection = new SqlConnection(constring))
-                {
-                    connection.Open();
-
-                    using (SqlCommand command = new SqlCommand(@"
-                        SET TEXTSIZE 2147483647;
-                        SET LANGUAGE us_english;
-                        SET DATEFORMAT mdy;
-                        SET DATEFIRST 7;
-                        SET LOCK_TIMEOUT -1;
-                        SET QUOTED_IDENTIFIER ON;
-                        SET ARITHABORT ON;
-                        SET ANSI_NULL_DFLT_ON ON;
-                        SET ANSI_WARNINGS ON;
-                        SET ANSI_PADDING ON;
-                        SET ANSI_NULLS ON;
-                        SET CONCAT_NULL_YIELDS_NULL ON;
-                        SET TRANSACTION ISOLATION LEVEL READ COMMITTED;", connection))
-                        {
-                            command.ExecuteNonQuery();
-                        }
-
-                    using (var conn = new SqlConnection(constring))
-                    using (var cmd = new SqlCommand("sp_annualtax_hdr_tbl_list_wtaxpmos", conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.Add(new SqlParameter("@p_payroll_year", SqlDbType.VarChar, 4) { Value = par_year });
-                        cmd.Parameters.Add(new SqlParameter("@p_employment_type", SqlDbType.VarChar, 2) { Value = par_empType });
-                        cmd.Parameters.Add(new SqlParameter("@p_letter", SqlDbType.VarChar, 1) { Value = "" });
+                        cmd.Parameters.Add(new SqlParameter("@p_employment_type", SqlDbType.VarChar, 2) { Value = par_employment });
+                        cmd.Parameters.Add(new SqlParameter("@p_letter", SqlDbType.VarChar, 1) { Value = par_letter ?? "" });
 
                         conn.Open();
                         using (var reader = cmd.ExecuteReader())
@@ -815,10 +602,11 @@ namespace HRIS_ePAccount.Controllers
                                     prev_mo = reader["prev_mo"] as int?,
                                     taxable = reader["taxable"] as bool?,
                                     hr_tax_due = reader["hr_tax_due"] as decimal?,
-                                    hr_tax_rate = reader["hr_tax_rate"] as decimal?
+                                    hr_tax_rate = reader["hr_tax_rate"] as decimal?,
+                                    cnt_pnia = reader["cnt_pnia"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["cnt_pnia"])
                                 };
 
-                                sp_annualtax_hdr_tbl_list_wtaxpmos.Add(r);
+                                sp_annualtax_hdr_tbl_list.Add(r);
                             }
                         }
                     }
@@ -826,8 +614,248 @@ namespace HRIS_ePAccount.Controllers
                     connection.Close();
                 }
 
+                var sp_annualtax_hdr_tbl_list2 = sp_annualtax_hdr_tbl_list.Where(a => a.empl_id == par_empl_id).FirstOrDefault();
+                message = "success";
+                return JSON(new { message, sp_annualtax_hdr_tbl_list, sp_annualtax_hdr_tbl_list2 }, JsonRequestBehavior.AllowGet);
+            }
 
-                var sp_prcmonitor_tbl = db_pacco.sp_prcmonitor_tbl(par_year,"" , par_empType).ToList();
+            catch (Exception ex)
+            {
+                return JSON(new { ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        
+
+        ////*********************************************************************//
+        //// Created By : JRV - Created Date : 09/19/2019
+        //// Description: Delete Action from Database
+        ////*********************************************************************//
+        public ActionResult DeleteFromDatabase(string par_empl_id, string par_payroll_year)
+        {
+            try
+            {
+                db_pacco.Database.CommandTimeout = int.MaxValue;
+                string message = "";
+                var dt = db_pacco.annualtax_hdr_tbl.Where(a =>
+                               a.payroll_year == par_payroll_year &&
+                               a.empl_id == par_empl_id).FirstOrDefault();
+
+                db_pacco.annualtax_hdr_tbl.Remove(dt);
+
+                if (dt == null)
+                {
+                    message = "fail";
+                }
+
+                else
+                {
+                    message = "success";
+                }
+                db_pacco.SaveChanges();
+                return JSON(message, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return JSON(new { ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+
+        //*********************************************************************//
+        // Created By : JRV - Created Date : 09/19/2019
+        // Description : User Access On Page 
+        //*********************************************************************//
+        public ActionResult PreviousValuesonPage_cBIRAnnualizedTax
+            (string par_year
+             , string par_tax_due
+             , string par_tax_rate
+             , string par_empl_id
+             , string par_emp_type
+             , string par_emp_type_descr
+             , string par_letter
+             , string par_show_entries
+             , string par_page_nbr
+             , string par_search
+             , string par_sort_value
+             , string par_sort_order
+             , string par_position
+            )
+        {
+
+            Session["history_page"] = Request.UrlReferrer.ToString();
+            Session["PreviousValuesonPage_cBIRAnnualizedTax"] = par_year
+                                                          + "," + par_tax_due
+                                                          + "," + par_tax_rate
+                                                          + "," + par_empl_id
+                                                          + "," + par_emp_type
+                                                          + "," + par_emp_type_descr
+                                                          + "," + par_letter
+                                                          + "," + par_show_entries
+                                                          + "," + par_page_nbr
+                                                          + "," + par_search
+                                                          + "," + par_sort_value
+                                                          + "," + par_sort_order
+                                                          + "," + par_position;
+
+            return JSON("success", JsonRequestBehavior.AllowGet);
+        }
+
+        //*********************************************************************//
+        // Created By : JRV - Created Date : 09/19/2019
+        // UPDATED By : MARVIN - UPDATED Date : 01/28/2026
+        // Description: Populate Employment Type
+        //*********************************************************************//
+
+        // Add this helper inside the `cBIRAnnualizedTaxController` class (near other helpers)
+        private bool ReaderHasColumn(System.Data.IDataRecord reader, string columnName)
+        {
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                if (reader.GetName(i).Equals(columnName, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+            return false;
+        }
+
+        // Modified SelectEmploymentType: uses a safe check for `cnt_pnia`
+        public ActionResult SelectEmploymentType(string par_empType, string par_year, string par_letter)
+        {
+            try
+            {
+                db_pacco.Database.CommandTimeout = int.MaxValue;
+                if (par_letter == null)
+                { par_letter = ""; }
+
+                //List<sp_annualtax_hdr_tbl_list_wtaxpmos_2> sp_annualtax_hdr_tbl_list_wtaxpmos = new List<sp_annualtax_hdr_tbl_list_wtaxpmos_2>();
+                //using (SqlConnection connection = new SqlConnection(constring))
+                //{
+                //    connection.Open();
+
+                //    using (SqlCommand command = new SqlCommand(@"
+                //        SET TEXTSIZE 2147483647;
+                //        SET LANGUAGE us_english;
+                //        SET DATEFORMAT mdy;
+                //        SET DATEFIRST 7;
+                //        SET LOCK_TIMEOUT -1;
+                //        SET QUOTED_IDENTIFIER ON;
+                //        SET ARITHABORT ON;
+                //        SET ANSI_NULL_DFLT_ON ON;
+                //        SET ANSI_WARNINGS ON;
+                //        SET ANSI_PADDING ON;
+                //        SET ANSI_NULLS ON;
+                //        SET CONCAT_NULL_YIELDS_NULL ON;
+                //        SET TRANSACTION ISOLATION LEVEL READ COMMITTED;", connection))
+                //    {
+                //        command.ExecuteNonQuery();
+                //    }
+
+                //    using (var conn = new SqlConnection(constring))
+                //    using (var cmd = new SqlCommand("sp_annualtax_hdr_tbl_list_wtaxpmos", conn))
+                //    {
+                //        cmd.CommandType = CommandType.StoredProcedure;
+                //        cmd.Parameters.Add(new SqlParameter("@p_payroll_year", SqlDbType.VarChar, 4) { Value = par_year });
+                //        cmd.Parameters.Add(new SqlParameter("@p_employment_type", SqlDbType.VarChar, 2) { Value = par_empType });
+                //        cmd.Parameters.Add(new SqlParameter("@p_letter", SqlDbType.VarChar, 1) { Value = "" });
+
+                //        conn.Open();
+                //        using (var reader = cmd.ExecuteReader())
+                //        {
+                //            while (reader.Read())
+                //            {
+                //                // compute cnt_pnia safely (column may not exist)
+                //                int? cntPniaValue = null;
+                //                if (ReaderHasColumn(reader, "cnt_pnia"))
+                //                {
+                //                    int idx = reader.GetOrdinal("cnt_pnia");
+                //                    if (!reader.IsDBNull(idx))
+                //                        cntPniaValue = reader.GetInt32(idx);
+                //                }
+
+                //                var r = new sp_annualtax_hdr_tbl_list_wtaxpmos_2
+                //                {
+                //                    payroll_year = reader["payroll_year"] as string,
+                //                    empl_id = reader["empl_id"] as string,
+                //                    employee_name = reader["employee_name"] as string,
+                //                    employment_type = reader["employment_type"] as string,
+                //                    account_id_nbr_ref = reader["account_id_nbr_ref"] as string,
+                //                    employmenttype_description = reader["employmenttype_description"] as string,
+                //                    position_title1 = reader["position_title1"] as string,
+                //                    addl_txbl_comp_prsnt = reader["addl_txbl_comp_prsnt"] as decimal?,
+                //                    annual_tax_due = reader["annual_tax_due"] as decimal?,
+                //                    wtax_prsnt_emplyr = reader["wtax_prsnt_emplyr"] as decimal?,
+                //                    wtax_prev_emplyr = reader["wtax_prev_emplyr"] as decimal?,
+                //                    ntx_basic_salary = reader["ntx_basic_salary"] as decimal?,
+                //                    ntx_hol_pay_mwe = reader["ntx_hol_pay_mwe"] as decimal?,
+                //                    ntx_ot_pay_mwe = reader["ntx_ot_pay_mwe"] as decimal?,
+                //                    ntx_night_diff_mwe = reader["ntx_night_diff_mwe"] as decimal?,
+                //                    ntx_hzrd_pay_mwe = reader["ntx_hzrd_pay_mwe"] as decimal?,
+                //                    ntx_13th_14th = reader["ntx_13th_14th"] as decimal?,
+                //                    ntx_de_minimis = reader["ntx_de_minimis"] as decimal?,
+                //                    ntx_gsis_phic_hdmf = reader["ntx_gsis_phic_hdmf"] as decimal?,
+                //                    ntx_salaries_oth = reader["ntx_salaries_oth"] as decimal?,
+                //                    txbl_basic_salary = reader["txbl_basic_salary"] as decimal?,
+                //                    txbl_representation = reader["txbl_representation"] as decimal?,
+                //                    txbl_transportation = reader["txbl_transportation"] as decimal?,
+                //                    txbl_cola = reader["txbl_cola"] as decimal?,
+                //                    txbl_fh_allowance = reader["txbl_fh_allowance"] as decimal?,
+                //                    txbl_otherA = reader["txbl_otherA"] as decimal?,
+                //                    txbl_otherB = reader["txbl_otherB"] as decimal?,
+                //                    sup_commission = reader["sup_commission"] as decimal?,
+                //                    sup_prof_sharing = reader["sup_prof_sharing"] as decimal?,
+                //                    sup_fi_drctr_fees = reader["sup_fi_drctr_fees"] as decimal?,
+                //                    sup_13th_14th = reader["sup_13th_14th"] as decimal?,
+                //                    sup_hzrd_pay = reader["sup_hzrd_pay"] as decimal?,
+                //                    sup_ot_pay = reader["sup_ot_pay"] as decimal?,
+                //                    sup_otherA = reader["sup_otherA"] as decimal?,
+                //                    sup_otherB = reader["sup_otherB"] as decimal?,
+                //                    annual_txbl_income = reader["annual_txbl_income"] as decimal?,
+                //                    annual_tax_wheld = reader["annual_tax_wheld"] as decimal?,
+                //                    monthly_tax_due = reader["monthly_tax_due"] as decimal?,
+                //                    tax_rate = reader["tax_rate"] as decimal?,
+                //                    employer_type = reader["employer_type"] as string,
+                //                    foreign_address = reader["foreign_address"] as string,
+                //                    stat_daily_rate = reader["stat_daily_rate"] as decimal?,
+                //                    stat_monthly_rate = reader["stat_monthly_rate"] as decimal?,
+                //                    min_wage_earner = reader["min_wage_earner"] as bool?,
+                //                    tin_employer_prev = reader["tin_employer_prev"] as string,
+                //                    employer_name_prev = reader["employer_name_prev"] as string,
+                //                    employer_add_prev = reader["employer_add_prev"] as string,
+                //                    employer_zip_prev = reader["employer_zip_prev"] as string,
+                //                    remarks = reader["remarks"] as string,
+                //                    substituted = reader["substituted"] as string,
+                //                    jan = reader["jan"] as decimal?,
+                //                    feb = reader["feb"] as decimal?,
+                //                    mar = reader["mar"] as decimal?,
+                //                    apr = reader["apr"] as decimal?,
+                //                    may = reader["may"] as decimal?,
+                //                    jun = reader["jun"] as decimal?,
+                //                    july = reader["july"] as decimal?,
+                //                    aug = reader["aug"] as decimal?,
+                //                    sep = reader["sep"] as decimal?,
+                //                    oct = reader["oct"] as decimal?,
+                //                    nov = reader["nov"] as decimal?,
+                //                    dec = reader["dec"] as decimal?,
+                //                    check_for_descrepancy = reader["check_for_descrepancy"] as bool?,
+                //                    cur_mo = reader["cur_mo"] as int?,
+                //                    prev_mo = reader["prev_mo"] as int?,
+                //                    taxable = reader["taxable"] as bool?,
+                //                    hr_tax_due = reader["hr_tax_due"] as decimal?,
+                //                    hr_tax_rate = reader["hr_tax_rate"] as decimal?,
+                //                    cnt_pnia = cntPniaValue
+                //                };
+
+                //                sp_annualtax_hdr_tbl_list_wtaxpmos.Add(r);
+                //            }
+                //        }
+                //    }
+
+                //    connection.Close();
+                //}
+
+                var sp_annualtax_hdr_tbl_list_wtaxpmos = db_pacco.sp_annualtax_hdr_tbl_list_wtaxpmos(par_year, par_empType, "").ToList();
+                var sp_prcmonitor_tbl = db_pacco.sp_prcmonitor_tbl(par_year, "", par_empType).ToList();
 
                 return JSON(new { sp_annualtax_hdr_tbl_list_wtaxpmos, sp_prcmonitor_tbl }, JsonRequestBehavior.AllowGet);
             }
@@ -837,6 +865,177 @@ namespace HRIS_ePAccount.Controllers
             }
 
         }
+
+        //public ActionResult SelectEmploymentType(string par_empType, string par_year, string par_letter)
+        //{
+        //    try
+        //    {
+        //        db_pacco.Database.CommandTimeout = int.MaxValue;
+        //        if (par_letter == null)
+        //        { par_letter = ""; }
+        //        //var sp_annualtax_hdr_tbl_list = db_pacco.sp_annualtax_hdr_tbl_list(par_year, par_empType, par_letter).ToList();
+        //        //List<sp_annualtax_hdr_tbl_list_Result> sp_annualtax_hdr_tbl_list = new List<sp_annualtax_hdr_tbl_list_Result>();
+        //        List<sp_annualtax_hdr_tbl_list_wtaxpmos_Result> sp_annualtax_hdr_tbl_list_wtaxpmos = new List<sp_annualtax_hdr_tbl_list_wtaxpmos_Result>();
+        //        using (SqlConnection connection = new SqlConnection(constring))
+        //        {
+        //            connection.Open();
+
+        //            using (SqlCommand command = new SqlCommand(@"
+        //                SET TEXTSIZE 2147483647;
+        //                SET LANGUAGE us_english;
+        //                SET DATEFORMAT mdy;
+        //                SET DATEFIRST 7;
+        //                SET LOCK_TIMEOUT -1;
+        //                SET QUOTED_IDENTIFIER ON;
+        //                SET ARITHABORT ON;
+        //                SET ANSI_NULL_DFLT_ON ON;
+        //                SET ANSI_WARNINGS ON;
+        //                SET ANSI_PADDING ON;
+        //                SET ANSI_NULLS ON;
+        //                SET CONCAT_NULL_YIELDS_NULL ON;
+        //                SET TRANSACTION ISOLATION LEVEL READ COMMITTED;", connection))
+        //                {
+        //                    command.ExecuteNonQuery();
+        //                }
+
+        //            using (var conn = new SqlConnection(constring))
+        //            using (var cmd = new SqlCommand("sp_annualtax_hdr_tbl_list_wtaxpmos", conn))
+        //            {
+        //                cmd.CommandType = CommandType.StoredProcedure;
+        //                cmd.Parameters.Add(new SqlParameter("@p_payroll_year", SqlDbType.VarChar, 4) { Value = par_year });
+        //                cmd.Parameters.Add(new SqlParameter("@p_employment_type", SqlDbType.VarChar, 2) { Value = par_empType });
+        //                cmd.Parameters.Add(new SqlParameter("@p_letter", SqlDbType.VarChar, 1) { Value = "" });
+
+        //                conn.Open();
+        //                using (var reader = cmd.ExecuteReader())
+        //                {
+
+        //                    bool hasCnt = false;
+
+        //                    do
+        //                    {
+        //                        for (int i = 0; i < reader.FieldCount; i++)
+        //                        {
+        //                            if (reader.GetName(i).Equals("cnt_pnia", StringComparison.OrdinalIgnoreCase))
+        //                            {
+        //                                hasCnt = true;
+        //                                break;
+        //                            }
+        //                        }
+        //                        if (hasCnt) break;
+        //                    }
+        //                    while (reader.NextResult());
+
+        //                    if (!hasCnt)
+        //                        throw new Exception("Result set does not contain cnt_pnia. Check stored proc output.");
+
+        //                    while (reader.Read())
+        //                    {
+        //                        var r = new sp_annualtax_hdr_tbl_list_wtaxpmos_Result
+        //                        {
+        //                            payroll_year = reader["payroll_year"] as string,
+        //                            empl_id = reader["empl_id"] as string,
+        //                            employee_name = reader["employee_name"] as string,
+        //                            employment_type = reader["employment_type"] as string,
+        //                            account_id_nbr_ref = reader["account_id_nbr_ref"] as string,
+        //                            employmenttype_description = reader["employmenttype_description"] as string,
+        //                            position_title1 = reader["position_title1"] as string,
+        //                            addl_txbl_comp_prsnt = reader["addl_txbl_comp_prsnt"] as decimal?,
+        //                            annual_tax_due = reader["annual_tax_due"] as decimal?,
+        //                            wtax_prsnt_emplyr = reader["wtax_prsnt_emplyr"] as decimal?,
+        //                            wtax_prev_emplyr = reader["wtax_prev_emplyr"] as decimal?,
+        //                            ntx_basic_salary = reader["ntx_basic_salary"] as decimal?,
+        //                            ntx_hol_pay_mwe = reader["ntx_hol_pay_mwe"] as decimal?,
+        //                            ntx_ot_pay_mwe = reader["ntx_ot_pay_mwe"] as decimal?,
+        //                            ntx_night_diff_mwe = reader["ntx_night_diff_mwe"] as decimal?,
+        //                            ntx_hzrd_pay_mwe = reader["ntx_hzrd_pay_mwe"] as decimal?,
+        //                            ntx_13th_14th = reader["ntx_13th_14th"] as decimal?,
+        //                            ntx_de_minimis = reader["ntx_de_minimis"] as decimal?,
+        //                            ntx_gsis_phic_hdmf = reader["ntx_gsis_phic_hdmf"] as decimal?,
+        //                            ntx_salaries_oth = reader["ntx_salaries_oth"] as decimal?,
+        //                            txbl_basic_salary = reader["txbl_basic_salary"] as decimal?,
+        //                            txbl_representation = reader["txbl_representation"] as decimal?,
+        //                            txbl_transportation = reader["txbl_transportation"] as decimal?,
+        //                            txbl_cola = reader["txbl_cola"] as decimal?,
+        //                            txbl_fh_allowance = reader["txbl_fh_allowance"] as decimal?,
+        //                            txbl_otherA = reader["txbl_otherA"] as decimal?,
+        //                            txbl_otherB = reader["txbl_otherB"] as decimal?,
+        //                            sup_commission = reader["sup_commission"] as decimal?,
+        //                            sup_prof_sharing = reader["sup_prof_sharing"] as decimal?,
+        //                            sup_fi_drctr_fees = reader["sup_fi_drctr_fees"] as decimal?,
+        //                            sup_13th_14th = reader["sup_13th_14th"] as decimal?,
+        //                            sup_hzrd_pay = reader["sup_hzrd_pay"] as decimal?,
+        //                            sup_ot_pay = reader["sup_ot_pay"] as decimal?,
+        //                            sup_otherA = reader["sup_otherA"] as decimal?,
+        //                            sup_otherB = reader["sup_otherB"] as decimal?,
+        //                            annual_txbl_income = reader["annual_txbl_income"] as decimal?,
+        //                            annual_tax_wheld = reader["annual_tax_wheld"] as decimal?,
+        //                            monthly_tax_due = reader["monthly_tax_due"] as decimal?,
+        //                            tax_rate = reader["tax_rate"] as decimal?,
+        //                            employer_type = reader["employer_type"] as string,
+        //                            foreign_address = reader["foreign_address"] as string,
+        //                            stat_daily_rate = reader["stat_daily_rate"] as decimal?,
+        //                            stat_monthly_rate = reader["stat_monthly_rate"] as decimal?,
+        //                            min_wage_earner = reader["min_wage_earner"] as bool?,
+        //                            tin_employer_prev = reader["tin_employer_prev"] as string,
+        //                            employer_name_prev = reader["employer_name_prev"] as string,
+        //                            employer_add_prev = reader["employer_add_prev"] as string,
+        //                            employer_zip_prev = reader["employer_zip_prev"] as string,
+        //                            remarks = reader["remarks"] as string,
+        //                            substituted = reader["substituted"] as string,
+        //                            jan = reader["jan"] as decimal?,
+        //                            feb = reader["feb"] as decimal?,
+        //                            mar = reader["mar"] as decimal?,
+        //                            apr = reader["apr"] as decimal?,
+        //                            may = reader["may"] as decimal?,
+        //                            jun = reader["jun"] as decimal?,
+        //                            july = reader["july"] as decimal?,
+        //                            aug = reader["aug"] as decimal?,
+        //                            sep = reader["sep"] as decimal?,
+        //                            oct = reader["oct"] as decimal?,
+        //                            nov = reader["nov"] as decimal?,
+        //                            dec = reader["dec"] as decimal?,
+        //                            check_for_descrepancy = reader["check_for_descrepancy"] as bool?,
+        //                            cur_mo = reader["cur_mo"] as int?,
+        //                            prev_mo = reader["prev_mo"] as int?,
+        //                            taxable = reader["taxable"] as bool?,
+        //                            hr_tax_due = reader["hr_tax_due"] as decimal?,
+        //                            hr_tax_rate = reader["hr_tax_rate"] as decimal?,
+        //                            cnt_pnia = reader["cnt_pnia"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["cnt_pnia"]) 
+        //                        };
+
+        //                        sp_annualtax_hdr_tbl_list_wtaxpmos.Add(r);
+        //                    }
+        //                }
+        //            }
+
+        //            connection.Close();
+        //        }
+
+
+        //        var sp_prcmonitor_tbl = db_pacco.sp_prcmonitor_tbl(par_year,"" , par_empType).ToList();
+
+        //        return JSON(new { sp_annualtax_hdr_tbl_list_wtaxpmos, sp_prcmonitor_tbl }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    //catch (DbEntityValidationException ex)
+        //    //{
+        //    //    var errors = ex.EntityValidationErrors
+        //    //        .SelectMany(e => e.ValidationErrors)
+        //    //        .Select(e => e.PropertyName + " : " + e.ErrorMessage)
+        //    //        .ToList();
+
+        //    //    return Json(new
+        //    //    {
+        //    //        error = "Validation failed",
+        //    //        details = errors
+        //    //    }, JsonRequestBehavior.AllowGet);
+        //    //}
+        //    catch (Exception ex)
+        //    {
+        //        return JSON(new { ex.Message }, JsonRequestBehavior.AllowGet);
+        //    }
+
+        //}
 
         //*********************************************************************//
         // Created By : Marvin Olita - Created Date : 08/28/2025
@@ -874,7 +1073,7 @@ namespace HRIS_ePAccount.Controllers
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.Add(new SqlParameter("@p_payroll_year", SqlDbType.VarChar, 4) { Value = par_payroll_year });
                         cmd.Parameters.Add(new SqlParameter("@p_empl_id", SqlDbType.VarChar, 10) { Value = par_empl_id });
-                      
+
 
                         conn.Open();
                         using (var reader = cmd.ExecuteReader())
@@ -883,37 +1082,37 @@ namespace HRIS_ePAccount.Controllers
                             {
                                 var r = new sp_check_annualized_tax_dtl_Result
                                 {
-                                           payrolltemplate_code         =       reader["payrolltemplate_code"] as string,
-                                           voucher_nbr                  =       reader["voucher_nbr"] as string,
-                                           payroll_month                =       reader["payroll_month"] as string,
-                                           remarks                      =       reader["remarks"] as string,
-                                           basic_sal                    =       reader["basic_sal"] as decimal?,
-                                           phic_share                   =       reader["phic_share"] as decimal?,
-                                           hazard_pay                   =       reader["hazard_pay"] as decimal?,
-                                           subsistence_allowance        =       reader["subsistence_allowance"] as decimal?,
-                                           overtime                     =       reader["overtime"] as decimal?,
-                                           oth                          =       reader["oth"] as decimal?,
-                                           taxable13th                  =       reader["taxable13th"] as decimal?,
-                                           nontaxable13th               =       reader["nontaxable13th"] as decimal?,
-                                           deminimis                    =       reader["deminimis"] as decimal?,
-                                           sal_oth                      =       reader["sal_oth"] as decimal?,
-                                           nontaxable_oth               =       reader["nontaxable_oth"] as decimal?,
-                                           gsis_ps                      =       reader["gsis_ps"] as decimal?,
-                                           hdmf_ps                      =       reader["hdmf_ps"] as decimal?,
-                                           phic_ps                      =       reader["phic_ps"] as decimal?,
-                                           wtax_amt                     =       reader["wtax_amt"] as decimal?,
-                                           gross_income                 =       reader["gross_income"] as decimal?,
-                                           nontaxable_income            =       reader["nontaxable_income"] as decimal?,
-                                           taxable_income               =       reader["taxable_income"] as decimal?,
-                                           tax_due                      =       reader["tax_due"] as decimal?,
-                                           tax_withheld                 =       reader["tax_withheld"] as decimal?,
-                                           tax_payable                  =       reader["tax_payable"] as decimal?,
-                                           no_of_installment            =       reader["no_of_installment"] as int?,
-                                           month13th_other              =       reader["month13th_other"] as decimal?,
-                                           DE_minimis                   =       reader["DE_minimis"] as decimal?,
-                                           gsis_hdmf_phic               =       reader["gsis_hdmf_phic"] as decimal?,
-                                           salaries_oth                 =       reader["salaries_oth"] as decimal?,
-                                           basic_salary                 =       reader["basic_salary"] as decimal?
+                                    payrolltemplate_code = reader["payrolltemplate_code"] as string,
+                                    voucher_nbr = reader["voucher_nbr"] as string,
+                                    payroll_month = reader["payroll_month"] as string,
+                                    remarks = reader["remarks"] as string,
+                                    basic_sal = reader["basic_sal"] as decimal?,
+                                    phic_share = reader["phic_share"] as decimal?,
+                                    hazard_pay = reader["hazard_pay"] as decimal?,
+                                    subsistence_allowance = reader["subsistence_allowance"] as decimal?,
+                                    overtime = reader["overtime"] as decimal?,
+                                    oth = reader["oth"] as decimal?,
+                                    taxable13th = reader["taxable13th"] as decimal?,
+                                    nontaxable13th = reader["nontaxable13th"] as decimal?,
+                                    deminimis = reader["deminimis"] as decimal?,
+                                    sal_oth = reader["sal_oth"] as decimal?,
+                                    nontaxable_oth = reader["nontaxable_oth"] as decimal?,
+                                    gsis_ps = reader["gsis_ps"] as decimal?,
+                                    hdmf_ps = reader["hdmf_ps"] as decimal?,
+                                    phic_ps = reader["phic_ps"] as decimal?,
+                                    wtax_amt = reader["wtax_amt"] as decimal?,
+                                    gross_income = reader["gross_income"] as decimal?,
+                                    nontaxable_income = reader["nontaxable_income"] as decimal?,
+                                    taxable_income = reader["taxable_income"] as decimal?,
+                                    tax_due = reader["tax_due"] as decimal?,
+                                    tax_withheld = reader["tax_withheld"] as decimal?,
+                                    tax_payable = reader["tax_payable"] as decimal?,
+                                    no_of_installment = reader["no_of_installment"] as int?,
+                                    month13th_other = reader["month13th_other"] as decimal?,
+                                    DE_minimis = reader["DE_minimis"] as decimal?,
+                                    gsis_hdmf_phic = reader["gsis_hdmf_phic"] as decimal?,
+                                    salaries_oth = reader["salaries_oth"] as decimal?,
+                                    basic_salary = reader["basic_salary"] as decimal?
 
                                 };
 
@@ -936,10 +1135,10 @@ namespace HRIS_ePAccount.Controllers
         }
 
 
-            //*********************************************************************//
-            // Created By : JRV - Created Date : 09/19/2019
-            // Description: Populate Employment Type
-            //*********************************************************************//
+        //*********************************************************************//
+        // Created By : JRV - Created Date : 09/19/2019
+        // Description: Populate Employment Type
+        //*********************************************************************//
         public ActionResult SelectPayrollYear(string par_empType, string par_year, string par_letter)
         {
             try
@@ -1005,7 +1204,7 @@ namespace HRIS_ePAccount.Controllers
         ////*********************************************************************//
         public ActionResult ReportCount(string par_payroll_year, string par_empl_id, string par_period_from, string par_period_to)
         {
-            
+
             Session["history_page"] = Request.UrlReferrer.ToString();
             var reportcount = db_pacco.sp_annualtax_hdr_tbl_rep(par_payroll_year, par_empl_id).ToList();
             return JSON(new { reportcount }, JsonRequestBehavior.AllowGet);
@@ -1236,7 +1435,7 @@ namespace HRIS_ePAccount.Controllers
             {
 
                 db_pacco.Database.CommandTimeout = int.MaxValue;
-                
+
                 string message = "";
                 decimal start_row = 2;
                 decimal c_start_row_i = start_row;
@@ -1244,19 +1443,19 @@ namespace HRIS_ePAccount.Controllers
                 {
 
                     var sp_extract_annualized_tax = db_pacco.sp_extract_annualized_tax_forPHP(par_payroll_year, par_empType).ToList();
-                   
+
                     message = "success";
-                    return JSON(new { message, sp_extract_annualized_tax}, JsonRequestBehavior.AllowGet);
+                    return JSON(new { message, sp_extract_annualized_tax }, JsonRequestBehavior.AllowGet);
                 }
 
                 else
                 {
 
                     var sp_extract_annualized_tax = db_pacco.sp_extract_annualized_tax_bir_forPHP(par_payroll_year, par_empType).ToList();
-                   
+
                     message = "success";
 
-                    return JSON(new { message, sp_extract_annualized_tax}, JsonRequestBehavior.AllowGet);
+                    return JSON(new { message, sp_extract_annualized_tax }, JsonRequestBehavior.AllowGet);
                 }
 
             }
@@ -1267,6 +1466,94 @@ namespace HRIS_ePAccount.Controllers
 
         }
 
-    }   
+        public ActionResult payroll_not_in_annualtax(string par_payroll_year, string par_empl_id)
+        {
 
+            try
+            {
+
+                db_pacco.Database.CommandTimeout = int.MaxValue;
+
+                var dataset = db_pacco.payroll_not_in_annual_dtl.Where(a => a.payroll_year == par_payroll_year && a.empl_id == par_empl_id).ToList();
+                var tag = 1;
+                return JSON(new { tag, dataset }, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                var tag = 0;
+                return JSON(new { ex.Message, tag }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+        public ActionResult Get_Generation_Status_List(string payroll_year, string employment_type)
+        {
+            try
+            {
+
+                var result = db_pacco.sp_get_tax_empl_dtl_hdr_generate_status(payroll_year, employment_type).ToList();
+
+                return Json(new {icon="success",result }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { icon = "error", error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public ActionResult StartAnnualTaxJob(string payrollYear, string employmentType)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(constring))
+                {
+                    conn.Open();
+
+                    // 1️⃣ Insert or update the job parameter table
+                    using (SqlCommand cmdParam = new SqlCommand(@"
+                IF EXISTS (SELECT 1 FROM dbo.annual_tax_job_params 
+                           WHERE payroll_year = @payrollYear 
+                             AND employment_type = @employmentType)
+                    UPDATE dbo.annual_tax_job_params
+                    SET processed = 0,payroll_year =@payrollYear,employment_type= @employmentType
+
+                    WHERE payroll_year = @payrollYear 
+                      AND employment_type = @employmentType
+                ELSE
+                    INSERT INTO dbo.annual_tax_job_params (payroll_year, employment_type, processed)
+                    VALUES (@payrollYear, @employmentType,1);
+            ", conn))
+                    {
+                        cmdParam.Parameters.AddWithValue("@payrollYear", payrollYear);
+                        cmdParam.Parameters.AddWithValue("@employmentType", employmentType);
+                        cmdParam.ExecuteNonQuery();
+                    }
+
+                    // 2️⃣ Start the SQL Agent job asynchronously
+                    using (SqlCommand cmdJob = new SqlCommand("msdb.dbo.sp_start_job", conn))
+                    {
+                        cmdJob.CommandType = CommandType.StoredProcedure;
+                        cmdJob.Parameters.AddWithValue("@job_name", "SQL_JOB_WITH_ERRORS_REGENERATE"); // your SQL Agent job name
+                        cmdJob.ExecuteNonQuery();
+                    }
+                }
+
+                return Json(new { success = true, message = "Job started in background. You can continue using the app." },
+                            JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+
+
+
+    }
+
+    public class GenerateAnnualTaxRequest
+    {
+    }
 }

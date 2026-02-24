@@ -1,0 +1,257 @@
+﻿@model HRIS_ePAccount.Models.User_Menu
+
+
+@{
+    ViewBag.Title = "Payroll Not In Annual Tax Details";
+}
+
+<style>
+    .swal-wide {
+    width: 55vw !important;
+    max-width: 1200px !important;
+    }
+    .swal-wide .swal-content {
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+
+    @@media (max-width: 1200px) {
+        .swal-wide {
+            width: 85vw !important;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .swal-wide {
+            width: 95vw !important;
+        }
+    }
+
+    .gear-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.35);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .gear-box {
+        background: #ffffff;
+        padding: 25px 40px;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+
+    .gear-text {
+        margin-top: 10px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    /* SweetAlert Professional Theme */
+    .swal-modal {
+        border-radius: 12px !important;
+        padding: 25px 20px !important;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15) !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .swal-title {
+        font-size: 22px !important;
+        font-weight: 600 !important;
+        color: #2c3e50 !important;
+    }
+
+    .swal-text {
+        font-size: 15px !important;
+        color: #555 !important;
+        margin-top: 10px !important;
+        line-height: 1.5 !important;
+    }
+
+    .swal-btn-pro {
+        background: linear-gradient(135deg, #4e73df, #224abe) !important;
+        border-radius: 6px !important;
+        padding: 8px 24px !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+    }
+
+        .swal-btn-pro:hover {
+            background: linear-gradient(135deg, #2e59d9, #1c3faa) !important;
+        }
+
+    /* Center SweetAlert message text */
+    .swal-text {
+        text-align: center !important;
+    }
+
+    /* Optional: also center title for balance */
+    .swal-title {
+        text-align: center !important;
+    }
+</style>
+
+<script src="~/Angular/ng-cPayrollNotInAnnualTaxDetails.js"></script>
+<section ng-app="ng_HRD_App" ng-controller="cPayrollNotInAnnualTaxDetails_ctrlr">
+    <h1>
+        <b>Payroll Not In Annual Tax Details</b>
+    </h1>
+    @*<div class="wrapper wrapper-content animated fadeInRight" style="padding:10px 0px 0px 0px!important">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox-title" style="background-color:#507CD1;border-radius:5px 5px 0px 0px;">
+
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <b><h2 class="text-white">BIR Annualized Tax</h2></b>
+                            </div>
+                            <div class="col-lg-5">
+                                <input type="search" class="form-control" ng-model="search_box" ng-keyup="search_in_list(search_box,'datalist_grid')" placeholder="Search ....">
+                            </div>
+                            <div class="col-lg-3">
+                                <button type="button" class="btn btn-primary btn-block" ng-click="BacktoTaxHeader()" style="font-weight:bold;"><i class="fa fa-arrow-left"></i>&nbsp;&nbsp;&nbsp;Back To BIR Tax Header</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+
+                        <!-- Row 1: Show entries + Search -->
+                        <div class="row align-items-center">
+                            <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <span class="font-bold me-2">Show</span>
+                                    <select class="form-control" id="ddl_show_entries"
+                                            style="width:90px;"
+                                            ng-model="rowLen"
+                                            ng-change="setNumOfRow(rowLen,'datalist_grid')">
+                                        <option value="5" selected>5</option>
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                        <option value="20">20</option>
+                                    </select>
+                                    <span class="font-bold ms-2">entries</span>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-9 col-md-8 col-sm-12 mb-2">
+                                <input type="search" class="form-control"
+                                       ng-model="search_box"
+                                       ng-keyup="search_in_list(search_box,'datalist_grid')"
+                                       placeholder="Search ....">
+                            </div>
+                        </div>
+
+                        <hr class="m-0 my-2" />
+
+                        <!-- Row 2: Payroll Year + Employee ID + Buttons -->
+                        <div class="row g-2 align-items-end">
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <label class="font-bold mb-1" for="txtb_ddl_year">Payroll Year</label>
+                                <input id="txtb_ddl_year"
+                                       ng-model="txtb_ddl_year"
+                                       class="form-control"
+                                       style="font-weight:bold;"
+                                       disabled />
+                            </div>
+
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <label class="font-bold mb-1" for="txtb_empl_id">Employee ID</label>
+                                <input id="txtb_empl_id"
+                                       ng-model="txtb_empl_id"
+                                       class="form-control"
+                                       style="font-weight:bold;"
+                                       disabled />
+                            </div>
+
+                            <div class="col-lg-4 col-md-12 col-sm-12">
+                                <div class="d-flex gap-2 flex-wrap justify-content-lg-end">
+                                    @if (1 == 1)
+                                    {
+                                        <button type="button"
+                                                class="btn btn-success px-4"
+                                                ng-click="btn_generate_action()">
+                                            <i class="fa fa-share-square-o me-1"></i> Generate
+                                        </button>
+                                    }
+
+                                    <button type="button"
+                                            class="btn btn-info border px-4"
+                                            ng-click="BacktoTaxHeader()">
+                                        <i class="fa fa-arrow-left me-1"></i> Back to BIR Tax Header
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 3: Employment Type + Employee Name -->
+                        <div class="row g-2 mt-1">
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <label class="font-bold mb-1" for="txtb_empl_type_hdr">Employment Type</label>
+                                <input id="txtb_empl_type_hdr"
+                                       ng-model="txtb_empl_type_hdr"
+                                       class="form-control"
+                                       style="font-weight:bold;"
+                                       disabled />
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <label class="font-bold mb-1" for="txtb_empl_name_hdr">Employee's Name</label>
+                                <input id="txtb_empl_name_hdr"
+                                       ng-model="txtb_empl_name_hdr"
+                                       class="form-control text-left"
+                                       style="font-weight:bold;"
+                                       disabled />
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="ibox-content">
+                        <div class="col-12 table-responsive">
+                            <table id="pnia_table" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Voucher Nbr</th>
+                                        <th>Payroll Month</th>
+                                        <th>Template Code</th>
+                                        <th>Gross Pay</th>
+                                        <th>WTAX Amt</th>
+                                        <th>Remarks</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="gearLoader" class="gear-loader" style="display:none;">
+        <div class="gear-box">
+            <i class="fa fa-cog fa-spin fa-3x"></i>
+            <div class="gear-text">Processing, please wait...</div>
+        </div>
+    </div>
+
+
+</section>
+

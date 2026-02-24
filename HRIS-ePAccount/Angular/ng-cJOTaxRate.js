@@ -238,6 +238,29 @@ ng_HRD_App.controller("cJOTaxRate_ctrlr", function ($scope, $compile, $http, $fi
     s.startQueuePolling();
     s.refreshQueueCounts();
 
+    // Refresh list (triggered by toolbar button)
+    s.btn_refresh_list = function () {
+        $("#btn_refresh_icon").removeClass("fa fa-refresh");
+        $("#btn_refresh_icon").addClass("fa fa-spinner fa-spin");
+        var year = s.ddl_year || new Date().getFullYear().toString();
+        h.post("../cJOTaxRate/InitializeData", { par_payroll_year: year }).then(function (d) {
+            if (d.data.sp_payrollemployee_tax_hdr_tbl_list && d.data.sp_payrollemployee_tax_hdr_tbl_list.length > 0) {
+                s.datalistgrid = d.data.sp_payrollemployee_tax_hdr_tbl_list;
+                s.oTable.fnClearTable();
+                s.oTable.fnAddData(s.datalistgrid);
+            } else {
+                s.datalistgrid = [];
+                s.oTable.fnClearTable();
+            }
+            $("#btn_refresh_icon").removeClass("fa fa-spinner fa-spin");
+            $("#btn_refresh_icon").addClass("fa fa-refresh");
+        }).catch(function (err) {
+            console.error(err);
+            $("#btn_refresh_icon").removeClass("fa fa-spinner fa-spin");
+            $("#btn_refresh_icon").addClass("fa fa-refresh");
+        });
+    }
+
     var init_table_data = function (par_data) {
         s.datalistgrid = par_data;
 

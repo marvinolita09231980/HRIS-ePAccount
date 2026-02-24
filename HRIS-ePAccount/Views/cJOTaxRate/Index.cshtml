@@ -5,613 +5,313 @@
 }
 
 <style type="text/css">
-    .field {
-        border-radius: 3px;
-        height: 35px;
-        font-size: 18px;
+    /* Professional, compact layout for cJOTaxRate view - keeps IDs and bindings intact */
+    .page-wrapper {
+        max-width: 100%;
+        /* reduce outer margin so content fits window more tightly */
+        margin: 8px 10px;
+        padding: 0 8px;
+        font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
-    .field-arrow {
-        font-size: 26px;
+    .gradient-header {
+        background: linear-gradient(90deg,#507CD1 0%,#6a82e8 100%);
+        color: #fff;
+        /* reduced padding to fit header snugly */
+        padding: 12px 16px;
+        border-radius: 6px;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:12px;
+        /* remove extra margin so it sits flush inside wrapper */
+        margin: 0;
     }
 
-    .require-field {
-        border: 1px solid red !important;
+    .gradient-header h2 { margin:0; font-weight:700; font-size:1.45rem; }
+    .breadcrumbs { color: rgba(255,255,255,0.9); font-size:0.95rem; }
+
+    .card { background:#fff; border-radius:8px; /* smaller padding and vertical spacing to fit window */ padding:12px; box-shadow: 0 6px 18px rgba(15,34,62,0.06); margin: 8px 0; }
+
+    .controls { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+    .controls .left { display:flex; gap:12px; align-items:center; }
+    .controls .right { margin-left:auto; display:flex; gap:8px; align-items:center; }
+
+    .info-box { background:#f1f4fa; color:#2f5bb7; padding:8px 14px; border-radius:8px; font-weight:700; }
+
+    .search-field { width:320px; max-width:100%; }
+    .field-select-sm { height:36px; min-width:90px; }
+
+    .table-responsive { margin-top:12px; }
+    .table thead th { background:#f9fbff; color:#2f5bb7; font-weight:700; }
+
+    .modal-header-add-edit { background: linear-gradient(90deg,#507CD1 0%,#6a82e8 100%); color:#fff; }
+    .lbl_required { color:#d9534f; font-size:0.85rem; min-height:18px; display:block; margin-top:6px; }
+
+    /* small screens adjustments */
+    @@media (max-width: 768px) {
+        .controls { flex-direction:column; align-items:stretch; }
+        .controls .right { margin-left:0; justify-content:flex-end; }
     }
 
-    .btn.action {
-        width: 27px;
-    }
-    .select2-selection__clear {
-        font-size: 14px !important;
-    }
+    /* preserve existing required class style usage */
+    .required { border-color: red !important; }
 
-    .select2-close-mask {
-        z-index: 2099;
-    }
-
-    .select2-dropdown {
-        z-index: 3051;
-    }
-
-
-
-    .select2-selection__rendered {
-        line-height: 31px !important;
-    }
-
-    .select2-container .select2-selection--single {
-        height: 35px !important;
-        /*border: 1px solid red !important;*/
-    }
-
-    .select2-selection__arrow {
-        height: 34px !important;
-    }
-
-    .select2-container--default .select2-results__option {
-        text-align: left !important;
-    }
-
-    .select2-container--default .select2-selection--single .select2-selection__rendered {
-        text-align: left !important;
-    }
-    #toast-container {
-        z-index: 999999 !important;
-    }
+    #toast-container { z-index: 999999 !important; }
 </style>
+
 <script src="~/Angular/ng-cJOTaxRate.js?v=@DateTime.Now.Ticks"></script>
-<!-- The Modal - Generating Report -->
-<div class="modal fade" id="Loading_master" ng-model="Loading_master">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-dialog">
-            @*<span class="fa fa-spinner fa-spin fa-3x text-white"></span>*@
-            <div class="spiner-example">
-                <div class="sk-spinner sk-spinner-wandering-cubes ">
-                    <div class="sk-cube1"></div>
-                    <div class="sk-cube2"></div>
-                </div>
-            </div>
+
+<section class="page-wrapper" ng-app="ng_HRD_App" ng-controller="cJOTaxRate_ctrlr">
+
+    <div class="gradient-header">
+        <div>
+            <h2>@Model.menu_name</h2>
+            <div class="breadcrumbs">Home / Payroll / <strong>@Model.menu_name</strong></div>
+        </div>
+
+        <div style="display:flex; gap:12px; align-items:center;">
+            <div class="info-box">Total: <span style="margin-left:8px;">{{datalistgrid.length || 0}}</span></div>
+            @*<div class="info-box" style="background:#e9fbf0;color:#1f8a4a;">Active: <span style="margin-left:8px">{{active_count || 0}}</span></div>
+            <div class="info-box" style="background:#fff6f6;color:#d9534f;">Inactive: <span style="margin-left:8px">{{inactive_count || 0}}</span></div>*@
         </div>
     </div>
-</div>
 
-<section ng-app="ng_HRD_App" ng-controller="cJOTaxRate_ctrlr">
-    <!-- The modal -->
-    <div class="modal fade" id="modal_print">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content animated flipInY ">
-                <div class="modal-header text-white" style="background-color: #28a745; height:8%;">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h2 class="modal-title" id="modalLabelSmall" style="font-weight:bold; margin-top:-5px;">{{ModalTitle}}</h2>
+    <div class="card">
+        <div class="controls">
+            <div class="left">
+                <div>
+                    <label style="font-weight:600; margin-right:8px;">Show</label>
+                    <select id="ddl_show_entries" class="form-control field-select-sm" ng-model="rowLen" ng-change="setNumOfRow(rowLen,'datalist_grid')">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                    </select>
                 </div>
 
-                <div class="modal-body with-background">
-                    <hr style="margin-top:5px;" />
-                    <div class="form-group row" style="margin-top:-10px;">
-
-                        <div class="col-lg-12">
-                            <select class="form-control field-select-sm" id="ddl_reporttemplate" ng-model="ddl_reporttemplate" ng-change="SelectReportTemplate()">
-                                <option value="" selected>--Select Here--</option>
-                                <option ng-repeat="lst in reporttemplate" value="{{lst.payrolltemplate_code}}">{{lst.payrolltemplate_descr}}</option>
-                            </select>
-                        </div>
-                    </div>
+                <div>
+                    <label style="font-weight:600; margin-right:8px;">Payroll Year</label>
+                    <select id="ddl_year" class="form-control field-select-sm" ng-model="ddl_year" ng-change="SelectPayrollYear(ddl_year)">
+                        <option ng-repeat="yr in year" value="{{yr.year}}">{{yr.year}}</option>
+                    </select>
                 </div>
-                <div class="modal-footer" style="padding: 10px 30px 10px 30px !important">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-                    <button ng-show="true" ng-click="btn_print_action2()" type="button" class="btn btn-primary"><i class="fa fa-print"></i> Print </button>
 
+                <div>
+                    <label style="font-weight:600; margin-right:8px;">Department</label>
+                    <select id="ddl_department" class="form-control field-select-sm" ng-model="ddl_department" ng-change="SelectedDepartment_Change(ddl_department)">
+                        <option value="">--Select Here--</option>
+                        <option ng-repeat="lst in department_data" value="{{lst.department_code}}">{{lst.department_name1}}</option>
+                    </select>
+                </div>
+
+                @* include history checkbox if allowed *@
+                <div>
+                    @if (Model.allow_edit_history == 1)
+                    {
+                        <label style="display:flex; gap:6px; align-items:center;"> <input type="checkbox" id="chckbx_history" ng-model="chckbx_history" ng-change="chckbx_history_Change(chckbx_history)" /> Include History </label>
+                    }
                 </div>
             </div>
+
+            <div class="right">
+                <input type="search" class="form-control search-field" ng-model="search_box" ng-keyup="search_in_list(search_box,'datalist_grid')" placeholder="Search..." />
+                <button class="btn btn-light" title="Refresh" ng-click="btn_refresh_list()"><i id="btn_refresh_icon" class="fa fa-refresh"></i></button>
+                @if (Model.allow_add == 1)
+                {
+                    <button class="btn btn-success" ng-show="btnAddShow" ng-click="btn_add_action()"><i id="btn_add" class="fa fa-plus-circle" style="margin-right:8px;"></i> Add</button>
+                }
+            </div>
+        </div>
+
+        <div style="margin-top:12px; display:flex; gap:8px; align-items:center;">
+            <span ng-show="pending_gen_count > 0" ng-click="confirmRunPendingGeneration()" class="badge badge-warning" style="background:#ffefc6;color:#8a6d00;padding:8px 12px;border-radius:999px;cursor:pointer;"> <i class="fa fa-clock-o"></i> <b>{{pending_gen_count}}</b> pending</span>
+            <span ng-show="failed_gen_count > 0" ng-click="confirmRetryFailedGeneration()" class="badge badge-danger" style="background:#fdecea;color:#b02a37;padding:8px 12px;border-radius:999px;cursor:pointer;"> <i class="fa fa-exclamation-triangle"></i> <b>{{failed_gen_count}}</b> failed</span>
         </div>
     </div>
-    
 
-    <!-- The modal -->
-    <div class="modal fade" id="main_modal" data-toggle="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" aria-hidden="true" style="overflow:auto;">
+    <div class="card">
+        <div class="table-responsive">
+            <table id="datalist_grid" class="table table-striped table-bordered table-hover" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th style="width:8%">ID NBR</th>
+                        <th style="width:30%">EMPLOYEE NAME</th>
+                        <th style="width:10%">BASIC TAX</th>
+                        <th style="width:10%">ADDL. TAX</th>
+                        <th style="width:10%">VAT</th>
+                        <th style="width:12%">GROSS PAY</th>
+                        <th style="width:15%">ACTION</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Main modal - keep original IDs and bindings -->
+    <div class="modal fade" id="main_modal" data-toggle="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content animated flipInY">
-                <div class="modal-header modal-header-add-edit text-white">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+            <div class="modal-content">
+                <div class="modal-header modal-header-add-edit">
                     <h4 class="modal-title" id="modalLabelSmall">{{ModalTitle}}</h4>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
+                <div class="modal-body">
 
-                <div class="modal-body with-background">
-                    <div class="row" style="display:none;">
-                    </div>
-                    <div class="form-group row">
-
-                        <div class="col-lg-2" style="padding-top:5px;">
+                    <div class="form-row">
+                        <div class="form-group col-md-8">
                             <label>Employee's Name:</label>
-                        </div>
-                        <div class="col-lg-6">
-                            <input id="txtb_empl_name" ng-show="isShowNameInput" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_empl_name" class="form-control" disabled />
-
-                            <select class="select2_demo_3 form-control" ng-hide="isShowNameInput" ng-model="ddl_employee_name" id="ddl_employee_name" style="width:100%;">
-                                @*<option ng-repeat="lst in employeenames track by lst.empl_id" value="{{lst.empl_id}}">{{lst.employee_name}}</option>*@
+                            <input id="txtb_empl_name" ng-show="isShowNameInput" ng-disabled="true" ng-model="txtb_empl_name" class="form-control" disabled />
+                            <select id="ddl_employee_name" class="form-control select2_demo_3" ng-hide="isShowNameInput" ng-model="ddl_employee_name" style="width:100%;">
                                 <option ng-repeat="lst in employeenames track by $index" ngx-data="{{$index}}" value="{{lst.empl_id}}">{{lst.employee_name}}</option>
                             </select>
-                            @*<select class="select2_demo_3 form-control"
-                                    ng-hide="isShowNameInput"
-                                    ng-model="ddl_employee_name"
-                                    ng-options="e.empl_id as e.employee_name for e in employeenames"
-                                    id="ddl_employee_name"
-                                    style="width:100%;">
-                                <option value="">--Select Here--</option>
-                            </select>*@
                             <label id="lbl_ddl_employee_name_req" class="lbl_required"></label>
                         </div>
 
-                        <div class="col-lg-2" style="padding-top:5px; padding-right:0px;">
+                        <div class="form-group col-md-4">
                             <label>ID Nbr.:</label>
+                            <input id="txtb_empl_id" ng-disabled="true" ng-model="txtb_empl_id" class="form-control text-center" disabled />
                         </div>
-
-                        <div class="col-lg-2">
-                            <input id="txtb_empl_id" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_empl_id" class="form-control text-center" disabled />
-                        </div>
-
                     </div>
 
-                    <div class="row" style="margin-top:-15px;">
-                        <hr style="border-color:cadetblue; height:5px;" />
-                    </div>
-                    <div class="form-group row" style="margin-top:-15px;">
-
-                        <div class="col-lg-2" style="padding-top:5px;">
+                    <div class="form-row">
+                        <div class="form-group col-md-8">
                             <label>Position:</label>
-                        </div>
-                        <div class="col-lg-10">
-                            <input id="txtb_position" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_position" class="form-control" disabled />
+                            <input id="txtb_position" ng-disabled="true" ng-model="txtb_position" class="form-control" disabled />
                         </div>
 
-
+                        <div class="form-group col-md-4">
+                            <label>Effective Date:</label>
+                            <input type="text" id="txtb_effective_date" ng-show="isShowEffectiveDate" onchange="RemoveEffective()" ng-model="txtb_effective_date" class="form-control text-center" />
+                            <input id="txtb_effective_date_hid" ng-show="isShowEffectiveDate_hid" ng-disabled="true" ng-model="txtb_effective_date_hid" class="form-control text-center" disabled />
+                            <label id="lbl_txtb_effective_date_req" class="lbl_required"></label>
+                        </div>
                     </div>
 
-                    <div class="row" style="margin-top:-15px;">
-                        <hr />
-                    </div>
-
-                    <div class="form-group row" style="margin-top:-15px;">
-
-                        <div class="col-lg-6">
-                            <div style="float:left; width:35.5%;">
-                                <label>Effective Date:</label>
-                            </div>
-                            <div style="width:64.5%; float:right;" class="input-group date" data-provide="datepicker">
-                                <input type="text" id="txtb_effective_date" ng-show="isShowEffectiveDate" onchange="RemoveEffective()" maxlength="20" ng-model="txtb_effective_date" class="form-control text-center" />
-                                <input id="txtb_effective_date_hid" style="font-weight:bold;" ng-disabled="true" ng-show="isShowEffectiveDate_hid" ng-model="txtb_effective_date_hid" class="form-control text-center" disabled />
-                                <div class="input-group-addon" ng-show="isShowEffectiveDate">
-                                    <span class="fa fa-calendar"></span>
-                                </div>
-
-                            </div>
-
-                            <div style="float:left; width:35.5%;">
-                                &nbsp;
-                            </div>
-                            <div style="float:left;" class="input-group date" data-provide="datepicker">
-                                <label id="lbl_txtb_effective_date_req" class="lbl_required"></label>
-                            </div>
-
-                        </div>
-
-                        <div class="col-lg-2" style="padding-top:5px; padding-right:0px;">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
                             <label>BIR Class:</label>
-                        </div>
-
-                        <div class="col-lg-4">
-                            @*<input id="txtb_bir_class" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_bir_class" class="form-control text-center" disabled />*@
-                            <select class="form-control field-select-sm text-center" ng-change="SelectBirClass(ddl_bir_class)" ng-disabled="isDisabledBIRClass" ng-show="isShowBirSelect" ng-model="ddl_bir_class" id="ddl_bir_class">
-                                <option value="" selected>--Select Here--</option>
-                                <option ng-click="SelectBirClass(lst)" ng-repeat="lst in bir_class_data" value="{{lst.bir_class}}">{{lst.bir_class_descr}}</option>
+                            <select id="ddl_bir_class" class="form-control" ng-model="ddl_bir_class" ng-change="SelectBirClass(ddl_bir_class)">
+                                <option value="">--Select Here--</option>
+                                <option ng-repeat="lst in bir_class_data" value="{{lst.bir_class}}">{{lst.bir_class_descr}}</option>
                             </select>
                             <label id="lbl_ddl_bir_class_req" class="lbl_required"></label>
                         </div>
 
-                    </div>
-
-                    <div class="row" style="margin-top:-15px;">
-                        <hr />
-                    </div>
-
-                    <div class="form-group row" style="margin-top:-15px;">
-
-                        <div class="col-lg-2" style="padding-top:5px;">
+                        <div class="form-group col-md-4">
                             <label>Fixed Rate:</label>
-                        </div>
-                        <div class="col-lg-4">
-                            <select class="form-control field-select-sm text-center" ng-change="SelectFixedRate(ddl_fixed_rate)" id="ddl_fixed_rate" ng-model="ddl_fixed_rate">
-                                <option value="" selected>--Select Here--</option>
+                            <select id="ddl_fixed_rate" class="form-control" ng-model="ddl_fixed_rate" ng-change="SelectFixedRate(ddl_fixed_rate)">
+                                <option value="">--Select Here--</option>
                                 <option value="true">YES</option>
                                 <option value="false">NO</option>
                             </select>
                             <label id="lbl_ddl_fixed_rate_req" class="lbl_required"></label>
                         </div>
-                        <div class="col-lg-2" style="padding-top:5px; padding-right:0px;">
-                            <label>Basic Tax:</label>
-                        </div>
 
-                        <div class="col-lg-2">
-
-                            <select class="form-control text-center" id="ddl_w_held" ng-disabled="isDisabledWHeld" ng-model="ddl_w_held">
-                                <option value="0">0</option>
-                                <option value="3"> 3 Percent</option>
-                                <option value="5"> 5 Percent</option>
-                                <option value="10">10 Percent</option>
-                                <option value="15">15 Percent</option>
-                                <option value="1"> 1 Percent</option>
-                                @*<option ng-repeat="lst in w_held_data" value="{{lst.taxrate_percentage}}">{{lst.taxrate_percentage}}</option>*@
-                            </select>
-
-                        </div>
-                        <div class="col-lg-2" style="padding-right:0px;">
-                            <label class="text-success" style="padding-top:10px;">RATE PERCENTAGE</label>
-                        </div>
-
-                    </div>
-
-
-                    <div class="row" style="margin-top:-15px;">
-                        <hr />
-                    </div>
-
-                    <div class="form-group row" style="margin-top:-15px;">
-
-                        <div class="col-lg-2" style="padding-top:5px;">
+                        <div class="form-group col-md-4">
                             <label>With Sworn:</label>
-                        </div>
-                        <div class="col-lg-4">
-                            <select class="form-control field-select-sm text-center" ng-change="SelectWithSworn(ddl_with_sworn)" id="ddl_with_sworn" ng-model="ddl_with_sworn">
-                                @*<option value="" selected>--Select Here--</option>*@
+                            <select id="ddl_with_sworn" class="form-control" ng-model="ddl_with_sworn" ng-change="SelectWithSworn(ddl_with_sworn)">
                                 <option value="">--Select Here--</option>
-                                @*<option value="true" selected>YES</option>*@
                                 <option value="false" selected>NO</option>
                                 <option value="true">YES</option>
-
                             </select>
                             <label id="lbl_ddl_with_sworn_req" class="lbl_required"></label>
                         </div>
+                    </div>
 
-                        <div class="col-lg-2" style="padding-top:5px; padding-right:0px;">
-                            <label>Additional Tax:</label>
-                        </div>
-                        <div class="col-lg-2">
-
-                            <select class="form-control text-center" id="ddl_b_tax" ng-disabled="isDisabledBTax" ng-model="ddl_b_tax">
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label>Basic Tax:</label>
+                            <select id="ddl_w_held" class="form-control" ng-model="ddl_w_held">
                                 <option value="0">0</option>
-                                <option value="3"> 3 Percent</option>
-                                <option value="5"> 5 Percent</option>
-                                <option value="10">10 Percent</option>
-                                <option value="15">15 Percent</option>
-                                <option value="1"> 1 Percent</option>
-                                @*<option ng-repeat="lst in w_held_data" value="{{lst.taxrate_percentage}}">{{lst.taxrate_percentage}}</option>*@
+                                <option value="1">1%</option>
+                                <option value="3">3%</option>
+                                <option value="5">5%</option>
+                                <option value="10">10%</option>
+                                <option value="15">15%</option>
                             </select>
-
-                        </div>
-                        <div class="col-lg-2" style="padding-right:0px;">
-                            <label class="text-success" style="padding-top:10px;">RATE PERCENTAGE</label>
                         </div>
 
+                        <div class="form-group col-md-3">
+                            <label>Additional Tax:</label>
+                            <select id="ddl_b_tax" class="form-control" ng-model="ddl_b_tax">
+                                <option value="0">0</option>
+                                <option value="1">1%</option>
+                                <option value="3">3%</option>
+                                <option value="5">5%</option>
+                                <option value="10">10%</option>
+                                <option value="15">15%</option>
+                            </select>
+                        </div>
 
+                        <div class="form-group col-md-3">
+                            <label>VAT:</label>
+                            <select id="ddl_vat" class="form-control" ng-model="ddl_vat">
+                                <option value="0">0</option>
+                                <option value="1">1%</option>
+                                <option value="3">3%</option>
+                                <option value="5">5%</option>
+                                <option value="8">8%</option>
+                                <option value="10">10%</option>
+                                <option value="15">15%</option>
+                            </select>
+                        </div>
 
+                        <div class="form-group col-md-3">
+                            <label>Exmpt. Amount:</label>
+                            <input id="txtb_expt_amt" class="form-control text-right" ng-model="txtb_expt_amt" />
+                            <label id="lbl_txtb_expt_amt_req" class="lbl_required"></label>
+                        </div>
                     </div>
 
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label>Total Gross:</label>
+                            <input id="txtb_gross_pay" class="form-control text-right" ng-model="txtb_gross_pay" disabled />
+                        </div>
 
-                    <div class="row" style="margin-top:-15px;">
-                        <hr />
-                    </div>
-
-                    <div class="form-group row" style="margin-top:-15px;">
-                        <div class="col-lg-2" style="padding-top:5px;">
+                        <div class="form-group col-md-4">
                             <label>Deduction Status:</label>
-                        </div>
-                        <div class="col-lg-4">
-                            <select class="form-control field-select-sm text-center" ng-change="RemoveClass(ddl_deduction_status,'ddl_deduction_status')" id="ddl_deduction_status" ng-model="ddl_deduction_status">
-                                <option value="" selected>--Select Here--</option>
-                                <option value="true" selected>ACTIVE</option>
+                            <select id="ddl_deduction_status" class="form-control" ng-model="ddl_deduction_status">
+                                <option value="">--Select Here--</option>
+                                <option value="true">ACTIVE</option>
                                 <option value="false">IN-ACTIVE</option>
                             </select>
                             <label id="lbl_ddl_deduction_status_req" class="lbl_required"></label>
                         </div>
 
-                        <div class="col-lg-2" style="padding-top:5px; padding-right:0px;">
-                            <label>VAT:</label>
-                        </div>
-                        <div class="col-lg-2">
-
-                            <select class="form-control text-center" id="ddl_vat" ng-disabled="isDisabledVat" ng-model="ddl_vat">
-                                <option value="0">0</option>
-                                <option value="3"> 3 Percent</option>
-                                <option value="5"> 5 Percent</option>
-                                <option value="8"> 8 Percent</option>
-                                <option value="10">10 Percent</option>
-                                <option value="15">15 Percent</option>
-                                <option value="1"> 1 Percent</option>
-                                @*<option ng-repeat="lst in w_held_data" value="{{lst.taxrate_percentage}}">{{lst.taxrate_percentage}}</option>*@
-                            </select>
-
-                        </div>
-                        <div class="col-lg-2" style="padding-right:0px;">
-                            <label class="text-success" style="padding-top:10px;">RATE PERCENTAGE</label>
-                        </div>
-                    </div>
-
-                    <div class="row" style="margin-top:-15px;">
-                        <hr style="border-color:cadetblue; height:5px;" />
-                    </div>
-
-                    <div class="form-group row" style="margin-top:-15px;">
-                        <div class="col-lg-2" style="padding-top:5px; padding-right:0px;">
-                            <label class="text-danger">Total Gross:</label>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <input id="txtb_gross_pay" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_gross_pay" class="form-control text-right" disabled />
-
-                        </div>
-                        <div class="col-lg-2" style="padding-top:5px; padding-right:0px;">
-                            <label class="text-danger">Exmpt. Amount:</label>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <input id="txtb_expt_amt" style="font-weight:bold;" ng-disabled="isDisabledExmpt" ng-model="txtb_expt_amt" class="form-control text-right" />
-                            <label id="lbl_txtb_expt_amt_req" class="lbl_required"></label>
-                        </div>
-                    </div>
-
-                    <div class="form-group row" ng-show="false" style="margin-top:-15px;">
-
-                        <div class="col-lg-2" style="padding-top:5px;">
-                            <label>Status</label>
-                        </div>
-                        <div class="col-lg-4">
-                            <select class="form-control field-select-sm text-center" id="ddl_status" ng-model="ddl_status">
-                                <option value="" selected>--Select Here--</option>
+                        <div class="form-group col-md-4">
+                            <label>Status:</label>
+                            <select id="ddl_status" class="form-control" ng-model="ddl_status">
                                 <option value="N" selected>NEW</option>
                                 <option value="A">APPROVED</option>
                                 <option value="R">REJECTED</option>
                             </select>
                             <label id="lbl_ddl_status_req" class="lbl_required"></label>
                         </div>
-
-                        <div class="col-lg-2" style="padding-top:5px; padding-right:0px;">
-                        </div>
-
-                        <div class="col-lg-4">
-
-                        </div>
-
                     </div>
 
-                    <div class="row" style="margin-top:-15px;">
-                        <hr style="border-color:cadetblue; height:5px;" />
-                    </div>
-                    <div class="row">
-                        <div class="col-12" id="alert_section"></div>
-                    </div>
-
-                    @*<div class="form-group row" style="margin-top:-15px;">
-
-                            <div class="col-lg-6">
-                                <div style="float:left; width:35.5%; padding-top:10px;">
-                                    <label>Business Tax:</label>
-                                </div>
-                                <div style="width:64.5%; float:right;" class="input-group">
-                                    <input id="txtb_business_tax" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_business_tax" class="form-control text-center" disabled />
-                                    <div class="input-group-addon">
-                                        <span>%</span>
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="col-lg-6">
-                                <div style="float:left; width:35.5%; padding-top:10px;">
-                                    <label>W/ Held Tax:</label>
-                                </div>
-                                <div style="width:64.5%; float:right;" class="input-group">
-                                    <input id="txtb_wheld_tax" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_wheld_tax" class="form-control text-center" disabled />
-                                    <div class="input-group-addon">
-                                        <span>%</span>
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>*@
                 </div>
-                <div class="modal-footer" style="padding: 10px 30px 10px 30px !important">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
                     <button ng-show="ishowsave" id="btn_save_tx_edit" ng-click="btn_save()" type="button" class="btn btn-success"><i id="btn_save" class="fa fa-save"></i> Save</button>
-
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="wrapper wrapper-content animated fadeInRight" style="padding:10px 0px 0px 0px!important">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox-title" style="background-color:#507CD1;border-radius:5px 5px 0px 0px;">
-
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <b><h2 class="text-white">@Model.menu_name</h2></b>
-                        </div>
-                        <div class="col-lg-8">
-                            <input type="search" class="form-control" ng-model="search_box" ng-keyup="search_in_list(search_box,'datalist_grid')" placeholder="Search ....">
-                        </div>
-                    </div>
-
-                </div>
-               
-            </div>
-        </div>
-    </div>
-
-
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;">Show</span>
-                                <select class="form-control field-select-sm" id="ddl_show_entries" style="width:30%;float:left;" ng-model="rowLen" ng-change="setNumOfRow(rowLen,'datalist_grid')">
-                                    <option value="5" selected>5</option>
-                                    <option value="10">10</option>
-                                    <option value="15">15</option>
-                                    <option value="20">20</option>
-                                </select>
-                                <span class="font-bold" style="float:left;margin-top:9px;margin-left:10px;">entries</span>
-                            </div>
-
-                            <div class="col-sm-4">
-                                <div style="width:40%; float:left;">
-                                    <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;font-weight:bold;">Payroll Year:</span>
-                                </div>
-                                <div style="width:60%; float:right;">
-                                    <select id="ddl_year" ng-model="ddl_year" ng-change="SelectPayrollYear(ddl_year)" class="form-control field-select-sm" style="width:100%;">
-                                        <option ng-repeat="yr in year" value="{{yr.year}}">{{yr.year}}</option>
-                                    </select>
-                                   
-                                </div>
-
-                            </div>
-                            
-
-
-
-                        </div>
-
-                        <div class="row" style="margin-top:5px;">
-                            <div class="col-sm-3">
-                                @if (Model.allow_edit_history == 1)
-                                {
-                                    <label ID="include_history" class="container" style="padding-top: 5px; font-size: 12px !important;">
-                                        Include History
-                                        <input type="checkbox" id="chckbx_history" ng-model="chckbx_history" ng-change="chckbx_history_Change(chckbx_history)" />
-                                        <span class="checkmark"></span>
-                                    </label>
-                                }
-
-
-                            </div>
-                            <div class="col-sm-1">
-
-                            </div>
-                            <div class="col-sm-6">
-                                <div style="width:26%; float:left;">
-                                    <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;font-weight:bold;">Department:</span>
-                                </div>
-                                <div style="width:74%; float:right;">
-                                    <select class="form-control" id="ddl_department" ng-model="ddl_department" ng-change="SelectedDepartment_Change(ddl_department)">
-                                        <option value="">--Select Here--</option>
-                                        <option ng-repeat="lst in department_data" value="{{lst.department_code}}">{{lst.department_name1}}</option>
-                                    </select>
-
-                                </div>
-                            </div>
-                            <div class="col-sm-2 text-right">
-
-                                @if (Model.allow_add == 1)
-                                {
-                                    <button class="btn btn-success" ng-show="btnAddShow" ng-click="btn_add_action()"><i id="btn_add" class="fa fa-plus-circle"> </i> Add</button>
-                                }
-
-                            </div>
-
-
-
-
-                        </div>
-
-
-
-
-                    </div>
-                    <div class="ibox-content">
-                        <div class="row" style="margin-bottom:8px;">
-                            <div style="margin-bottom:10px;">
-                                <span ng-show="pending_gen_count > 0"
-                                      ng-click="confirmRunPendingGeneration()"
-                                      class="label label-warning"
-                                      style="font-size:13px; padding:7px 14px; border-radius:15px; cursor:pointer;">
-                                    <i class="fa fa-clock-o"></i>
-                                    <b>{{pending_gen_count}}</b> pending tax generation
-                                </span>
-
-                                <span ng-show="failed_gen_count > 0"
-                                      ng-click="confirmRetryFailedGeneration()"
-                                      class="label label-danger"
-                                      style="font-size:13px; padding:7px 14px; border-radius:15px; margin-left:6px; cursor:pointer;">
-                                    <i class="fa fa-exclamation-triangle"></i>
-                                    <b>{{failed_gen_count}}</b> failed generation
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-12 table-resposive">
-                            <table id="datalist_grid" class="table table-striped table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th width="8%">ID NBR</th>
-                                        <th width="25%">EMPLOYEE NAME</th>
-                                        <th width="10%">BASIC TAX</th>
-                                        <th width="10%">ADDL. TAX</th>
-                                        <th width="10%">VAT</th>
-                                        <th width="10%">GROSS PAY</th>
-                                        <th width="15%">ACTION</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="loading_data" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" data-backdrop="static" data-keyboard="false" aria-hidden="true" style="margin-top:10%;overflow:hidden">
+    <!-- loading modal -->
+    <div class="modal fade" id="loading_data" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
         <div class="modal-dialog modal-md modal-dialog-centered">
-
-            @*<span class="fa fa-spinner fa-spin fa-3x text-white"></span>*@
-            <div class="spiner-example">
-                <div class="sk-spinner sk-spinner-cube-grid" style="height:50px;width:50px;">
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="row" style="padding-top:5px;">
-
-                        <div class="col-sm-12">
-                            <div style="width:10%; float:left;" class="no-padding">
-                                <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;color:white">Please&nbsp;wait..</span>
-                            </div>
-
-
-                        </div>
-
-                    </div>
-
+            <div class="spiner-example text-center" style="padding:22px;">
+                <div class="sk-spinner sk-spinner-cube-grid" style="width:56px;height:56px;margin:0 auto;">
+                    <div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div>
+                    <div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div>
+                    <div class="sk-cube"></div><div class="sk-cube"></div><div class="sk-cube"></div>
                 </div>
-
+                <div style="margin-top:12px;font-weight:600;">Loading, please wait…</div>
             </div>
-            @**@
-
         </div>
     </div>
 

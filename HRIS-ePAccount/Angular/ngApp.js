@@ -72,6 +72,8 @@ ng_HRD_App.run(function () {
         return this;
     }
 
+
+
     clearTable = function (table) {
         $("#" + table).dataTable().fnClearTable();
     }

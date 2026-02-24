@@ -12,15 +12,11 @@ namespace HRIS_ePAccount.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class generate_tax_empl_dtl_success_tbl
+    public partial class error_generate_payroll_not_in_annual_tbl
     {
         public string empl_id { get; set; }
         public string payroll_year { get; set; }
-        public string payroll_month { get; set; }
-        public string employment_type { get; set; }
-        public System.DateTime created_at { get; set; }
-        public string batch_id { get; set; }
-    
-        public virtual generate_tax_empl_hdr_success_tbl generate_tax_empl_hdr_success_tbl { get; set; }
+        public string error_message { get; set; }
+        public System.DateTime created_dttm { get; set; }
     }
 }

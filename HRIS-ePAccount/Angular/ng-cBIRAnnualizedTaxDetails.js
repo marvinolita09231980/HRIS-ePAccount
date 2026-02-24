@@ -821,7 +821,7 @@ ng_HRD_App.controller("cBIRAnnualizedTaxDetails_ctrlr", function ($scope, $compi
 
 
     Array.prototype.refreshTable = function (table, id) {
-      
+        
         if (this.length == 0) {
             s.oTable.fnClearTable();
 
@@ -832,7 +832,7 @@ ng_HRD_App.controller("cBIRAnnualizedTaxDetails_ctrlr", function ($scope, $compi
         }
 
         var el_id = s[table][0].id
-
+        console.log(el_id)
         if (id != "") {
             for (var x = 1; x <= $("#" + el_id).DataTable().page.info().pages; x++) {
                 if (id.get_page(table) == false) {

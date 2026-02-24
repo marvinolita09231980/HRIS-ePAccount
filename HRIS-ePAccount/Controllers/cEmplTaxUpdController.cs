@@ -106,17 +106,15 @@ namespace HRIS_ePAccount.Controllers
                     var ep = db_pacco.generate_tax_empl_dtl_success_tbl
                             .Where(a => a.payroll_year == par_year
                                      && a.employment_type == par_empType
-                                     && a.payroll_month == currentMonth)
-                            .Max(a => a.episode);
-                    episode = ep + 1;
+                                     && a.payroll_month == currentMonth);
+                 
 
                     var res = db_pacco.Database.SqlQuery<TaxGenResult>(
-                        "EXEC dbo.sp_run_tax_generation_loop @p_payroll_year,@p_employment_type,@payroll_month,@p_empl_id,@episode,@firstgenoftheyear,@removeprojected",
+                        "EXEC dbo.sp_run_tax_generation_loop @p_payroll_year,@p_employment_type,@payroll_month,@p_empl_id,@firstgenoftheyear,@removeprojected",
                         new SqlParameter("@p_payroll_year", par_year),
                         new SqlParameter("@p_employment_type", par_empType),
                         new SqlParameter("@payroll_month", currentMonth),
                         new SqlParameter("@p_empl_id", ""),
-                        new SqlParameter("@episode", episode),
                         new SqlParameter("@firstgenoftheyear", false),
                         new SqlParameter("@removeprojected", false)
                     ).FirstOrDefault();

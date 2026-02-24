@@ -10,17 +10,18 @@
 namespace HRIS_ePAccount.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class generate_tax_empl_dtl_success_tbl
+    public partial class sp_get_tax_empl_dtl_hdr_generate_status_Result
     {
         public string empl_id { get; set; }
-        public string payroll_year { get; set; }
-        public string payroll_month { get; set; }
-        public string employment_type { get; set; }
-        public System.DateTime created_at { get; set; }
+        public string employee_name { get; set; }
         public string batch_id { get; set; }
-    
-        public virtual generate_tax_empl_hdr_success_tbl generate_tax_empl_hdr_success_tbl { get; set; }
+        public string dtl_status { get; set; }
+        public string dtl_generated_datetime { get; set; }
+        public string hdr_status_or_error { get; set; }
+        public string hdr_generated_datetime { get; set; }
+        public Nullable<int> dtl_to_hdr_seconds { get; set; }
+        public Nullable<int> dtl_loop_interval_seconds { get; set; }
+        public string latest_error_msg { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace HRIS_ePAccount.Models
 {
     using System;
     
-    public partial class sp_annualtax_hdr_tbl_list_wtaxpmos_Result
+    public partial class sp_annualtax_hdr_tbl_list_empl_id_Result
     {
         public string payroll_year { get; set; }
         public string empl_id { get; set; }

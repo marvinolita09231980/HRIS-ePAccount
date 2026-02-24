@@ -5,30 +5,58 @@
 }
 
 <style type="text/css">
-    .field 
-    {
-        border-radius: 3px;
-        height: 35px;
-        font-size: 18px;
-    }
+.field 
+{
+    border-radius: 3px;
+    height: 35px;
+    font-size: 18px;
+}
 
-    .field-arrow {
-        font-size: 26px;
-    }
+.field-arrow {
+    font-size: 26px;
+}
 
-    .require-field {
-        border: 1px solid red !important;
-    }
+.require-field {
+    border: 1px solid red !important;
+}
 
-    .btn.action {
-        width: 27px;
-    }
+.btn.action {
+    width: 27px;
+}
 
-    .form-control.detail {
-        padding-bottom: 0;
-        padding-top: 0;
-        height: 30px !important;
-    }
+.form-control.detail {
+    padding-bottom: 0;
+    padding-top: 0;
+    height: 30px !important;
+}
+
+/* Gear Loader Styles */
+.gear-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gear-box {
+    background: #ffffff;
+    padding: 25px 40px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}
+
+.gear-text {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #333;
+}
 
     #datalist_grid_checktaxes {
         font-size: 11px; /* smaller font for the whole table */
@@ -146,9 +174,64 @@
         z-index: 2;
         background: #f8f9fa;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        /* Professional action buttons */
+        .btn-group .btn.action {
+            border-radius: 4px !important;
+            margin-right: 4px;
+        }
+        /* PNIA button styling */
+        .btn-pnia {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px !important;
+            border: 1px solid rgba(0,0,0,.15);
+            box-shadow: 0 1px 1px rgba(0,0,0,.06);
+        }
+            /* Small label next to icon */
+            .btn-pnia .pnia-label {
+                font-size: 11px;
+                letter-spacing: .4px;
+                text-transform: uppercase;
+                opacity: .95;
+            }
+            /* Count pill */
+            .btn-pnia .pnia-count {
+                margin-left: 2px;
+                background: rgba(255,255,255,.95);
+                color: #d9534f; /* bootstrap danger */
+                border-radius: 10px;
+                padding: 1px 7px;
+                font-weight: 700;
+                font-size: 11px;
+                line-height: 1.4;
+                min-width: 18px;
+                text-align: center;
+            }
+            /* Optional: make it calmer when count is zero */
+            .btn-pnia.is-zero {
+                opacity: .65;
+            }
+            
+            /* Cell truncation styles - max 2 lines with ellipsis */
+            .cell-truncate {
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-height: 2.8em;
+                line-height: 1.4em;
+                word-wrap: break-word;
+                cursor: pointer;
+            }
+            .cell-truncate:hover {
+                background-color: #f5f5f5;
+                border-radius: 3px;
+            }
     }
 </style>
-<script src="~/Angular/ng-cBIRAnnualizedTax.js?v=3"></script>
+<script src="~/Angular/ng-cBIRAnnualizedTax.js?v=@DateTime.Now.ToString("yyyyMMddHHmmss")"></script>
 <!-- The Modal - Generating Report -->
 <div class="modal fade" id="Loading_master" ng-model="Loading_master">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -166,7 +249,33 @@
 
 
 <section ng-app="ng_HRD_App" ng-controller="cBIRAnnualizedTax_ctrlr">
-    <!-- The modal -->
+<!-- Cell Detail Modal -->
+<div class="modal fade" id="modal_cell_detail">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header" style="background: linear-gradient(135deg, #1a5276 0%, #2e86de 100%); color: white; padding: 15px 20px;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white; opacity: 1;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" style="font-weight: 600;">
+                    <i class="fa fa-info-circle"></i>&nbsp; {{modalDetailTitle}}
+                </h4>
+            </div>
+            <div class="modal-body" style="padding: 20px;">
+                <div style="background-color: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 5px; padding: 15px; max-height: 300px; overflow-y: auto;">
+                    <p style="margin: 0; white-space: pre-wrap; word-wrap: break-word; font-size: 14px; line-height: 1.6;">{{modalDetailContent}}</p>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding: 10px 20px; border-top: 1px solid #e0e0e0;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<!-- The modal -->
     <div class="modal fade" id="modal_print">
         <div class="modal-dialog modal-md">
             <div class="modal-content animated flipInY ">
@@ -910,6 +1019,48 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="main_modal2" data-toggle="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" aria-hidden="true" style="overflow:auto;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header modal-header-add-edit text-white">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="modalLabelSmall">{{ModalTitle}}</h4>
+                </div>
+
+                <div class="modal-body with-background">
+                   
+                    <table id="datalist_grid" class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                               
+                                <th>ID NBR</th>
+                                <th width="150px">EMPLOYEE NAME</th>
+                                <th>TXBL AMT.</th>
+                                <th>JAN/FEB</th>
+                                <th>MAR/APR</th>
+                                <th>MAY/JUN</th>
+                                <th>JUL/AUG</th>
+                                <th>SEP/OCT</th>
+                                <th>NOV/DEC</th>
+                                <th width="10%">ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+
+
+                </div>
+                <div class="modal-footer" style="padding: 10px 30px 10px 30px !important">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                    <button ng-show="ishowsave" ng-click="btn_save()" type="button" class="btn btn-success"><i id="btn_save" class="fa fa-save"></i> Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="wrapper wrapper-content animated fadeInRight" style="padding:10px 0px 0px 0px!important">
         <div class="row">
             <div class="col-lg-12">
@@ -920,8 +1071,8 @@
                             <b><h2 class="text-white">@Model.menu_name</h2></b>
                         </div>
                         @*<div class="col-lg-8">
-                            <input type="search" class="form-control" ng-model="search_box" ng-keyup="search_in_list(search_box,'datalist_grid')" placeholder="Search ....">
-                        </div>*@
+                                <input type="search" class="form-control" ng-model="search_box" ng-keyup="search_in_list(search_box,'datalist_grid')" placeholder="Search ....">
+                            </div>*@
                     </div>
 
                 </div>
@@ -935,96 +1086,99 @@
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;">Show</span>
-                                <select class="form-control field-select-sm" id="ddl_show_entries" style="width:30%;float:left;" ng-model="rowLen" ng-change="setNumOfRow(rowLen,'datalist_grid')">
-                                    <option value="5" selected>5</option>
-                                    <option value="10">10</option>
-                                    <option value="15">15</option>
-                                    <option value="20">20</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                                <span class="font-bold" style="float:left;margin-top:9px;margin-left:10px;">entries</span>
+                        <!-- Row 1: Show Entries, Payroll Year, Employment Type, Actions -->
+                        <div class="row" style="display:flex; flex-wrap:wrap; align-items:center; margin-bottom:10px;">
+                            <!-- Show Entries -->
+                            <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12" style="margin-bottom:8px;">
+                                <div style="display:flex; align-items:center;">
+                                    <span class="font-bold" style="margin-right:8px; white-space:nowrap;">Show</span>
+                                    <select class="form-control input-sm" id="ddl_show_entries" style="width:70px;" ng-model="rowLen" ng-change="setNumOfRow(rowLen,'datalist_grid')">
+                                        <option value="5" selected>5</option>
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                    <span class="font-bold" style="margin-left:8px; white-space:nowrap;">entries</span>
+                                </div>
                             </div>
 
-                            <div class="col-sm-4">
-                                <div style="width:40%; float:left;">
-                                    <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;font-weight:bold;">Payroll Year:</span>
-                                </div>
-                                <div style="width:60%; float:right;">
-                                    <select id="ddl_year" ng-model="ddl_year" ng-change="SelectPayrollYear(ddl_employment_type,ddl_year,ddl_letter)" class="form-control field-select-sm" style="width:100%;">
+                            <!-- Payroll Year -->
+                            <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12" style="margin-bottom:8px;">
+                                <div style="display:flex; align-items:center;">
+                                    <label class="font-bold" style="margin-right:8px; margin-bottom:0; white-space:nowrap;">Payroll Year:</label>
+                                    <select id="ddl_year" ng-model="ddl_year" ng-change="SelectPayrollYear(ddl_employment_type,ddl_year,ddl_letter)" class="form-control input-sm" style="flex:1; min-width:80px;">
                                         <option ng-repeat="yr in year" value="{{yr.year}}">{{yr.year}}</option>
                                     </select>
                                 </div>
-
                             </div>
 
-
-
-                        </div>
-
-                        <div class="row" style="margin-top:5px;">
-                            <div class="col-sm-3">
-                                
-
-                                <div>
-                                    <label class="checkbox-inline" style="margin-left:10px;">
-                                        <input type="checkbox" id="chk_show_descrep" style="width:25px; height:25px;" ng-click="FilterPageGridShowAction()">
-                                        <span class="pull-left font-bold" style="margin-top:3px;font-weight:bold;">
-                                            &nbsp;&nbsp;&nbsp;&nbsp;Check for Descrepancy:&nbsp;&nbsp;
-                                            <span id="descrepancy_count" class="badge badge-danger badge-counter ng-binding" style="font-size:10px;margin-left:-3px"></span>
-                                        </span>
-                                    </label>
-                                    @*<select class="form-control" id="ddl_letter" ng-model="ddl_letter" ng-change="SelectLetter(ddl_employment_type,ddl_year,ddl_letter)">
-                                        <option value="">--</option>
-                                        <option ng-repeat="lst in alphabet_list track by $index" value="{{lst.id}}">{{lst.alpha_name}}</option>
-                                    </select>*@
-                                </div>
-
-                            </div>
-                            <div class="col-sm-6">
-                                <div style="width:26%; float:left;">
-                                    <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;font-weight:bold;">Employment Type:</span>
-                                </div>
-                                <div style="width:74%; float:right;">
-                                    <select class="form-control field-select-sm" id="ddl_employment_type" ng-model="ddl_employment_type" ng-change="SelectEmploymentType(ddl_employment_type,ddl_year,ddl_letter)">
+                            <!-- Employment Type -->
+                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="margin-bottom:8px;">
+                                <div style="display:flex; align-items:center;">
+                                    <label class="font-bold" style="margin-right:8px; margin-bottom:0; white-space:nowrap;">Employment Type:</label>
+                                    <select class="form-control input-sm" id="ddl_employment_type" ng-model="ddl_employment_type" ng-change="SelectEmploymentType(ddl_employment_type,ddl_year,ddl_letter)" style="flex:1; min-width:150px;">
                                         <option value="" selected>--Select Here--</option>
                                         <option ng-repeat="lst in employeeddl" value="{{lst.employment_type}}">{{lst.employmenttype_description}}</option>
                                     </select>
-
                                 </div>
                             </div>
 
-                            <div class="col-sm-2 text-right">
-
-                                @if (Model.allow_add == 1)
-                                {
-                                    @*<button class="btn btn-primary" ng-click="btn_generateALL_action()"><i id="btn_generate" class="fa fa-share-square-o"> </i>Generate All</button>*@
-                                    @*<select class="form-control detail text-center"  ng-change="btn_extract_action()">
-                            <option value="">--Select here--</option>
-                            <option ng-repeat="lst in extract_status" value="{{lst.id}}">{{lst.text}}</option>
-                        </select>*@
-
-                                    <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"> Other Actions <span class="caret"></span></button>
-                                    @*<button  ng-click="ExctractToExcel()" data-toggle="dropdown" class="btn btn-primary dropdown-toggle" >Other Actions </button>*@
-                                    <ul class="dropdown-menu">
-                                        <li><a ng-click="btn_extract_action('H')">HRIS Extract</a></li>
-                                        <li><a ng-click="btn_extract_action('B')">BIR Extract</a></li>
-                                    </ul>
-                                    @*<button id="btn_extract" class="btn btn-info btn-block" ng-click="btn_extract_action()"><i id="btn_extract_icon" class="fa fa-file-excel-o"> </i>Extract</button>*@
-                                }
-
+                            <!-- Action Buttons -->
+                            <div class="col-lg-4 col-md-2 col-sm-12 col-xs-12 text-right" style="margin-bottom:8px;">
+                                <div style="display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap;">
+                                    @if (Model.allow_add == 1)
+                                    {
+                                    <div class="btn-group">
+                                            <button data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">
+                                                Other Actions <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-right">
+                                                <li><a ng-click="btn_extract_action('H')"><i class="fa fa-download"></i> HRIS Extract</a></li>
+                                                <li><a ng-click="btn_extract_action('B')"><i class="fa fa-download"></i> BIR Extract</a></li>
+                                            </ul>
+                                        </div>
+                                        <button id="btn_add" class="btn btn-success btn-sm" ng-click="btn_add_action()">
+                                            <i id="btn_add_icon" class="fa fa-plus"></i> Add
+                                        </button>
+                                    }
+                                </div>
                             </div>
-                            <div class="col-sm-1 text-right">
+                        </div>
 
-                                @if (Model.allow_add == 1)
-                                {
-                                    @*<button class="btn btn-primary" ng-click="btn_generateALL_action()"><i id="btn_generate" class="fa fa-share-square-o"> </i>Generate All</button>*@
-                                    <button id="btn_add" class="btn btn-success btn-block" ng-click="btn_add_action()"><i id="btn_add_icon" class="fa fa-plus"> </i>Add</button>
-                                }
+                        <!-- Row 2: Filter Checkboxes -->
+                        <div class="row" style="display:flex; flex-wrap:wrap; align-items:center;">
+                            <!-- Check for Discrepancy -->
+                            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" style="margin-bottom:8px;">
+                                <label class="checkbox-inline" style="display:flex; align-items:center; margin:0; cursor:pointer;">
+                                    <input type="checkbox" id="chk_show_descrep" style="width:16px; height:16px; margin-right:8px;" ng-click="FilterPageGridShowAction()">
+                                    <span class="font-bold">
+                                        Check for Discrepancy
+                                        <span id="descrepancy_count" class="badge badge-danger" style="font-size:10px; margin-left:5px;"></span>
+                                    </span>
+                                </label>
+                            </div>
 
+                            <!-- Show PNIA Only -->
+                            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" style="margin-bottom:8px;">
+                                <label class="checkbox-inline" style="display:flex; align-items:center; margin:0; cursor:pointer;">
+                                    <input type="checkbox" id="chk_show_pnia" style="width:16px; height:16px; margin-right:8px;" ng-click="FilterPageGridShowPNIA()">
+                                    <span class="font-bold">
+                                        Show Posted payroll but not in annualized table
+                                        <span id="pnia_count" class="badge" style="background-color:#d9534f;color:white; font-size:10px; margin-left:5px;">{{pnia_employee_count || 0}}</span>
+                                    </span>
+                                </label>
+                            </div>
+
+                            <!-- Employee Count Display -->
+                            <div class="col-lg-6 col-md-4 col-sm-12 col-xs-12 text-right" style="margin-bottom:8px;">
+                                <span class="font-bold" style="font-size:13px;">
+                                    <i class="fa fa-users"></i> 
+                                    Showing: <span class="text-primary">{{datalistgrid.length || 0}}</span> 
+                                    <span ng-show="datalistgrid_raw.length != datalistgrid.length"> of <span class="text-success">{{datalistgrid_raw.length || 0}}</span> employees</span>
+                                    <span ng-show="datalistgrid_raw.length == datalistgrid.length"> employees</span>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -1033,137 +1187,185 @@
                         <li class="active">
                             <a data-toggle="tab" href="#tab-11">
                                 <i class="fa fa-user"></i> Employee List
+                                <span id="employee_count" class="badge" style="background-color:#5cb85c; margin-left:5px;">{{datalistgrid.length || 0}}</span>
                             </a>
                         </li>
                         <li class="" style="display:none;"><a data-toggle="tab" href="#tab-12"><i class="fa fa-user"></i>CHECK DETAILS</a></li>
                         <li class=""><a data-toggle="tab" href="#tab-13"><i class="fa fa-briefcase"></i>Generation List</a></li>
-                        <li class="search-box"><input type="search" class="form-control" ng-model="search_box" ng-keyup="search_in_list(search_box,'datalist_grid')" placeholder="Search ...."></li>
+                        
                     </ul>
                     <div class="tab-content">
                         <div id="tab-11" class="tab-pane active">
                             <div class="full-height-scroll">
-
-                                <table id="datalist_grid" class="table table-striped table-bordered table-hover">
-                                    <thead>
-                                        @*<tr>
-                                            <th width="10%">ID NBR</th>
-                                            <th width="30%">EMPLOYEE NAME</th>
-                                            <th width="15%">TIN NBR</th>
-                                            <th width="15%">TAXABLE AMT.</th>
-                                            <th width="15%">TAX RATE</th>
-                                            <th width="15%">ACTIONS</th>
-                                        </tr>*@
-
-                                        <tr>
-                                            <th>check_for_descrepancy</th>
-                                            <th>ID NBR</th>
-                                            <th width="150px">EMPLOYEE NAME</th>
-                                            <th>TXBL AMT.</th>
-                                            <th>JAN/FEB</th>
-                                            <th>MAR/APR</th>
-                                            <th>MAY/JUN</th>
-                                            <th>JUL/AUG</th>
-                                            <th>SEP/OCT</th>
-                                            <th>NOV/DEC</th>
-                                            <th width="10%">ACTIONS</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-
+                                <!-- Professional Employee Tax Records Panel -->
+                                <div class="panel panel-default" style="border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                                    <!-- Panel Header with Gradient -->
+                                    <div class="panel-heading" style="background: linear-gradient(135deg, #1a5276 0%, #2e86de 100%); color: white; border-radius: 7px 7px 0 0; padding: 15px 20px;">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h4 style="margin: 0; font-weight: 600;">
+                                                    <i class="fa fa-users"></i>&nbsp; Employee Tax Records
+                                                </h4>
+                                                <small style="opacity: 0.9;">View and manage employee annualized tax records</small>
+                                            </div>
+                                            <div class="col-md-6 text-right">
+                                                <span class="badge" style="background-color: rgba(255,255,255,0.2); padding: 8px 15px; font-size: 13px;">
+                                                    <i class="fa fa-database"></i>&nbsp; Total Records: <strong>{{datalistgrid.length || 0}}</strong>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Panel Body -->
+                                    <div class="panel-body" style="padding: 20px;">
+                                        <!-- Search and Filter Section -->
+                                        <div class="row" style="margin-bottom: 15px;">
+                                            <div class="col-md-6">
+                                                <label style="font-weight: 600; color: #2c3e50; margin-bottom: 8px; display: block;">
+                                                    <i class="fa fa-search text-primary"></i>&nbsp; Search Employee Records
+                                                </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon" style="background: linear-gradient(135deg, #1a5276 0%, #2e86de 100%); color: white; border: none;">
+                                                        <i class="fa fa-filter"></i>
+                                                    </span>
+                                                    <input type="search" class="form-control" ng-model="search_box" ng-keyup="search_in_list(search_box,'datalist_grid')" placeholder="Search by ID, Name, TIN..." style="border-radius: 0 4px 4px 0;">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label style="font-weight: 600; color: #2c3e50; margin-bottom: 8px; display: block;">
+                                                    <i class="fa fa-bar-chart text-info"></i>&nbsp; Quick Statistics
+                                                </label>
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <div style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); color: white; padding: 10px 15px; border-radius: 5px; text-align: center;">
+                                                            <i class="fa fa-check-circle"></i>&nbsp; <strong>{{datalistgrid.length || 0}}</strong> Employees
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6">
+                                                        <div style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; padding: 10px 15px; border-radius: 5px; text-align: center;">
+                                                            <i class="fa fa-exclamation-triangle"></i>&nbsp; <strong>{{pnia_employee_count || 0}}</strong> Posted payroll but not in annualized table
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- DataTable -->
+                                        <div style="border: 1px solid #e0e0e0; border-radius: 5px; overflow: hidden;">
+                                            <table id="datalist_grid" class="table table-striped table-bordered table-hover" style="margin-bottom: 0;">
+                                                <thead style="background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%); color: white;">
+                                                    <tr>
+                                                        <th style="display: none;">check_for_descrepancy</th>
+                                                        <th style="color: white; font-weight: 600;">ID NBR</th>
+                                                        <th width="150px" style="color: white; font-weight: 600;">EMPLOYEE NAME</th>
+                                                        <th style="color: white; font-weight: 600;">TXBL AMT.</th>
+                                                        <th style="color: white; font-weight: 600;">JAN/FEB</th>
+                                                        <th style="color: white; font-weight: 600;">MAR/APR</th>
+                                                        <th style="color: white; font-weight: 600;">MAY/JUN</th>
+                                                        <th style="color: white; font-weight: 600;">JUL/AUG</th>
+                                                        <th style="color: white; font-weight: 600;">SEP/OCT</th>
+                                                        <th style="color: white; font-weight: 600;">NOV/DEC</th>
+                                                        <th width="10%" style="color: white; font-weight: 600;">ACTIONS</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div id="tab-12" class="tab-pane">
 
                             <div class="container-fluid payroll-summary">
                                 <div class="table-responsive">
-                                        <table class="table table-bordered table-condensed">
-                                            <thead>
-                                                <tr class="success">
-                                                    <th colspan="3">{{tax_empl_id}}</th>
-                                                    <th colspan="4">{{tax_employee_name}}</th>
-                                                    <th colspan="4">{{tax_tin}}</th>
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th></th>
-                                                </tr>
-                                                <tr class="success">
-                                                    <th>Voucher</th>
-                                                    <th>Period</th>
-                                                    <th>Code</th>
-                                                    <th>Description</th>
-                                                    <th>BASIC SAL</th>
-                                                    <th>PHIC SHARE</th>
-                                                    <th>HAZ</th>
-                                                    <th>SUBS</th>
-                                                    <th>OT</th>
-                                                    <th>OTH</th>
-                                                    <th>TAXABLE 13TH</th>
-                                                    <th>NONTAXABLE 13TH</th>
-                                                    <th>DE MINIMIS</th>
-                                                    <th>SAL & OTH</th>
-                                                    <th>NONTAXABLE OTH</th>
-                                                    <th>GSIS</th>
-                                                    <th>HDMF</th>
-                                                    <th>PHIC</th>
-                                                    <th>WTAX</th>
-                                                </tr>
-                                            </thead>
+                                    <table class="table table-bordered table-condensed">
+                                        <thead>
+                                            <tr class="success">
+                                                <th colspan="3">{{tax_empl_id}}</th>
+                                                <th colspan="4">{{tax_employee_name}}</th>
+                                                <th colspan="4">{{tax_tin}}</th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                            <tr class="success">
+                                                <th>Voucher</th>
+                                                <th>Period</th>
+                                                <th>Code</th>
+                                                <th>Description</th>
+                                                <th>BASIC SAL</th>
+                                                <th>PHIC SHARE</th>
+                                                <th>HAZ</th>
+                                                <th>SUBS</th>
+                                                <th>OT</th>
+                                                <th>OTH</th>
+                                                <th>TAXABLE 13TH</th>
+                                                <th>NONTAXABLE 13TH</th>
+                                                <th>DE MINIMIS</th>
+                                                <th>SAL & OTH</th>
+                                                <th>NONTAXABLE OTH</th>
+                                                <th>GSIS</th>
+                                                <th>HDMF</th>
+                                                <th>PHIC</th>
+                                                <th>WTAX</th>
+                                            </tr>
+                                        </thead>
 
 
-                                            <tbody>
+                                        <tbody>
 
-                                                <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks !== 'TOTAL'">
-                                                    <td>{{l.voucher_nbr}}</td>
-                                                    <td>{{l.payroll_month}}</td>
-                                                    <td>{{l.payrolltemplate_code}}</td>
-                                                    <td>{{l.remarks}}</td>
-                                                    <td>{{fn_currency(l.basic_sal)}}</td>
-                                                    <td>{{fn_currency(l.phic_share)}}</td>
-                                                    <td>{{fn_currency(l.hazard_pay)}}</td>
-                                                    <td>{{fn_currency(l.subsistence_allowance)}}</td>
-                                                    <td>{{fn_currency(l.overtime)}}</td>
-                                                    <td>{{fn_currency(l.oth)}}</td>
-                                                    <td>{{fn_currency(l.taxable13th)}}</td>
-                                                    <td>{{fn_currency(l.nontaxable13th)}}</td>
-                                                    <td>{{fn_currency(l.deminimis)}}</td>
-                                                    <td>{{fn_currency(l.sal_oth)}}</td>
-                                                    <td>{{fn_currency(l.nontaxable_oth)}}</td>
-                                                    <td>{{fn_currency(l.gsis_ps)}}</td>
-                                                    <td>{{fn_currency(l.hdmf_ps)}}</td>
-                                                    <td>{{fn_currency(l.phic_ps)}}</td>
-                                                    <td>{{fn_currency(l.wtax_amt)}}</td>
-                                                </tr>
-                                                <tr class="success" ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'" style="font-weight: bold;">
-                                                    <td>{{l.voucher_nbr}}</td>
-                                                    <td>{{l.payroll_month}}</td>
-                                                    <td></td>
-                                                    <td>{{l.remarks}}</td>
-                                                    <td class="strong-border">{{fn_currency(l.basic_sal)}}</td>
-                                                    <td class="strong-border">{{fn_currency(l.phic_share)}}</td>
-                                                    <td class="strong-border">{{fn_currency(l.hazard_pay)}}</td>
-                                                    <td class="strong-border">{{fn_currency(l.subsistence_allowance)}}</td>
-                                                    <td class="strong-border">{{fn_currency(l.overtime)}}</td>
-                                                    <td class="strong-border">{{fn_currency(l.oth)}}</td>
-                                                    <td class="strong-border">{{fn_currency(l.taxable13th)}}</td>
-                                                    <td class="strong-border">{{fn_currency(l.nontaxable13th)}}</td>
-                                                    <td class="strong-border">{{fn_currency(l.deminimis)}}</td>
-                                                    <td class="strong-border">{{fn_currency(l.sal_oth)}}</td>
-                                                    <td class="strong-border">{{fn_currency(l.nontaxable_oth)}}</td>
-                                                    <td class="strong-border">{{fn_currency(l.gsis_ps)}}</td>
-                                                    <td class="strong-border">{{fn_currency(l.hdmf_ps)}}</td>
-                                                    <td class="strong-border">{{fn_currency(l.phic_ps)}}</td>
-                                                    <td>{{fn_currency(l.wtax_amt)}}</td>
-                                                </tr>
+                                            <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks !== 'TOTAL'">
+                                                <td>{{l.voucher_nbr}}</td>
+                                                <td>{{l.payroll_month}}</td>
+                                                <td>{{l.payrolltemplate_code}}</td>
+                                                <td>{{l.remarks}}</td>
+                                                <td>{{fn_currency(l.basic_sal)}}</td>
+                                                <td>{{fn_currency(l.phic_share)}}</td>
+                                                <td>{{fn_currency(l.hazard_pay)}}</td>
+                                                <td>{{fn_currency(l.subsistence_allowance)}}</td>
+                                                <td>{{fn_currency(l.overtime)}}</td>
+                                                <td>{{fn_currency(l.oth)}}</td>
+                                                <td>{{fn_currency(l.taxable13th)}}</td>
+                                                <td>{{fn_currency(l.nontaxable13th)}}</td>
+                                                <td>{{fn_currency(l.deminimis)}}</td>
+                                                <td>{{fn_currency(l.sal_oth)}}</td>
+                                                <td>{{fn_currency(l.nontaxable_oth)}}</td>
+                                                <td>{{fn_currency(l.gsis_ps)}}</td>
+                                                <td>{{fn_currency(l.hdmf_ps)}}</td>
+                                                <td>{{fn_currency(l.phic_ps)}}</td>
+                                                <td>{{fn_currency(l.wtax_amt)}}</td>
+                                            </tr>
+                                            <tr class="success" ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'" style="font-weight: bold;">
+                                                <td>{{l.voucher_nbr}}</td>
+                                                <td>{{l.payroll_month}}</td>
+                                                <td></td>
+                                                <td>{{l.remarks}}</td>
+                                                <td class="strong-border">{{fn_currency(l.basic_sal)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.phic_share)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.hazard_pay)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.subsistence_allowance)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.overtime)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.oth)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.taxable13th)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.nontaxable13th)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.deminimis)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.sal_oth)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.nontaxable_oth)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.gsis_ps)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.hdmf_ps)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.phic_ps)}}</td>
+                                                <td>{{fn_currency(l.wtax_amt)}}</td>
+                                            </tr>
 
 
-                                            </tbody>
-                                        </table>
+                                        </tbody>
+                                    </table>
                                 </div>
 
                                 <!-- Summary Section -->
@@ -1319,6 +1521,7 @@
                                 .payroll-summary .highlight {
                                     background-color: #f2dede; /* light red for emphasis */
                                 }
+
                                 .strong-border {
                                     border-left: 2px solid #000 !important;
                                     border-right: 2px solid #000 !important;
@@ -1329,61 +1532,183 @@
                         </div>
                         <div id="tab-13" class="tab-pane">
                             <div class="full-height-scroll">
-                                <table id="datalist_grid_2" class="table table-striped table-bordered table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>DATE</th>
-                                            <th>START</th>
-                                            <th>END</th>
-                                            <th>STATUS</th>
-                                            <th>DESCRIPTION</th>
-                                            <th>RUN BY</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
+                                <!-- Generation Status Header Panel -->
+                                <div class="panel panel-default" style="margin-bottom:15px; border-radius:4px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+                                    <div class="panel-heading" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white; border-radius:4px 4px 0 0; padding:12px 15px;">
+                                        <div class="row" style="display:flex; align-items:center;">
+                                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                                <h4 style="margin:0; font-weight:600;">
+                                                    <i class="fa fa-cogs"></i> Tax Generation Status Monitor
+                                                </h4>
+                                                <small style="opacity:0.85;">Track and monitor annualized tax generation progress</small>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 text-left" style="margin-bottom:10px;">
+                                                <label class="font-bold" style="display: block; margin-bottom: 5px; color: white; font-size: 12px; font-weight: 600; font-size: 11px; ">
+                                                    <i class="fa fa-info-circle"></i> Quick Stats
+                                                </label>
+                                                <span class="label" style="background-color: #5cb85c; font-size: 11px; padding: 5px 10px; margin-right: 3px; color: white; font-weight: 600; font-size: 11px; ">
+                                                    <i class="fa fa-list"></i> Records: {{filteredRowsCount || 0}}
+                                                </span>
+                                                <span class="label" style="background-color: #5bc0de; font-size: 11px; padding: 5px 10px; color: white; font-weight: 600;">
+                                                    <i class="fa fa-clock-o"></i> Last Updated: {{lastRefreshTime || 'N/A'}}
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 text-right">
+                                                <span class="label label-info" style="font-size:11px; padding:5px 10px;">
+                                                    <i class="fa fa-calendar"></i> Year: {{ddl_year}}
+                                                </span>
+                                                <span class="label label-success" style="font-size:11px; padding:5px 10px; margin-left:5px;">
+                                                    <i class="fa fa-users"></i> {{ddl_employment_type || 'All Types'}}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body" style="padding:15px;">
+                                        <div class="row" style="display:flex; flex-wrap:wrap; align-items:center;">
+                                            <!-- Refresh Button -->
+                                            <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12" style="margin-bottom:10px;">
+
+                                                <label class="font-bold"
+                                                       style="display:block; margin-bottom:8px; color:#555; font-size:12px;">
+                                                    <i class="fa fa-search"></i> Date Filter
+                                                </label>
+                                                
+
+                                                <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+
+
+                                                    <div style="display:flex; align-items:center; gap:8px; min-width:220px;">
+                                                        <input type="date"
+                                                               id="txtb_gen_date"
+                                                               ng-model="txtb_gen_date"
+                                                               class="form-control"
+                                                               title="Filter by date"
+                                                               style="height:38px; margin-bottom:4px;" />
+
+                                                        <button class="btn btn-primary"
+                                                                ng-click="btn_refresh_generation_status()"
+                                                                style="height:38px; border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+                                                            <i class="fa fa-refresh"></i> Refresh List
+                                                        </button>
+                                                    </div>
+
+                                                    <label class="text-danger"
+                                                           style="display:flex; align-items:center; gap:6px; margin:0; font-weight:600; cursor:pointer;">
+                                                        <input type="checkbox"
+                                                               ng-model="filterWithErrors"
+                                                               ng-change="filterErrors()"
+                                                               style="cursor: pointer; width: 16px; height: 16px; margin-right: 8px;" />
+
+                                                        Show With Errors Only
+                                                    </label>
+                                                    <button class="btn btn-warning"
+                                                            ng-click="getWithErrorsEmplIdList()"
+                                                            style="border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+                                                        <i class="fa fa-refresh"></i> Generate All W/ Errors
+                                                    </button>
+                                                </div>
+
+                                            </div>
+
+
+
+                                            <!-- Search Box -->
+                                            <div class="col-lg-3 col-md-5 col-sm-6 col-xs-12" style="margin-bottom:10px;">
+                                                <label class="font-bold" style="display:block; margin-bottom:5px; color:#555; font-size:12px;">
+                                                    <i class="fa fa-search"></i> Search Generation Records
+                                                </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon" style="background:#f5f5f5; border-color:#ddd;">
+                                                        <i class="fa fa-search" style="color:#888;"></i>
+                                                    </span>
+                                                    <input type="search"
+                                                           class="form-control"
+                                                           ng-model="search_box_gen"
+                                                           ng-keyup="search_in_list(search_box_gen,'datalist_grid_2')"
+                                                           placeholder="Type to search by ID, Name, Status..."
+                                                           style="border-left:0;">
+                                                </div>
+                                               
+                                            </div>
+                                            <div class="col-lg-2 col-md-5 col-sm-6 col-xs-12" style="margin-bottom:10px;">
+                                               
+                                                
+                                                
+                                            </div>
+
+
+
+                                            <!-- Status Summary -->
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Data Table -->
+                                <div class="table-responsive" style="border:1px solid #ddd; border-radius:4px; box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+                                    <table id="datalist_grid_2" class="table table-striped table-bordered table-hover" style="margin-bottom:0;">
+                                        <thead style="background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);">
+                                            <tr>
+                                                <th style="vertical-align:middle; text-align:center; font-weight:600; color:#495057;">ID</th>
+                                                <th style="vertical-align:middle; text-align:center; font-weight:600; color:#495057;">NAME</th>
+                                                <th style="vertical-align:middle; text-align:center; font-weight:600; color:#495057;">DTL GENERATE TIME</th>
+                                                <th style="vertical-align:middle; text-align:center; font-weight:600; color:#495057;">HDR GENERATE TIME</th>
+                                                <th style="vertical-align:middle; text-align:center; font-weight:600; color:#495057;">ERROR STATUS</th>
+                                                <th style="vertical-align:middle; text-align:center; font-weight:600; color:#495057; width:10%;">ACTION</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
 
                             </div>
                         </div>
                     </div>
-                
-                
+
+
                 </div>
+            </div>
         </div>
-    </div>
 
-    <div class="modal fade" id="loading_data" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" data-backdrop="static" data-keyboard="false" aria-hidden="true" style="margin-top:10%;overflow:hidden">
-        <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal fade" id="loading_data" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" data-backdrop="static" data-keyboard="false" aria-hidden="true" style="margin-top:10%;overflow:hidden">
+            <div class="modal-dialog modal-md modal-dialog-centered">
 
-            @*<span class="fa fa-spinner fa-spin fa-3x text-white"></span>*@
-            <div class="spiner-example">
-                <div class="sk-spinner sk-spinner-cube-grid" style="height:50px;width:50px;">
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="sk-cube"></div>
-                    <div class="row" style="padding-top:5px;">
+                @*<span class="fa fa-spinner fa-spin fa-3x text-white"></span>*@
+                <div class="spiner-example">
+                    <div class="sk-spinner sk-spinner-cube-grid" style="height:50px;width:50px;">
+                        <div class="sk-cube"></div>
+                        <div class="sk-cube"></div>
+                        <div class="sk-cube"></div>
+                        <div class="sk-cube"></div>
+                        <div class="sk-cube"></div>
+                        <div class="sk-cube"></div>
+                        <div class="sk-cube"></div>
+                        <div class="sk-cube"></div>
+                        <div class="sk-cube"></div>
+                        <div class="row" style="padding-top:5px;">
 
-                        <div class="col-sm-12">
-                            <div style="width:10%; float:left;" class="no-padding">
-                                <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;color:white">Please&nbsp;wait..</span>
+                            <div class="col-sm-12">
+                                <div style="width:10%; float:left;" class="no-padding">
+                                    <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;color:white">Please&nbsp;wait..</span>
+                                </div>
+
+
                             </div>
-
 
                         </div>
 
                     </div>
 
                 </div>
+                @**@
 
             </div>
-            @**@
-
         </div>
-    </div>
 </section>
+
+<div id="gearLoader" class="gear-loader" style="display:none;">
+    <div class="gear-box">
+        <i class="fa fa-cog fa-spin fa-3x"></i>
+        <div class="gear-text">Processing, please wait...</div>
+    </div>
+</div>
