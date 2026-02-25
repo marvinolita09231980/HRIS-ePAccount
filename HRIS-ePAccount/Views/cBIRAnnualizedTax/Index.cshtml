@@ -1546,12 +1546,18 @@
                                                 <label class="font-bold" style="display: block; margin-bottom: 5px; color: white; font-size: 12px; font-weight: 600; font-size: 11px; ">
                                                     <i class="fa fa-info-circle"></i> Quick Stats
                                                 </label>
-                                                <span class="label" style="background-color: #5cb85c; font-size: 11px; padding: 5px 10px; margin-right: 3px; color: white; font-weight: 600; font-size: 11px; ">
+                                                <span class="label" style="background-color: #17a2b8; font-size: 11px; padding: 5px 10px; margin-right: 3px; color: white; font-weight: 600; font-size: 11px; ">
                                                     <i class="fa fa-list"></i> Records: {{filteredRowsCount || 0}}
                                                 </span>
-                                                <span class="label" style="background-color: #5bc0de; font-size: 11px; padding: 5px 10px; color: white; font-weight: 600;">
-                                                    <i class="fa fa-clock-o"></i> Last Updated: {{lastRefreshTime || 'N/A'}}
+                                                <span class="label" style="background-color: #28a745; font-size: 11px; padding: 5px 10px; margin-right: 3px; color: white; font-weight: 600; font-size: 11px; ">
+                                                    <i class="fa fa-list"></i> Success: {{filteredSuccessCount || 0}}
                                                 </span>
+                                                <span class="label" style="background-color: #dc3545; font-size: 11px; padding: 5px 10px; margin-right: 3px; color: white; font-weight: 600; font-size: 11px; ">
+                                                    <i class="fa fa-list"></i> Fails: {{filteredFailsCount || 0}}
+                                                </span>
+                                                @*<span class="label" style="background-color: #17a2b8; font-size: 11px; padding: 5px 10px; color: white; font-weight: 600;">
+                                                    <i class="fa fa-clock-o"></i> Last Updated: {{lastRefreshTime || 'N/A'}}
+                                                </span>*@
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-12 text-right">
                                                 <span class="label label-info" style="font-size:11px; padding:5px 10px;">

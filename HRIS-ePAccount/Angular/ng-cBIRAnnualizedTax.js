@@ -455,7 +455,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 		
      //   init_table_data_checktaxes([]);
 
-       $("#loading_data").modal({ keyboard: false, backdrop: "static" })
+        $("#gearLoader").fadeIn(200);
         RetrieveYear()
         h.post("../cBIRAnnualizedTax/InitializeData", { par_empType: s.employeeddl }).then(function (d) {
 
@@ -536,7 +536,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
             // Set initial counts for discrepancy and PNIA
             set_pnia_count();
 
-            $("#loading_data").modal("hide")
+            $("#gearLoader").fadeOut(200);
         })
     }
     init()
@@ -645,6 +645,10 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         $('#modal_cell_detail').modal('show');
     }
 
+    function toDateOnly(d) {
+        return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    }
+
     var init_table_data2 = function (par_data) {
         s.datalistgrid2 = par_data;
 
@@ -657,24 +661,61 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                 pageLength: 10,
                 deferRender: true,
                 "fnDrawCallback": function (oSettings) {
-                    // `this` is the DataTable DOM node; get the API object
+
                     var api = this.api ? this.api() : table;
 
-                    // ✅ Count filtered rows
-                    var filteredRows = api.rows({ filter: 'applied' }).data().length;
+                    // ✅ Get filtered rows
+                    var filteredData = api.rows({ filter: 'applied' }).data();
+                   
+                    var filteredRows = filteredData.length;
+                    var successCount = 0;
+                    var failsCount = 0;
 
-                    // Store in AngularJS scope
-                    $scope.filteredRowCount = filteredRows;
+                    // ✅ Count rows where dtl_status == "SUCCESS"
+                    for (var i = 0; i < filteredData.length; i++) {
+                        if (filteredData[i].dtl_status === "SUCCESS") {
+                            successCount++;
+                        }
+                    }
+                    // ✅ Count rows where dtl_status == "SUCCESS"
+                    for (var i = 0; i < filteredData.length; i++) {
+                        if (filteredData[i].dtl_status === "ERROR") {
+                            failsCount++;
+                        }
+                    }
 
-                    // Optional: also store in your object
+                    // ✅ Set filtered success count
                     s.filteredRowsCount = filteredRows;
+                    s.filteredSuccessCount = successCount;
+                    s.filteredFailsCount = failsCount
+                    
 
-                    // Trigger digest so AngularJS updates bindings
                     if (!$scope.$$phase) {
                         $scope.$apply();
                     }
+                },
+                rowCallback: function (row, data, index) {
 
-                    console.log("Filtered rows count:", filteredRows);
+                    if ($scope.txtb_gen_date) {
+
+                        var batchId = data.batch_id; // adjust column index if needed
+                        var rowDate = getDateFromBatchId(batchId);
+
+                        var filterDate = toDateOnly(new Date(s.txtb_gen_date));
+                        
+
+                        if (rowDate < filterDate) {
+                            $('td:eq(2)', row).css('color', '#d9534f'); // red
+                            $('td:eq(3)', row).css('color', '#d9534f'); // red
+                            $('td:eq(4)', row).css('color', '#d9534f'); // red
+                            $('td:eq(4)', row).html('Not generated today : see last DTL generated time');
+                            if (data.dtl_status !== "ERROR") {
+                                data.dtl_status = "ERROR";
+                            }
+                        }   
+                    }       
+
+                    
                 },
                 columns: [
 
@@ -741,8 +782,17 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
         $("div.toolbar").html('<b>Custom tool bar! Text/images etc.</b>');
     }
+    function getDateFromBatchId(batchId) {
+        var datePart = batchId.substring(0, 8); // "20260224"
 
-    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+        var year = parseInt(datePart.substring(0, 4));
+        var month = parseInt(datePart.substring(4, 6)) - 1; // JS month is 0-based
+        var day = parseInt(datePart.substring(6, 8));
+
+        return new Date(year, month, day);
+    }
+
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex,full) {
 
         if (settings.nTable.id !== "datalist_grid_2") {
             return true;
@@ -750,31 +800,31 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
         var dtlDate = data[2]; // dtl_generated_datetime column index
 
+
         /* -------------------------
            1️⃣ FILTER WITH ERRORS
         ------------------------- */
-        if ($scope.filterWithErrors) {
-            if (dtlDate && dtlDate.trim() !== "") {
-                return false;
-            }
-        }
+        if (s.txtb_gen_date) {
 
-        /* -------------------------
-           2️⃣ DATE FILTER (>=)
-        ------------------------- */
-        if ($scope.txtb_gen_date) {
+            var batchId = full.batch_id; // adjust column index if needed
+            var rowDate = getDateFromBatchId(batchId);
 
-            if (!dtlDate || dtlDate.trim() === "") {
-                return false;
-            }
+            var filterDate = toDateOnly(new Date(s.txtb_gen_date));
 
-            var filterDate = new Date($scope.txtb_gen_date);
-            var rowDate = new Date(dtlDate);
 
             if (rowDate < filterDate) {
+                if (full.dtl_status !== "ERROR") {
+                    full.dtl_status = "ERROR";
+                }
+            }
+        } 
+
+        if (s.filterWithErrors) {
+            if (full.dtl_status !=="ERROR") {
                 return false;
             }
         }
+
 
         return true;
     });
@@ -819,17 +869,32 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
         // Get ALL rows from internal data (not only visible rows)
         var dt = $('#datalist_grid_2').DataTable();;
-        console.log(dt.rows())
-        dt.rows().every(function () {
+        
+            dt.rows().every(function () {
 
-            var rowData = this.data();
+                var rowData = this.data();
+                var dtl_status = rowData.dtl_status;
 
-            // dtl_generated_datetime is a property in your dataset
-            if (!rowData.dtl_generated_datetime ||
-                rowData.dtl_generated_datetime.trim() === "") {
-
-                errorList.push(rowData.empl_id);
-            }
+            
+                if (!s.filterWithErrors) {
+                    errorList.push({
+                        empl_id: rowData.empl_id,
+                        payroll_year: ddlyear,
+                        employment_type: ddlemploymenttype,
+                        processed: true
+                    });
+                }
+                else {
+                    if (dtl_status == "ERROR" ) {
+                        errorList.push({
+                            empl_id: rowData.empl_id,
+                            payroll_year: ddlyear,
+                            employment_type: ddlemploymenttype,
+                            processed: true
+                        });
+                    }
+                }
+                
 
         });
         
@@ -844,6 +909,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         h.post("../cBIRAnnualizedTax/StartAnnualTaxJob", {
             payrollYear: ddlyear,
             employmentType: ddlemploymenttype,
+            datalist: errorList
         }).then(function (response) {
 
             var data = response.data;
@@ -868,7 +934,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                 if (data.failedEmplIds && data.failedEmplIds.length > 0) {
                     swal("Generation Failed!", "Employees with errors: " + data.failedEmplIds.join(", "), "error");
                 } else {
-                    swal("Generation Failed!", "Unknown error occurred.", "error");
+                    swal("Generation Failed!", data.message, "error");
                 }
                 $("#gearLoader").fadeOut(200);
             }
@@ -999,6 +1065,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
     // Expose refresh function to scope for button click
     s.btn_refresh_generation_status = function () {
+        $("#gearLoader").fadeIn(200);
         $("#btn_refresh_icon").removeClass("fa fa-refresh");
         $("#btn_refresh_icon").addClass("fa fa-spinner fa-spin");
         
@@ -1023,10 +1090,12 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
             
             $("#btn_refresh_icon").removeClass("fa fa-spinner fa-spin");
             $("#btn_refresh_icon").addClass("fa fa-refresh");
+            $("#gearLoader").fadeOut(200);
         }).catch(function (error) {
             console.error('Error refreshing generation status:', error);
             $("#btn_refresh_icon").removeClass("fa fa-spinner fa-spin");
             $("#btn_refresh_icon").addClass("fa fa-refresh");
+            $("#gearLoader").fadeOut(200);
         })
     }
                     
@@ -1111,7 +1180,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     //***Select-Employment-Type-DropDown****//
     //************************************// 
     s.SelectEmploymentType = function (par_empType, par_year,par_letter) {
-        $("#loading_data").modal({ keyboard: false, backdrop: "static" })
+        $("#gearLoader").fadeIn(200);
         get_generation_status_list()
         h.post("../cBIRAnnualizedTax/SelectEmploymentType",
             {
@@ -1155,7 +1224,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                 }
                 set_descrepancy_count()
                 set_pnia_count()
-                $("#loading_data").modal("hide")
+                $("#gearLoader").fadeOut(200);
             })
 
     }

@@ -33,6 +33,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Services.Description;
 using System.Web.UI.WebControls;
+using DataTable = System.Data.DataTable;
 using Excel = Microsoft.Office.Interop.Excel;
 
 
@@ -1501,32 +1502,39 @@ namespace HRIS_ePAccount.Controllers
             }
         }
 
-        public ActionResult StartAnnualTaxJob(string payrollYear, string employmentType)
+        public ActionResult StartAnnualTaxJob(string payrollYear, string employmentType,List<generateList> datalist)
         {
             try
             {
+
+                
                 using (SqlConnection conn = new SqlConnection(constring))
                 {
                     conn.Open();
 
-                    // 1️⃣ Insert or update the job parameter table
-                    using (SqlCommand cmdParam = new SqlCommand(@"
-                IF EXISTS (SELECT 1 FROM dbo.annual_tax_job_params 
-                           WHERE payroll_year = @payrollYear 
-                             AND employment_type = @employmentType)
-                    UPDATE dbo.annual_tax_job_params
-                    SET processed = 0,payroll_year =@payrollYear,employment_type= @employmentType
+                    var dt = ConvertToDataTable(datalist);
 
-                    WHERE payroll_year = @payrollYear 
-                      AND employment_type = @employmentType
-                ELSE
-                    INSERT INTO dbo.annual_tax_job_params (payroll_year, employment_type, processed)
-                    VALUES (@payrollYear, @employmentType,1);
-            ", conn))
+                    //delete old rows if you want fresh data
+                    using (var cmdTruncate = new SqlCommand("TRUNCATE TABLE dbo.annual_tax_job_params", conn))
                     {
-                        cmdParam.Parameters.AddWithValue("@payrollYear", payrollYear);
-                        cmdParam.Parameters.AddWithValue("@employmentType", employmentType);
-                        cmdParam.ExecuteNonQuery();
+                        cmdTruncate.ExecuteNonQuery();
+                    }
+
+                    // Bulk copy
+                    using (var bulkCopy = new SqlBulkCopy(conn))
+                    {
+                        bulkCopy.DestinationTableName = "dbo.annual_tax_job_params";
+
+                        // Map DataTable columns to table columns
+                        bulkCopy.ColumnMappings.Add("empl_id", "empl_id");
+                        bulkCopy.ColumnMappings.Add("payroll_year", "payroll_year");
+                        bulkCopy.ColumnMappings.Add("employment_type", "employment_type");
+                        bulkCopy.ColumnMappings.Add("processed", "processed");
+
+                        //// Optional batch size
+                        //bulkCopy.BatchSize = 1000;
+
+                        bulkCopy.WriteToServer(dt);
                     }
 
                     // 2️⃣ Start the SQL Agent job asynchronously
@@ -1547,13 +1555,25 @@ namespace HRIS_ePAccount.Controllers
             }
         }
 
+        private DataTable ConvertToDataTable(List<generateList> datalist)
+        {
+            var table = new DataTable();
+            table.Columns.Add("empl_id", typeof(string));
+            table.Columns.Add("payroll_year", typeof(string));
+            table.Columns.Add("employment_type", typeof(string));
+            table.Columns.Add("processed", typeof(bool));
 
+            foreach (var item in datalist)
+            {
+                table.Rows.Add(item.empl_id, item.payroll_year, item.employment_type, item.processed);
+            }
+
+            return table;
+        }
 
 
 
     }
 
-    public class GenerateAnnualTaxRequest
-    {
-    }
+   
 }
