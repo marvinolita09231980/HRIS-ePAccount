@@ -40,5 +40,7 @@ namespace HRIS_ePAccount.Models
         public decimal bus_tax_perc { get; set; }
         public decimal vat_perc { get; set; }
         public decimal exmpt_amt { get; set; }
+        public decimal vat { get; set; }
+        public int cnt { get; set; }
     }
 }

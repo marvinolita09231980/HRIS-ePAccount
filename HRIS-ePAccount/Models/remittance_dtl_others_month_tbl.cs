@@ -24,5 +24,7 @@ namespace HRIS_ePAccount.Models
         public string remittance_status { get; set; }
         public string or_nbr { get; set; }
         public Nullable<System.DateTime> or_date { get; set; }
+        public System.DateTime period_from { get; set; }
+        public System.DateTime period_to { get; set; }
     }
 }

@@ -15,7 +15,6 @@ namespace HRIS_ePAccount.Controllers
     {
 
         // GET: Login
-        HRIS_ACTEntities db = new HRIS_ACTEntities();
         CommonDB Cmn = new CommonDB();
         Dev_Version_Name dvn = new Dev_Version_Name();
        
@@ -23,17 +22,18 @@ namespace HRIS_ePAccount.Controllers
         public ActionResult Index()
         {
             string excelExportServer = System.Configuration.ConfigurationManager.AppSettings["ExcelExportServerIP"];
-            dvn.DVName = "(" + db.Database.Connection.DataSource.ToString().Split('\\')[db.Database.Connection.DataSource.ToString().Split('\\').Length - 1] + ")";
+            using (var db = new HRIS_ACTEntities())
+            {
+                dvn.DVName = "(" + db.Database.Connection.DataSource.ToString().Split('\\')[db.Database.Connection.DataSource.ToString().Split('\\').Length - 1] + ")";
+            }
             if (Session["user_id"] != null)
             {
                 return RedirectToAction("Index", "cMainPage");
             }
             else
             {
-
                 return View(dvn);
             }
-
         }
 
         //public ActionResult GetUserIsLogin()
@@ -98,49 +98,55 @@ namespace HRIS_ePAccount.Controllers
 
         public ActionResult Login_Validation(string username, string password)
         {
-           
-
             var message = "";
             var success = 0;
             object cred = new object();
             try
             {
-                var data = db.sp_user_login_ACT(username.Trim(), Cmn.EncryptString(password.Trim(), Cmn.CONST_WORDENCRYPTOR)).FirstOrDefault();
-                if(data.log_in_flag == "Y")
+                using (var db = new HRIS_ACTEntities())
                 {
-                   
-                        Session["TEMP_user_id"] = data.user_id;
-                        //Session["user_profile"] = data.empl_photo;
-                        Session["empl_id"] = data.empl_id;
-                        Session["employee_name"] = data.employee_name;
-                        Session["role_id"] = data.role_id;
-                        //Session["first_name"] = data.first_name;
-                        //Session["last_name"] = data.last_name;
-                        //Session["middle_name"] = data.middle_name;
-                        //Session["suffix_name"] = data.suffix_name;
-                        //Session["photo"] =  data.empl_photo;
-                        Session["owner_fullname"] = data.employee_name;
-                        //Session["budget_code"] = data.budget_code;
+                    var data = db.sp_user_login_ACT(username.Trim(), Cmn.EncryptString(password.Trim(), Cmn.CONST_WORDENCRYPTOR)).FirstOrDefault();
+                    if (data.log_in_flag == "Y")
+                    {
+                        Session["TEMP_user_id"]    = data.user_id;
+                        Session["empl_id"]         = data.empl_id;
+                        Session["employee_name"]   = data.employee_name;
+                        Session["role_id"]         = data.role_id;
+                        Session["owner_fullname"]  = data.employee_name;
                         Session["department_code"] = data.department_code;
                         Session["employment_type"] = data.employment_type;
-                        
-                        cred = data;
+
+                        // Project only the scalar fields needed by the client.
+                        // Avoids serializing the entire EF result object (which
+                        // may contain large/unexpected data from the SP result set).
+                        cred = new
+                        {
+                            data.user_id,
+                            data.empl_id,
+                            data.employee_name,
+                            data.employment_type,
+                            data.department_code,
+                            data.role_id,
+                            data.locked_account,
+                            data.change_password,
+                            data.log_in_flag,
+                            data.log_in_flag_descr
+                        };
                         success = 1;
-                    
+                    }
+                    else
+                    {
+                        success = 2;
+                        message = data.log_in_flag_descr.ToString();
+                    }
                 }
-                else
-                {
-                    success = 2;
-                    message = data.log_in_flag_descr.ToString();
-                }
-                return Json(new { cred, success,message}, JsonRequestBehavior.AllowGet);
+                return Json(new { cred, success, message }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 message = ex.Message;
                 return Json(new { message, success = 0 }, JsonRequestBehavior.AllowGet);
             }
-
         }
         public ActionResult logout()
         {

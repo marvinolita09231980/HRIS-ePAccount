@@ -5,79 +5,79 @@
 }
 
 <style type="text/css">
-.field 
-{
-    border-radius: 3px;
-    height: 35px;
-    font-size: 18px;
-}
+    .field {
+        border-radius: 3px;
+        height: 35px;
+        font-size: 18px;
+    }
 
-.field-arrow {
-    font-size: 26px;
-}
+    .field-arrow {
+        font-size: 26px;
+    }
 
-.require-field {
-    border: 1px solid red !important;
-}
+    .require-field {
+        border: 1px solid red !important;
+    }
 
-.btn.action {
-    width: 27px;
-}
+    .btn.action {
+        width: 27px;
+    }
 
-.form-control.detail {
-    padding-bottom: 0;
-    padding-top: 0;
-    height: 30px !important;
-}
+    .form-control.detail {
+        padding-bottom: 0;
+        padding-top: 0;
+        height: 30px !important;
+    }
 
-/* Gear Loader Styles */
-.gear-loader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.35);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+    /* Gear Loader Styles */
+    .gear-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.35);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-.gear-box {
-    background: #ffffff;
-    padding: 25px 40px;
-    border-radius: 8px;
-    text-align: center;
-    box-shadow: 0 0 15px rgba(0,0,0,0.3);
-}
+    .gear-box {
+        background: #ffffff;
+        padding: 25px 40px;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
 
-.gear-text {
-    margin-top: 10px;
-    font-weight: bold;
-    color: #333;
-}
+    .gear-text {
+        margin-top: 10px;
+        font-weight: bold;
+        color: #333;
+    }
 
     #datalist_grid_checktaxes {
         font-size: 11px; /* smaller font for the whole table */
     }
 
-    #datalist_grid_checktaxes th {
-        font-size: 10px; /* header */
-    }
-    
-    #datalist_grid_checktaxes td {
-        font-size: 10px; /* body cells */
-    }
+        #datalist_grid_checktaxes th {
+            font-size: 10px; /* header */
+        }
+
+        #datalist_grid_checktaxes td {
+            font-size: 10px; /* body cells */
+        }
+
     .payroll-summary table {
         font-size: 11px;
     }
 
-    .payroll-summary table > thead > tr > th,
-    .payroll-summary table > tbody > tr > td {
-        padding: 4px 6px;
-        vertical-align: middle;
-    }
+        .payroll-summary table > thead > tr > th,
+        .payroll-summary table > tbody > tr > td {
+            padding: 4px 6px;
+            vertical-align: middle;
+        }
 
     .payroll-summary .table-summary td {
         font-weight: bold;
@@ -86,6 +86,7 @@
     .payroll-summary .highlight {
         background-color: #f2dede; /* light red for emphasis */
     }
+
     .nav-tabs {
         position: sticky; /* keeps it visible when scrolling */
         top: 0; /* stick at the top of tab-content */
@@ -96,6 +97,7 @@
     .full-height-scroll {
         overflow: visible !important; /* if dropdown is inside this container */
     }
+
     .nav-tabs {
         position: sticky;
         top: 0;
@@ -106,7 +108,6 @@
         margin-top: 8px; /* space from top container */
         box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* shadow for separation */
         display: flex;
-        
     }
 
     .tab {
@@ -133,24 +134,25 @@
         transition: background 0.2s, box-shadow 0.2s;
     }
 
-    .nav-tabs > li:last-child {
-        flex: 1; /* take up remaining space */
-    }
-    .nav-tabs > li.search-box {
-        width: 60%;
-    }
+        .nav-tabs > li:last-child {
+            flex: 1; /* take up remaining space */
+        }
 
-    .nav-tabs > li:last-child input {
-        width: 60%; /* stretch the input fully */
-        max-width: none; /* remove default max */
-    }
+        .nav-tabs > li.search-box {
+            width: 60%;
+        }
+
+        .nav-tabs > li:last-child input {
+            width: 60%; /* stretch the input fully */
+            max-width: none; /* remove default max */
+        }
 
 
     /*.tab-pane table thead th {
         position: sticky;
-        top: 45px; 
+        top: 45px;
         background: #fff;
-        z-index: 1020; 
+        z-index: 1020;
         border-bottom: 2px solid #ddd;
     }*/
 
@@ -212,23 +214,49 @@
             .btn-pnia.is-zero {
                 opacity: .65;
             }
-            
-            /* Cell truncation styles - max 2 lines with ellipsis */
-            .cell-truncate {
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-height: 2.8em;
-                line-height: 1.4em;
-                word-wrap: break-word;
-                cursor: pointer;
-            }
+        /* Cell truncation styles - max 2 lines with ellipsis */
+        .cell-truncate {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 2.8em;
+            line-height: 1.4em;
+            word-wrap: break-word;
+            cursor: pointer;
+        }
+
             .cell-truncate:hover {
                 background-color: #f5f5f5;
                 border-radius: 3px;
             }
+    }
+
+    .select2-container--open {
+        z-index: 99999 !important;
+    }
+
+    #modal_add_employee .select2-container .select2-selection--single {
+        height: 36px !important;
+        border: 1px solid #cbd5e0;
+        border-radius: 6px;
+    }
+
+    #modal_add_employee .select2-container .select2-selection--single .select2-selection__rendered {
+        line-height: 36px !important;
+        font-size: 13px;
+        color: #2d3748;
+        padding-left: 10px;
+        text-align: left !important;
+    }
+
+    #modal_add_employee .select2-results__option {
+        text-align: left !important;
+    }
+
+    #modal_add_employee .select2-container .select2-selection--single .select2-selection__arrow {
+        height: 36px !important;
     }
 </style>
 <script src="~/Angular/ng-cBIRAnnualizedTax.js?v=@DateTime.Now.ToString("yyyyMMddHHmmss")"></script>
@@ -249,33 +277,33 @@
 
 
 <section ng-app="ng_HRD_App" ng-controller="cBIRAnnualizedTax_ctrlr">
-<!-- Cell Detail Modal -->
-<div class="modal fade" id="modal_cell_detail">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content animated fadeIn">
-            <div class="modal-header" style="background: linear-gradient(135deg, #1a5276 0%, #2e86de 100%); color: white; padding: 15px 20px;">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white; opacity: 1;">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" style="font-weight: 600;">
-                    <i class="fa fa-info-circle"></i>&nbsp; {{modalDetailTitle}}
-                </h4>
-            </div>
-            <div class="modal-body" style="padding: 20px;">
-                <div style="background-color: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 5px; padding: 15px; max-height: 300px; overflow-y: auto;">
-                    <p style="margin: 0; white-space: pre-wrap; word-wrap: break-word; font-size: 14px; line-height: 1.6;">{{modalDetailContent}}</p>
+    <!-- Cell Detail Modal -->
+    <div class="modal fade" id="modal_cell_detail">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content animated fadeIn">
+                <div class="modal-header" style="background: linear-gradient(135deg, #1a5276 0%, #2e86de 100%); color: white; padding: 15px 20px;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white; opacity: 1;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" style="font-weight: 600;">
+                        <i class="fa fa-info-circle"></i>&nbsp; {{modalDetailTitle}}
+                    </h4>
                 </div>
-            </div>
-            <div class="modal-footer" style="padding: 10px 20px; border-top: 1px solid #e0e0e0;">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                    <i class="fa fa-times"></i> Close
-                </button>
+                <div class="modal-body" style="padding: 20px;">
+                    <div style="background-color: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 5px; padding: 15px; max-height: 300px; overflow-y: auto;">
+                        <p style="margin: 0; white-space: pre-wrap; word-wrap: break-word; font-size: 14px; line-height: 1.6;">{{modalDetailContent}}</p>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 10px 20px; border-top: 1px solid #e0e0e0;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-times"></i> Close
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-    
-<!-- The modal -->
+
+    <!-- The modal -->
     <div class="modal fade" id="modal_print">
         <div class="modal-dialog modal-md">
             <div class="modal-content animated flipInY ">
@@ -341,7 +369,8 @@
                         </div>
 
                         <div class="col-lg-2">
-                            <input id="txtb_empl_id" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_empl_id" class="form-control inputfield text-center" disabled />
+                            <input id="txt_empl_id" ng-show="isShowNameSelect" style="font-weight:bold;" ng-model="txt_empl_id_search" ng-keyup="txt_empl_id_keyup()" class="form-control inputfield text-center" placeholder="Type ID..." />
+                            <input id="txtb_empl_id" ng-show="isShowNameInput" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_empl_id" class="form-control inputfield text-center" disabled />
                         </div>
 
                     </div>
@@ -356,6 +385,28 @@
                         </div>
                         <div class="col-lg-6">
                             <input id="txtb_position" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_position" class="form-control inputfield" disabled />
+                        </div>
+
+                        <div class="col-lg-2" style="padding-top:5px; padding-right:0px;">
+                            <label class="font-bold">Effective Date:</label>
+                        </div>
+
+                        <div class="col-lg-2">
+                            <input id="txtb_effective_date" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_effective_date" class="form-control inputfield text-center" disabled />
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="margin-top:-15px;">
+                        <hr />
+                    </div>
+                    <div class="form-group row" style="margin-top:-15px;">
+
+                        <div class="col-lg-2" style="padding-top:5px;">
+                            &nbsp;
+                        </div>
+                        <div class="col-lg-6">
+                            &nbsp;
                         </div>
 
                         <div class="col-lg-2" style="padding-top:5px; padding-right:0px;">
@@ -1031,11 +1082,11 @@
                 </div>
 
                 <div class="modal-body with-background">
-                   
+
                     <table id="datalist_grid" class="table table-striped table-bordered table-hover">
                         <thead>
                             <tr>
-                               
+
                                 <th>ID NBR</th>
                                 <th width="150px">EMPLOYEE NAME</th>
                                 <th>TXBL AMT.</th>
@@ -1130,7 +1181,7 @@
                                 <div style="display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap;">
                                     @if (Model.allow_add == 1)
                                     {
-                                    <div class="btn-group">
+                                        <div class="btn-group">
                                             <button data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">
                                                 Other Actions <span class="caret"></span>
                                             </button>
@@ -1139,7 +1190,7 @@
                                                 <li><a ng-click="btn_extract_action('B')"><i class="fa fa-download"></i> BIR Extract</a></li>
                                             </ul>
                                         </div>
-                                        <button id="btn_add" class="btn btn-success btn-sm" ng-click="btn_add_action()">
+                                        <button id="btn_add" class="btn btn-success btn-sm" ng-click="btn_add_action2()">
                                             <i id="btn_add_icon" class="fa fa-plus"></i> Add
                                         </button>
                                     }
@@ -1174,8 +1225,8 @@
                             <!-- Employee Count Display -->
                             <div class="col-lg-6 col-md-4 col-sm-12 col-xs-12 text-right" style="margin-bottom:8px;">
                                 <span class="font-bold" style="font-size:13px;">
-                                    <i class="fa fa-users"></i> 
-                                    Showing: <span class="text-primary">{{datalistgrid.length || 0}}</span> 
+                                    <i class="fa fa-users"></i>
+                                    Showing: <span class="text-primary">{{datalistgrid.length || 0}}</span>
                                     <span ng-show="datalistgrid_raw.length != datalistgrid.length"> of <span class="text-success">{{datalistgrid_raw.length || 0}}</span> employees</span>
                                     <span ng-show="datalistgrid_raw.length == datalistgrid.length"> employees</span>
                                 </span>
@@ -1192,7 +1243,7 @@
                         </li>
                         <li class="" style="display:none;"><a data-toggle="tab" href="#tab-12"><i class="fa fa-user"></i>CHECK DETAILS</a></li>
                         <li class=""><a data-toggle="tab" href="#tab-13"><i class="fa fa-briefcase"></i>Generation List</a></li>
-                        
+
                     </ul>
                     <div class="tab-content">
                         <div id="tab-11" class="tab-pane active">
@@ -1215,20 +1266,37 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Panel Body -->
                                     <div class="panel-body" style="padding: 20px;">
                                         <!-- Search and Filter Section -->
                                         <div class="row" style="margin-bottom: 15px;">
                                             <div class="col-md-6">
-                                                <label style="font-weight: 600; color: #2c3e50; margin-bottom: 8px; display: block;">
+
+                                                <label style="font-weight: 600; color: #2c3e50; margin: 0; display: block;">
                                                     <i class="fa fa-search text-primary"></i>&nbsp; Search Employee Records
                                                 </label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon" style="background: linear-gradient(135deg, #1a5276 0%, #2e86de 100%); color: white; border: none;">
-                                                        <i class="fa fa-filter"></i>
-                                                    </span>
-                                                    <input type="search" class="form-control" ng-model="search_box" ng-keyup="search_in_list(search_box,'datalist_grid')" placeholder="Search by ID, Name, TIN..." style="border-radius: 0 4px 4px 0;">
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon" style="background: linear-gradient(135deg, #1a5276 0%, #2e86de 100%);color: white; border: none;">
+                                                                <i class="fa fa-filter"></i>
+                                                            </span>
+                                                            <input type="search"
+                                                                   class="form-control"
+                                                                   ng-model="search_box"
+                                                                   ng-keyup="search_in_list(search_box,'datalist_grid')"
+                                                                   placeholder="Search by ID, Name...">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-4">
+                                                        <button class="btn btn-primary"
+                                                                ng-click="refreshdatalist()"
+                                                                style="border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+                                                            <i class="fa fa-refresh"></i> Refresh List
+                                                        </button>
+                                                    </div>
+
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -1242,14 +1310,38 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-xs-6">
-                                                        <div style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; padding: 10px 15px; border-radius: 5px; text-align: center;">
-                                                            <i class="fa fa-exclamation-triangle"></i>&nbsp; <strong>{{pnia_employee_count || 0}}</strong> Posted payroll but not in annualized table
+                                                        <div ng-click="pollPNIA()"
+                                                             ng-class="{'disabled-box': isJobRunning}"
+                                                             style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+                                                                        color: white;
+                                                                        padding: 10px 15px;
+                                                                        border-radius: 5px;
+                                                                        text-align: center;
+                                                                        cursor: pointer;
+                                                                        transition: 0.2s ease;
+                                                                        user-select: none;">
+                                                        <i class="fa" ng-class="{
+                                                                        'fa-cog fa-spin': isJobRunning,
+                                                                        'fa-exclamation-triangle': !isJobRunning
+                                                               }">
+                                                         </i>
+
+                                                            &nbsp;
+                                                            <strong>{{pnia_employee_count || 0}}</strong>
+
+                                                            <span ng-if="!isJobRunning">
+                                                                Posted payroll but not in annualized table
+                                                            </span>
+
+                                                            <span ng-if="isJobRunning">
+                                                                Processing annualized job...
+                                                            </span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <!-- DataTable -->
                                         <div style="border: 1px solid #e0e0e0; border-radius: 5px; overflow: hidden;">
                                             <table id="datalist_grid" class="table table-striped table-bordered table-hover" style="margin-bottom: 0;">
@@ -1578,7 +1670,7 @@
                                                        style="display:block; margin-bottom:8px; color:#555; font-size:12px;">
                                                     <i class="fa fa-search"></i> Date Filter
                                                 </label>
-                                                
+
 
                                                 <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
 
@@ -1634,22 +1726,22 @@
                                                            placeholder="Type to search by ID, Name, Status..."
                                                            style="border-left:0;">
                                                 </div>
-                                               
+
                                             </div>
                                             <div class="col-lg-2 col-md-5 col-sm-6 col-xs-12" style="margin-bottom:10px;">
-                                               
-                                                
-                                                
+
+
+
                                             </div>
 
 
 
                                             <!-- Status Summary -->
-                                            
+
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Data Table -->
                                 <div class="table-responsive" style="border:1px solid #ddd; border-radius:4px; box-shadow:0 1px 3px rgba(0,0,0,0.08);">
                                     <table id="datalist_grid_2" class="table table-striped table-bordered table-hover" style="margin-bottom:0;">
@@ -1710,6 +1802,156 @@
 
             </div>
         </div>
+        <div id="gearLoaderWithQuickStat" class="gear-loader" style="display:none;
+         position: fixed;
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         background: rgba(0,0,0,0.4);
+         display: none;
+         align-items: flex-start;
+         justify-content: center;
+         padding-top: 80px;
+         z-index: 1050;">
+
+                <div class="gear-box" style="background:white; padding:20px; border-radius:8px; text-align:center; min-width:250px; position:relative;">
+
+                    <!-- Close Button -->
+                    <button type="button" onclick="closeGearLoader()"
+                            style="position:absolute; top:5px; right:10px; background:none; border:none; font-size:20px; font-weight:bold; cursor:pointer;">
+                        ×
+                    </button>
+
+                    <i class="fa fa-cog fa-spin fa-3x" style="margin-bottom:10px;"></i>
+
+                    <div style="font-weight:600; margin-bottom:15px;">
+                        Processing... please wait...
+                    </div>
+
+                    <div style="margin-top: 20px; margin-bottom: 30px;">
+                        <div style="margin-top:5px; font-weight:600;">
+                            {{progressPercent || 0}}% Complete
+                        </div>
+                        <div style="width:100%; background:#e9ecef; height:20px; border-radius:10px; overflow:hidden; margin-top:15px;">
+                            <div style="height:100%;
+                                 background:linear-gradient(90deg,#28a745,#20c997);
+                                 transition: width 0.4s ease;"
+                                 ng-style="{'width': progressPercent + '%'}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <span style="background:#17a2b8;color:white;font-weight:700;font-size:14px;padding:8px 12px;margin-right:5px;border-radius:4px;">
+                            Records: {{filteredRowsCount || 0}}
+                        </span>
+
+                        <span style="background:#28a745;color:white;font-weight:700;font-size:14px;padding:8px 12px;margin-right:5px;border-radius:4px;">
+                            Success: {{filteredSuccessCount || 0}}
+                        </span>
+
+                        <span style="background:#dc3545;color:white;font-weight:700;font-size:14px;padding:8px 12px;border-radius:4px;">
+                            Fails: {{filteredFailsCount || 0}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        <script>
+            function showGearLoader() {
+                document.getElementById("gearLoaderWithQuickStat").style.display = "flex";
+            }
+
+            function closeGearLoader() {
+                document.getElementById("gearLoaderWithQuickStat").style.display = "none";
+            }
+        </script>
+
+<!-- Add Employee Modal -->
+<div class="modal fade" id="modal_add_employee" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalAddEmployeeLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md" style="margin-top: 60px;">
+        <div class="modal-content" style="border: none; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.25); overflow: hidden;">
+
+            <!-- Header -->
+            <div class="modal-header" style="background: linear-gradient(135deg, #1a5276 0%, #2e86de 100%); padding: 18px 24px; border: none;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #fff; opacity: 0.85; font-size: 20px; margin-top: -2px;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="modalAddEmployeeLabel" style="color: #fff; font-weight: 700; font-size: 16px; letter-spacing: 0.4px;">
+                    <i class="fa fa-user-plus" style="margin-right: 8px;"></i> Add Employee
+                </h4>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body" style="background: #f7f9fc; padding: 24px 28px;">
+
+                <!-- Employee Name -->
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label style="font-size: 12px; font-weight: 700; color: #4a5568; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; display: block;">
+                        <i class="fa fa-user" style="color: #2e86de; margin-right: 5px;"></i> Employee Name <span style="color: #e53e3e;">*</span>
+                    </label>
+                    <select id="ddl_add_employee_name" ng-model="ddl_add_employee_name" style="width: 100%;"></select>
+                    <span id="lbl_add_empl_name_req" style="color: #e53e3e; font-size: 11px; margin-top: 3px; display: block;"></span>
+                </div>
+
+                <!-- Two-column row: Employee ID + Employment Type -->
+                <div class="row" style="margin-bottom: 16px;">
+                    <div class="col-sm-6">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label style="font-size: 12px; font-weight: 700; color: #4a5568; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; display: block;">
+                                <i class="fa fa-id-badge" style="color: #2e86de; margin-right: 5px;"></i> Employee ID
+                            </label>
+                            <input type="text" ng-model="add_empl_id" class="form-control" readonly
+                                   style="background: #edf2f7; border: 1px solid #cbd5e0; border-radius: 6px; height: 36px; font-size: 13px; color: #2d3748; font-weight: 600; text-align: center; cursor: default;"
+                                   placeholder="Auto-filled" />
+                            <span id="lbl_add_empl_id_req" style="color: #e53e3e; font-size: 11px; margin-top: 3px; display: block;"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label style="font-size: 12px; font-weight: 700; color: #4a5568; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; display: block;">
+                                <i class="fa fa-briefcase" style="color: #2e86de; margin-right: 5px;"></i> Employment Type
+                            </label>
+                            <select ng-model="add_employment_type" class="form-control" disabled
+                                    style="border: 1px solid #cbd5e0; border-radius: 6px; height: 36px; font-size: 13px; color: #2d3748; background: #edf2f7; cursor: default;">
+                                <option value="">--Select--</option>
+                                <option ng-repeat="lst in employeeddl" value="{{lst.employment_type}}">{{lst.employmenttype_description}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Position Title -->
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label style="font-size: 12px; font-weight: 700; color: #4a5568; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; display: block;">
+                        <i class="fa fa-tag" style="color: #2e86de; margin-right: 5px;"></i> Position Title
+                    </label>
+                    <input type="text" ng-model="add_position" class="form-control" readonly
+                           style="background: #edf2f7; border: 1px solid #cbd5e0; border-radius: 6px; height: 36px; font-size: 13px; color: #2d3748; cursor: default;"
+                           placeholder="Auto-filled" />
+                    <span id="lbl_add_position_req" style="color: #e53e3e; font-size: 11px; margin-top: 3px; display: block;"></span>
+                </div>
+
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer" style="background: #fff; border-top: 1px solid #e2e8f0; padding: 14px 24px; border-radius: 0 0 10px 10px;">
+                <button type="button" class="btn" ng-click="btn_add_employee_cancel()"
+                        style="background: #fff; border: 1px solid #cbd5e0; color: #4a5568; border-radius: 6px; padding: 7px 20px; font-size: 13px; font-weight: 600;">
+                    <i class="fa fa-times" style="margin-right: 5px;"></i> Cancel
+                </button>
+                <button type="button" class="btn" ng-click="btn_add_employee_add()"
+                        style="background: linear-gradient(135deg, #1a5276 0%, #2e86de 100%); color: #fff; border: none; border-radius: 6px; padding: 7px 22px; font-size: 13px; font-weight: 600; box-shadow: 0 2px 6px rgba(46,134,222,0.35);">
+                    <i class="fa fa-plus" style="margin-right: 5px;"></i> Add Employee
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- End Add Employee Modal -->
+
 </section>
 
 <div id="gearLoader" class="gear-loader" style="display:none;">
@@ -1718,3 +1960,6 @@
         <div class="gear-text">Processing, please wait...</div>
     </div>
 </div>
+<!-- New Gear Loader Modal with Quick Stats -->
+
+

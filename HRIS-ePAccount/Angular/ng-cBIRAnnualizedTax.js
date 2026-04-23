@@ -450,6 +450,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
         })
     }
+
 	
     function init() {
 		
@@ -539,86 +540,70 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
             $("#gearLoader").fadeOut(200);
         })
     }
+
     init()
-    get_generation_status_list()
-
-    //var init_table_data = function (par_data) {
-    //    s.datalistgrid = par_data;
-
-    //    s.oTable = $('#datalist_grid').dataTable(
-    //        {
-
-    //            data: s.datalistgrid,
-    //            stateSave: false,
-    //            sDom: 'rt<"bottom"p>',
-    //            pageLength: 5,
-				//deferRender:true,
-    //            columns: [
-    //                {
-    //                    "mData": "empl_id", "mRender": function (data, type, full, row) {
-    //                        return "<div class='btn-block text-center'>" + data + "</div>";
-    //                    }
-    //                },
-    //                {
-    //                    "mData": "employee_name", "mRender": function (data, type, full, row) {
-    //                        return "<div class='btn-block text-left'>" + data + "</div>";
-    //                    }
-    //                },
-
-    //                {
-    //                    "mData": "account_id_nbr_ref", "mRender": function (data, type, full, row) {
-    //                        return "<div class='btn-block text-center'>" + data + "</div>";
-    //                    }
-    //                },
-    //                {
-    //                    "mData": "annual_txbl_income", "mRender": function (data, type, full, row) {
-    //                        var retdata = currency(data)
-    //                        return "<div class='btn-block text-right'>" + retdata + "</div>";
-    //                    }
-                        
-    //                },
-    //                {
-    //                    "mData": "tax_rate", "mRender": function (data, type, full, row) {
-    //                        return "<div class='btn-block text-center'>" + data + "%</div>";
-    //                    }
-    //                },
-
-                  
-    //                {
-    //                    "mData": null,
-    //                    "bSortable": false,
-    //                    "mRender": function (data, type, full, row)
-    //                    {
-
-    //                        return '<center><div class="btn-group tooltip-demo">'
-    //                            + '<button type="button" class="btn btn-warning btn-sm action" data-toggle="tooltip" data-placement="left" title="Show Details" ng-show="' + s.allow_view + '" ng-click="btn_show_action(' + row["row"] + ')" > '
-    //                            + '<i class="fa fa-plus"></i>' + '</button>'
-    //                            + '<button type="button" class="btn btn-primary btn-sm action" style="background-color:blueviolet;color:white;border:1px solid blueviolet;" data-toggle="tooltip" data-placement="left" title="Generate Annualized Tax" ng-show="' + s.allow_edit + '" ng-click="btn_generate_action(' + row["row"] + ')" > '
-    //                            + '<i id="generate_icon_dtl' + row["row"] + '" class="fa fa-clipboard"></i>' + '</button>' 
-    //                            + '<button type="button" class="btn btn-info btn-sm action" data-toggle="tooltip" data-placement="left" title="Edit" ng-show="' + s.allow_edit + '" ng-click="btn_edit_action(' + row["row"] + ')" > '
-    //                            + '<i id="edit_icon' + row["row"] + '" class="fa fa-edit"></i>' + '</button>' +
-    //                             '<button type="button" class="btn btn-danger btn-sm action" data-toggle="tooltip" data-placement="left" title="Delete" ng-show="' + s.allow_delete + '" ng-click="btn_delete_action(' + row["row"] + ')" > '
-    //                            + '<i id="delete_icon' + row["row"] + '" class="fa fa-trash"></i>' +
-    //                            '<button type="button" class="btn btn-primary btn-sm action" data-toggle="tooltip" data-placement="left" title="Print" ng-show="' + s.allow_print + '" ng-click="btn_print_action(' + row["row"] + ')" > '
-    //                            + '<i class="fa fa-print"></i>' + '</button>' +
-    //                            '</button></div ></center >'
-
-    //                    }
-    //                }
-
-    //            ],
 
 
-    //            "createdRow": function (row, data, index) {
-    //                $(row).attr('id', index);
-    //                $compile(row)($scope);  //add this to compile the DOM
-    //            }
-    //        });
 
-    //    s.oTable.fnSort([[1, 'asc']]);
+    // Expose refresh function to scope for button click
+    s.btn_refresh_generation_status = function () {
+        $("#gearLoaderWithQuickStat").fadeIn(200);
+        $("#btn_refresh_icon").removeClass("fa fa-refresh");
+        $("#btn_refresh_icon").addClass("fa fa-spinner fa-spin");
 
-    //    $("div.toolbar").html('<b>Custom tool bar! Text/images etc.</b>');
-    //}
+        var ddlyear = $("#ddl_year option:selected").val();
+        var ddlemploymenttype = $("#ddl_employment_type option:selected").val();
+
+        // Inner function to poll recursively
+        function pollStatus() {
+            h.post("../cBIRAnnualizedTax/Get_Generation_Status_List", {
+                payroll_year: ddlyear,
+                employment_type: ddlemploymenttype
+            }).then(function (d) {
+              
+                if (d.data.result && d.data.result.length > 0) {
+                    s.datalistgrid2 = d.data.result;
+                    
+                    if (s.gTable) {
+                        s.gTable.fnClearTable();
+                        s.gTable.fnAddData(s.datalistgrid2);
+                    }
+                } else {
+                    s.datalistgrid2 = [];
+                    if ($.fn.dataTable.isDataTable('#datalist_grid_2')) {
+                        s.gTable.fnClearTable();
+                    }
+                }
+
+                // Update last refresh timestamp
+                var now = new Date();
+                s.lastRefreshTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+                // Check jobIsRunning returned by backend
+                if (d.data.jobIsRunning) {
+                    // Poll again after 3 seconds
+                    setTimeout(pollStatus, 3000);
+                } else {
+                    // Job finished, reset UI
+                    $("#btn_refresh_icon").removeClass("fa fa-spinner fa-spin");
+                    $("#btn_refresh_icon").addClass("fa fa-refresh");
+                   $("#gearLoaderWithQuickStat").fadeOut(200);
+                }
+
+            }).catch(function (error) {
+                console.error('Error refreshing generation status:', error);
+                $("#btn_refresh_icon").removeClass("fa fa-spinner fa-spin");
+                $("#btn_refresh_icon").addClass("fa fa-refresh");
+                $("#gearLoaderWithQuickStat").fadeOut(200);
+            });
+        }
+
+        // Start polling
+        pollStatus();
+    };
+
+    //s.btn_refresh_generation_status()
+
 
 
 
@@ -640,17 +625,23 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
     // Function to show detail modal
     s.showDetailModal = function (title, content) {
+        console.log(content)
         s.modalDetailTitle = title;
         s.modalDetailContent = content;
         $('#modal_cell_detail').modal('show');
     }
 
+   
     function toDateOnly(d) {
         return new Date(d.getFullYear(), d.getMonth(), d.getDate());
     }
 
     var init_table_data2 = function (par_data) {
         s.datalistgrid2 = par_data;
+
+        if ($.fn.dataTable.isDataTable('#datalist_grid_2')) {
+            $('#datalist_grid_2').DataTable().destroy();
+        }
 
         s.gTable = $('#datalist_grid_2').dataTable(
             {
@@ -688,7 +679,15 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                     s.filteredRowsCount = filteredRows;
                     s.filteredSuccessCount = successCount;
                     s.filteredFailsCount = failsCount
-                    
+
+                    // ✅ Compute percentage (avoid divide by zero)
+                    if (filteredRows > 0) {
+                        s.progressPercent = Math.round(
+                            (successCount / filteredRows) * 100
+                        );
+                    } else {
+                        s.progressPercent = 0;
+                    }
 
                     if (!$scope.$$phase) {
                         $scope.$apply();
@@ -707,8 +706,9 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                         if (rowDate < filterDate) {
                             $('td:eq(2)', row).css('color', '#d9534f'); // red
                             $('td:eq(3)', row).css('color', '#d9534f'); // red
-                            $('td:eq(4)', row).css('color', '#d9534f'); // red
-                            $('td:eq(4)', row).html('Not generated today : see last DTL generated time');
+                            var td4 = $('td:eq(4)', row);
+                            td4.html("<div class='text-danger' style='cursor:pointer;' title='Click to view' ng-click=\"showDetailModal('Status', 'Not generated today : see last DTL generated time')\">Not generated today : see last DTL generated time</div>");
+                            $compile(td4.contents())($scope);
                             if (data.dtl_status !== "ERROR") {
                                 data.dtl_status = "ERROR";
                             }
@@ -755,9 +755,12 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                             var displayText = truncateText(data, 40);
                             var hasMore = (data && data.length > 40);
                             if (hasMore) {
-                                return "<div class='cell-truncate text-danger' ng-click=\"showDetailModal('Error Message', '" + escapeQuotes(data) + "')\" style='cursor:pointer;' title='Click to view full content'>" + displayText + "</div>";
+                                return "<div class='cell-truncate text-danger' " +
+                                    "ng-click=\"showDetailModal('Error Message', '" + escapeQuotes(data) + "')\" " +
+                                    "style='cursor:pointer;' title='Click to view full content'>" +
+                                    displayText + "</div>";
                             }
-                            return "<div class='btn-block text-center " + text_color(full["prc_status"]) + "'>" + (data || '') + "</div>";
+                            return "<div class='btn-block text-center " + text_color(full["dtl_status"]) + "' ng-click=\"showDetailModal('Error Message', '" + escapeQuotes(data) + "')\" style='cursor:pointer;' title='Click to view full content'>" + (data || '') + "</div>";
                         }
                     },
                     {
@@ -783,13 +786,39 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         $("div.toolbar").html('<b>Custom tool bar! Text/images etc.</b>');
     }
     function getDateFromBatchId(batchId) {
-        var datePart = batchId.substring(0, 8); // "20260224"
 
-        var year = parseInt(datePart.substring(0, 4));
-        var month = parseInt(datePart.substring(4, 6)) - 1; // JS month is 0-based
-        var day = parseInt(datePart.substring(6, 8));
+        // ✅ Stop immediately if invalid
+        if (!batchId || typeof batchId !== "string") {
+            return null;
+        }
 
-        return new Date(year, month, day);
+        // Trim just in case
+        batchId = batchId.trim();
+
+        if (batchId.length < 8) {
+            return null;
+        }
+
+        var year = parseInt(batchId.slice(0, 4), 10);
+        var month = parseInt(batchId.slice(4, 6), 10) - 1;
+        var day = parseInt(batchId.slice(6, 8), 10);
+
+        if (isNaN(year) || isNaN(month) || isNaN(day)) {
+            return null;
+        }
+
+        var date = new Date(year, month, day);
+
+        // ✅ Validate actual date
+        if (
+            date.getFullYear() !== year ||
+            date.getMonth() !== month ||
+            date.getDate() !== day
+        ) {
+            return null;
+        }
+
+        return date;
     }
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex,full) {
@@ -810,8 +839,6 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
             var rowDate = getDateFromBatchId(batchId);
 
             var filterDate = toDateOnly(new Date(s.txtb_gen_date));
-
-
             if (rowDate < filterDate) {
                 if (full.dtl_status !== "ERROR") {
                     full.dtl_status = "ERROR";
@@ -866,6 +893,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         var ddlyear = $("#ddl_year option:selected").val();
         var ddlemploymenttype = $("#ddl_employment_type option:selected").val();
         var errorList = [];
+        var errorsOnly = false
 
         // Get ALL rows from internal data (not only visible rows)
         var dt = $('#datalist_grid_2').DataTable();;
@@ -893,6 +921,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                             processed: true
                         });
                     }
+                    errorsOnly =  true
                 }
                 
 
@@ -909,7 +938,8 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         h.post("../cBIRAnnualizedTax/StartAnnualTaxJob", {
             payrollYear: ddlyear,
             employmentType: ddlemploymenttype,
-            datalist: errorList
+            datalist: errorList,
+            errorsOnly: errorsOnly
         }).then(function (response) {
 
             var data = response.data;
@@ -942,7 +972,6 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         })
         
     };
-
 
     function currency(d)
     {
@@ -1033,16 +1062,36 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                             set_pnia_count();
                         }
 
-                        // Refresh generation status list
-                        
+                        // Refresh generation status list - update only the regenerated employee's row
                         h.post("../cBIRAnnualizedTax/Get_Generation_Status_List", {
                             payroll_year: ddlyear,
                             employment_type: ddlemploymenttype
                         }).then(function (d) {
 
                             if (d.data.result && d.data.result.length > 0) {
-                                s.datalistgrid2 = d.data.result.refreshTable("datalist_grid_2", empl_id)
+                                var updatedRow = null;
+                                for (var i = 0; i < d.data.result.length; i++) {
+                                    if (d.data.result[i].empl_id == empl_id) {
+                                        updatedRow = d.data.result[i];
+                                        break;
+                                    }
+                                }
+
+                                if (updatedRow && s.datalistgrid2 && s.datalistgrid2.length > 0) {
+                                    // Update only the matching row, keep all other rows intact
+                                    for (var j = 0; j < s.datalistgrid2.length; j++) {
+                                        if (s.datalistgrid2[j].empl_id == empl_id) {
+                                            s.datalistgrid2[j] = updatedRow;
+                                            break;
+                                        }
+                                    }
+                                    s.datalistgrid2.refreshTable("datalist_grid_2", empl_id);
+                                } else {
+                                    s.datalistgrid2 = d.data.result;
+                                    s.datalistgrid2.refreshTable("datalist_grid_2", empl_id);
+                                }
                             }
+
                             swal("Successfully Regenerated!", "Tax for " + employee_name + " has been regenerated.", "success");
                             $("#gearLoader").fadeOut(200);
                         })
@@ -1063,41 +1112,16 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         });
     }
 
-    // Expose refresh function to scope for button click
-    s.btn_refresh_generation_status = function () {
-        $("#gearLoader").fadeIn(200);
-        $("#btn_refresh_icon").removeClass("fa fa-refresh");
-        $("#btn_refresh_icon").addClass("fa fa-spinner fa-spin");
-        
-        var ddlyear = $("#ddl_year option:selected").val()
-        var ddlemploymenttype = $("#ddl_employment_type option:selected").val()
-        h.post("../cBIRAnnualizedTax/Get_Generation_Status_List", {
-            payroll_year: ddlyear,  
-            employment_type: ddlemploymenttype
-        }).then(function (d) {
-            if (d.data.result && d.data.result.length > 0) {
-                s.datalistgrid2 = d.data.result
-                s.gTable.fnClearTable()
-                s.gTable.fnAddData(s.datalistgrid2)
-            } else {
-                s.datalistgrid2 = []
-                s.gTable.fnClearTable()
-            }
-            
-            // Update last refresh timestamp
-            var now = new Date();
-            s.lastRefreshTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            
-            $("#btn_refresh_icon").removeClass("fa fa-spinner fa-spin");
-            $("#btn_refresh_icon").addClass("fa fa-refresh");
-            $("#gearLoader").fadeOut(200);
-        }).catch(function (error) {
-            console.error('Error refreshing generation status:', error);
-            $("#btn_refresh_icon").removeClass("fa fa-spinner fa-spin");
-            $("#btn_refresh_icon").addClass("fa fa-refresh");
-            $("#gearLoader").fadeOut(200);
-        })
-    }
+    s.getProgressPercentage = function () {
+
+        if (!s.filteredRowsCount || s.filteredRowsCount === 0) {
+            return 0;
+        }
+
+        var percent = (s.filteredSuccessCount / s.filteredRowsCount) * 100;
+
+        return Math.round(percent);
+    };
                     
 
 
@@ -1106,7 +1130,19 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     //************************************// 
     s.SelectPayrollYear = function (par_empType, par_year, par_letter) {
         $("#loading_data").modal({ keyboard: false, backdrop: "static" })
-        get_generation_status_list()
+
+        // Save job params when both year and employment type are selected
+        if (par_year && par_year.toString().trim() !== "" &&
+            par_empType && par_empType.toString().trim() !== "") {
+            h.post("../cBIRAnnualizedTax/SaveJobParams", {
+                par_payroll_year:    par_year,
+                par_employment_type: par_empType
+            });
+        }
+
+        //if ($("#tab-13").hasClass("active")) {
+        //    s.btn_refresh_generation_status();
+        //}
         h.post("../cBIRAnnualizedTax/SelectPayrollYear",
             {
                 par_empType: par_empType,
@@ -1168,11 +1204,63 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         descrepancy_count.innerHTML = ln.toString()
     }
 
+    s.pollPNIA = function () {
+        function fnPollingPNIA() {
+            h.post("../cBIRAnnualizedTax/runPNIA").then(function (res) {
+                if (res.data.runPNIA) {
+                    s.isJobRunning = res.data.jobIsRunning;
+                    console.log(s.isJobRunning)
+                    setTimeout(fnPollingPNIA, 3000);
+                }
+                else {
+                    var par_empType = $("#ddl_employment_type option:selected").val();
+                    var par_year = $("#ddl_year option:selected").val();
+                    var par_letter = '';
+
+                    h.post("../cBIRAnnualizedTax/refreshdatalist",
+                        {
+                            par_empType: par_empType,
+                            par_year: par_year,
+                            par_letter: par_letter
+
+                        }).then(function (d) {
+
+                            if (par_empType.trim() == "" || par_empType.trim() == undefined || par_empType.trim() == null) {
+                                $("#btn_add").hide()
+                            }
+
+                            else {
+                                $("#btn_add").show()
+                            }
+
+                            if (d.data.sp_annualtax_hdr_tbl_list_wtaxpmos && d.data.sp_annualtax_hdr_tbl_list_wtaxpmos.length > 0) {
+
+                                s.datalistgrid_raw = d.data.sp_annualtax_hdr_tbl_list_wtaxpmos;
+                                s.datalistgrid = d.data.sp_annualtax_hdr_tbl_list_wtaxpmos;
+                                s.oTable.fnClearTable();
+                                s.oTable.fnAddData(s.datalistgrid)
+                            }
+                            else {
+                                s.oTable.fnClearTable();
+                            }
+                            
+                           
+                            set_descrepancy_count()
+                            set_pnia_count()
+                        })
+                }
+            })
+        }
+
+       
+    }
+
+   s.pollPNIA();
     function set_pnia_count() {
-        var pniaData = s.datalistgrid_raw.filter(function (d) {
-            return d.cnt_pnia != null && d.cnt_pnia > 0
-        })
-        s.pnia_employee_count = pniaData.length;
+            var pniaData = s.datalistgrid_raw.filter(function (d) {
+                        return d.cnt_pnia != null && d.cnt_pnia > 0
+             })
+            s.pnia_employee_count = pniaData.length;
     }
 
 
@@ -1181,7 +1269,20 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     //************************************// 
     s.SelectEmploymentType = function (par_empType, par_year,par_letter) {
         $("#gearLoader").fadeIn(200);
-        get_generation_status_list()
+
+        // Save job params when both year and employment type are selected
+        if (par_empType && par_empType.toString().trim() !== "" &&
+            par_year && par_year.toString().trim() !== "") {
+            h.post("../cBIRAnnualizedTax/SaveJobParams", {
+                par_payroll_year:    par_year,
+                par_employment_type: par_empType
+            });
+        }
+
+        //if ($("#tab-13").hasClass("active")) {
+        //    s.btn_refresh_generation_status();
+        //}
+
         h.post("../cBIRAnnualizedTax/SelectEmploymentType",
             {
                 par_empType : par_empType,
@@ -1213,15 +1314,51 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
                     s.oTable.fnClearTable();
                 }
 
-                if (d.data.sp_prcmonitor_tbl.length > 0) {
 
-                    s.datalistgrid2 = d.data.sp_prcmonitor_tbl;
-                    s.gTable.fnClearTable();
-                    s.gTable.fnAddData(s.datalistgrid2)
+
+                set_descrepancy_count()
+                set_pnia_count()
+                $("#gearLoader").fadeOut(200);
+            })
+
+    }
+
+    s.refreshdatalist = function () {
+        $("#gearLoader").fadeIn(200);
+        
+        var par_empType = $("#ddl_employment_type option:selected").val();
+        var par_year = $("#ddl_year option:selected").val();
+        var par_letter = '';
+
+        h.post("../cBIRAnnualizedTax/refreshdatalist",
+            {
+                par_empType: par_empType,
+                par_year: par_year,
+                par_letter: par_letter
+
+            }).then(function (d) {
+
+                if (par_empType.trim() == "" || par_empType.trim() == undefined || par_empType.trim() == null) {
+                    $("#btn_add").hide()
+                }
+
+                else {
+                    $("#btn_add").show()
+                }
+
+                if (d.data.sp_annualtax_hdr_tbl_list_wtaxpmos.length > 0) {
+
+                    s.datalistgrid_raw = d.data.sp_annualtax_hdr_tbl_list_wtaxpmos;
+                    s.datalistgrid = d.data.sp_annualtax_hdr_tbl_list_wtaxpmos;
+                    s.oTable.fnClearTable();
+                    s.oTable.fnAddData(s.datalistgrid)
                 }
                 else {
-                    //s.gTable   
+                    s.oTable.fnClearTable();
                 }
+
+
+
                 set_descrepancy_count()
                 set_pnia_count()
                 $("#gearLoader").fadeOut(200);
@@ -1248,7 +1385,9 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     function clearentry() {
         s.txtb_empl_name            = ""
         s.txtb_empl_id              = ""
+        s.txt_empl_id_search        = ""
         s.txtb_position             = ""
+        s.txtb_effective_date       = ""
         s.txtb_monthly_tax_due      = "0.00"
         s.txtb_employment_type      = ""
         s.txtb_monthly_tax_rate     = "0.00"
@@ -1632,7 +1771,64 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         s.txtb_position             = ""
         s.txtb_employment_type      = ""
         s.txtb_employment_type_val  = ""
+        s.txtb_effective_date       = ""
         $("#btn_generate").hide()
+    }
+
+    s.txt_empl_id_keyup = function () {
+        var typedId = (s.txt_empl_id_search || "").toString().trim();
+
+        if (!typedId || !s.employeenames) {
+            s.txtb_empl_name      = ""
+            s.txtb_position       = ""
+            s.txtb_effective_date = ""
+            s.txtb_empl_id        = ""
+            $("#btn_generate").hide()
+            return;
+        }
+
+        var found = null;
+        for (var i = 0; i < s.employeenames.length; i++) {
+            if (s.employeenames[i].empl_id.toString() === typedId) {
+                found = s.employeenames[i];
+                break;
+            }
+        }
+
+        if (found) {
+            var nameWithDate = found.employee_name || "";
+            var colonIdx     = nameWithDate.lastIndexOf(":");
+
+            // Extract date portion after the last colon (e.g. "2024-01-01")
+            var dateStr  = colonIdx >= 0 ? nameWithDate.substring(colonIdx + 1).trim() : "";
+
+            s.txtb_empl_name = nameWithDate;
+            s.txtb_position  = found.position_title1;
+            s.txtb_empl_id   = found.empl_id;
+
+            // Determine effective date: if extracted date < Jan 1 of current year, use Jan 1 current year
+            var currentYear   = new Date().getFullYear();
+            var jan1CurrYear  = new Date(currentYear, 0, 1);
+
+            if (dateStr) {
+                var parsedDate = new Date(dateStr);
+                if (!isNaN(parsedDate) && parsedDate < jan1CurrYear) {
+                    s.txtb_effective_date = currentYear + "-01-01";
+                } else {
+                    s.txtb_effective_date = dateStr;
+                }
+            } else {
+                s.txtb_effective_date = currentYear + "-01-01";
+            }
+
+            $("#btn_generate").show()
+        } else {
+            s.txtb_empl_name      = ""
+            s.txtb_position       = ""
+            s.txtb_effective_date = ""
+            s.txtb_empl_id        = ""
+            $("#btn_generate").hide()
+        }
     }
 
     s.SelectEmployeeName = function (data)
@@ -2222,45 +2418,6 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
 
     }
 
-    //////this fucntion is called after refreshTable to return to the current dataTable page
-    //function changePage(tname, page, id) {
-    //    var npage = page
-    //    var pageLen = $("#" + id).DataTable().page.info().length
-    //    if (page < 2 && pageLen == 0) {
-    //        npage = page + 1
-    //    }
-    //    else if (page > 1 && pageLen == 0) {
-    //        npage = page - 1
-    //    }
-
-    //    if (npage != 0) {
-    //        s[tname].fnPageChange(npage)
-    //    }
-    //}
-
-
-    //String.prototype.get_page = function (table) {
-    //    id = this;
-    //    var nakit_an = false;
-    //    var rowx = 0;
-    //    var el_id = s[table][0].id
-    //    $("#" + el_id + " tr").each(function () {
-    //        $.each(this.cells, function (cells) {
-    //            if (cells == 0) {
-    //                if ($(this).text() == id) {
-    //                    nakit_an = true;
-    //                    return false;
-    //                }
-    //            }
-    //        });
-    //        if (nakit_an) {
-    //            $(this).addClass("selected");
-    //            return false;
-    //        }
-    //        rowx++;
-    //    });
-    //    return nakit_an;
-    //}
 
     //This function is called to extract the DataTable rows data
     function DataTable_data(tname) {
@@ -2364,6 +2521,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     //******************************************//
     //***CALCULATE GROSS TAXABLE INCOME     ***//
     //******************************************// 
+
     function calculatetotaladjst() {
         var total_adjst = 0;
         total_adjst =
@@ -2484,6 +2642,7 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
         s.txtb_sup_total = currency(total_taxable_sup).toString()
     }
 
+
     s.btn_add_action = function ()
     {
         clearentry()
@@ -2524,6 +2683,35 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
             })
 
         
+    }
+
+    s.btn_add_action2 = function () {
+        $("#btn_add_icon").removeClass("fa fa-plus-circle");
+        $("#btn_add_icon").addClass("fa fa-spinner fa-spin");
+
+        h.post("../cBIRAnnualizedTax/RetrieveEmployeeList", {
+            par_empType:      $("#ddl_employment_type option:selected").val(),
+            par_payroll_year: $("#ddl_year option:selected").val()
+        }).then(function (d) {
+            s.employeenames_add = d.data.sp_personnelnames_annualtax_hdr_combolist || [];
+
+            s.add_position        = "";
+            s.add_empl_id         = "";
+            s.add_employment_type = $("#ddl_employment_type option:selected").val() || "";
+            if (!s.$$phase) s.$apply();
+
+            $("#lbl_add_empl_name_req").text("");
+            $("#lbl_add_position_req").text("");
+            $("#lbl_add_empl_id_req").text("");
+
+            $("#btn_add_icon").removeClass("fa fa-spinner fa-spin");
+            $("#btn_add_icon").addClass("fa fa-plus-circle");
+
+            $("#modal_add_employee").modal("show");
+        }).catch(function () {
+            $("#btn_add_icon").removeClass("fa fa-spinner fa-spin");
+            $("#btn_add_icon").addClass("fa fa-plus-circle");
+        });
     }
 
     //s.btn_extract_action = function (extract_type)
@@ -3238,6 +3426,107 @@ ng_HRD_App.controller("cBIRAnnualizedTax_ctrlr", function ($scope, $compile, $ht
     }
 
 
+
+    // *** Add Employee Modal ***
+    s.add_position = ""
+    s.add_empl_id = ""
+    s.add_employment_type = ""
+    s.ddl_employment_type_list = []
+    s.employeenames_add = []
+
+    $('#modal_add_employee').on('shown.bs.modal', function () {
+        var $ddl = $('#ddl_add_employee_name');
+
+        // Always destroy before re-init to avoid Select2 ignoring duplicate calls
+        if ($ddl.hasClass('select2-hidden-accessible')) {
+            $ddl.select2('destroy');
+        }
+
+        // Repopulate options fresh every time
+        $ddl.empty().append('<option value="">--Select Employee--</option>');
+        $.each(s.employeenames_add, function (i, emp) {
+            $ddl.append($('<option>', { value: emp.empl_id, text: emp.employee_name }));
+        });
+
+        $ddl.select2({
+            width: '100%',
+            placeholder: '--Select Employee--',
+            dropdownParent: $('#modal_add_employee')
+        });
+
+        $ddl.off('change').on('change', function () {
+            var selectedId = $(this).val();
+            setTimeout(function () {
+                if (selectedId) {
+                    var emp = s.employeenames_add.filter(function (e) { return e.empl_id == selectedId; })[0];
+                    if (emp) {
+                        s.add_empl_id         = emp.empl_id;
+                        s.add_position        = emp.position_title1 || "";
+                        s.add_employment_type = $("#ddl_employment_type option:selected").val() || "";
+                        s.ddl_add_employee_name = emp.empl_id;
+                    }
+                } else {
+                    s.add_empl_id         = "";
+                    s.add_position        = "";
+                    s.add_employment_type = "";
+                }
+                if (!s.$$phase) s.$apply();
+            }, 0);
+        });
+    });
+
+    s.btn_add_employee_cancel = function () {
+        $("#modal_add_employee").modal("hide")
+    }
+
+    s.btn_add_employee_add = function () {
+       
+        var selectedEmpId = $('#ddl_add_employee_name').val();
+        var isValid = true
+
+        if (!selectedEmpId || selectedEmpId === "") {
+            $("#lbl_add_empl_name_req").text("Required field.")
+            isValid = false
+        } else { $("#lbl_add_empl_name_req").text("") }
+
+        if (!s.add_empl_id || s.add_empl_id === "") {
+            $("#lbl_add_empl_id_req").text("Required field.")
+            isValid = false
+        } else { $("#lbl_add_empl_id_req").text("") }
+
+        if (!isValid) return
+
+        $("#modal_add_employee").modal("hide")
+
+        document.getElementById("gearLoader").style.display = "flex";
+
+        h.post("../cBIRAnnualizedTax/GenerateByEmployee", {
+            par_empl_id:      s.add_empl_id,
+            par_payroll_year: $("#ddl_year option:selected").val(),
+            par_letter:       $("#ddl_letter option:selected").val() || "",
+            par_employment:   s.add_employment_type
+        }).then(function (d) {
+            document.getElementById("gearLoader").style.display = "none";
+
+            if (d.data.message == "success") {
+                if (d.data.sp_annualtax_hdr_tbl_list && d.data.sp_annualtax_hdr_tbl_list.length > 0) {
+                    s.datalistgrid_raw = d.data.sp_annualtax_hdr_tbl_list;
+                    s.datalistgrid     = d.data.sp_annualtax_hdr_tbl_list;
+                    s.oTable.fnClearTable();
+                    s.oTable.fnAddData(s.datalistgrid);
+                    set_descrepancy_count();
+                    set_pnia_count();
+                }
+                swal("Successfully Added!", "Employee " + s.add_empl_id + " has been successfully added.", "success");
+            } else {
+                swal("Failed!", d.data.message || "An error occurred while adding the employee.", "error");
+            }
+        }).catch(function () {
+            document.getElementById("gearLoader").style.display = "none";
+            swal("Failed!", "An error occurred while adding the employee.", "error");
+        });
+    }
+    // *** End Add Employee Modal ***
 
     //***************************Functions end*********************************************************//
 

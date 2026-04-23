@@ -1,0 +1,1627 @@
+﻿@model HRIS_ePAccount.Models.User_Menu
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<style type="text/css">
+.field 
+{
+    border-radius: 3px;
+    height: 35px;
+    font-size: 18px;
+}
+
+.field-arrow {
+    font-size: 26px;
+}
+
+.require-field {
+    border: 1px solid red !important;
+}
+
+.btn.action {
+    width: 27px;
+}
+
+.form-control.detail {
+    padding-bottom: 0;
+    padding-top: 0;
+    height: 30px !important;
+}
+
+/* Gear Loader Styles */
+.gear-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gear-box {
+    background: #ffffff;
+    padding: 25px 40px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}
+
+.gear-text {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+    #datalist_grid_checktaxes {
+        font-size: 11px; /* smaller font for the whole table */
+    }
+
+    #datalist_grid_checktaxes th {
+        font-size: 10px; /* header */
+    }
+    
+    #datalist_grid_checktaxes td {
+        font-size: 10px; /* body cells */
+    }
+    .payroll-summary table {
+        font-size: 11px;
+    }
+
+    .payroll-summary table > thead > tr > th,
+    .payroll-summary table > tbody > tr > td {
+        padding: 4px 6px;
+        vertical-align: middle;
+    }
+
+    .payroll-summary .table-summary td {
+        font-weight: bold;
+    }
+
+    .payroll-summary .highlight {
+        background-color: #f2dede; /* light red for emphasis */
+    }
+    .nav-tabs {
+        position: sticky; /* keeps it visible when scrolling */
+        top: 0; /* stick at the top of tab-content */
+        z-index: 1000; /* stay above table */
+        background: #fff; /* background so table rows don’t overlap */
+    }
+
+    .full-height-scroll {
+        overflow: visible !important; /* if dropdown is inside this container */
+    }
+    .nav-tabs {
+        position: sticky;
+        top: 0;
+        z-index: 500;
+        background: #f8f9fa; /* light background for contrast */
+        border-bottom: 2px solid #ccc;
+        padding: 12px 16px; /* added padding */
+        margin-top: 8px; /* space from top container */
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* shadow for separation */
+        display: flex;
+        
+    }
+
+    .tab {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 8px 16px;
+        cursor: pointer;
+        transition: background 0.2s, box-shadow 0.2s;
+    }
+
+    .nav-tabs > li:hover {
+        background: #f1f1f1;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+
+    .nav-tabs > li {
+        margin-bottom: -1px; /* keep Bootstrap tab style */
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 8px 16px;
+        cursor: pointer;
+        transition: background 0.2s, box-shadow 0.2s;
+    }
+
+    .nav-tabs > li:last-child {
+        flex: 1; /* take up remaining space */
+    }
+    .nav-tabs > li.search-box {
+        width: 60%;
+    }
+
+    .nav-tabs > li:last-child input {
+        width: 60%; /* stretch the input fully */
+        max-width: none; /* remove default max */
+    }
+
+
+    /*.tab-pane table thead th {
+        position: sticky;
+        top: 45px; 
+        background: #fff;
+        z-index: 1020; 
+        border-bottom: 2px solid #ddd;
+    }*/
+
+    #tab-12 .table-responsive {
+        max-height: 500px; /* make table scrollable */
+        overflow-y: auto;
+    }
+
+    /* First row (employee info) sticks at very top */
+    #tab-12 table thead tr:nth-child(1) {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        background: #dff0d8; /* bootstrap .success background */
+    }
+
+    /* Second row (column headers) sticks right below it */
+    #tab-12 table thead tr:nth-child(2) {
+        position: sticky;
+        top: 25px; /* adjust to match first row’s height */
+        z-index: 2;
+        background: #f8f9fa;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        /* Professional action buttons */
+        .btn-group .btn.action {
+            border-radius: 4px !important;
+            margin-right: 4px;
+        }
+        /* PNIA button styling */
+        .btn-pnia {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px !important;
+            border: 1px solid rgba(0,0,0,.15);
+            box-shadow: 0 1px 1px rgba(0,0,0,.06);
+        }
+            /* Small label next to icon */
+            .btn-pnia .pnia-label {
+                font-size: 11px;
+                letter-spacing: .4px;
+                text-transform: uppercase;
+                opacity: .95;
+            }
+            /* Count pill */
+            .btn-pnia .pnia-count {
+                margin-left: 2px;
+                background: rgba(255,255,255,.95);
+                color: #d9534f; /* bootstrap danger */
+                border-radius: 10px;
+                padding: 1px 7px;
+                font-weight: 700;
+                font-size: 11px;
+                line-height: 1.4;
+                min-width: 18px;
+                text-align: center;
+            }
+            /* Optional: make it calmer when count is zero */
+            .btn-pnia.is-zero {
+                opacity: .65;
+            }
+    }
+</style>
+<script src="~/Angular/ng-cBIRAnnualizedTax.js?v=@DateTime.Now.ToString("yyyyMMddHHmmss")"></script>
+<!-- The Modal - Generating Report -->
+<div class="modal fade" id="Loading_master" ng-model="Loading_master">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog">
+            @*<span class="fa fa-spinner fa-spin fa-3x text-white"></span>*@
+            <div class="spiner-example">
+                <div class="sk-spinner sk-spinner-wandering-cubes ">
+                    <div class="sk-cube1"></div>
+                    <div class="sk-cube2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<section ng-app="ng_HRD_App" ng-controller="cBIRAnnualizedTax_ctrlr">
+    <!-- The modal -->
+    <div class="modal fade" id="modal_print">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content animated flipInY ">
+                <div class="modal-header text-white" style="background-color: #28a745; height:8%;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h2 class="modal-title" id="modalLabelSmall" style="font-weight:bold; margin-top:-5px;">{{ModalTitle}}</h2>
+                </div>
+
+                <div class="modal-body with-background">
+                    <hr style="margin-top:5px;" />
+                    <div class="form-group row" style="margin-top:-10px;">
+
+                        <div class="col-lg-12">
+                            <select class="form-control field-select-sm" id="ddl_reporttemplate" ng-model="ddl_reporttemplate" ng-change="SelectReportTemplate()">
+                                <option value="" selected>--Select Here--</option>
+                                <option ng-repeat="lst in reporttemplate" value="{{lst.payrolltemplate_code}}">{{lst.payrolltemplate_descr}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 10px 30px 10px 30px !important">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                    <button ng-show="true" ng-click="btn_print_action2()" type="button" class="btn btn-primary"><i class="fa fa-print"></i> Print </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- The modal -->
+    <div class="modal fade" id="main_modal" data-toggle="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" aria-hidden="true" style="overflow:auto;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header modal-header-add-edit text-white">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="modalLabelSmall">{{ModalTitle}}</h4>
+                </div>
+
+                <div class="modal-body with-background">
+                    <div class="row" style="display:none;">
+                    </div>
+                    <div class="form-group row">
+
+                        <div class="col-lg-2" style="padding-top:5px;">
+                            <label class="font-bold">Employee's Name:</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <input id="txtb_empl_name" ng-show="isShowNameInput" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_empl_name" class="form-control inputfield" disabled />
+                            <select class="form-control field-select-sm" ng-show="isShowNameSelect" id="ddl_employee_name">
+                                <option value="" ng-click="SelectEmployeeNameClear()" selected>--Select Here--</option>
+                                <option ng-click="SelectEmployeeName(lst)" ng-repeat="lst in employeenames" value="{{lst.empl_id}}">{{lst.employee_name}}</option>
+                            </select>
+                            <label id="lbl_ddl_employee_name_req" class="lbl_required"></label>
+                            @*<label class="text-danger small">{{lbl_requiredfield1}}</label>*@
+                        </div>
+
+                        <div class="col-lg-2" style="padding-top:5px; padding-right:0px;">
+                            <label class="font-bold">ID Nbr.:</label>
+                        </div>
+
+                        <div class="col-lg-2">
+                            <input id="txtb_empl_id" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_empl_id" class="form-control inputfield text-center" disabled />
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="margin-top:-15px;">
+                        <hr />
+                    </div>
+                    <div class="form-group row" style="margin-top:-15px;">
+
+                        <div class="col-lg-2" style="padding-top:5px;">
+                            <label class="font-bold">Position Title:</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <input id="txtb_position" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_position" class="form-control inputfield" disabled />
+                        </div>
+
+                        <div class="col-lg-2" style="padding-top:5px; padding-right:0px;">
+                            <label class="font-bold">Monthly Tax Due:</label>
+                        </div>
+
+                        <div class="col-lg-2">
+                            <input id="txtb_monthly_tax_due" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_monthly_tax_due" class="form-control inputfield text-right" disabled />
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="margin-top:-15px;">
+                        <hr />
+                    </div>
+
+                    <div class="form-group row" style="margin-top:-15px;">
+
+                        <div class="col-lg-2" style="padding-top:5px;">
+                            <label class="font-bold">Employment Type:</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <input id="txtb_employment_type" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_employment_type" class="form-control inputfield" disabled />
+
+                        </div>
+
+                        <div class="col-lg-2" style="padding-top:5px; padding-right:0px;">
+                            <label class="font-bold">Monthly Tax Rate(%):</label>
+                        </div>
+
+                        <div class="col-lg-2">
+                            <input id="txtb_monthly_tax_rate" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_monthly_tax_rate" class="form-control inputfield text-center" disabled />
+
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="margin-top:-15px;">
+                        <hr />
+                    </div>
+
+                    <div class="form-group row" style="margin-top:-15px;">
+
+                        <div class="col-lg-2" style="padding-top:5px;">
+                            <label class="font-bold">Type of Employer:</label>
+                        </div>
+                        <div class="col-lg-3">
+                            <select class="form-control field-select-sm" id="ddl_employer_type">
+                                <option value="M" selected>Main Employer</option>
+                                <option value="S">Secondary Employer</option>
+                            </select>
+                            <input id="txtb_employment_type_val" style="font-weight:bold;visibility:hidden;" ng-disabled="true" ng-model="txtb_employment_type_val" class="form-control inputfield" disabled />
+                        </div>
+
+                        <div class="col-lg-1" style="padding-top:5px; padding-right:0px;">
+                            <label class="font-bold">Substituted:</label>
+                        </div>
+                        <div class="col-lg-2">
+                            <select class="form-control field-select-sm" id="ddl_subs_type">
+                                <option value="Y" selected>YES</option>
+                                <option value="N">NO</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-2">
+                            &nbsp;
+                        </div>
+
+                        <div class="col-lg-2">
+                            @if (Model.allow_add == 1)
+                            {
+                                <button id="btn_generate" class="btn btn-block btn-primary" ng-click="btn_generate_action_add()"><i id="btn_generate_icon" class="fa fa-share-square-o"> </i>Generate</button>
+
+                            }
+                        </div>
+
+
+                    </div>
+
+                    <div class="row" style="margin-top:-15px;">
+                        <hr />
+                    </div>
+
+                    <div class="row" style="margin-top:-15px;">
+                        <div class="col-lg-12 m-b-md">
+                            <div class="tabs-container">
+                                <ul class="nav nav-tabs">
+
+                                    <li class="active" style="width:20%;"><a data-toggle="tab" style="font-size:16px;" href="#tab-1"><i class="fa fa-university"></i>SUMMARY</a></li>
+                                    <li class="" style="width:22%;"><a data-toggle="tab" style="font-size:16px;" href="#tab-2"><i class="fa fa-building"></i>NON-TAXABLE</a></li>
+                                    <li class="" style="width:19%;"><a data-toggle="tab" style="font-size:16px;" href="#tab-3"><i class="fa fa-archive"></i>TAXABLE</a></li>
+                                    <li class="" style="width:24%;"><a data-toggle="tab" style="font-size:16px;" href="#tab-4"><i class="fa fa-briefcase"></i>SUPPLEMENTARY</a></li>
+                                    <li class="" style="width:15%;"><a data-toggle="tab" style="font-size:16px;" href="#tab-5"><i class="fa fa-support"></i>OTHER</a></li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div id="tab-1" class="tab-pane active">
+                                        <div class="panel-body">
+                                            <div class="form-group row">
+                                                <div class="col-lg-6">
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Gross Income Present:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_gross_inc_prst" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_gross_inc_prst" class="form-control inputfield text-right" disabled />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Non-Tax/Ex. Comp.:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_non_tax_exmpt" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_non_tax_exmpt" class="form-control inputfield text-right" disabled />
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Taxable Income Prsnt.:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_txbl_inc_prst" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_txbl_inc_prst" class="form-control inputfield text-right" disabled />
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Addl. Tax. Inc. Prev.:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_add_txbl_inc_prst" style="font-weight:bold;" ng-model="txtb_add_txbl_inc_prst" class="form-control inputfield text-right" />
+                                                            <label id="lbl_txtb_add_txbl_inc_prst_req" class="lbl_required"></label>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Gross Taxable Income: </label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_gross_txbl_inc" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_gross_txbl_inc" class="form-control inputfield text-right" disabled />
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Tax Dues: </label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_annual_tax_due" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_annual_tax_due" class="form-control inputfield text-right" disabled />
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-12">
+                                                            <h3>AMOUNT OF TAXES WITHHELD</h3>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Present Employer:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_wheld_prst_emplyr" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_wheld_prst_emplyr" class="form-control inputfield text-right" disabled />
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Previous Employer:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_wheld_prev_emplyr" style="font-weight:bold;" ng-model="txtb_wheld_prev_emplyr" class="form-control inputfield text-right" />
+                                                            <label id="lbl_txtb_wheld_prev_emplyr_req" class="lbl_required"></label>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold text-danger">TOTAL AMT.(Adjstd.):</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_wheld_total" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_wheld_total" class="form-control inputfield text-right" disabled />
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Tax Payable:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_cal_tax_payable" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_cal_tax_payable" class="form-control inputfield text-right" disabled />
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold"># of Installments:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_no_install" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_no_install" class="form-control inputfield text-right" disabled />
+                                                        </div>
+
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div id="tab-2" class="tab-pane">
+                                        <div class="panel-body">
+                                            <div class="form-group row">
+
+
+                                                <div class="col-lg-6">
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Basic Salary (MWE):</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_ntx_basic_sal_mwe" style="font-weight:bold;" ng-model="txtb_ntx_basic_sal_mwe" class="form-control inputfield text-right" />
+                                                            <label id="lbl_txtb_ntx_basic_sal_mwe_req" class="lbl_required"></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Holiday Pay (MWE):</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_ntx_hol_pay_mwe" style="font-weight:bold;" ng-model="txtb_ntx_hol_pay_mwe" class="form-control inputfield text-right" />
+                                                            <label id="lbl_txtb_ntx_hol_pay_mwe_req" class="lbl_required"></label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Overtime Pay (MWE):</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_ntx_ot_pay_mwe" style="font-weight:bold;" ng-model="txtb_ntx_ot_pay_mwe" class="form-control inputfield text-right" />
+                                                            <label id="lbl_txtb_ntx_ot_pay_mwe_req" class="lbl_required"></label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Night Shift Diff. (MWE):</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_ntx_night_diff_mwe" style="font-weight:bold;" ng-model="txtb_ntx_night_diff_mwe" class="form-control inputfield text-right" />
+                                                            <label id="lbl_txtb_ntx_night_diff_mwe_req" class="lbl_required"></label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Hazard Pay (MWE):</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_ntx_hzrd_pay_mwe" style="font-weight:bold;" ng-model="txtb_ntx_hzrd_pay_mwe" class="form-control inputfield text-right" />
+                                                            <label id="lbl_txtb_ntx_hzrd_pay_mwe_req" class="lbl_required"></label>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+
+                                                <div class="col-lg-6">
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">13th Month & Other:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_ntx_13th_month" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_ntx_13th_month" class="form-control inputfield text-right" disabled />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">De Minimis Benefits</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_ntx_deminimis" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_ntx_deminimis" class="form-control inputfield text-right" disabled />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">GSIS, PHIC & HDMF:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_ntx_premiums" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_ntx_premiums" class="form-control inputfield text-right" disabled />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Salaries & Oth. Forms:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_ntx_salaries_oth" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_ntx_salaries_oth" class="form-control inputfield text-right" disabled />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold text-danger">TOTAL AMT.:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_ntx_total" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_ntx_total" class="form-control inputfield text-right" disabled />
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="tab-3" class="tab-pane">
+                                        <div class="panel-body">
+                                            <div class="form-group row">
+                                                <div class="col-lg-6">
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Basic Salary:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_txbl_basic_sal" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_txbl_basic_sal" class="form-control inputfield text-right" disabled />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Representation:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_txbl_ra" style="font-weight:bold;" ng-model="txtb_txbl_ra" class="form-control inputfield text-right" />
+                                                            <label id="lbl_txtb_txbl_ra_req" class="lbl_required"></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Transportation:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_txbl_ta" style="font-weight:bold;" ng-model="txtb_txbl_ta" class="form-control inputfield text-right" />
+                                                            <label id="lbl_txtb_txbl_ta_req" class="lbl_required"></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Cost of Living Allo.:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_txbl_cola" style="font-weight:bold;" ng-model="txtb_txbl_cola" class="form-control inputfield text-right" />
+                                                            <label id="lbl_txtb_txbl_cola_req" class="lbl_required"></label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Fixed Hsng. Allo.:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_txbl_fxd_hsng_allo" style="font-weight:bold;" ng-model="txtb_txbl_fxd_hsng_allo" class="form-control inputfield text-right" />
+                                                            <label id="lbl_txtb_txbl_fxd_hsng_allo_req" class="lbl_required"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-6">
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-12">
+                                                            <h3>OTHER</h3>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">PHIC Share:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_txbl_othA" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_txbl_othA" class="form-control inputfield text-right" disabled />
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">BAC Honorarium:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_txbl_othB" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_txbl_othB" class="form-control inputfield text-right" disabled />
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="form-group row" style="margin-top:40px;">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold text-danger">TOTAL AMT.:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_txbl_total" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_txbl_total" class="form-control inputfield text-right" disabled />
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                    <div id="tab-4" class="tab-pane">
+                                        <div class="panel-body">
+                                            <div class="form-group row">
+                                                <div class="col-lg-6">
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Commision:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txbl_sup_com" style="font-weight:bold;" ng-model="txbl_sup_com" class="form-control inputfield text-right" />
+                                                            <label id="lbl_txbl_sup_com_req" class="lbl_required"></label>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Profit Sharing:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_sup_proft_s" style="font-weight:bold;" ng-model="txtb_sup_proft_s" class="form-control inputfield text-right" />
+                                                            <label id="lbl_txtb_sup_proft_s_req" class="lbl_required"></label>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Director's Fee:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_sup_dir_fee" style="font-weight:bold;" ng-model="txtb_sup_dir_fee" class="form-control inputfield text-right" />
+                                                            <label id="lbl_txtb_sup_dir_fee_req" class="lbl_required"></label>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Taxable 13th & Oth:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_sup_13_oth" style="font-weight:bold;" ng-model="txtb_sup_13_oth" class="form-control inputfield text-right" disabled />
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Hazard Pay:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_sup_hzrd_pay" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_sup_hzrd_pay" class="form-control inputfield text-right" disabled />
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Overtime Pay:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_sup_ot_pay" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_sup_ot_pay" class="form-control inputfield text-right" disabled />
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-6">
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-12">
+                                                            <h3>OTHER</h3>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Honorarium:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_sup_othA" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_sup_othA" class="form-control inputfield text-right" disabled />
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold">Subsistence:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_sup_othB" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_sup_othB" class="form-control inputfield text-right" disabled />
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="form-group row" style="margin-top:75px;">
+                                                        <div class="col-lg-5" style="padding-top:10px;">
+                                                            <label class="font-bold text-danger">TOTAL AMT.:</label>
+                                                        </div>
+                                                        <div class="col-lg-7">
+                                                            <input id="txtb_sup_total" style="font-weight:bold;" ng-disabled="true" ng-model="txtb_sup_total" class="form-control inputfield text-right" disabled />
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="tab-5" class="tab-pane">
+                                        <div class="panel-body">
+                                            <div class="form-group row">
+
+                                                <div class="col-lg-6">
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-12">
+                                                            <h3 class="font-bold">Employee's Information</h3>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-12" style="margin-top:-20px;">
+                                                            <hr style="border-color:cadetblue;" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-6" style="padding-top:10px;">
+                                                            <label class="font-bold">Foreign Address:</label>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <input id="txtb_foreign_add" style="font-weight:bold;" maxlength="255" ng-model="txtb_foreign_add" class="form-control inputfield" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-6" style="padding-top:5px;padding-right:0;">
+                                                            <label class="font-bold">Statutory Min. Rate per day:</label>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <input id="txtb_stat_daily" style="font-weight:bold;" maxlength="255" ng-model="txtb_stat_daily" class="form-control inputfield text-right" />
+                                                            <label id="lbl_txtb_stat_daily_req" class="lbl_required"></label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row">
+
+                                                        <div class="col-lg-6" style="padding-top:5px;padding-right:0;">
+                                                            <label class="font-bold">Statutory Min. Rate per month:</label>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <input id="txtb_stat_monthly" style="font-weight:bold;" maxlength="255" ng-model="txtb_stat_monthly" class="form-control inputfield text-right" />
+                                                            <label id="lbl_txtb_stat_monthly_req" class="lbl_required"></label>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="form-group row">
+
+                                                        <div class="col-lg-6" style="padding-top:5px;padding-right:0;">
+                                                            <label class="font-bold">Minimum Wage Earner:</label>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <select class="form-control field-select-sm text-center" id="ddl_wage_earner">
+                                                                <option value="TRUE">YES</option>
+                                                                <option value="FALSE" selected>NO</option>
+                                                            </select>
+                                                            @*<input type="checkbox" id="chk_min_wage" style="font-weight:bold;" ng-model="chk_min_wage" class="form-control inputfield text-right" />*@
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="col-lg-6">
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-12">
+                                                            <h3 class="font-bold">Employer Information (Previous)</h3>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-12" style="margin-top:-20px;">
+                                                            <hr style="border-color:cadetblue;" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-6" style="padding-top:10px;">
+                                                            <label class="font-bold">TIN:</label>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <input id="txtb_tin_prev" style="font-weight:bold;" maxlength="255" ng-model="txtb_tin_prev" class="form-control inputfield" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-6" style="padding-top:5px;padding-right:0;">
+                                                            <label class="font-bold">Employer's Name:</label>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <input id="txtb_empl_name_prev" style="font-weight:bold;" maxlength="255" ng-model="txtb_empl_name_prev" class="form-control inputfield" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row">
+
+                                                        <div class="col-lg-6" style="padding-top:5px;padding-right:0;">
+                                                            <label class="font-bold">Registered Address:</label>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <input id="txtb_address_prev" style="font-weight:bold;" maxlength="255" ng-model="txtb_address_prev" class="form-control inputfield" />
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="form-group row">
+
+                                                        <div class="col-lg-6" style="padding-top:5px;padding-right:0;">
+                                                            <label class="font-bold">ZIP Code:</label>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <input id="txtb_zip_prev" style="font-weight:bold;" maxlength="255" ng-model="txtb_zip_prev" class="form-control inputfield" />
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer" style="padding: 10px 30px 10px 30px !important">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                    <button ng-show="ishowsave" ng-click="btn_save()" type="button" class="btn btn-success"><i id="btn_save" class="fa fa-save"></i> Save</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="main_modal2" data-toggle="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" aria-hidden="true" style="overflow:auto;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header modal-header-add-edit text-white">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="modalLabelSmall">{{ModalTitle}}</h4>
+                </div>
+
+                <div class="modal-body with-background">
+                   
+                    <table id="datalist_grid" class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                               
+                                <th>ID NBR</th>
+                                <th width="150px">EMPLOYEE NAME</th>
+                                <th>TXBL AMT.</th>
+                                <th>JAN/FEB</th>
+                                <th>MAR/APR</th>
+                                <th>MAY/JUN</th>
+                                <th>JUL/AUG</th>
+                                <th>SEP/OCT</th>
+                                <th>NOV/DEC</th>
+                                <th width="10%">ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+
+
+                </div>
+                <div class="modal-footer" style="padding: 10px 30px 10px 30px !important">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                    <button ng-show="ishowsave" ng-click="btn_save()" type="button" class="btn btn-success"><i id="btn_save" class="fa fa-save"></i> Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper wrapper-content animated fadeInRight" style="padding:10px 0px 0px 0px!important">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox-title" style="background-color:#507CD1;border-radius:5px 5px 0px 0px;">
+
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <b><h2 class="text-white">@Model.menu_name</h2></b>
+                        </div>
+                        @*<div class="col-lg-8">
+                                <input type="search" class="form-control" ng-model="search_box" ng-keyup="search_in_list(search_box,'datalist_grid')" placeholder="Search ....">
+                            </div>*@
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <!-- Row 1: Show Entries, Payroll Year, Employment Type, Actions -->
+                        <div class="row" style="display:flex; flex-wrap:wrap; align-items:center; margin-bottom:10px;">
+                            <!-- Show Entries -->
+                            <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12" style="margin-bottom:8px;">
+                                <div style="display:flex; align-items:center;">
+                                    <span class="font-bold" style="margin-right:8px; white-space:nowrap;">Show</span>
+                                    <select class="form-control input-sm" id="ddl_show_entries" style="width:70px;" ng-model="rowLen" ng-change="setNumOfRow(rowLen,'datalist_grid')">
+                                        <option value="5" selected>5</option>
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                    <span class="font-bold" style="margin-left:8px; white-space:nowrap;">entries</span>
+                                </div>
+                            </div>
+
+                            <!-- Payroll Year -->
+                            <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12" style="margin-bottom:8px;">
+                                <div style="display:flex; align-items:center;">
+                                    <label class="font-bold" style="margin-right:8px; margin-bottom:0; white-space:nowrap;">Payroll Year:</label>
+                                    <select id="ddl_year" ng-model="ddl_year" ng-change="SelectPayrollYear(ddl_employment_type,ddl_year,ddl_letter)" class="form-control input-sm" style="flex:1; min-width:80px;">
+                                        <option ng-repeat="yr in year" value="{{yr.year}}">{{yr.year}}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Employment Type -->
+                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="margin-bottom:8px;">
+                                <div style="display:flex; align-items:center;">
+                                    <label class="font-bold" style="margin-right:8px; margin-bottom:0; white-space:nowrap;">Employment Type:</label>
+                                    <select class="form-control input-sm" id="ddl_employment_type" ng-model="ddl_employment_type" ng-change="SelectEmploymentType(ddl_employment_type,ddl_year,ddl_letter)" style="flex:1; min-width:150px;">
+                                        <option value="" selected>--Select Here--</option>
+                                        <option ng-repeat="lst in employeeddl" value="{{lst.employment_type}}">{{lst.employmenttype_description}}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="col-lg-4 col-md-2 col-sm-12 col-xs-12 text-right" style="margin-bottom:8px;">
+                                <div style="display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap;">
+                                    @if (Model.allow_add == 1)
+                                    {
+                                    <div class="btn-group">
+                                            <button data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">
+                                                Other Actions <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-right">
+                                                <li><a ng-click="btn_extract_action('H')"><i class="fa fa-download"></i> HRIS Extract</a></li>
+                                                <li><a ng-click="btn_extract_action('B')"><i class="fa fa-download"></i> BIR Extract</a></li>
+                                            </ul>
+                                        </div>
+                                        <button id="btn_add" class="btn btn-success btn-sm" ng-click="btn_add_action()">
+                                            <i id="btn_add_icon" class="fa fa-plus"></i> Add
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 2: Filter Checkboxes -->
+                        <div class="row" style="display:flex; flex-wrap:wrap; align-items:center;">
+                            <!-- Check for Discrepancy -->
+                            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" style="margin-bottom:8px;">
+                                <label class="checkbox-inline" style="display:flex; align-items:center; margin:0; cursor:pointer;">
+                                    <input type="checkbox" id="chk_show_descrep" style="width:16px; height:16px; margin-right:8px;" ng-click="FilterPageGridShowAction()">
+                                    <span class="font-bold">
+                                        Check for Discrepancy
+                                        <span id="descrepancy_count" class="badge badge-danger" style="font-size:10px; margin-left:5px;"></span>
+                                    </span>
+                                </label>
+                            </div>
+
+                            <!-- Show PNIA Only -->
+                            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" style="margin-bottom:8px;">
+                                <label class="checkbox-inline" style="display:flex; align-items:center; margin:0; cursor:pointer;">
+                                    <input type="checkbox" id="chk_show_pnia" style="width:16px; height:16px; margin-right:8px;" ng-click="FilterPageGridShowPNIA()">
+                                    <span class="font-bold">
+                                        Show PNIA Only
+                                        <span id="pnia_count" class="badge" style="background-color:#d9534f;color:white; font-size:10px; margin-left:5px;">{{pnia_employee_count || 0}}</span>
+                                    </span>
+                                </label>
+                            </div>
+
+                            <!-- Employee Count Display -->
+                            <div class="col-lg-6 col-md-4 col-sm-12 col-xs-12 text-right" style="margin-bottom:8px;">
+                                <span class="font-bold" style="font-size:13px;">
+                                    <i class="fa fa-users"></i> 
+                                    Showing: <span class="text-primary">{{datalistgrid.length || 0}}</span> 
+                                    <span ng-show="datalistgrid_raw.length != datalistgrid.length"> of <span class="text-success">{{datalistgrid_raw.length || 0}}</span> employees</span>
+                                    <span ng-show="datalistgrid_raw.length == datalistgrid.length"> employees</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a data-toggle="tab" href="#tab-11">
+                                <i class="fa fa-user"></i> Employee List
+                                <span id="employee_count" class="badge" style="background-color:#5cb85c; margin-left:5px;">{{datalistgrid.length || 0}}</span>
+                            </a>
+                        </li>
+                        <li class="" style="display:none;"><a data-toggle="tab" href="#tab-12"><i class="fa fa-user"></i>CHECK DETAILS</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-13"><i class="fa fa-briefcase"></i>Generation List</a></li>
+                        
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-11" class="tab-pane active">
+                            <div class="full-height-scroll">
+                                <!-- Professional Employee Tax Records Panel -->
+                                <div class="panel panel-default" style="border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                                    <!-- Panel Header with Gradient -->
+                                    <div class="panel-heading" style="background: linear-gradient(135deg, #1a5276 0%, #2e86de 100%); color: white; border-radius: 7px 7px 0 0; padding: 15px 20px;">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h4 style="margin: 0; font-weight: 600;">
+                                                    <i class="fa fa-users"></i>&nbsp; Employee Tax Records
+                                                </h4>
+                                                <small style="opacity: 0.9;">View and manage employee annualized tax records</small>
+                                            </div>
+                                            <div class="col-md-6 text-right">
+                                                <span class="badge" style="background-color: rgba(255,255,255,0.2); padding: 8px 15px; font-size: 13px;">
+                                                    <i class="fa fa-database"></i>&nbsp; Total Records: <strong>{{datalistgrid.length || 0}}</strong>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Panel Body -->
+                                    <div class="panel-body" style="padding: 20px;">
+                                        <!-- Search and Filter Section -->
+                                        <div class="row" style="margin-bottom: 15px;">
+                                            <div class="col-md-6">
+                                                <label style="font-weight: 600; color: #2c3e50; margin-bottom: 8px; display: block;">
+                                                    <i class="fa fa-search text-primary"></i>&nbsp; Search Employee Records
+                                                </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon" style="background: linear-gradient(135deg, #1a5276 0%, #2e86de 100%); color: white; border: none;">
+                                                        <i class="fa fa-filter"></i>
+                                                    </span>
+                                                    <input type="search" class="form-control" ng-model="search_box" ng-keyup="search_in_list(search_box,'datalist_grid')" placeholder="Search by ID, Name, TIN..." style="border-radius: 0 4px 4px 0;">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label style="font-weight: 600; color: #2c3e50; margin-bottom: 8px; display: block;">
+                                                    <i class="fa fa-bar-chart text-info"></i>&nbsp; Quick Statistics
+                                                </label>
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <div style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); color: white; padding: 10px 15px; border-radius: 5px; text-align: center;">
+                                                            <i class="fa fa-check-circle"></i>&nbsp; <strong>{{datalistgrid.length || 0}}</strong> Employees
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6">
+                                                        <div style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; padding: 10px 15px; border-radius: 5px; text-align: center;">
+                                                            <i class="fa fa-exclamation-triangle"></i>&nbsp; <strong>{{pnia_employee_count || 0}}</strong> PNIA
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- DataTable -->
+                                        <div style="border: 1px solid #e0e0e0; border-radius: 5px; overflow: hidden;">
+                                            <table id="datalist_grid" class="table table-striped table-bordered table-hover" style="margin-bottom: 0;">
+                                                <thead style="background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%); color: white;">
+                                                    <tr>
+                                                        <th style="display: none;">check_for_descrepancy</th>
+                                                        <th style="color: white; font-weight: 600;">ID NBR</th>
+                                                        <th width="150px" style="color: white; font-weight: 600;">EMPLOYEE NAME</th>
+                                                        <th style="color: white; font-weight: 600;">TXBL AMT.</th>
+                                                        <th style="color: white; font-weight: 600;">JAN/FEB</th>
+                                                        <th style="color: white; font-weight: 600;">MAR/APR</th>
+                                                        <th style="color: white; font-weight: 600;">MAY/JUN</th>
+                                                        <th style="color: white; font-weight: 600;">JUL/AUG</th>
+                                                        <th style="color: white; font-weight: 600;">SEP/OCT</th>
+                                                        <th style="color: white; font-weight: 600;">NOV/DEC</th>
+                                                        <th width="10%" style="color: white; font-weight: 600;">ACTIONS</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab-12" class="tab-pane">
+
+                            <div class="container-fluid payroll-summary">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-condensed">
+                                        <thead>
+                                            <tr class="success">
+                                                <th colspan="3">{{tax_empl_id}}</th>
+                                                <th colspan="4">{{tax_employee_name}}</th>
+                                                <th colspan="4">{{tax_tin}}</th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                            <tr class="success">
+                                                <th>Voucher</th>
+                                                <th>Period</th>
+                                                <th>Code</th>
+                                                <th>Description</th>
+                                                <th>BASIC SAL</th>
+                                                <th>PHIC SHARE</th>
+                                                <th>HAZ</th>
+                                                <th>SUBS</th>
+                                                <th>OT</th>
+                                                <th>OTH</th>
+                                                <th>TAXABLE 13TH</th>
+                                                <th>NONTAXABLE 13TH</th>
+                                                <th>DE MINIMIS</th>
+                                                <th>SAL & OTH</th>
+                                                <th>NONTAXABLE OTH</th>
+                                                <th>GSIS</th>
+                                                <th>HDMF</th>
+                                                <th>PHIC</th>
+                                                <th>WTAX</th>
+                                            </tr>
+                                        </thead>
+
+
+                                        <tbody>
+
+                                            <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks !== 'TOTAL'">
+                                                <td>{{l.voucher_nbr}}</td>
+                                                <td>{{l.payroll_month}}</td>
+                                                <td>{{l.payrolltemplate_code}}</td>
+                                                <td>{{l.remarks}}</td>
+                                                <td>{{fn_currency(l.basic_sal)}}</td>
+                                                <td>{{fn_currency(l.phic_share)}}</td>
+                                                <td>{{fn_currency(l.hazard_pay)}}</td>
+                                                <td>{{fn_currency(l.subsistence_allowance)}}</td>
+                                                <td>{{fn_currency(l.overtime)}}</td>
+                                                <td>{{fn_currency(l.oth)}}</td>
+                                                <td>{{fn_currency(l.taxable13th)}}</td>
+                                                <td>{{fn_currency(l.nontaxable13th)}}</td>
+                                                <td>{{fn_currency(l.deminimis)}}</td>
+                                                <td>{{fn_currency(l.sal_oth)}}</td>
+                                                <td>{{fn_currency(l.nontaxable_oth)}}</td>
+                                                <td>{{fn_currency(l.gsis_ps)}}</td>
+                                                <td>{{fn_currency(l.hdmf_ps)}}</td>
+                                                <td>{{fn_currency(l.phic_ps)}}</td>
+                                                <td>{{fn_currency(l.wtax_amt)}}</td>
+                                            </tr>
+                                            <tr class="success" ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'" style="font-weight: bold;">
+                                                <td>{{l.voucher_nbr}}</td>
+                                                <td>{{l.payroll_month}}</td>
+                                                <td></td>
+                                                <td>{{l.remarks}}</td>
+                                                <td class="strong-border">{{fn_currency(l.basic_sal)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.phic_share)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.hazard_pay)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.subsistence_allowance)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.overtime)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.oth)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.taxable13th)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.nontaxable13th)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.deminimis)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.sal_oth)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.nontaxable_oth)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.gsis_ps)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.hdmf_ps)}}</td>
+                                                <td class="strong-border">{{fn_currency(l.phic_ps)}}</td>
+                                                <td>{{fn_currency(l.wtax_amt)}}</td>
+                                            </tr>
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Summary Section -->
+                                <table class="table table-bordered table-summary">
+                                    <tbody>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>GROSS INCOME</td>
+                                            <td>{{fn_currency(l.gross_income)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>Basic Sal</td>
+                                            <td>{{fn_currency(l.basic_salary)}}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>NONTAXABLE INCOME</td>
+                                            <td>{{fn_currency(l.nontaxable_income)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>PHIC Share</td>
+                                            <td>{{fn_currency(l.phic_share)}}</td>
+                                            <td>-</td>
+                                        </tr>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>TAXABLE INCOME</td>
+                                            <td>{{fn_currency(l.taxable_income)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>Hazard</td>
+                                            <td>{{fn_currency(l.hazard_pay)}}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>TAX DUE</td>
+                                            <td>{{fn_currency(l.tax_due)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>Subs</td>
+                                            <td>{{fn_currency(l.subsistence_allowance)}}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>TAX WITHHELD</td>
+                                            <td>{{fn_currency(l.tax_withheld)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>Oth</td>
+                                            <td>{{fn_currency(l.oth)}}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>TAX PAYABLE TOTAL</td>
+                                            <td>{{fn_currency(l.tax_payable)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>OT</td>
+                                            <td>{{fn_currency(l.overtime)}}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td># OF INSTALLMENT</td>
+                                            <td>{{fn_currency(l.no_of_installment)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td style="border-top: 2px solid black;">TOTAL</td>
+                                            <td style="border-top: 2px solid black;" colspan="2">{{fn_currency(l.basic_salary + l.phic_share + l.hazard_pay + l.subsistence_allowance + l.oth + l.overtime)}}</td>
+                                        </tr>
+                                        <tr class="highlight" ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>TAX PAYABLE</td>
+                                            <td>{{fn_currency(l.tax_payable/l.no_of_installment)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td colspan="3"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <!-- Bottom Section -->
+                                <table class="table table-bordered table-summary">
+                                    <tbody>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>13th Month & Other</td>
+                                            <td>{{fn_currency(l.month13th_other)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>TAXABLE 13TH</td>
+                                            <td>{{fn_currency(l.taxable13th)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>De Minimis</td>
+                                            <td>{{fn_currency(l.DE_minimis)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td colspan="3"></td>
+                                        </tr>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>GSIS,HDMF,PHIC</td>
+                                            <td>{{fn_currency(l.gsis_hdmf_phic)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td colspan="3"></td>
+                                        </tr>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td>Salaries & Oth</td>
+                                            <td>{{fn_currency(l.salaries_oth)}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td colspan="3"></td>
+                                        </tr>
+                                        <tr ng-repeat="l in sp_check_annualized_tax_dtl" ng-if="l.remarks === 'TOTAL'">
+                                            <td style="border-top: 2px solid black;">TOTAL</td>
+                                            <td style="border-top: 2px solid black;">{{fn_currency(l.month13th_other + l.DE_minimis + l.gsis_hdmf_phic + l.salaries_oth)}}</td>
+                                            <td colspan="5"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Custom CSS for smaller rows/font -->
+                            <style>
+                                .payroll-summary table {
+                                    font-size: 11px;
+                                }
+
+                                    .payroll-summary table > thead > tr > th,
+                                    .payroll-summary table > tbody > tr > td {
+                                        padding: 4px 6px;
+                                        vertical-align: middle;
+                                    }
+
+                                .payroll-summary .table-summary td {
+                                    font-weight: bold;
+                                }
+
+                                .payroll-summary .highlight {
+                                    background-color: #f2dede; /* light red for emphasis */
+                                }
+
+                                .strong-border {
+                                    border-left: 2px solid #000 !important;
+                                    border-right: 2px solid #000 !important;
+                                }
+                            </style>
+
+
+                        </div>
+                        <div id="tab-13" class="tab-pane">
+                            <div class="full-height-scroll">
+                                <!-- Generation Status Header Panel -->
+                                <div class="panel panel-default" style="margin-bottom:15px; border-radius:4px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+                                    <div class="panel-heading" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white; border-radius:4px 4px 0 0; padding:12px 15px;">
+                                        <div class="row" style="display:flex; align-items:center;">
+                                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                                <h4 style="margin:0; font-weight:600;">
+                                                    <i class="fa fa-cogs"></i> Tax Generation Status Monitor
+                                                </h4>
+                                                <small style="opacity:0.85;">Track and monitor annualized tax generation progress</small>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 text-right">
+                                                <span class="label label-info" style="font-size:11px; padding:5px 10px;">
+                                                    <i class="fa fa-calendar"></i> Year: {{ddl_year}}
+                                                </span>
+                                                <span class="label label-success" style="font-size:11px; padding:5px 10px; margin-left:5px;">
+                                                    <i class="fa fa-users"></i> {{ddl_employment_type || 'All Types'}}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body" style="padding:15px;">
+                                        <div class="row" style="display:flex; flex-wrap:wrap; align-items:center;">
+                                            <!-- Refresh Button -->
+                                            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" style="margin-bottom:10px;">
+                                                <label class="font-bold" style="display:block; margin-bottom:5px; color:#555; font-size:12px;">
+                                                    <i class="fa fa-sync-alt"></i> Actions
+                                                </label>
+                                                <button class="btn btn-primary" ng-click="btn_refresh_generation_status()" style="border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+                                                    <i id="btn_refresh_icon" class="fa fa-refresh"></i> Refresh Status
+                                                </button>
+                                            </div>
+                                            
+                                            <!-- Search Box -->
+                                            <div class="col-lg-5 col-md-5 col-sm-6 col-xs-12" style="margin-bottom:10px;">
+                                                <label class="font-bold" style="display:block; margin-bottom:5px; color:#555; font-size:12px;">
+                                                    <i class="fa fa-search"></i> Search Generation Records
+                                                </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon" style="background:#f5f5f5; border-color:#ddd;">
+                                                        <i class="fa fa-search" style="color:#888;"></i>
+                                                    </span>
+                                                    <input type="search" 
+                                                           class="form-control" 
+                                                           ng-model="search_box_gen" 
+                                                           ng-keyup="search_in_list(search_box_gen,'datalist_grid_2')" 
+                                                           placeholder="Type to search by ID, Name, Status..."
+                                                           style="border-left:0;">
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Status Summary -->
+                                            <div class="col-lg-4 col-md-3 col-sm-12 col-xs-12 text-right" style="margin-bottom:10px;">
+                                                <label class="font-bold" style="display:block; margin-bottom:5px; color:#555; font-size:12px;">
+                                                    <i class="fa fa-info-circle"></i> Quick Stats
+                                                </label>
+                                                <span class="label" style="background-color:#5cb85c; font-size:11px; padding:5px 10px; margin-right:3px;">
+                                                    <i class="fa fa-list"></i> Records: {{datalistgrid2.length || 0}}
+                                                </span>
+                                                <span class="label" style="background-color:#5bc0de; font-size:11px; padding:5px 10px;">
+                                                    <i class="fa fa-clock-o"></i> Last Updated: {{lastRefreshTime || 'N/A'}}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Data Table -->
+                                <div class="table-responsive" style="border:1px solid #ddd; border-radius:4px; box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+                                    <table id="datalist_grid_2" class="table table-striped table-bordered table-hover" style="margin-bottom:0;">
+                                        <thead style="background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);">
+                                            <tr>
+                                                <th style="vertical-align:middle; text-align:center; font-weight:600; color:#495057;">ID</th>
+                                                <th style="vertical-align:middle; text-align:center; font-weight:600; color:#495057;">NAME</th>
+                                                <th style="vertical-align:middle; text-align:center; font-weight:600; color:#495057;">DTL STATUS</th>
+                                                <th style="vertical-align:middle; text-align:center; font-weight:600; color:#495057;">DTL GENERATE TIME</th>
+                                                <th style="vertical-align:middle; text-align:center; font-weight:600; color:#495057;">HDR STATUS</th>
+                                                <th style="vertical-align:middle; text-align:center; font-weight:600; color:#495057;">HDR GENERATE TIME</th>
+                                                <th style="vertical-align:middle; text-align:center; font-weight:600; color:#495057;">ERROR STATUS</th>
+                                                <th style="vertical-align:middle; text-align:center; font-weight:600; color:#495057; width:10%;">ACTION</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="loading_data" tabindex="-1" role="dialog" aria-labelledby="modalLabelSmall" data-backdrop="static" data-keyboard="false" aria-hidden="true" style="margin-top:10%;overflow:hidden">
+            <div class="modal-dialog modal-md modal-dialog-centered">
+
+                @*<span class="fa fa-spinner fa-spin fa-3x text-white"></span>*@
+                <div class="spiner-example">
+                    <div class="sk-spinner sk-spinner-cube-grid" style="height:50px;width:50px;">
+                        <div class="sk-cube"></div>
+                        <div class="sk-cube"></div>
+                        <div class="sk-cube"></div>
+                        <div class="sk-cube"></div>
+                        <div class="sk-cube"></div>
+                        <div class="sk-cube"></div>
+                        <div class="sk-cube"></div>
+                        <div class="sk-cube"></div>
+                        <div class="sk-cube"></div>
+                        <div class="row" style="padding-top:5px;">
+
+                            <div class="col-sm-12">
+                                <div style="width:10%; float:left;" class="no-padding">
+                                    <span class="pull-left font-bold" style="margin-top:9px;margin-right:10px;color:white">Please&nbsp;wait..</span>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                @**@
+
+            </div>
+        </div>
+</section>
+
+<div id="gearLoader" class="gear-loader" style="display:none;">
+    <div class="gear-box">
+        <i class="fa fa-cog fa-spin fa-3x"></i>
+        <div class="gear-text">Processing, please wait...</div>
+    </div>
+</div>

@@ -53,7 +53,6 @@ namespace HRIS_ePAccount.Models
         public virtual DbSet<jo_tax_tbl> jo_tax_tbl { get; set; }
         public virtual DbSet<obr_tracking_tbl> obr_tracking_tbl { get; set; }
         public virtual DbSet<payrollemployee_tax_dtl_tbl> payrollemployee_tax_dtl_tbl { get; set; }
-        public virtual DbSet<payrollemployee_tax_hdr_tbl> payrollemployee_tax_hdr_tbl { get; set; }
         public virtual DbSet<payrollemployee_tax_hdr_tbl_backup> payrollemployee_tax_hdr_tbl_backup { get; set; }
         public virtual DbSet<payrollregistry_dtl_unpost_tbl> payrollregistry_dtl_unpost_tbl { get; set; }
         public virtual DbSet<payrollregistryaccounting_hdr_ret_tbl> payrollregistryaccounting_hdr_ret_tbl { get; set; }
@@ -195,6 +194,7 @@ namespace HRIS_ePAccount.Models
         public virtual DbSet<generate_tax_empl_dtl_success_tbl> generate_tax_empl_dtl_success_tbl { get; set; }
         public virtual DbSet<generate_tax_empl_hdr_success_tbl> generate_tax_empl_hdr_success_tbl { get; set; }
         public virtual DbSet<generate_tax_errors_tbl> generate_tax_errors_tbl { get; set; }
+        public virtual DbSet<payrollemployee_tax_hdr_tbl> payrollemployee_tax_hdr_tbl { get; set; }
     
         [DbFunction("HRIS_ACTEntities", "func_get_personnel_names")]
         public virtual IQueryable<func_get_personnel_names_Result> func_get_personnel_names(Nullable<System.DateTime> par_period_to)
@@ -4737,7 +4737,7 @@ namespace HRIS_ePAccount.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_generate_annualized_tax_forloop", p_payroll_yearParameter, p_empl_idParameter, result_value, result_msg);
         }
     
-        public virtual int sp_run_tax_generation_loop(string p_payroll_year, string p_employment_type, string payroll_month, string p_empl_id, Nullable<bool> firstgenoftheyear, Nullable<bool> removeprojected)
+        public virtual int sp_run_tax_generation_loop(string p_payroll_year, string p_employment_type, string payroll_month, string p_empl_id, Nullable<int> episode, Nullable<bool> firstgenoftheyear, Nullable<bool> removeprojected)
         {
             var p_payroll_yearParameter = p_payroll_year != null ?
                 new ObjectParameter("p_payroll_year", p_payroll_year) :
@@ -4755,6 +4755,10 @@ namespace HRIS_ePAccount.Models
                 new ObjectParameter("p_empl_id", p_empl_id) :
                 new ObjectParameter("p_empl_id", typeof(string));
     
+            var episodeParameter = episode.HasValue ?
+                new ObjectParameter("episode", episode) :
+                new ObjectParameter("episode", typeof(int));
+    
             var firstgenoftheyearParameter = firstgenoftheyear.HasValue ?
                 new ObjectParameter("firstgenoftheyear", firstgenoftheyear) :
                 new ObjectParameter("firstgenoftheyear", typeof(bool));
@@ -4763,7 +4767,7 @@ namespace HRIS_ePAccount.Models
                 new ObjectParameter("removeprojected", removeprojected) :
                 new ObjectParameter("removeprojected", typeof(bool));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_run_tax_generation_loop", p_payroll_yearParameter, p_employment_typeParameter, payroll_monthParameter, p_empl_idParameter, firstgenoftheyearParameter, removeprojectedParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_run_tax_generation_loop", p_payroll_yearParameter, p_employment_typeParameter, payroll_monthParameter, p_empl_idParameter, episodeParameter, firstgenoftheyearParameter, removeprojectedParameter);
         }
     
         public virtual ObjectResult<sp_phic_share_rece_tbl_ACT_Result> sp_phic_share_rece_tbl_ACT(string p_department_code, string p_employment_type, string p_payroll_year)
@@ -4895,11 +4899,11 @@ namespace HRIS_ePAccount.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_get_tax_empl_dtl_hdr_generate_status_Result>("sp_get_tax_empl_dtl_hdr_generate_status", payroll_yearParameter, employment_typeParameter);
         }
     
-        public virtual int sp_generate_annual_tax_batch_empl_id(Nullable<int> p_payroll_year, string p_employment_type, string p_empl_id)
+        public virtual int sp_generate_annual_tax_batch_empl_id(string p_payroll_year, string p_employment_type, string p_empl_id)
         {
-            var p_payroll_yearParameter = p_payroll_year.HasValue ?
+            var p_payroll_yearParameter = p_payroll_year != null ?
                 new ObjectParameter("p_payroll_year", p_payroll_year) :
-                new ObjectParameter("p_payroll_year", typeof(int));
+                new ObjectParameter("p_payroll_year", typeof(string));
     
             var p_employment_typeParameter = p_employment_type != null ?
                 new ObjectParameter("p_employment_type", p_employment_type) :

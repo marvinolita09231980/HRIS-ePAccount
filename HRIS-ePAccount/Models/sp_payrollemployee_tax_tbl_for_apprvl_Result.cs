@@ -15,12 +15,25 @@ namespace HRIS_ePAccount.Models
     {
         public string empl_id { get; set; }
         public string employee_name { get; set; }
+        public Nullable<decimal> total_gross_pay { get; set; }
         public Nullable<decimal> basic_tax_rate { get; set; }
         public Nullable<decimal> tax_perc { get; set; }
         public Nullable<decimal> vat_perc { get; set; }
         public string rcrd_status { get; set; }
+        public Nullable<bool> fixed_rate { get; set; }
         public string rcrd_status_descr { get; set; }
         public string effective_date { get; set; }
         public string payroll_year { get; set; }
+        public decimal act_total_gross_pay { get; set; }
+        public decimal act_basic_tax_rate { get; set; }
+        public decimal act_tax_perc { get; set; }
+        public decimal act_vat_perc { get; set; }
+        public Nullable<bool> no_act_src { get; set; }
+        public Nullable<bool> total_gross_descre { get; set; }
+        public Nullable<bool> w_tax_perc_descre { get; set; }
+        public Nullable<bool> bus_tax_perc_descre { get; set; }
+        public Nullable<bool> vat_perc_descre { get; set; }
+        public Nullable<bool> fixed_rate_descre { get; set; }
+        public Nullable<bool> fixed_rate_wotx_descre { get; set; }
     }
 }

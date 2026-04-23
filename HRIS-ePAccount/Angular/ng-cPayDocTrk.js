@@ -1079,6 +1079,7 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
 
     function SaveRoute(dt)
     {
+        alert("test")
         var nextroute = ""
         s.temp_date_front = $("#dttm").val().trim()
 
@@ -1106,7 +1107,11 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
         //$("button#rlsd").prop('disabled', true);
         //$("button#rcvd").prop('disabled', true);
         //$("button#retd").prop('disabled', true);
+        console.log(dt)
+        console.log(s.data_vl)
+        console.log(s.doc_nbr_show)
 
+        return;
         h.post("../cPayDocTrk/sp_document_tracking_nbrs_tbl_update", { det: s.data_vl[0], dt: dt, doc_nbr_show: s.doc_nbr_show }).then(function (d)
         {
             if (d.data.message == "success")
@@ -1121,8 +1126,7 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
                         , nextroute  : nextroute
                     }).then(function (d) 
                     {
-                        if (d.data.icon == "success")
-                        {
+                        if (d.data.icon == "success") {
 
                             //Added by Joseph M. Tombo JR 10-21-2021
                             $("button#rlsd").prop('disabled', false);
@@ -1134,20 +1138,17 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
                             //s.ToRelease_Data_orig = d.data.ToRelease;
 
                             //Added By: Joseph M. Tombo Jr. 12-15-2020 if refresh flag is Y then it will refresh all the table source
-                            if (d.data.refresh_grid == "Y")
-                            {
+                            if (d.data.refresh_grid == "Y") {
                                 s.ToRelease_Data_orig = d.data.ToRelease;
                                 s.ToRecieve_Data_orig = d.data.ToReceive;
                             }
-                            else if (s.a_flag == "V")
-                            {
+                            else if (s.a_flag == "V") {
 
                                 s.ToRecieve_Data_orig = s.ToRecieve_Data_orig.delete2(s.doc_ctrl_nbr);
                                 s.ToRelease_Data_orig.push(initRelease_object(s.data_vl[0]));
 
                             }
-                            else
-                            {
+                            else {
                                 s.ToRelease_Data_orig = s.ToRelease_Data_orig.delete2(s.doc_ctrl_nbr);
                             }
 
@@ -1163,7 +1164,27 @@ ng_HRD_App.controller("cPayDocTrk_ctrlr", function (commonScript,$scope, $compil
                             //s.total_count_released = d.data.ToRelease.length
                             s.ToRecieve_Data.refreshTable('ToRecieve_Table', '');
                             s.ToRelease_Data.refreshTable('ToRelease_Table', '');
+                            //var vlt_code = dt
+                            //if()
+                            h.post("../cPayDocTrk/RefreshPayrollRegistryInfo3",
+                                {
+                                      payroll_year          : s.data_vl[0]
+                                    , payroll_registry_nbr  : dt
 
+                            }).then(function (rf) {
+                                toastr.options = {
+                                    closeButton   : true,
+                                    progressBar   : true,
+                                    newestOnTop   : true,
+                                    timeOut       : 3000,
+                                    positionClass : "toast-top-right"
+                                };
+                                if (rf.data.result_value == "Y") {
+                                    toastr.success(rf.data.result_msg, "Success");
+                                } else {
+                                    toastr.error(rf.data.result_msg, "Error");
+                                }
+                            })
                             swal(d.data.message, { icon: "success", });
                             ClearDocInfoFields();
                             resetModal()

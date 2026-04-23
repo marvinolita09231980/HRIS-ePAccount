@@ -1004,6 +1004,109 @@ ng_HRD_App.controller("cBIRAnnualizedTaxDetails_ctrlr", function ($scope, $compi
 
     }
 
+    //************************************//
+    //***Add-Employee-Modal (Action 2)****//
+    //************************************//
+    s.btn_add_action2 = function () {
+        s.txtb_add_empl_id          = "";
+        s.txtb_add_position         = "";
+        s.ddl_add_employment_type   = "";
+        s.lbl_add_empl_required     = "";
+        s.lbl_add_emptype_required  = "";
+
+        $("#loading_data").modal({ keyboard: false, backdrop: "static" });
+
+        h.post("../cBIRAnnualizedTax/RetrieveEmployeeList", {
+            par_empType     : s.txtb_employment_type_val || "",
+            par_payroll_year: s.txtb_ddl_year || ""
+        }).then(function (d) {
+            if (d.data.message == "success" && d.data.sp_personnelnames_annualtax_hdr_combolist.length > 0) {
+                s.employeenames_dtl = d.data.sp_personnelnames_annualtax_hdr_combolist;
+            } else {
+                s.employeenames_dtl = [];
+            }
+            $("#loading_data").modal("hide");
+            $("#modal_add_employee2").modal("show");
+        });
+    }
+
+    $('#modal_add_employee2').on('shown.bs.modal', function () {
+        var $ddl = $('#ddl_add_employee_name');
+
+        if ($ddl.hasClass('select2-hidden-accessible')) {
+            $ddl.select2('destroy');
+        }
+
+        $ddl.empty().append('<option value="">--Select Employee--</option>');
+        if (s.employeenames_dtl && s.employeenames_dtl.length > 0) {
+            $.each(s.employeenames_dtl, function (i, emp) {
+                $ddl.append($('<option>', { value: emp.empl_id, text: emp.employee_name }));
+            });
+        }
+
+        $ddl.select2({
+            width: '100%',
+            placeholder: '--Select Employee--',
+            dropdownParent: $('#modal_add_employee2')
+        });
+
+        $ddl.off('change').on('change', function () {
+            var selectedId = $(this).val();
+            if (selectedId && s.employeenames_dtl) {
+                var emp = s.employeenames_dtl.filter(function (e) { return e.empl_id == selectedId; })[0];
+                if (emp) {
+                    s.txtb_add_empl_id  = emp.empl_id;
+                    s.txtb_add_position = emp.position_title || "";
+                }
+            } else {
+                s.txtb_add_empl_id  = "";
+                s.txtb_add_position = "";
+            }
+            if (!s.$$phase) s.$apply();
+        });
+    });
+
+    s.btn_add_action2_confirm = function () {
+        var selectedEmpId = $('#ddl_add_employee_name').val();
+        var isValid = true;
+
+        s.lbl_add_empl_required    = "";
+        s.lbl_add_emptype_required = "";
+
+        if (!selectedEmpId || selectedEmpId == "") {
+            s.lbl_add_empl_required = "required field!";
+            isValid = false;
+        }
+        if (!s.ddl_add_employment_type || s.ddl_add_employment_type == "") {
+            s.lbl_add_emptype_required = "required field!";
+            isValid = false;
+        }
+
+        if (!isValid) return;
+
+        var emp = s.employeenames_dtl.filter(function (e) { return e.empl_id == selectedEmpId; })[0];
+
+        s.txtb_empl_name        = emp ? emp.employee_name  : "";
+        s.txtb_empl_id          = s.txtb_add_empl_id;
+        s.txtb_position         = s.txtb_add_position;
+        s.ddl_employment_type   = s.ddl_add_employment_type;
+
+        $('#modal_add_employee2').modal('hide');
+
+        clearentry();
+        s.isShowTextPayTemplate = false;
+        s.isShowDdlPayTemplate  = true;
+        s.isAction              = "ADD";
+        s.isShowNameInput       = true;
+        s.ishowsave             = true;
+        s.isDisabledVchNbr      = false;
+        s.isDisabledClass       = false;
+        s.isShowDdlPayClass     = true;
+        s.ModalTitle            = "Add New Record";
+
+        $("#main_modal").modal("show");
+    }
+
 
     function validatenumber(value)
     {

@@ -9,20 +9,23 @@
 using HRIS_ePAccount.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Data.Entity.Validation;
+using System.Data.SqlClient;
+using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Excel = Microsoft.Office.Interop.Excel;
-using System.Web.Script.Serialization;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Web.UI;
-using System.IO;
-using System.Drawing;
-using System.Threading.Tasks;
 using System.Text;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Script.Serialization;
+using System.Web.UI;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace HRIS_ePAccount.Controllers
 {
@@ -31,6 +34,8 @@ namespace HRIS_ePAccount.Controllers
         
         HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
         string role_id = "";
+
+        string constring = System.Configuration.ConfigurationManager.AppSettings["connetionString_act"];
 
         //*********************************************************************//
         // Created By : VJA - Created Date : 09/19/2019
@@ -213,10 +218,11 @@ namespace HRIS_ePAccount.Controllers
             var doctype = det.docmnt_type.Split(new char[] { '-' })[0];
             try
             {
-              
-                    //if ((role_id == "501" || role_id == "500" || role_id == "502" ) && doc_nbr_show == true && ISNULL(dt.doc_nbr, "") != "")
-                    //if ((role_id == "501" || role_id == "500" || role_id == "502" || role_id == "508") && doc_nbr_show == true && ISNULL(dt.doc_nbr, "") != "") //Updated By: Joseph
-                    if ((role_id == "501" || role_id == "500" || role_id == "502" || role_id == "508")) //Updated By: Joseph
+
+                //if ((role_id == "501" || role_id == "500" || role_id == "502" ) && doc_nbr_show == true && ISNULL(dt.doc_nbr, "") != "")
+                //if ((role_id == "501" || role_id == "500" || role_id == "502" || role_id == "508") && doc_nbr_show == true && ISNULL(dt.doc_nbr, "") != "") //Updated By: Joseph
+
+                if ((role_id == "501" || role_id == "500" || role_id == "502" || role_id == "508")) //Updated By: Joseph
                     {
                         //db_pacco.sp_doc_trk_nbrs_tbl_update(
                         //    det.doc_ctrl_nbr
@@ -437,6 +443,8 @@ namespace HRIS_ePAccount.Controllers
             }
 
         }
+
+        
 
         public String DbEntityValidationExceptionError(DbEntityValidationException e)
         {
@@ -1586,6 +1594,55 @@ namespace HRIS_ePAccount.Controllers
                 message = DbEntityValidationExceptionError(e);
                 icon = "error";
                 return JSON(new { message, icon }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        [HttpPost]
+        public ActionResult RefreshPayrollRegistryInfo3(string payroll_year, string payroll_registry_nbr)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(payroll_year) || string.IsNullOrWhiteSpace(payroll_registry_nbr))
+                {
+                    return Json(new { result_value = "N", result_msg = "Payroll year and registry number are required." });
+                }
+
+                using (SqlConnection conn = new SqlConnection(constring))
+                {
+                    conn.Open();
+
+                    using (var cmd = new SqlCommand("dbo.sp_refresh_payrollregistry_info3_2", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.CommandTimeout = 300;
+
+                        cmd.Parameters.AddWithValue("@p_payroll_year", payroll_year.Trim());
+                        cmd.Parameters.AddWithValue("@p_payroll_registry_nbr", payroll_registry_nbr.Trim());
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                return Json(new
+                                {
+                                    result_value = reader["result_value"].ToString(),
+                                    result_msg = reader["result_msg"].ToString()
+                                });
+                            }
+                        }
+                    }
+                }
+
+                return Json(new { result_value = "N", result_msg = "No result returned from stored procedure." });
+            }
+            catch (SqlException ex)
+            {
+                return Json(new { result_value = "N", result_msg = "SQL Error: " + ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result_value = "N", result_msg = "Error: " + ex.Message });
             }
         }
         //*********************************************************************//

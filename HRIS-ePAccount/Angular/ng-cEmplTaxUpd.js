@@ -29,7 +29,8 @@ ng_HRD_App.controller("cEmplTaxUpd_ctrlr", function (commonScript,$scope, $compi
 
     s.isAction = "";
     s.employmenttype_list = [
-        { employment_type: 'RC', employment_type_descr: 'REGULAR AND CASUAL EMPLOYEE/S' }, { employment_type: 'JO', employment_type_descr: 'JOB ORDER EMPLOYEE/S' }
+        //{ employment_type: 'RC', employment_type_descr: 'REGULAR AND CASUAL EMPLOYEE/S' }, { employment_type: 'JO', employment_type_descr: 'JOB ORDER EMPLOYEE/S' }
+         { employment_type: 'JO', employment_type_descr: 'JOB ORDER EMPLOYEE/S' }
 
     ]
 

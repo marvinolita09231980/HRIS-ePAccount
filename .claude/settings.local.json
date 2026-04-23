@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep:*)",
+      "Bash(where:*)",
+      "Bash(C:/Python312/python.exe:*)",
+      "Bash(python3:*)",
+      "Bash(python:*)",
+      "Bash(sqlcmd:*)",
+      "Bash(find \"D:\\\\GIT\\\\HRIS-ePAccount - Development\\\\HRIS-ePAccount\" -name \"*BIRAnnualized*\" -o -name \"*BIRAnnual*\" 2>/dev/null | grep -v obj | head -20)",
+      "Bash(find:*)",
+      "Bash(awk 'NR>=1580 && NR<=1650' \"D:\\\\GIT\\\\HRIS-ePAccount - Development\\\\HRIS-ePAccount\\\\Views\\\\cBIRAnnualizedTax\\\\Index.cshtml\")"
+    ]
+  }
+}

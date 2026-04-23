@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Web.Mvc;
 
@@ -42,6 +43,7 @@ namespace HRIS_ePAccount.Controllers
 
         public ActionResult GetTaxToUpdate()
         {
+            var jotx = new cRECETaxUpdController();
             db_pay.Database.CommandTimeout = int.MaxValue;
             String[] AllowUserTaxUpdApprove_list;
             bool AllowUserTaxApprove = false;
@@ -52,14 +54,14 @@ namespace HRIS_ePAccount.Controllers
             {
                 var retax = db_pay.sp_empltaxwithheld_tbl_for_apprvl("RE").ToList().Count();
                 var cetax = db_pay.sp_empltaxwithheld_tbl_for_apprvl("CE").ToList().Count();
-                var jotax = db_pay.sp_payrollemployee_tax_tbl_for_apprvl(year, "N").ToList().Count();
+                var jotax = jotx.GetTaxJOForApproval(year, "N").ToList().Count();
                 var netax = db_pay.sp_payrollemployee_tax_tbl_for_apprvl_NE(year, "N").ToList().Count();
                 var rece_phic_tax = db_pay.sp_payrollemployee_tax_tbl_phic_rece(year, "N").ToList().Count();
                 var rctax = retax + cetax;
                 int updtax = rctax + jotax + netax + rece_phic_tax;
 
                 for (var x = 0; x < AllowUserTaxUpdApprove_list.Count(); x++)
-                {
+                { 
                     if (userid == AllowUserTaxUpdApprove_list[x])
                     {
                         AllowUserTaxApprove = true;

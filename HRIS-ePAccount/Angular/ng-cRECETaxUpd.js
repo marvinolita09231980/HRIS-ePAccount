@@ -180,7 +180,6 @@ ng_HRD_App.controller("cRECETaxUpd_ctrlr", function (commonScript,$scope, $compi
 
     var init_table_data_jo = function (par_data) {
         s.datalistgrid_jo = par_data;
-
         s.datalistgrid_jo_Table = $('#datalist_grid_jo').dataTable(
             {
 
@@ -188,6 +187,7 @@ ng_HRD_App.controller("cRECETaxUpd_ctrlr", function (commonScript,$scope, $compi
                 stateSave: false,
                 sDom: 'rt<"bottom"p>',
                 pageLength: 5,
+
                 columns: [
 
                     {
@@ -195,41 +195,31 @@ ng_HRD_App.controller("cRECETaxUpd_ctrlr", function (commonScript,$scope, $compi
                             return "<div class='btn-block text-center'>" + data + "</div>";
                         }
                     },
-
-
-
                     {
                         "mData": "employee_name", "mRender": function (data, type, full, row) {
                             return "<div class='btn-block text-left'>" + data + "</div>";
                         }
                     },
-
                     {
                         "mData": "basic_tax_rate", "mRender": function (data, type, full, row) {
-                            
                             return "<div class='btn-block text-right'>" + data + "</div>";
                         }
                     },
-
                     {
                         "mData": "tax_perc", "mRender": function (data, type, full, row) {
                           
                             return "<div class='btn-block text-right'>" + data + "</div>";
                         }
                     },
-
                     {
                         "mData": "vat_perc", "mRender": function (data, type, full, row) {
                            
                             return "<div class='btn-block text-right'>" + data + "</div>";
                         }
                     },
-
-
-
                     {
                         "mData": "effective_date", "mRender": function (data, type, full, row) {
-                            
+                           
                             return "<div class='btn-block text-right'>" + data + "</div>";
                         }
                     },
@@ -258,7 +248,14 @@ ng_HRD_App.controller("cRECETaxUpd_ctrlr", function (commonScript,$scope, $compi
                     }
 
                 ],
-
+                "fnRowCallback": function (row, data, index) {
+                    $(row).attr('id', index);
+                    if (data.rcrd_status === 'N') {
+                        $(row).css('background-color', '#f8d7da');
+                        $(row).css('color', '#721c24');
+                    }
+                    $compile(row)($scope);
+                },
 
                 "createdRow": function (row, data, index) {
                     $(row).attr('id', index);
@@ -271,6 +268,8 @@ ng_HRD_App.controller("cRECETaxUpd_ctrlr", function (commonScript,$scope, $compi
         $("div.toolbar").html('<b>Custom tool bar! Text/images etc.</b>');
     }
 
+   
+    
 
     var init_table_data_ne = function (par_data) {
         s.datalistgrid_ne = par_data;
@@ -631,26 +630,26 @@ ng_HRD_App.controller("cRECETaxUpd_ctrlr", function (commonScript,$scope, $compi
     }
 
     s.btn_approve_jo = function (row) {
-        var data = s.datalistgrid_jo[row]
-        
-        var empl_id = data.empl_id;
-        var effective_date = data.effective_date;
-        var payroll_year = data.payroll_year;
-        var employment_type = data.employment_type;
+        var jotx_row = s.datalistgrid_jo[row]
+        console.log(jotx_row)
+        var empl_id = jotx_row.empl_id;
+        var effective_date = jotx_row.effective_date;
+        var payroll_year = jotx_row.payroll_year;
+        var employment_type = jotx_row.employment_type;
         var status = "";
         var swaltitle = ""
         var swaltext = ""
-        if (data.rcrd_status == "N") {
+        if (jotx_row.rcrd_status == "N") {
             status = "A";
             swaltitle = "Approve this Record?";
             swaltext ="Are you sure to approve this record?"
         }
-        else if (data.rcrd_status == "A") {
+        else if (jotx_row.rcrd_status == "A") {
             status = "N";
             swaltitle = "Set to New this Record?";
             swaltext = "Are you sure to set New this record?"
         }
-        else if (data.rcrd_status == "R") {
+        else if (jotx_row.rcrd_status == "R") {
             status = "A";
             swaltitle = "Approve this Record?";
             swaltext = "Are you sure to approve this record?"
@@ -665,18 +664,15 @@ ng_HRD_App.controller("cRECETaxUpd_ctrlr", function (commonScript,$scope, $compi
             if (approve) {
                 cs.loading("show")
                 h.post("../cRECETaxUpd/approved_reject_tax_jo", {
-                    empl_id: empl_id
-                    , effective_date: effective_date
-                    , payroll_year: payroll_year
-                    , employment_type: employment_type
-                    , nstatus: status
-                    , status: data.rcrd_status
+                      nstatus: status
+                    , status: jotx_row.rcrd_status
+                    , data : jotx_row
                 }).then(function (d) {
-                    if (d.data.icon == "success") {
-                        s.datalistgrid_jo = d.data.sp_payrollemployee_tax_tbl_for_apprvl.refreshTable("datalist_grid_jo", "" + row)
-                    }
                     cs.loading("hide")
                     swal({ title: "Success", text: d.data.message, icon: d.data.icon })
+                    if (d.data.icon == "success") {
+                        s.getJOData();
+                    }
                 })
             }
         })
@@ -726,11 +722,11 @@ ng_HRD_App.controller("cRECETaxUpd_ctrlr", function (commonScript,$scope, $compi
                     , nstatus: status
                     , status: data.rcrd_status
                 }).then(function (d) {
-                    if (d.data.icon == "success") {
-                        s.datalistgrid_jo = d.data.sp_payrollemployee_tax_tbl_for_apprvl.refreshTable("datalist_grid_jo", "" + row)
-                    }
                     cs.loading("hide")
                     swal({ title: "Success", text: d.data.message, icon: d.data.icon })
+                    if (d.data.icon == "success") {
+                        s.getJOData();
+                    }
                 })
             }
         })

@@ -29,6 +29,7 @@ namespace HRIS_ePAccount.Controllers
     {
 
         HRIS_ACTEntities db_pacco = new HRIS_ACTEntities();
+        
         User_Menu um = new User_Menu();
         //*********************************************************************//
         // Created By : JRV - Created Date : 09/19/2019

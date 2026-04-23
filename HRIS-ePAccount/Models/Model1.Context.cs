@@ -34,15 +34,6 @@ namespace HRIS_ePAccount.Models
         public virtual DbSet<empl_taxwithheld_tbl> empl_taxwithheld_tbl { get; set; }
         public virtual DbSet<payrollemployee_tax_phic_rece_tbl> payrollemployee_tax_phic_rece_tbl { get; set; }
     
-        public virtual ObjectResult<sp_empltaxwithheld_tbl_for_apprvl_Result> sp_empltaxwithheld_tbl_for_apprvl(string p_employment_type)
-        {
-            var p_employment_typeParameter = p_employment_type != null ?
-                new ObjectParameter("p_employment_type", p_employment_type) :
-                new ObjectParameter("p_employment_type", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_empltaxwithheld_tbl_for_apprvl_Result>("sp_empltaxwithheld_tbl_for_apprvl", p_employment_typeParameter);
-        }
-    
         public virtual int sp_payrollemployee_tax_hdr_tbl_update(string par_empl_id, Nullable<System.DateTime> par_effective_date, string par_rcrd_status, string par_user_id_updated_by)
         {
             var par_empl_idParameter = par_empl_id != null ?
@@ -62,19 +53,6 @@ namespace HRIS_ePAccount.Models
                 new ObjectParameter("par_user_id_updated_by", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_payrollemployee_tax_hdr_tbl_update", par_empl_idParameter, par_effective_dateParameter, par_rcrd_statusParameter, par_user_id_updated_byParameter);
-        }
-    
-        public virtual ObjectResult<sp_payrollemployee_tax_tbl_for_apprvl_Result> sp_payrollemployee_tax_tbl_for_apprvl(string par_year, string par_rcrd_status)
-        {
-            var par_yearParameter = par_year != null ?
-                new ObjectParameter("par_year", par_year) :
-                new ObjectParameter("par_year", typeof(string));
-    
-            var par_rcrd_statusParameter = par_rcrd_status != null ?
-                new ObjectParameter("par_rcrd_status", par_rcrd_status) :
-                new ObjectParameter("par_rcrd_status", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_payrollemployee_tax_tbl_for_apprvl_Result>("sp_payrollemployee_tax_tbl_for_apprvl", par_yearParameter, par_rcrd_statusParameter);
         }
     
         public virtual ObjectResult<sp_payrollemployee_tax_tbl_for_apprvl_NE_Result> sp_payrollemployee_tax_tbl_for_apprvl_NE(string par_year, string par_rcrd_status)
@@ -101,6 +79,28 @@ namespace HRIS_ePAccount.Models
                 new ObjectParameter("par_rcrd_status", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_payrollemployee_tax_tbl_phic_rece_Result>("sp_payrollemployee_tax_tbl_phic_rece", par_yearParameter, par_rcrd_statusParameter);
+        }
+    
+        public virtual ObjectResult<sp_empltaxwithheld_tbl_for_apprvl_Result> sp_empltaxwithheld_tbl_for_apprvl(string p_employment_type)
+        {
+            var p_employment_typeParameter = p_employment_type != null ?
+                new ObjectParameter("p_employment_type", p_employment_type) :
+                new ObjectParameter("p_employment_type", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_empltaxwithheld_tbl_for_apprvl_Result>("sp_empltaxwithheld_tbl_for_apprvl", p_employment_typeParameter);
+        }
+    
+        public virtual ObjectResult<sp_payrollemployee_tax_tbl_for_apprvl_Result> sp_payrollemployee_tax_tbl_for_apprvl(string par_year, string par_rcrd_status)
+        {
+            var par_yearParameter = par_year != null ?
+                new ObjectParameter("par_year", par_year) :
+                new ObjectParameter("par_year", typeof(string));
+    
+            var par_rcrd_statusParameter = par_rcrd_status != null ?
+                new ObjectParameter("par_rcrd_status", par_rcrd_status) :
+                new ObjectParameter("par_rcrd_status", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_payrollemployee_tax_tbl_for_apprvl_Result>("sp_payrollemployee_tax_tbl_for_apprvl", par_yearParameter, par_rcrd_statusParameter);
         }
     }
 }

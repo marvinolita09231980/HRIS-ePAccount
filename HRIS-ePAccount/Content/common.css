@@ -388,7 +388,7 @@ div.parent_required::before {
     color: red;
     padding: 0px !important;
     margin: 0px !important;
-    float: left;
+    display: block;
 }
 
 .my-date {

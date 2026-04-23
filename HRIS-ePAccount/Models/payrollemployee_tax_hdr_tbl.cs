@@ -30,5 +30,6 @@ namespace HRIS_ePAccount.Models
         public Nullable<decimal> bus_tax_perc { get; set; }
         public Nullable<decimal> vat_perc { get; set; }
         public Nullable<decimal> exmpt_amt { get; set; }
+        public Nullable<decimal> grosspay_without_vat { get; set; }
     }
 }
