@@ -11219,35 +11219,6 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Name="sum_oth_amt3" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="tot_amt" Type="Decimal" Precision="19" Scale="4" />
         </EntityType>
-        <EntityType Name="payrollemployee_tax_dtl_tbl">
-          <Key>
-            <PropertyRef Name="effective_date" />
-            <PropertyRef Name="empl_id" />
-            <PropertyRef Name="voucher_nbr" />
-            <PropertyRef Name="period_from" />
-            <PropertyRef Name="period_to" />
-          </Key>
-          <Property Name="effective_date" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="empl_id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="voucher_nbr" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="payroll_year" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
-          <Property Name="payroll_month" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
-          <Property Name="payrolltemplate_code" Type="String" MaxLength="3" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="pera_ca_amt" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="gsis_ps" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="phic_ps" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="hdmf_ps" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="hazard_pay" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="subsistence_allowance" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="laundry_allowance" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="gross_pay" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="wtax_amt" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="remarks" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="rcrd_status" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="acctclass_code" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
-          <Property Name="period_from" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="period_to" Type="DateTime" Nullable="false" Precision="0" />
-        </EntityType>
         <EntityType Name="payrollemployee_tax_hdr_tbl_backup">
           <Key>
             <PropertyRef Name="empl_id" />
@@ -12036,13 +12007,6 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Name="upper_limit" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="tax_on_lower_limit" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="tax_on_excess" Type="Decimal" Precision="19" Scale="4" />
-        </EntityType>
-        <EntityType Name="taxrate_percentage_tbl">
-          <Key>
-            <PropertyRef Name="taxrate_percentage" />
-          </Key>
-          <Property Name="taxrate_percentage" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
-          <Property Name="taxrate_description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="AnnualizedEmployeeTax">
           <Key>
@@ -16250,7 +16214,6 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <EntitySet Name="idoc_trk_tbl" EntityType="Self.idoc_trk_tbl" />
           <EntitySet Name="jo_tax_tbl" EntityType="Self.jo_tax_tbl" />
           <EntitySet Name="obr_tracking_tbl" EntityType="Self.obr_tracking_tbl" />
-          <EntitySet Name="payrollemployee_tax_dtl_tbl" EntityType="Self.payrollemployee_tax_dtl_tbl" />
           <EntitySet Name="payrollemployee_tax_hdr_tbl_backup" EntityType="Self.payrollemployee_tax_hdr_tbl_backup" />
           <EntitySet Name="payrollregistry_dtl_unpost_tbl" EntityType="Self.payrollregistry_dtl_unpost_tbl" />
           <EntitySet Name="payrollregistryaccounting_hdr_ret_tbl" EntityType="Self.payrollregistryaccounting_hdr_ret_tbl" />
@@ -16283,7 +16246,6 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <EntitySet Name="remittancetype_tbl" EntityType="Self.remittancetype_tbl" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
           <EntitySet Name="tax_tbl" EntityType="Self.tax_tbl" />
-          <EntitySet Name="taxrate_percentage_tbl" EntityType="Self.taxrate_percentage_tbl" />
           <EntitySet Name="AnnualizedEmployeeTaxes" EntityType="Self.AnnualizedEmployeeTax" />
           <EntitySet Name="AnnualTaxResults" EntityType="Self.AnnualTaxResult" />
           <EntitySet Name="idoc_trk_tbl_ret_chk" EntityType="Self.idoc_trk_tbl_ret_chk" />
@@ -17776,6 +17738,8 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
             <Parameter Name="p_empl_id" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="payrollemployee_tax_hdr_tbl" EntityType="HRIS_ACTModel.payrollemployee_tax_hdr_tbl" />
+          <EntitySet Name="taxrate_percentage_tbl" EntityType="HRIS_ACTModel.taxrate_percentage_tbl" />
+          <EntitySet Name="payrollemployee_tax_dtl_tbl" EntityType="HRIS_ACTModel.payrollemployee_tax_dtl_tbl" />
         </EntityContainer>
         <ComplexType Name="sp_accountingsystemsetup_tbl_list_Result">
           <Property Type="String" Name="syssetup_type_code" Nullable="false" MaxLength="2" />
@@ -25047,6 +25011,43 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
           <Property Name="exmpt_amt" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="grosspay_without_vat" Type="Decimal" Precision="19" Scale="4" />
         </EntityType>
+        <EntityType Name="taxrate_percentage_tbl">
+          <Key>
+            <PropertyRef Name="taxrate_percentage" />
+          </Key>
+          <Property Name="taxrate_percentage" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="taxrate_description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="payrollemployee_tax_dtl_tbl">
+          <Key>
+            <PropertyRef Name="effective_date" />
+            <PropertyRef Name="empl_id" />
+            <PropertyRef Name="voucher_nbr" />
+            <PropertyRef Name="payrolltemplate_code" />
+            <PropertyRef Name="period_from" />
+            <PropertyRef Name="period_to" />
+          </Key>
+          <Property Name="effective_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="empl_id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="voucher_nbr" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="payroll_year" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="payroll_month" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="payrolltemplate_code" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="pera_ca_amt" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="gsis_ps" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="phic_ps" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="hdmf_ps" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="hazard_pay" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="subsistence_allowance" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="laundry_allowance" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="gross_pay" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="wtax_amt" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="remarks" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="rcrd_status" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="acctclass_code" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="period_from" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="period_to" Type="DateTime" Nullable="false" Precision="0" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -25458,32 +25459,6 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
                 <ScalarProperty Name="sum_oth_amt2" ColumnName="sum_oth_amt2" />
                 <ScalarProperty Name="sum_oth_amt3" ColumnName="sum_oth_amt3" />
                 <ScalarProperty Name="tot_amt" ColumnName="tot_amt" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="payrollemployee_tax_dtl_tbl">
-            <EntityTypeMapping TypeName="HRIS_ACTModel.payrollemployee_tax_dtl_tbl">
-              <MappingFragment StoreEntitySet="payrollemployee_tax_dtl_tbl">
-                <ScalarProperty Name="period_to" ColumnName="period_to" />
-                <ScalarProperty Name="period_from" ColumnName="period_from" />
-                <ScalarProperty Name="effective_date" ColumnName="effective_date" />
-                <ScalarProperty Name="empl_id" ColumnName="empl_id" />
-                <ScalarProperty Name="voucher_nbr" ColumnName="voucher_nbr" />
-                <ScalarProperty Name="payroll_year" ColumnName="payroll_year" />
-                <ScalarProperty Name="payroll_month" ColumnName="payroll_month" />
-                <ScalarProperty Name="payrolltemplate_code" ColumnName="payrolltemplate_code" />
-                <ScalarProperty Name="pera_ca_amt" ColumnName="pera_ca_amt" />
-                <ScalarProperty Name="gsis_ps" ColumnName="gsis_ps" />
-                <ScalarProperty Name="phic_ps" ColumnName="phic_ps" />
-                <ScalarProperty Name="hdmf_ps" ColumnName="hdmf_ps" />
-                <ScalarProperty Name="hazard_pay" ColumnName="hazard_pay" />
-                <ScalarProperty Name="subsistence_allowance" ColumnName="subsistence_allowance" />
-                <ScalarProperty Name="laundry_allowance" ColumnName="laundry_allowance" />
-                <ScalarProperty Name="gross_pay" ColumnName="gross_pay" />
-                <ScalarProperty Name="wtax_amt" ColumnName="wtax_amt" />
-                <ScalarProperty Name="remarks" ColumnName="remarks" />
-                <ScalarProperty Name="rcrd_status" ColumnName="rcrd_status" />
-                <ScalarProperty Name="acctclass_code" ColumnName="acctclass_code" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -26227,14 +26202,6 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
                 <ScalarProperty Name="upper_limit" ColumnName="upper_limit" />
                 <ScalarProperty Name="tax_on_lower_limit" ColumnName="tax_on_lower_limit" />
                 <ScalarProperty Name="tax_on_excess" ColumnName="tax_on_excess" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="taxrate_percentage_tbl">
-            <EntityTypeMapping TypeName="HRIS_ACTModel.taxrate_percentage_tbl">
-              <MappingFragment StoreEntitySet="taxrate_percentage_tbl">
-                <ScalarProperty Name="taxrate_percentage" ColumnName="taxrate_percentage" />
-                <ScalarProperty Name="taxrate_description" ColumnName="taxrate_description" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -38063,6 +38030,40 @@ warning 6002: The table/view 'HRIS_ACT.dbo.vw_subdepartments_tbl_list' does not 
                 <ScalarProperty Name="bir_class" ColumnName="bir_class" />
                 <ScalarProperty Name="effective_date" ColumnName="effective_date" />
                 <ScalarProperty Name="empl_id" ColumnName="empl_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="taxrate_percentage_tbl">
+            <EntityTypeMapping TypeName="HRIS_ACTModel.taxrate_percentage_tbl">
+              <MappingFragment StoreEntitySet="taxrate_percentage_tbl">
+                <ScalarProperty Name="taxrate_description" ColumnName="taxrate_description" />
+                <ScalarProperty Name="taxrate_percentage" ColumnName="taxrate_percentage" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="payrollemployee_tax_dtl_tbl">
+            <EntityTypeMapping TypeName="HRIS_ACTModel.payrollemployee_tax_dtl_tbl">
+              <MappingFragment StoreEntitySet="payrollemployee_tax_dtl_tbl">
+                <ScalarProperty Name="period_to" ColumnName="period_to" />
+                <ScalarProperty Name="period_from" ColumnName="period_from" />
+                <ScalarProperty Name="acctclass_code" ColumnName="acctclass_code" />
+                <ScalarProperty Name="rcrd_status" ColumnName="rcrd_status" />
+                <ScalarProperty Name="remarks" ColumnName="remarks" />
+                <ScalarProperty Name="wtax_amt" ColumnName="wtax_amt" />
+                <ScalarProperty Name="gross_pay" ColumnName="gross_pay" />
+                <ScalarProperty Name="laundry_allowance" ColumnName="laundry_allowance" />
+                <ScalarProperty Name="subsistence_allowance" ColumnName="subsistence_allowance" />
+                <ScalarProperty Name="hazard_pay" ColumnName="hazard_pay" />
+                <ScalarProperty Name="hdmf_ps" ColumnName="hdmf_ps" />
+                <ScalarProperty Name="phic_ps" ColumnName="phic_ps" />
+                <ScalarProperty Name="gsis_ps" ColumnName="gsis_ps" />
+                <ScalarProperty Name="pera_ca_amt" ColumnName="pera_ca_amt" />
+                <ScalarProperty Name="payrolltemplate_code" ColumnName="payrolltemplate_code" />
+                <ScalarProperty Name="payroll_month" ColumnName="payroll_month" />
+                <ScalarProperty Name="payroll_year" ColumnName="payroll_year" />
+                <ScalarProperty Name="voucher_nbr" ColumnName="voucher_nbr" />
+                <ScalarProperty Name="empl_id" ColumnName="empl_id" />
+                <ScalarProperty Name="effective_date" ColumnName="effective_date" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

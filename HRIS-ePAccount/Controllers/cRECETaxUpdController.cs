@@ -150,7 +150,8 @@ namespace HRIS_ePAccount.Controllers
         {
             try
             {
-                var sp_payrollemployee_tax_tbl_for_apprvl = db_pay.sp_payrollemployee_tax_tbl_for_apprvl(year, status).ToList();
+                
+                var sp_payrollemployee_tax_tbl_for_apprvl = GetTaxJOForApproval(year, status).ToList();
 
                 return JSON(new { message = "success", icon = "success", sp_payrollemployee_tax_tbl_for_apprvl }, JsonRequestBehavior.AllowGet);
             }

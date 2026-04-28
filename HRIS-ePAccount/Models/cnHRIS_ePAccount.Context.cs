@@ -52,7 +52,6 @@ namespace HRIS_ePAccount.Models
         public virtual DbSet<idoc_trk_tbl> idoc_trk_tbl { get; set; }
         public virtual DbSet<jo_tax_tbl> jo_tax_tbl { get; set; }
         public virtual DbSet<obr_tracking_tbl> obr_tracking_tbl { get; set; }
-        public virtual DbSet<payrollemployee_tax_dtl_tbl> payrollemployee_tax_dtl_tbl { get; set; }
         public virtual DbSet<payrollemployee_tax_hdr_tbl_backup> payrollemployee_tax_hdr_tbl_backup { get; set; }
         public virtual DbSet<payrollregistry_dtl_unpost_tbl> payrollregistry_dtl_unpost_tbl { get; set; }
         public virtual DbSet<payrollregistryaccounting_hdr_ret_tbl> payrollregistryaccounting_hdr_ret_tbl { get; set; }
@@ -85,7 +84,6 @@ namespace HRIS_ePAccount.Models
         public virtual DbSet<remittancetype_tbl> remittancetype_tbl { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<tax_tbl> tax_tbl { get; set; }
-        public virtual DbSet<taxrate_percentage_tbl> taxrate_percentage_tbl { get; set; }
         public virtual DbSet<AnnualizedEmployeeTax> AnnualizedEmployeeTaxes { get; set; }
         public virtual DbSet<AnnualTaxResult> AnnualTaxResults { get; set; }
         public virtual DbSet<idoc_trk_tbl_ret_chk> idoc_trk_tbl_ret_chk { get; set; }
@@ -195,6 +193,8 @@ namespace HRIS_ePAccount.Models
         public virtual DbSet<generate_tax_empl_hdr_success_tbl> generate_tax_empl_hdr_success_tbl { get; set; }
         public virtual DbSet<generate_tax_errors_tbl> generate_tax_errors_tbl { get; set; }
         public virtual DbSet<payrollemployee_tax_hdr_tbl> payrollemployee_tax_hdr_tbl { get; set; }
+        public virtual DbSet<taxrate_percentage_tbl> taxrate_percentage_tbl { get; set; }
+        public virtual DbSet<payrollemployee_tax_dtl_tbl> payrollemployee_tax_dtl_tbl { get; set; }
     
         [DbFunction("HRIS_ACTEntities", "func_get_personnel_names")]
         public virtual IQueryable<func_get_personnel_names_Result> func_get_personnel_names(Nullable<System.DateTime> par_period_to)

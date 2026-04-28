@@ -266,8 +266,6 @@ namespace HRIS_ePAccount.Controllers
             {
                 data = Convert.ToDateTime(value);
             }
-
-
             return data;
         }
 
@@ -281,12 +279,7 @@ namespace HRIS_ePAccount.Controllers
             return Json(new { bir_class, message = "success" }, JsonRequestBehavior.AllowGet);
         }
 
-        /// <summary>
-        /// Retrieves the vat_value from the row with the latest effective_date
-        /// for an employee, where status = 1.
-        /// </summary>
-        /// <param name="emplId">The employee ID.</param>
-        /// <returns>The vat_value of the most recent active record, or null if none exists.</returns>
+       
         public decimal? GetEmployeeVatValue(string emplId)
         {
             const string query = @"

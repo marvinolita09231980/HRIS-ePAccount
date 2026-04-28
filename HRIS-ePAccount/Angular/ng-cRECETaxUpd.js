@@ -512,7 +512,7 @@ ng_HRD_App.controller("cRECETaxUpd_ctrlr", function (commonScript,$scope, $compi
 
         var year = $("#ddl_year").val() == undefined ? "" : $("#ddl_year").val();
         var status = $("#ddl_status").val() == undefined ? "" : $("#ddl_status").val();
-        cs.loading("show")
+       
         h.post("../cRECETaxUpd/sp_payrollemployee_tax_tbl_for_apprvl", { year: year, status: status}).then(function (d) {
             if (d.data.icon == "success") {
                 s.datalistgrid_jo = d.data.sp_payrollemployee_tax_tbl_for_apprvl.refreshTable("datalist_grid_jo", "")
@@ -631,7 +631,7 @@ ng_HRD_App.controller("cRECETaxUpd_ctrlr", function (commonScript,$scope, $compi
 
     s.btn_approve_jo = function (row) {
         var jotx_row = s.datalistgrid_jo[row]
-        console.log(jotx_row)
+       
         var empl_id = jotx_row.empl_id;
         var effective_date = jotx_row.effective_date;
         var payroll_year = jotx_row.payroll_year;
@@ -671,7 +671,8 @@ ng_HRD_App.controller("cRECETaxUpd_ctrlr", function (commonScript,$scope, $compi
                     cs.loading("hide")
                     swal({ title: "Success", text: d.data.message, icon: d.data.icon })
                     if (d.data.icon == "success") {
-                        s.getJOData();
+                        s.datalistgrid_jo = d.data.sp_payrollemployee_tax_tbl_for_apprvl.refreshTable("datalist_grid_jo", "")
+                      
                     }
                 })
             }

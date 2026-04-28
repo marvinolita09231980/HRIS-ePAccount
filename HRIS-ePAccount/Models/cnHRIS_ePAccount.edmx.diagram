@@ -30,7 +30,6 @@
         <EntityTypeShape EntityType="HRIS_ACTModel.idoc_trk_tbl" Width="1.5" PointX="14.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.jo_tax_tbl" Width="1.5" PointX="14.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.obr_tracking_tbl" Width="1.5" PointX="14.75" PointY="8.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.payrollemployee_tax_dtl_tbl" Width="1.5" PointX="14.75" PointY="12.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.payrollemployee_tax_hdr_tbl_backup" Width="1.5" PointX="16.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.payrollregistry_dtl_unpost_tbl" Width="1.5" PointX="2.75" PointY="16.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.payrollregistryaccounting_hdr_ret_tbl" Width="1.5" PointX="16.75" PointY="5.75" IsExpanded="true" />
@@ -63,7 +62,6 @@
         <EntityTypeShape EntityType="HRIS_ACTModel.remittancetype_tbl" Width="1.5" PointX="8.75" PointY="23.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.sysdiagram" Width="1.5" PointX="24.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.tax_tbl" Width="1.5" PointX="24.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.taxrate_percentage_tbl" Width="1.5" PointX="24.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.AnnualizedEmployeeTax" Width="1.5" PointX="24.75" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.AnnualTaxResult" Width="1.5" PointX="24.75" PointY="21.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.idoc_trk_tbl_ret_chk" Width="1.5" PointX="0.75" PointY="26.75" IsExpanded="true" />
@@ -174,6 +172,8 @@
         <EntityTypeShape EntityType="HRIS_ACTModel.generate_tax_errors_tbl" Width="1.5" PointX="49.375" PointY="3.75" />
         <AssociationConnector Association="HRIS_ACTModel.FK_hdr_to_dtl_batch" />
         <EntityTypeShape EntityType="HRIS_ACTModel.payrollemployee_tax_hdr_tbl" Width="1.5" PointX="49.375" PointY="7.75" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.taxrate_percentage_tbl" Width="1.5" PointX="49.375" PointY="13.75" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.payrollemployee_tax_dtl_tbl" Width="1.5" PointX="49.375" PointY="16.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
