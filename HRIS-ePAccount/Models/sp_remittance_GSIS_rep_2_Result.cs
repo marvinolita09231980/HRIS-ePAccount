@@ -57,6 +57,9 @@ namespace HRIS_ePAccount.Models
         public Nullable<decimal> p_gsis_ehp { get; set; }
         public Nullable<decimal> p_gsis_hip { get; set; }
         public Nullable<decimal> p_gsis_addl_ins { get; set; }
+        public Nullable<decimal> gsel { get; set; }
+        public Nullable<decimal> lrp { get; set; }
+        public Nullable<decimal> ebike_ln { get; set; }
         public string remittance_status_order { get; set; }
         public string due_month { get; set; }
         public string organization_name { get; set; }

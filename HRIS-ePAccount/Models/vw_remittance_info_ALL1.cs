@@ -89,5 +89,8 @@ namespace HRIS_ePAccount.Models
         public Nullable<decimal> uploaded_amount { get; set; }
         public Nullable<decimal> gfaleducnl_ln { get; set; }
         public Nullable<decimal> mpl_lite_ln { get; set; }
+        public Nullable<decimal> gsel { get; set; }
+        public Nullable<decimal> lrp { get; set; }
+        public Nullable<decimal> ebike_ln { get; set; }
     }
 }

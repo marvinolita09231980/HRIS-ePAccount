@@ -2228,6 +2228,10 @@
         s.fd.txtb_other_loan3 = currency(f.p_other_loan3)
         s.fd.txtb_gfaleducnl_ln = currency(f.gfaleducnl_ln)
         s.fd.txtb_mpl_lite_ln = currency(f.mpl_lite_ln)
+        s.fd.txtb_gsel = currency(f.gsel)
+        s.fd.txtb_lrp = currency(f.lrp)
+        s.fd.txtb_ebike_ln = currency(f.ebike_ln)
+
 
 
         //if ((elEmpty(f.o_gsis_ps) || f.o_gsis_ps == 0) && (elEmpty(f.o_gsis_gs)|| f.o_gsis_ps == 0))

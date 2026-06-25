@@ -88,5 +88,8 @@ namespace HRIS_ePAccount.Models
         public string uploaded_amount { get; set; }
         public string gfaleducnl_ln { get; set; }
         public string mpl_lite_ln { get; set; }
+        public string gsel { get; set; }
+        public string lrp { get; set; }
+        public string ebike_ln { get; set; }
     }
 }

@@ -440,8 +440,8 @@
 
 
 
-                    <div class="form-group row" ng-show="show_div_gsis">
-                        @*<div class="col-sm-12">
+                <div class="form-group row" ng-show="show_div_gsis">
+                    @*<div class="col-sm-12">
             <div class="form-group row">
                 <div class="col-6">
                     <label class="font-bold">PROCESS</label>
@@ -455,52 +455,58 @@
         </div>*@
 
 
-                        <div class="col-sm-3"> <label class="font-bold"> GSIS GS:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_gs" id="txtb_p_gsis_gs" disabled /></div>
-                        <div class="col-sm-3"> <label class="font-bold"> GSIS PS:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_ps" id="txtb_p_gsis_ps" disabled /></div>
-                        <div class="col-sm-3"> <label class="font-bold"> SIF:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_sif_gs" id="txtb_p_sif_gs" disabled /></div>
-                        <div class="col-sm-3"> <label class="font-bold"> GSIS OULI:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_uoli" id="txtb_p_gsis_uoli" disabled /></div>
-                        <div class="col-sm-3"> <label class="font-bold"> EHP:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_ehp" id="txtb_p_gsis_ehp" disabled /></div>
-                        <div class="col-sm-3"> <label class="font-bold"> HIP:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_hip" id="txtb_p_gsis_hip" disabled /></div>
-                        <div class="col-sm-3"> <label class="font-bold"> CEAP:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_ceap" id="txtb_p_gsis_ceap" disabled /></div>
-                        <div class="col-sm-3"> <label class="font-bold"> ADD. INS.:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_addl_ins" id="txtb_p_gsis_addl_ins" disabled /></div>
-                        <div class="col-sm-3"> <label class="font-bold"> CONSO LN.:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_conso_ln" id="txtb_p_gsis_conso_ln" disabled /></div>
-                        <div class="col-sm-3"> <label class="font-bold"> POL. REG.:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_policy_reg_ln" id="txtb_p_gsis_policy_reg_ln" disabled /></div>
-                        <div class="col-sm-3"> <label class="font-bold"> POL. OPT.:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_policy_opt_ln" id="txtb_p_gsis_policy_opt_ln" disabled /></div>
-                        <div class="col-sm-3"> <label class="font-bold"> EMERGENCY:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_emergency_ln" id="txtb_p_gsis_emergency_ln" disabled /></div>
-                        <div class="col-sm-3"> <label class="font-bold"> E-CARD:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_ecard_ln" id="txtb_p_gsis_ecard_ln" disabled /></div>
-                        <div class="col-sm-3"> <label class="font-bold"> EDUC. ASST.:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_educ_asst_ln" id="txtb_p_gsis_educ_asst_ln" disabled /></div>
-                        <div class="col-sm-3"> <label class="font-bold"> REAL STATE:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_real_state_ln" id="txtb_p_gsis_real_state_ln" disabled /></div>
-                        <div class="col-sm-3"> <label class="font-bold"> SOS:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_sos_ln" id="txtb_p_gsis_sos_ln" disabled /></div>
-                        <div class="col-sm-3"> <label class="font-bold"> HELP:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_help" id="txtb_p_gsis_help" disabled /></div>
-                        <div class="col-sm-3"> <label class="font-bold"> MPL:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_other_loan1" id="txtb_p_other_loan1" disabled /></div>
-                        <div class="col-sm-3"> <label class="font-bold"> GFAL:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_other_loan2" id="txtb_p_other_loan2" disabled /></div>
-                        <div class="col-sm-3"> <label class="font-bold"> CPL:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_other_loan3" id="txtb_p_other_loan3" disabled /></div>
-                        <div class="col-sm-3"> <label class="font-bold"> MPL LITE:</label></div>
-                        <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_mpl_lite_ln" id="txtb_mpl_lite_ln" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> GSIS GS:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_gs" id="txtb_p_gsis_gs" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> GSIS PS:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_ps" id="txtb_p_gsis_ps" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> SIF:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_sif_gs" id="txtb_p_sif_gs" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> GSIS OULI:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_uoli" id="txtb_p_gsis_uoli" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> EHP:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_ehp" id="txtb_p_gsis_ehp" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> HIP:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_hip" id="txtb_p_gsis_hip" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> CEAP:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_ceap" id="txtb_p_gsis_ceap" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> ADD. INS.:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_addl_ins" id="txtb_p_gsis_addl_ins" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> CONSO LN.:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_conso_ln" id="txtb_p_gsis_conso_ln" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> POL. REG.:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_policy_reg_ln" id="txtb_p_gsis_policy_reg_ln" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> POL. OPT.:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_policy_opt_ln" id="txtb_p_gsis_policy_opt_ln" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> EMERGENCY:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_emergency_ln" id="txtb_p_gsis_emergency_ln" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> E-CARD:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_ecard_ln" id="txtb_p_gsis_ecard_ln" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> EDUC. ASST.:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_educ_asst_ln" id="txtb_p_gsis_educ_asst_ln" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> REAL STATE:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_real_state_ln" id="txtb_p_gsis_real_state_ln" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> SOS:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_sos_ln" id="txtb_p_gsis_sos_ln" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> HELP:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_gsis_help" id="txtb_p_gsis_help" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> MPL:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_other_loan1" id="txtb_p_other_loan1" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> GFAL:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_other_loan2" id="txtb_p_other_loan2" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> CPL:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_p_other_loan3" id="txtb_p_other_loan3" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> MPL LITE:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_mpl_lite_ln" id="txtb_mpl_lite_ln" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> GSEL:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_gsel" id="txtb_gsel" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> LRP:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_lrp" id="txtb_lrp" disabled /></div>
+                    <div class="col-sm-3"> <label class="font-bold"> E-BIKE LN:</label></div>
+                    <div class="col-sm-3"><input class="form-control text-right" ng-model="txtb_ebike_ln" id="txtb_ebike_ln" disabled /></div>
 
 
 
-                    </div>
+                </div>
                     <div class="form-group row" ng-show="show_div_gsis">
                         <div class="form-group row" style="margin-top:-10px;margin-bottom:-10px;">
                             <hr style="border-color:cadetblue;" />

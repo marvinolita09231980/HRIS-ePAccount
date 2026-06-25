@@ -41,8 +41,6 @@
         <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_float_tbl" Width="1.5" PointX="18.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_gsis_flt_tbl" Width="1.5" PointX="18.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_gsis_month_ovrd_tbl" Width="1.5" PointX="18.75" PointY="10.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_gsis_month_tbl" Width="1.5" PointX="12.75" PointY="18.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_gsis_tbl" Width="1.5" PointX="14.75" PointY="19.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_gsis_tbl_temp" Width="1.5" PointX="20.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_hdmf_flt_tbl" Width="1.5" PointX="0.75" PointY="20.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_hdmf_month_tbl" Width="1.5" PointX="20.75" PointY="12.75" IsExpanded="true" />
@@ -163,7 +161,6 @@
         <EntityTypeShape EntityType="HRIS_ACTModel.vw_remittancetype_tbl2" Width="1.5" PointX="46.75" PointY="29.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.vw_sections_tbl_list" Width="1.5" PointX="46.75" PointY="32.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HRIS_ACTModel.vw_subdepartments_tbl_list" Width="1.5" PointX="46.75" PointY="36.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_hdr_tbl" Width="1.5" PointX="27.375" PointY="47.75" />
         <EntityTypeShape EntityType="HRIS_ACTModel.jo_tax_generation_queue_tbl" Width="1.5" PointX="31.375" PointY="47.75" />
         <EntityTypeShape EntityType="HRIS_ACTModel.payroll_not_in_annual_dtl" Width="1.5" PointX="47.375" PointY="39.75" />
         <EntityTypeShape EntityType="HRIS_ACTModel.error_generate_payroll_not_in_annual_tbl" Width="1.5" PointX="47.375" PointY="45.75" />
@@ -174,6 +171,9 @@
         <EntityTypeShape EntityType="HRIS_ACTModel.payrollemployee_tax_hdr_tbl" Width="1.5" PointX="49.375" PointY="7.75" />
         <EntityTypeShape EntityType="HRIS_ACTModel.taxrate_percentage_tbl" Width="1.5" PointX="49.375" PointY="13.75" />
         <EntityTypeShape EntityType="HRIS_ACTModel.payrollemployee_tax_dtl_tbl" Width="1.5" PointX="49.375" PointY="16.75" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_hdr_tbl" Width="1.5" PointX="27.375" PointY="47.75" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_gsis_month_tbl" Width="1.5" PointX="13.375" PointY="17.75" />
+        <EntityTypeShape EntityType="HRIS_ACTModel.remittance_dtl_gsis_tbl" Width="1.5" PointX="49.375" PointY="22.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

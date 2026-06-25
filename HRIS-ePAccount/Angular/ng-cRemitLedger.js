@@ -1502,7 +1502,10 @@
                     s.txtb_override_amount_ps   = "0.00";
                     s.txtb_payroll_amount       = "0.00";
                     s.txtb_uploaded_amount      = "0.00";
-                    s.txtb_mpl_lite_ln          = "0.00";
+                    s.txtb_mpl_lite_ln = "0.00";
+                    s.txtb_gsel = "0.00";
+                    s.txtb_lrp = "0.00";
+                    s.txtb_ebike_ln = "0.00";
 
                     // **********************************************************
                     // **********************************************************
@@ -1569,7 +1572,10 @@
                     s.txtb_override_amount_ps   = d.data.data.override_amount_ps   
                     s.txtb_payroll_amount       = d.data.data.payroll_amount       
                     s.txtb_uploaded_amount      = d.data.data.uploaded_amount  
-                    s.txtb_mpl_lite_ln          = d.data.data.mpl_lite_ln  
+                    s.txtb_mpl_lite_ln = d.data.data.mpl_lite_ln  
+                    s.txtb_gsel = d.data.data.gsel  
+                    s.txtb_lrp = d.data.data.lrp  
+                    s.txtb_ebike_ln = d.data.data.ebike_ln  
 
 
 
@@ -1606,6 +1612,9 @@
                         + toDecimalFormat(d.data.data.p_other_loan2)  
                         + toDecimalFormat(d.data.data.p_other_loan3)  
                         + toDecimalFormat(d.data.data.mpl_lite_ln)
+                        + toDecimalFormat(d.data.data.gsel)
+                        + toDecimalFormat(d.data.data.lrp)
+                        + toDecimalFormat(d.data.data.ebike_ln)
 
                     total_uploaded = 
 

@@ -86,6 +86,9 @@ namespace HRIS_ePAccount.Models
         public Nullable<decimal> u_other_loan3 { get; set; }
         public Nullable<decimal> gfaleducnl_ln { get; set; }
         public Nullable<decimal> mpl_lite_ln { get; set; }
+        public Nullable<decimal> gsel { get; set; }
+        public Nullable<decimal> lrp { get; set; }
+        public Nullable<decimal> ebike_ln { get; set; }
         public string gsis_umid { get; set; }
         public string payroll_year { get; set; }
         public string payroll_month { get; set; }
